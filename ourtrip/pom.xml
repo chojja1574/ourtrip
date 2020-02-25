@@ -22,6 +22,36 @@
 	</repositories>
 	
 	<dependencies>
+		
+		<dependency>
+		    <groupId>org.apache.tomcat.embed</groupId>
+		    <artifactId>tomcat-embed-websocket</artifactId>
+		    <version>8.0.28</version>
+		</dependency>
+		
+		<!-- Spring-WebSocket -->
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-websocket -->
+		<!-- 스프링 웹소켓 설치 -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-websocket</artifactId>
+		    <version>${org.springframework-version}</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>2.10.2</version>
+		</dependency>
+			
+		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+		<dependency>
+		    <groupId>com.googlecode.json-simple</groupId>
+		    <artifactId>json-simple</artifactId>
+		    <version>1.1.1</version>
+		</dependency>
+
 		<!-- ojdbc6(JDBC 드라이버) 라이브러리 -->
 		<!-- https://mvnrepository.com/artifact/com.oracle/ojdbc6 -->
 		<dependency>

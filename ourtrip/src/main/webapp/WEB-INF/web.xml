@@ -26,6 +26,9 @@
 			<param-value>classpath:spring/appServlet/servlet-context.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
+		
+		<!-- 비동기 작업 지원값을 참값으로 바꿈 - 안해도 1:1통신은 가능한데  2개 이상의 클라이언트 접속 시 에러 발생-->
+		<async-supported>true</async-supported>
 	</servlet>
 		
 	<servlet-mapping>
