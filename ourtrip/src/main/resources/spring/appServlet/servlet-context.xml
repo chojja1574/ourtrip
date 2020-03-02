@@ -30,7 +30,7 @@
 	
 	<beans:bean id="echoHandler" class="com.kh.ourtrip.websocket.EchoHandler"/>
 	
-	<websocket:handlers>
+ 	<websocket:handlers>
 	       <websocket:mapping handler="echoHandler" path="/echo" />
 	       <websocket:sockjs />
 	</websocket:handlers>

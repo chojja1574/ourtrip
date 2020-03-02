@@ -12,13 +12,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/websocket/*")
 public class WebSocketController {
 	
-	@Autowired
+	//@Autowired
 	
-	@RequestMapping("cattingForm")
+	@RequestMapping("chattingForm")
 	public String chattingForm(Model model, Integer no, RedirectAttributes rdAttr ) {
-		
-		System.out.println(1);
-		
-		return "/websocket-echo";
+		return "websocket-echo";
+	}
+	
+	@RequestMapping("chattingForm2")
+	public String chattingForm2(Model model, Integer no, RedirectAttributes rdAttr ) {
+		return "websocket-echo";
 	}
 }
