@@ -14,6 +14,10 @@
 
 <!-- Web socket CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.js"></script>
+
+<!-- json2.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.js"></script>
+
 <style type="text/css">
 	.testbox{
 		width: 300px;
@@ -30,6 +34,10 @@
 	<button type="button" id="redbtn">red</button>
 	<button type="button" id="bluebtn">blue</button>
 	<button type="button" id="greenbtn">green</button>
+	<span>${userId} + ${selectRoom}</span>
+	<br>
+	<button type="button" id="jsonTest">json test</button>
+	<button type="button" id="join">join</button>
 	<div id="data"></div>
 </body>
 <script type="text/javascript">
@@ -60,6 +68,12 @@
 				$('#message').val('')
 			}
 		});
+		$("#jsonTest").click(function() {
+			sock.send(JSON.stringify({chatRoomId: "room1", type: 'TEST', writer: "${userId}", content: "null"}))
+		});
+		$("#join").click(function(){
+			sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'JOIN', writer: "${userId}", content: ""}));
+		})
 	});
 	
 	// 웹소켓을 지정한 url로 연결한다.
@@ -69,17 +83,16 @@
 	
 	// 메시지 전송
 	function sendMessage() {
-		sock.send("m_" + $("#message").val());
+		sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'Message', writer: "${userId}", content: $("#message").val()}));
 	}
-	
 	function redbtn() {
-		sock.send("b_red");
+		sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'changeback', writer: "${userId}", content: "red"}));
 	}
 	function bluebtn() {
-		sock.send("b_blue");
+		sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'changeback', writer: "${userId}", content: "blue"}));
 	}
 	function greenbtn() {
-		sock.send("b_green");
+		sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'changeback', writer: "${userId}", content: "green"}));
 	}
 	
 	function chageback(color){

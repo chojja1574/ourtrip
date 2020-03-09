@@ -1,5 +1,7 @@
 package com.kh.ourtrip.websocket.controller;
 
+import java.util.Scanner;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
@@ -14,8 +16,16 @@ public class WebSocketController {
 	
 	//@Autowired
 	
+	@RequestMapping("chattingRoom")
+	public String chattingRoom() {
+		return "chattingRoom";
+	}
+	
 	@RequestMapping("chattingForm")
-	public String chattingForm(Model model, Integer no, RedirectAttributes rdAttr ) {
+	public String chattingForm(Model model, Integer no, RedirectAttributes rdAttr, String userId, String selectRoom) {
+		model.addAttribute("userId", userId);
+		model.addAttribute("selectRoom", selectRoom);
+		
 		return "websocket-echo";
 	}
 	
