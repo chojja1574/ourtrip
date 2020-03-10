@@ -1,0 +1,98 @@
+html,
+body{
+	height: 100%;
+    margin: 0;
+}
+
+div{
+    box-sizing: border-box;
+    margin: 0;
+}
+
+hr{
+    border: 0.5px solid gray;
+}
+
+/* 버튼 */
+.main-btn {
+    background-color: #18a8f1;
+    color: white;
+}
+
+.main-btn:hover {
+    background-color: #58ccff;
+    color: white;
+}
+
+.main-btn-rev{
+    background-color: white;
+    color: #18a8f1;
+    border: solid 1px #18a8f1;
+}
+
+.main-btn-rev:hover{
+    color: white;
+    background-color: #18a8f1;
+}
+
+.del-btn{
+    background-color: #e74c3c;
+    color: white;
+}
+
+.del-btn:hover{
+    background-color: #fc7363;
+    color: white;
+}
+
+.del-btn-rev{
+    background-color: white;
+    color: #e74c3c;
+    border: solid 1px #e74c3c;
+}
+
+.del-btn-rev:hover{
+    color: white;
+    background-color: #e74c3c;
+}
+
+.gray-btn{
+    background-color: #777777;
+    color: white;
+}
+
+.gray-btn:hover{
+    background-color: #969696;
+    color: white;
+}
+
+.gray-btn-rev{
+    background-color: white;
+    color:#777777;
+    border: solid 1px #777777;
+}
+
+.gray-btn-rev:hover{
+    color: white;
+    background-color: #777777;
+}
+/* 버튼 끝 */
+
+/* background */
+.main-back{
+    background-color: #18a8f1;
+    color: white;
+}
+
+.none-block {
+    display: inline-block;
+    margin: 0;
+}
+
+label {
+    margin-bottom: 0px;
+}
+
+.planner-wrapper {
+    padding: 0;
+}

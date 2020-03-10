@@ -1,8 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
+	<!-- root-context.xml 파일은 서버 구동 시 web.xml을 거쳐 바로 로딩 되는 즉, pre-loading 되는 
+		설정 파일이다. 따라서 서버 구동 시 바로 셋팅 해야 되는 내용들을 작성하는 설정 파일로 보통 DB연결 설정, 트랜잭션 처리, AOP 
+		관련, 내 외부 모듈 연동 등등 스프링에서 제공하는 서비스들에 대한 설정을 관리한다. -->
 	<!-- Root Context: defines shared resources visible to all other web components -->
+
+	<!-- 1. DataSource 등록 - DataSourece는 서버 구동 시 동시에 연결이 되어야 하며 연결 정보 설정 시 root-context 
+		제일 위쪽이 작성 -> 그래야지만 아래 작성되는 설정들에서 DataSource를 참조해서 사용 가능! -->
+
+	<!-- destroy-method="close" -> 주어진 세션을 자동으로 close 하라는 의미 -->
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+
+		<property name="driverClassName"
+			value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url"
+			value="jdbc:oracle:thin:@localhost:1521:xe" />
+		<property name="username" value="mini" />
+		<property name="password" value="mini" />
+		<property name="defaultAutoCommit" value="false" />
+	</bean>
+
+	<!-- 트랜잭션 처리를 위한 Transaction Manager 추가 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- @Transactional 어노테이션이 붙은 메소드를 찾아 트랜잭션 처리를 할 수 있도록 트랜잭션 어드바이스를 자동으로 
+		적용하는 <tx:annotation-driven/> 추가 -->
+
+	<!-- tx 태그를 사용하기 위하여 namespaces에서 tx 체크하기 -->
+	<tx:annotation-driven />
+
+	<!-- 마이바티스 SqlSession 등록하기 (xml 방식으로 bean 등록) -->
+	<!-- SqlSessionFactoryBean: MyBatis 설정파일을 바탕으로 SqlSessionFactory를 생성한다. 
+		Spring Bean으로 등록해야 한다. -->
+	<bean id="sqlSessionFactoryBean"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- mybatis-config.xml 설정 불러오기 -->
+		<property name="configLocation"
+			value="classpath:mybatis-config.xml" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- SqlSessionTemplate : SQL 실행이나 트랜잭션 관리 역할(Spring bean으로 등록해야함.) -->
+	<bean id="sqlSessionTemplate"
+		class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactoryBean" />
+	</bean>
+	
+	<!-- google email -->
+<!-- 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="username" value="jysrmb@gmail.com" />
+		<property name="password" value="dbtkd316425" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>
+	            <prop key="mail.smtp.auth">true</prop>
+	            <prop key="mail.smtp.starttls.enable">true</prop>
+	            <prop key="mail.debug">true</prop>
+			</props>
+		</property>
+	</bean> -->
 		
 </beans>

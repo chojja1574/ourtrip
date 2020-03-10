@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 스프링 보안과 관련된 설정을 추가하는 파일 -->
+	
+	<!-- bcrypt 암호화 관련 bean 등록 -->
+	<!-- <bean id="bcryptPasswordEncoder"
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/> -->
+		
+	<!-- 해당 xml파일을 읽을 수 있도록
+		web.xml에서 contextConfigLocation에 해당 xml 경로 추가
+	 -->
+	
+</beans>
