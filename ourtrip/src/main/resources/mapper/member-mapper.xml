@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="memberMapper">
+
+	<resultMap type="Member" id="memberResultSet">
+		<id property="memberNo" column="MEMBER_NO" />
+
+		<result property="memberEmail" column="MEMBER_EMAIL" />
+		<result property="memberPwd" column="MEMBER_PWD" />
+		<result property="memberNickName" column="MEMBER_NICK_NAME" />
+		<result property="memberEnrollDt" column="MEMBER_ENROLLDATE" />
+		<result property="memberStatus" column="MEMBER_STATUS" />
+		<result property="memberGrade" column="MEMBER_GRADE" />
+		<result property="signUpRoute" column="SIGNUP_ROUTE"/>
+	</resultMap>
+
+	<!-- 로그인 -->
+	<select id="login" parameterType="Member"
+		resultMap="memberResultSet">
+		SELECT * FROM MEMBER
+		WHERE MEMBER_EMAIL= #{memberEmail}
+		AND
+		MEMBER_STATUS= 'Y'
+	</select>
+</mapper>
