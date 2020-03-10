@@ -103,24 +103,23 @@
 	// 서버로부터 메시지를 받았을 때
 	function onMessage(msg) {
 		var data = msg.data;
-		var dataFlag = data.substring(data.indexOf(':')+2);
-		
-		console.log(data + " / " + data[0]);
-		console.log(dataFlag + " / " + dataFlag[0]);
-		switch(dataFlag[0]){
-		case 'm':
+		var dataFlag = JSON.parse(data)
+		console.log(dataFlag);
+		switch(dataFlag['type']){
+		case 'Message':
 			console.log("m");
 			$("#data").append(data + "<br/>");
 			break;
-		case 'b':
-			switch(dataFlag[2]){
-			case 'r' :
+		case 'changeback':
+			console.log(dataFlag['content']);
+			switch(dataFlag['content']){
+			case 'red' :
 				chageback("red");
 				break;
-			case 'b' :
+			case 'blue' :
 				chageback("blue");
 				break;
-			case 'g' :
+			case 'green' :
 				chageback("green");
 				break;
 				
