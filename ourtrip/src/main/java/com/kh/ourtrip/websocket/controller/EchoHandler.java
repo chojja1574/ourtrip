@@ -84,7 +84,7 @@ public class EchoHandler extends TextWebSocketHandler {
 	
 	// 클라이언트가 입장버튼 클릭 시 채팅방 없을 시 맵에 추가, 채팅방 있을 시 채팅방 세션리스트에 세션 추가
 	private void joinChattingRoom(WebSocketSession session, JSONObject joinJson) {
-		int existUser = -1;
+		
 		
 		UserInfo uInf = findUserInfo(session);
 		
@@ -93,6 +93,8 @@ public class EchoHandler extends TextWebSocketHandler {
 			userList.add(uInf);
 		}
 		String rId = (String) joinJson.get("chatRoomId");
+		
+		int existUser = -1;
 		
 		if(chatroomMap.containsKey(rId)) {
 			for(UserInfo inf : chatroomMap.get(rId)) {
