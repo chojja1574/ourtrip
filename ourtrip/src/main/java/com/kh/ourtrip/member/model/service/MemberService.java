@@ -12,4 +12,12 @@ public interface MemberService {
 	 */
 	public abstract Member login(Member member) throws Exception;
 
+	/** 카카오 로그인용 Service
+	 * @param member
+	 * @param imagePath
+	 * @return loginMember
+	 * @throws Exception
+	 */
+	public abstract Member kakaoLogin(Member member, String imagePath) throws Exception;
+
 }

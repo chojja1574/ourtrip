@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.kh.ourtrip.member.model.service.MemberService;
 import com.kh.ourtrip.member.model.vo.Member;
 
-@SessionAttributes({"loginMember", "msg"})
+@SessionAttributes({"loginMember", "msg", "profilePath"})
 @Controller
 @RequestMapping(value="/member/*")
 public class MemberController {
@@ -25,6 +26,7 @@ public class MemberController {
 	
 	@RequestMapping(value="login")
 	public String login(Member member, Model model) {
+		member.setSignUpRoute("1");
 		
 		try {
 			Member loginMember = memberService.login(member);
@@ -52,5 +54,31 @@ public class MemberController {
 		session.setComplete();
 		
 		return "redirect:/";
+	}
+	
+	@RequestMapping(value="kakaoLogin")
+	@ResponseBody
+	public String kakaoLogin(Member member, String imagePath,
+							Model model) { 
+		member.setSignUpRoute("2");
+		
+		String result = "fail";
+		
+		try {
+			Member loginMember = memberService.kakaoLogin(member, imagePath);
+			
+			if(loginMember != null){
+				model.addAttribute("loginMember", loginMember);
+				model.addAttribute("profilePath", imagePath);
+				result = "success";
+			}else {
+				model.addAttribute("msg", "카카오 로그인 과정 중 오류 발생");
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 }

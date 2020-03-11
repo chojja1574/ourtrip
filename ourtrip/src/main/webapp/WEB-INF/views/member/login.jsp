@@ -15,7 +15,7 @@
 	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
 	crossorigin="anonymous">
 
-<link rel="stylesheet" href="${contextPath}/resources/css/common.css">
+<link rel="stylesheet" href="../resources/css/common.css">
 
 <!-- google api -->
 <meta name="google-signin-scope" content="profile email">
@@ -61,94 +61,6 @@
 <title>login</title>
 
 <style>
-.ot-secessionTerms {
-	resize: none;
-	width: 100%;
-	height: 600px;
-	margin: 20px 0px 20px 0px;
-}
-
-.ot-termsAgree {
-	width: 15px;
-	height: 15px;
-}
-
-.ot-termsAgreeLabel {
-	line-height: 12px;
-	padding-left: 5px;
-	vertical-align: middle;
-}
-
-.ot-inputTextSetting {
-	font-weight: bold;
-	font-size: 1.2em;
-}
-
-.ot-inputTextSetting h1 {
-	text-align: center;
-}
-
-.g-signin2 {
-	width: 100%;
-}
-
-#customBtn {
-	display: inline-block;
-	text-align: center;
-	width: 100%;
-	height: 40px;
-	line-height: 40px;
-	border: #4285F4 solid 2px;
-	background-color: #ffffff;
-	color: #4285F4;
-	font-weight: 2em;
-	border-radius: 3px;
-	display: block;
-	margin-bottom: 40px;
-	text-decoration: none;
-	cursor: pointer;
-}
-
-#customBtn:hover {
-	text-align: center;
-	width: 100%;
-	height: 40px;
-	line-height: 40px;
-	border: #4285F4 solid 2px;
-	background-color: #4285F4;
-	color: #ffffff;
-	font-weight: 2em;
-	border-radius: 3px;
-	display: block;
-	margin-bottom: 40px;
-	text-decoration: none;
-	cursor: pointer;
-}
-
-span.label {
-	font-family: serif;
-	font-weight: normal;
-}
-
-span.icon {
-	background: url('GoogleLogo.PNG') transparent 5px 50% no-repeat;
-	display: inline-block;
-	vertical-align: middle;
-	width: 30px;
-	height: 20px;
-}
-
-span.buttonText {
-	display: inline-block;
-	vertical-align: middle;
-	padding-left: 5px;
-	padding-right: 10px;
-	font-size: 1em;
-	font-weight: bold;
-	/* Use the Roboto font that is loaded in the <head> */
-	font-family: 'Roboto', sans-serif;
-}
-
 .form-login {
   width: 100%;
   max-width: 330px;
@@ -175,6 +87,30 @@ span.buttonText {
 .kakao-btn:hover {
     background-color: rgb(245, 235, 132);
     color: #3c1e1ee;
+}
+
+.wrap-loading{
+    position: fixed;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    /* not in ie */
+    background:  rgba(0,0,0,0.2); 
+    /* ie */
+    filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr='#20000000',endColorstr='#20000000');
+}
+
+.wrap-loading div{ /*로딩이미지*/
+    position: fixed;
+    top:50%;
+    left:50%;
+    margin-left: -21px;
+    margin-top: -21px;
+}
+
+.display-none{
+    display:none;
 }
 </style>
 
@@ -290,6 +226,9 @@ span.buttonText {
 			</div>
 		</div>
 	</div> -->
+	<div class="wrap-loading display-none" id="loading">
+        <div><img src="${contextPath}/resources/images/loadingBar.gif"/></div>
+    </div>
 
 	<jsp:include page="../common/footer.jsp" />
 
@@ -309,16 +248,63 @@ span.buttonText {
 	    // 카카오 로그인
 	    //<![CDATA[
 	    // 사용할 앱의 JavaScript 키를 설정해 주세요.
-	    Kakao.init('9c1bfb8346b701102641547c85accb43');
+	    Kakao.init('3265d67cbccb2a931046b989ef45ad5f');
+	    
+        var nickname;
+        var profile_url;
+        var email;
 	    
 	    function loginWithKakao() {
 	        // 로그인 창을 띄웁니다.
 	        Kakao.Auth.login({
 	            success: function (authObj) {
-	                alert(JSON.stringify(authObj));
+	            	
+
+	                Kakao.API.request({
+	                    // 로그인한 회원의 정보 요청
+	                    url: '/v2/user/me',
+	                    success: function (res) {
+	                        console.log(res);
+	                        nickname = res.kakao_account.profile.nickname;
+	                        profile_url = res.kakao_account.profile.profile_image_url;
+	                        email = res.kakao_account.email;
+	                        
+	                        console.log("nickname : " + nickname);
+	                        console.log("profile_url : " + profile_url);
+	                        console.log("email : " + email);
+	                        
+	                        $.ajax({
+	                        	url : "kakaoLogin",
+	                        	type : "POST",
+	                        	data : {memberEmail : email,
+	                        			memberNickName : nickname,
+	                        			imagePath : profile_url},
+	                        	beforeSend : function(){
+	                        		$("#loading").removeClass("display-none");
+	                        	},
+	                        	success : function(result){
+	                        		if(result == "success"){
+	                        			location.href = "${contextPath}";
+	                        		}else{
+	                        			location.href = "loginForm";
+	                        		}
+	                        	},
+	                        	error : function(e){
+	                        		alert("카카오 로그인에 실패하였습니다.\n" + e);
+	                        	},
+	                        	complete : function(){
+	                        		$("#loading").addClass("display-none");
+	                        	}
+	                        });
+	                        
+	                    },
+	                    fail: function (error) {
+	                        alert("카카오 로그인에 실패하였습니다.");
+	                    }
+	                });
 	            },
 	            fail: function (err) {
-	                alert(JSON.stringify(err));
+	            	alert("카카오 로그인에 실패하였습니다.");
 	            }
 	        });
 	    };

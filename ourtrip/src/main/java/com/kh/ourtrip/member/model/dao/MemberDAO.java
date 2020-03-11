@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.ourtrip.member.model.vo.Member;
+import com.kh.ourtrip.member.model.vo.ProfileImage;
 
 @Repository
 public class MemberDAO {
@@ -21,5 +22,42 @@ public class MemberDAO {
 	public Member login(Member member) throws Exception{
 		return sqlSession.selectOne("memberMapper.login", member);
 	}
+
+	/** 회원인지 확인용 DAO
+	 * @param member
+	 * @return result
+	 * @throws Exception
+	 */
+	public int isMember(Member member) throws Exception{
+		return sqlSession.selectOne("memberMapper.isMember", member);
+	}
+
+	/** 회원가입용 DAO
+	 * @param member
+	 * @return result
+	 * @throws Exception
+	 */
+	public int signUp(Member member) throws Exception{
+		return sqlSession.insert("memberMapper.signUp", member);
+	}
+
+	/** 회원 이미지 등록용 DAO
+	 * @param profileImage
+	 * @return result
+	 * @throws Exception
+	 */
+	public int insertProfileImage(ProfileImage profileImage) throws Exception{
+		return sqlSession.insert("memberMapper.insertProfileImage", profileImage);
+	}
+
+	/** 카카오 로그인용 DAO
+	 * @param member
+	 * @return loginMember
+	 * @throws Exception
+	 */
+	public Member kakaoLogin(Member member) throws Exception{
+		return sqlSession.selectOne("memberMapper.kakaoLogin", member);
+	}
+
 
 }
