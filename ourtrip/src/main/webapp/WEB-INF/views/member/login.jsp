@@ -4,8 +4,6 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
-<meta charset="UTF-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -27,9 +25,26 @@
 	width: 100%;
 	height: 80%;
 	position: relative;
+	z-index:1;
+}
+
+#form-wrapper:after{
+	background-image: url(../resources/images/login-background.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	opacity: 0.6!important;
+	top:0;
+	left:0;
+	position:absolute;
+	z-index:-1;
+	content:'';
+	width:100%;
+	height:100%;
 }
 
 .form-login {
+  background-color: rgba(255,255,255,0.6);
+  border-radius: 10px;
   width: 100%;
   max-width: 330px;
   padding: 15px;
@@ -37,7 +52,7 @@
   left: 50%;
   top: 50%;
   margin-left: -165px;
-  margin-top: -250px;
+  margin-top: -200px;
 }
 
 .form-login .checkbox {
@@ -86,6 +101,10 @@
 .display-none{
     display:none;
 }
+
+#find-pwd{
+	color: black;
+}
 </style>
 
 </head>
@@ -95,21 +114,22 @@
 	
 	<div id="form-wrapper">
 		<form class="form-login" action="login" method="POST">
-			<h1 class="h3 mb-3 font-weight-normal" style="text-align: center;">Login</h1>
+			<h3 class="mb-3 font-weight-normal" style="text-align: center;">Login</h1>
 			<label for="email">이메일</label>
 			<input class="form-control mb-2" type="email" name="memberEmail" id="email"
-				placeholder="이메일을 입력해주세요" required autofocus>
+				placeholder="ourtrip@example.com" required autofocus>
 			<label for="email">비밀번호</label>
 			<input class="form-control mb-2" type="password" name="memberPwd" id="pwd"
-				placeholder="비밀번호를 입력해주세요" required autofocus>
+				placeholder="password" required autofocus>
 			<div class="checkbox mb-3">
 				<label>
-				<input  class="form-control" type="checkbox" value="saveId">
-					아이디 저장
+					<input type="checkbox" value="saveId">&nbsp;아이디 저장
+					
 				</label>
 			</div>
 			<button class="btn btn-lg main-btn btn-block" onclick="return validate();">로그인</button>
 			<a id="custom-login-btn" class="btn btn-lg kakao-btn btn-block" href="javascript:loginWithKakao()">카카오 계정으로 로그인</a>
+			<a href="#" id="find-pwd">비밀번호 찾기</a>
 		</form>
 	</div>
 
@@ -293,11 +313,6 @@
 	            return false;
 	        }
 	    }
-	    
-	    // 회원가입 페이지로 이동
-	    function signUpForm(){ location.href="signUpForm.html"; }
-	    // 비밀번호 찾기 페이지로 이동
-	    function changePwd(){ location.href="changePwd.html"; }
 	
 	</script>
 </body>
