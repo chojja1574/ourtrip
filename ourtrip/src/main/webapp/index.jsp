@@ -23,10 +23,6 @@
 <title>ourtrip</title>
 
 <style>
-a:hover {
-	text-decoration: none;
-}
-
 h5 {
 	margin-bottom: 0px;
 }

@@ -11,6 +11,7 @@
 	<!-- 2. 별칭 작성 부분 -->
 	<typeAliases>
 		<typeAlias type="com.kh.ourtrip.member.model.vo.Member" alias="Member"/>
+		<typeAlias type="com.kh.ourtrip.member.model.vo.ProfileImage" alias="ProfileImage"/>
 	</typeAliases>
 	
 	<!-- mapper 파일 등록 부분 -->

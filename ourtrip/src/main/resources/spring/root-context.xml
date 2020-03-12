@@ -21,8 +21,8 @@
 			value="oracle.jdbc.driver.OracleDriver" />
 		<property name="url"
 			value="jdbc:oracle:thin:@localhost:1521:xe" />
-		<property name="username" value="mini" />
-		<property name="password" value="mini" />
+		<property name="username" value="ourtrip" />
+		<property name="password" value="ourtrip" />
 		<property name="defaultAutoCommit" value="false" />
 	</bean>
 

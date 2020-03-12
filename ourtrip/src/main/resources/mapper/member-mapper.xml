@@ -13,13 +13,53 @@
 		<result property="memberGrade" column="MEMBER_GRADE" />
 		<result property="signUpRoute" column="SIGNUP_ROUTE"/>
 	</resultMap>
+	
+	<resultMap type="ProfileImage" id="piResultSet">
+		<id property="imageNo" column="IMAGE_NO" />
+
+		<result property="imagePath" column="IMAGE_PATH" />
+		<result property="imageUploadDate" column="IMAGE_UPLOAD_DT" />
+		<result property="imageStatus" column="IMAGE_STATUS" />
+		<result property="memberNo" column="MEMBER_NO" />
+	</resultMap>
 
 	<!-- 로그인 -->
 	<select id="login" parameterType="Member"
 		resultMap="memberResultSet">
 		SELECT * FROM MEMBER
 		WHERE MEMBER_EMAIL= #{memberEmail}
-		AND
-		MEMBER_STATUS= 'Y'
+		AND MEMBER_PWD= #{memberPwd}
+		AND	MEMBER_STATUS= 'Y'
+		AND SIGNUP_ROUTE= '1'
 	</select>
+	
+	<!-- 카카오 로그인 -->
+	<select id="kakaoLogin" parameterType="Member"
+		resultMap="memberResultSet">
+		SELECT * FROM MEMBER
+		WHERE MEMBER_EMAIL= #{memberEmail}
+		AND	MEMBER_STATUS= 'Y'
+		AND SIGNUP_ROUTE= #{signUpRoute}
+	</select>
+	
+	<!-- 회원인지 확인 -->
+	<select id="isMember" parameterType="Member" resultType="_int">
+		SELECT COUNT(*) FROM MEMBER
+		WHERE MEMBER_EMAIL= #{memberEmail}
+		AND MEMBER_STATUS= 'Y'
+		AND SIGNUP_ROUTE= #{signUpRoute}
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="signUp" parameterType="Member">
+		INSERT INTO MEMBER
+		(MEMBER_NO, MEMBER_EMAIL, MEMBER_PWD, MEMBER_NICK_NAME, SIGNUP_ROUTE)
+		VALUES (SEQ_MNO.NEXTVAL, #{memberEmail}, #{memberPwd}, #{memberNickName}, #{signUpRoute})
+	</insert>
+	
+	<!-- 프로필 이미지 삽입 -->
+	<insert id="insertProfileImage" parameterType="ProfileImage">
+		INSERT INTO PROFILE_IMAGE VALUES
+		(SEQ_PROFILE_I_INO.NEXTVAL, #{imagePath}, SYSDATE, DEFAULT, #{memberNo})
+	</insert>
 </mapper>
