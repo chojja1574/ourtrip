@@ -151,15 +151,18 @@ h5 {
 				</div>
 			</div>
 			<div class="col-md-6">
-				<h2>Heading</h2>
-				<p>Donec id elit non mi porta gravida at eget metus. Fusce
-					dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh,
-					ut fermentum massa justo sit amet risus. Etiam porta sem malesuada
-					magna mollis euismod. Donec sed odio dui.</p>
-				<p>
-					<a class="btn" href="#">View details »</a>
+				<h2>플레너 생성하기</h2>
+				<p>상상만해도 즐거운  여행 <br>
+					여러분의 여행계획을 친구들과 함께 만들어 보세요<br>
+					OurTrip 플래너가 여러분의 여행계획을 보다 쉽게 만들어 드립니다.<br>
+					지금 바로 플래너를 생성하고 친구들을 초대하여 계획을 완성하세요
+					
+					
 				</p>
-				<a href="#" class="btn btn-lg btn-primary" type="button">Button</a>
+				<p>
+					<a class="btn" href="#">자세히 보기.. »</a>
+				</p>
+				<a href="#" class="btn btn-lg btn-primary" type="button">플래너 생성하기</a>
 			</div>
 		</div>
 	</div>
