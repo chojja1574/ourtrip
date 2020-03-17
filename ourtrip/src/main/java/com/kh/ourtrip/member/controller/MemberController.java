@@ -81,4 +81,13 @@ public class MemberController {
 		
 		return result;
 	}
+	
+	@RequestMapping("signUpForm")
+	public String signUpForm(String isAgree) {
+		if(isAgree != null && isAgree.equals("1")) {
+			return "member/signUpForm";
+		}else {
+			return "member/signUpTerms";
+		}
+	}
 }

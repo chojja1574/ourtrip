@@ -19,6 +19,7 @@
 	crossorigin="anonymous"></script>
 
 <link rel="stylesheet" href="resources/css/common.css">
+<link rel="stylesheet" href="resources/css/carousel.css">
 
 <title>ourtrip</title>
 
@@ -34,6 +35,11 @@ h5 {
 
 .carousel-caption {
 	margin-bottom: 30px;
+}
+
+.carousel-item{
+	background-repeat: no-repeat;
+	background-size: cover;
 }
 
 @media screen and (max-width: 767px) {
@@ -57,25 +63,19 @@ h5 {
 				<li data-slide-to="2" data-target="#carousel-628660"></li>
 			</ol>
 			<div class="carousel-inner">
-				<div class="carousel-item active">
-					<img class="d-block w-100 mainimg" alt="Carousel Bootstrap First"
-						src="http://img.earthtory.com/img/city_default/6/10034.jpg" />
+				<div class="carousel-item active" style="background-image: url(resources/images/intro-image1.jpg);">
 					<div class="carousel-caption text-left">
 						<h1>Our Trip을 활용해 여행 계획을 같이 만들어보세요!</h1>
 						<p>Our Trip은 여러분의 여행 수정사항을 실시간으로 반영하여 즉각 배포해드립니다</p>
 					</div>
 				</div>
-				<div class="carousel-item">
-					<img class="d-block w-100 mainimg" alt="Carousel Bootstrap Second"
-						src="http://img.earthtory.com/img/city_images/243/singapore_1426840110.jpg" />
+				<div class="carousel-item" style="background-image: url(resources/images/intro-image2.jpg);">
 					<div class="carousel-caption text-left">
 						<h1>Our Trip을 활용해 여행 계획을 같이 만들어보세요!</h1>
 						<p>Our Trip은 여러분의 여행 수정사항을 실시간으로 반영하여 즉각 배포해드립니다</p>
 					</div>
 				</div>
-				<div class="carousel-item">
-					<img class="d-block w-100 mainimg" alt="Carousel Bootstrap Third"
-						src="http://img.earthtory.com/img/city_images/309/london_1429516385.jpg" />
+				<div class="carousel-item" style="background-image: url(resources/images/intro-image3.jpg);">
 					<div class="carousel-caption text-left">
 						<h1>Our Trip을 활용해 여행 계획을 같이 만들어보세요!</h1>
 						<p>Our Trip은 여러분의 여행 수정사항을 실시간으로 반영하여 즉각 배포해드립니다</p>
