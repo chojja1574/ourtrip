@@ -20,4 +20,10 @@ public interface MemberService {
 	 */
 	public abstract Member kakaoLogin(Member member, String imagePath) throws Exception;
 
+	/** 이메일 확인용 Service
+	 * @param email
+	 * @return result
+	 */
+	public abstract int emailCertify(String email) throws Exception;
+
 }

@@ -59,5 +59,13 @@ public class MemberDAO {
 		return sqlSession.selectOne("memberMapper.kakaoLogin", member);
 	}
 
+	/** 메일 확인용 DAO
+	 * @param email
+	 * @return result
+	 */
+	public int emailCertify(String email) {
+		return sqlSession.selectOne("memberMapper.emailCertify", email);
+	}
+
 
 }

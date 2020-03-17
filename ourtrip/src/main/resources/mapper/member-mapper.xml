@@ -62,4 +62,11 @@
 		INSERT INTO PROFILE_IMAGE VALUES
 		(SEQ_PROFILE_I_INO.NEXTVAL, #{imagePath}, SYSDATE, DEFAULT, #{memberNo})
 	</insert>
+	
+	<!-- 이메일 중복확인 -->
+	<select id="emailCertify" parameterType="string" resultType="_int">
+		SELECT COUNT(*) FROM MEMBER
+		WHERE MEMBER_EMAIL= #{email}
+		AND MEMBER_STATUS= 'Y'
+	</select>
 </mapper>

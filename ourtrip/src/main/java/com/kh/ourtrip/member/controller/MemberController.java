@@ -90,4 +90,15 @@ public class MemberController {
 			return "member/signUpTerms";
 		}
 	}
+	
+	@RequestMapping("emailCertify")
+	@ResponseBody
+	public String emailCertify(String email) throws Exception{
+		int result = 0;
+		
+		result = memberService.emailCertify(email);
+		
+		return Integer.toString(result);
+		
+	}
 }

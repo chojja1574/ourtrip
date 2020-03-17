@@ -1,11 +1,13 @@
 // 각 유효성 검사 결과를 저장할 객체
 var signUpCheck = {
 	"email" : false,
-	"emailDup" : false,
+	"emailCheck" : false,
 	"pwd1" : false,
 	"pwd2" : false,
 	"nickname" : false,
 };
+
+var defaultImg = "../resources/images/default-profile.png";
 
 // 실시간 입력 형식 검사
 // 정규표현식
@@ -18,41 +20,23 @@ $(document).ready(
 			var $pwd2 = $("#pwd2");
 			var $nickname = $("#nickname");
 
-			// 아이디 유효성 검사
-			$email.on("input", function() {
-				// 첫글자는 영어 소문자, 나머지 글자는 영어 대,소문자 + 숫자, 총 6~12글자
-				var regExp = /^[\w]{4,}@[\w]+(\.[\w]+){1,3}$/;
-				if (!regExp.test($id.val())) {
-					$("#checkEmail").text("이메일 형식이 유효하지 않습니다.").css({
-						"color" : "red",
-						"font-weight" : "bold"
-					});
-					signUpCheck.email = false;
-				} else {
-					signUpCheck.email = true;
-					$("#checkEmail").text("사용 가능한 아이디 입니다.").css({
-						"color" : "green",
-						"font-weight" : "bold"
-					});
-					signUpCheck.emailDup = true;
-					/*
-					 * 수업자료 회원가입부분 Ajax 긁어온 부분
-					 * 
-					 * $.ajax({ url : "idDupCheck", data : {memberId: $id.val() },
-					 * type : "post", success : function(result){
-					 * 
-					 * if(result == "true"){ $("#checkId").text("사용 가능한 아이디
-					 * 입니다.").css({"color":"green","font-weight":"bold"});
-					 * signUpCheck.idDup = true; }else{ $("#checkId").text("사용할
-					 * 수 없는 아이디
-					 * 입니다.").css({"color":"red","font-weight":"bold"});
-					 * signUpCheck.idDup = false; } },
-					 * 
-					 * error : function(e){ console.log("ajax 통신 실패");
-					 * console.log(e); } });
-					 */
-				}
-			});
+//			// 아이디 유효성 검사
+//			$email.on("input", function() {
+//				// 첫글자는 영어 소문자, 나머지 글자는 영어 대,소문자 + 숫자, 총 6~12글자
+//				var regExp = /^[\w]{4,}@[\w]+(\.[\w]+){1,3}$/;
+//				if (!regExp.test($email.val())) {
+//					$("#checkEmail").text("이메일 형식이 유효하지 않습니다.").css({
+//						"color" : "red"
+//					});
+//					signUpCheck.email = false;
+//				} else {
+//					signUpCheck.email = true;
+//					$("#checkEmail").text("사용 가능한 아이디 입니다.").css({
+//						"color" : "green"
+//					});
+//					signUpCheck.emailDup = true;
+//				}
+//			});
 
 			// 비밀번호 유효성 검사
 			$pwd1.on("input", function() {
@@ -94,6 +78,57 @@ $(document).ready(
 					signUpCheck.nickname = true;
 				}
 			});
+			
+			// 이메일 확인 및 전송
+			$("#email-authentication-btn").on("click", function(){
+		    	if($(this).text() == "취소"){
+		    		$email.prop("readonly", false).val("").focus();
+					$("#email-certify").text("메일 인증").removeClass("del-btn")
+					.addClass("main-btn");
+					
+					$("#checkEmail").html("이메일을 다시 입력해주세요.")
+					.css("color", "red");
+					
+					signUpCheck.emailCheck = false;
+		    		
+		    	}else{
+		    		var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+		    		if(!regExp.test($email.val())){
+		    			$("#checkEmail").html("이메일 형식이 유효하지 않습니다.")
+		    			.css("color", "red");
+		    		}else{
+		    			$("#checkEmail").html("<span class='spinner-border spinner-border-sm'></span> 이메일을 확인하고 있습니다.")
+		    			.css("color", "gray");
+		    			
+		    			$.ajax({
+		    				url: "emailCertify",
+		    				type: "POST",
+		    				data: {email: $email.val()},
+		    				success: function(result){
+		    					console.log(result);
+		    					
+		    					if(result == "0"){
+		    						$("#checkEmail").html("이미 가입된 이메일입니다.")
+		    						.css("color", "red");
+		    					}else{
+		    						$("#checkEmail").html("이메일로 전송된 코드를 확인해주세요.")
+		    						.css("color", "green");
+		    						
+		    						$email.prop("readonly", true);
+		    						$("#email-certify").text("Reset").removeClass("del-btn")
+		    						.addClass("main-btn");
+		    						
+		    						certifyCode = result;
+		    					}
+		    				},
+		    				error: function(e){
+		    					console.log("email 인증 ajax 실패");
+		    					console.log(e);
+		    				}
+		    			});
+		    		}
+		    	}
+		    });
 		});
 
 // submit 동작
@@ -128,7 +163,6 @@ function LoadImg(value, num) {
 		reader.onload = function(e) {
 
 			$("#ot_profile_image").prop("src", e.target.result);
-			console.log(e.target.result);
 			// e.target.result -> reader.onload한 이벤트 즉 파일 경로가 추가됨
 
 		}
