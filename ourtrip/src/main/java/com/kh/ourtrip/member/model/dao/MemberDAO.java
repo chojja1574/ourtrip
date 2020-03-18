@@ -67,5 +67,14 @@ public class MemberDAO {
 		return sqlSession.selectOne("memberMapper.emailCertify", email);
 	}
 
+	/** 회원번호 조회용 DAO
+	 * @param member
+	 * @return memberNo
+	 * @throws Exception
+	 */
+	public int selectMemberNo(Member member) throws Exception{
+		return sqlSession.selectOne("memberMapper.selectMemberNo", member);
+	}
+
 
 }

@@ -1,7 +1,7 @@
 // 각 유효성 검사 결과를 저장할 객체
 var signUpCheck = {
 	"email" : false,
-	"emailCheck" : false,
+	"certifyCode" : false,
 	"pwd1" : false,
 	"pwd2" : false,
 	"nickname" : false,
@@ -19,24 +19,6 @@ $(document).ready(
 			var $pwd1 = $("#pwd1");
 			var $pwd2 = $("#pwd2");
 			var $nickname = $("#nickname");
-
-//			// 아이디 유효성 검사
-//			$email.on("input", function() {
-//				// 첫글자는 영어 소문자, 나머지 글자는 영어 대,소문자 + 숫자, 총 6~12글자
-//				var regExp = /^[\w]{4,}@[\w]+(\.[\w]+){1,3}$/;
-//				if (!regExp.test($email.val())) {
-//					$("#checkEmail").text("이메일 형식이 유효하지 않습니다.").css({
-//						"color" : "red"
-//					});
-//					signUpCheck.email = false;
-//				} else {
-//					signUpCheck.email = true;
-//					$("#checkEmail").text("사용 가능한 아이디 입니다.").css({
-//						"color" : "green"
-//					});
-//					signUpCheck.emailDup = true;
-//				}
-//			});
 
 			// 비밀번호 유효성 검사
 			$pwd1.on("input", function() {
@@ -67,7 +49,7 @@ $(document).ready(
 
 			// 이름 유효성 검사
 			$nickname.on("input", function() {
-				var regExp = /^[가-힣a-z0-9]{4,12}$/; // 한글,영문,숫자 4~12글자
+				var regExp = /^[가-힣a-zA-Z0-9]{4,12}$/; // 한글,영문,숫자 4~12글자
 
 				if (!regExp.test($(this).val())) { // 이름이 정규식을 만족하지 않을경우
 					$("#checkNick").text("한글,영문,숫자 4~12글자 입력").css("color",
@@ -81,15 +63,15 @@ $(document).ready(
 			
 			// 이메일 확인 및 전송
 			$("#email-authentication-btn").on("click", function(){
+				signUpCheck.email = false;
+				
 		    	if($(this).text() == "취소"){
 		    		$email.prop("readonly", false).val("").focus();
-					$("#email-certify").text("메일 인증").removeClass("del-btn")
-					.addClass("main-btn");
+					$("#email-authentication-btn").text("메일 인증").removeClass("del-btn")
+						.addClass("main-btn");
 					
 					$("#checkEmail").html("이메일을 다시 입력해주세요.")
-					.css("color", "red");
-					
-					signUpCheck.emailCheck = false;
+						.css("color", "red");
 		    		
 		    	}else{
 		    		var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
@@ -115,9 +97,10 @@ $(document).ready(
 		    						.css("color", "green");
 		    						
 		    						$email.prop("readonly", true);
-		    						$("#email-certify").text("Reset").removeClass("del-btn")
-		    						.addClass("main-btn");
+		    						$("#email-authentication-btn").text("취소").removeClass("main-btn")
+		    						.addClass("del-btn");
 		    						
+		    						signUpCheck.email = true;
 		    						certifyCode = result;
 		    					}
 		    				},
@@ -134,11 +117,17 @@ $(document).ready(
 // submit 동작
 function validate() {
 
-	// 아이디 중복 검사 결과
-	// if( $("#idDup").val() == "true") signUpCheck.idDup = true;
-	// else signUpCheck.idDup = false;
+	// 인증번호 검사
+	if($("#certifyCode").val() != certifyCode){
+		alert("인증번호가 일치하지않습니다.");
+		$("#certifyCode").focus();
+		signUpCheck.certifyCode = false;
+		return false;
+	}else{
+		signUpCheck.certifyCode = true;
+	}
 
-	for ( var key in signUpCheck) {
+	for (var key in signUpCheck) {
 		if (!signUpCheck[key]) {
 			alert("일부 입력값이 잘못되었습니다.");
 			console.log(key);
@@ -179,7 +168,6 @@ function DefaultImg() {
 }
 
 $(function() {
-	console.log("start : " + $("#ot-input-profileImg").val);
 	$('#btn-upload').click(function(e) {
 
 		e.preventDefault();

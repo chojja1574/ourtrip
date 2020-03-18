@@ -8,8 +8,8 @@
 	<!-- 스프링 보안과 관련된 설정을 추가하는 파일 -->
 	
 	<!-- bcrypt 암호화 관련 bean 등록 -->
-	<!-- <bean id="bcryptPasswordEncoder"
-		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/> -->
+	<bean id="bcryptPasswordEncoder"
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 		
 	<!-- 해당 xml파일을 읽을 수 있도록
 		web.xml에서 contextConfigLocation에 해당 xml 경로 추가

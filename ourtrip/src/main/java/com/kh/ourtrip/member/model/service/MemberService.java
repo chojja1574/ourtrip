@@ -26,4 +26,11 @@ public interface MemberService {
 	 */
 	public abstract int emailCertify(String email) throws Exception;
 
+	/** 회원가입용 Service
+	 * @param member
+	 * @return memberNo
+	 * @throws Exception
+	 */
+	public abstract int signUp(Member member) throws Exception;
+
 }

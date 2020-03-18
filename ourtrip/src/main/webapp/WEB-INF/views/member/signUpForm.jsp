@@ -63,7 +63,7 @@
 		<div class="container py-3" id="signUp-container">
 			<h1 style="text-align: center;">회원가입</h1>
 			<hr>
-			<form action="#" method="POST" onsubmit="return false;">
+			<form action="signUp" method="POST" onsubmit="return validate();">
 				<h4 class="mt-5">회원 정보 입력(필수사항)</h4>
 				<div class="row mt-5">
 					<div class="col-md-3">
@@ -99,7 +99,7 @@
 						<label for="pwd2">비밀번호 확인</label>
 					</div>
 					<div class="col-md-6">
-						<input type="password" class="form-control" name="pwd2" id="pwd2" placeholder="password check">
+						<input type="password" class="form-control" id="pwd2" placeholder="password check">
 						<span id="checkPwd2"></span>
 					</div>
 				</div>
@@ -123,7 +123,7 @@
 					<div class="mx-auto">
 						<button type="button" id="btn-upload"
 						class="btn main-btn">사진 등록</button>
-						<input type="file" id="ot-input-profileImg" name="profileImg"
+						<input type="file" id="ot-input-profileImg" name="profileImage"
 							onchange="LoadImg(this,1)" accept="image/png, image/jpeg" alt=""
 							src="profile.png">
 						<button class="btn gray-btn" onclick="DefaultImg();">등록 취소</button>
@@ -135,7 +135,7 @@
 						<a href="#" class="btn btn-lg gray-btn btn-block">비밀번호 찾기</a>
 					</div>
 					<div class="col-md-6">
-						<button class="btn btn-lg main-btn btn-block" onclick="validate();">회원 가입</button>
+						<button class="btn btn-lg main-btn btn-block">회원 가입</button>
 					</div>
 				</div>
 			</form>

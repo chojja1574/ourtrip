@@ -5,7 +5,9 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.ourtrip.member.model.dao.MemberDAO;
 import com.kh.ourtrip.member.model.vo.Member;
@@ -18,8 +20,8 @@ public class MemberServiceImpl implements MemberService{
 	private MemberDAO memberDAO;
 	
 	// 암호화를 위한 객체 DI(의존성 주입)
-//	@Autowired
-//	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	// 메일 전송을 위한 객체 DI
 	@Autowired
@@ -34,6 +36,12 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public Member login(Member member) throws Exception {
 		Member loginMember = memberDAO.login(member);
+		
+		if(loginMember != null &&
+			!bCryptPasswordEncoder.matches(member.getMemberPwd(), loginMember.getMemberPwd())) {
+			
+			loginMember = null;
+		}
 		
 		return loginMember;
 	}
@@ -79,7 +87,7 @@ public class MemberServiceImpl implements MemberService{
 
 			messageHelper.setFrom(setfrom); // 보내는사람 생략하거나 하면 정상작동을 안함
 			messageHelper.setTo(email); // 받는사람 이메일
-			messageHelper.setSubject("메일전송 test"); // 메일제목은 생략이 가능하다
+			messageHelper.setSubject("OurTrip 인증번호"); // 메일제목은 생략이 가능하다
 			messageHelper.setText(Integer.toString(result)); // 메일 내용
 
 			mailSender.send(message);
@@ -87,6 +95,26 @@ public class MemberServiceImpl implements MemberService{
 
 		return result;
 	}
+
+	/** 회원가입용 Service
+	 * @param member
+	 * @return memberNo
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int signUp(Member member) throws Exception {
+		member.setMemberPwd(bCryptPasswordEncoder.encode(member.getMemberPwd()));
+		
+		int result = memberDAO.signUp(member);
+		
+		if(result > 0) {
+			result = memberDAO.selectMemberNo(member);
+		}
+		
+		return result;
+	}
+	
 	
 	
 

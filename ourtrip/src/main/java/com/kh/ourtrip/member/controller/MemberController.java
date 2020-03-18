@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.ourtrip.member.model.service.MemberService;
 import com.kh.ourtrip.member.model.vo.Member;
@@ -100,5 +103,34 @@ public class MemberController {
 		
 		return Integer.toString(result);
 		
+	}
+	
+	@RequestMapping("signUp")
+	public String signUp(Member member, Model model, RedirectAttributes rdAttr,
+			@RequestParam(value = "profileImage", required = false) MultipartFile profileImagge) {
+		member.setSignUpRoute("1");
+		
+		try {
+			int result = memberService.signUp(member);
+			
+			String msg = null;
+			String path = null;
+			if(result > 0) {
+				msg = "회원가입 되었습니다.";
+				path = "/member/loginForm";
+			}else {
+				msg = "회원가입에 실패하였습니다.";
+				path = "/member/signUpForm";
+			}
+			
+			rdAttr.addFlashAttribute("msg", msg);
+			
+			return "redirect:" + path;
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMsg", "회원가입 과정 중 오류 발생");
+			return "common/errorPage";
+		}
 	}
 }
