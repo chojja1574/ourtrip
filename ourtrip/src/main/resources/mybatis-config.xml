@@ -12,7 +12,16 @@
 	<typeAliases>
 		<typeAlias type="com.kh.ourtrip.member.model.vo.Member" alias="Member"/>
 		<typeAlias type="com.kh.ourtrip.member.model.vo.ProfileImage" alias="ProfileImage"/>
+
 		<typeAlias type="com.kh.ourtrip.admin.model.vo.VisitLog" alias="VisitLog"/>
+		<typeAlias type="com.kh.ourtrip.common.visitLog.model.vo.VisitCount" alias="VisitCount"/>
+		
+		<!-- 박지현 -->
+		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerView" alias="PlannerView"/>
+		<typeAlias type="com.kh.ourtrip.planner.model.vo.Planner1" alias="Planner1"/>
+		<typeAlias type="com.kh.ourtrip.planner.model.vo.Day" alias="Day"/>
+		<typeAlias type="com.kh.ourtrip.planner.model.vo.Schedule" alias="Schedule"/>
+
 	</typeAliases>
 	
 	<!-- mapper 파일 등록 부분 -->

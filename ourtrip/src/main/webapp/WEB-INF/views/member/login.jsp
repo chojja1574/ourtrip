@@ -4,6 +4,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+
+<meta charset="UTF-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -25,26 +27,9 @@
 	width: 100%;
 	height: 80%;
 	position: relative;
-	z-index:1;
-}
-
-#form-wrapper:after{
-	background-image: url(../resources/images/login-background.jpg);
-	background-repeat: no-repeat;
-	background-size: cover;
-	opacity: 0.6!important;
-	top:0;
-	left:0;
-	position:absolute;
-	z-index:-1;
-	content:'';
-	width:100%;
-	height:100%;
 }
 
 .form-login {
-  background-color: rgba(255,255,255,0.6);
-  border-radius: 10px;
   width: 100%;
   max-width: 330px;
   padding: 15px;
@@ -52,7 +37,7 @@
   left: 50%;
   top: 50%;
   margin-left: -165px;
-  margin-top: -200px;
+  margin-top: -250px;
 }
 
 .form-login .checkbox {
@@ -101,10 +86,6 @@
 .display-none{
     display:none;
 }
-
-#find-pwd{
-	color: black;
-}
 </style>
 
 </head>
@@ -114,25 +95,99 @@
 	
 	<div id="form-wrapper">
 		<form class="form-login" action="login" method="POST">
-			<h3 class="mb-3 font-weight-normal" style="text-align: center;">Login</h1>
+			<h1 class="h3 mb-3 font-weight-normal" style="text-align: center;">Login</h1>
 			<label for="email">이메일</label>
 			<input class="form-control mb-2" type="email" name="memberEmail" id="email"
-				placeholder="ourtrip@example.com" required autofocus>
+				placeholder="이메일을 입력해주세요" required autofocus>
 			<label for="email">비밀번호</label>
 			<input class="form-control mb-2" type="password" name="memberPwd" id="pwd"
-				placeholder="password" required autofocus>
+				placeholder="비밀번호를 입력해주세요" required autofocus>
 			<div class="checkbox mb-3">
 				<label>
-					<input type="checkbox" value="saveId">&nbsp;아이디 저장
-					
+				<input  class="form-control" type="checkbox" value="saveId">
+					아이디 저장
 				</label>
 			</div>
 			<button class="btn btn-lg main-btn btn-block" onclick="return validate();">로그인</button>
 			<a id="custom-login-btn" class="btn btn-lg kakao-btn btn-block" href="javascript:loginWithKakao()">카카오 계정으로 로그인</a>
-			<a href="#" id="find-pwd">비밀번호 찾기</a>
 		</form>
 	</div>
 
+	<!-- <div class="container-fluid my-3">
+		<div class="row">
+			<div class="col-md-12 ot-inputTextSetting">
+				<div class="row">
+					<div class="col-md-4"></div>
+					<div class="col-md-4" style="margin-top: 40px;">
+						<div class="row mb-5">
+							<h1 style="text-align: center; width: 100%;">로그인</h1>
+						</div>
+						<hr>
+						<form action="#" method="POST">
+							<div class="row mt-5 mb-4">
+								<div class="col-md-4">이메일</div>
+								<div class="col-md-8">
+									<input type="text" name="email" id="email" style="width: 100%;">
+								</div>
+							</div>
+							<div class="row mt-4 mb-5">
+								<div class="col-md-4">비밀번호</div>
+								<div class="col-md-8">
+									<input type="password" name="pwd" id="pwd" style="width: 100%;">
+								</div>
+							</div>
+							<div class="row">
+								<input type="checkbox" name="save" id="save" checked> <label
+									for="save" style="line-height: 10px;">&nbsp;&nbsp;아이디
+									저장</label>
+							</div>
+							<hr>
+							<div class="row mt-5" style="height: 40px">
+								<div class="col-md-12" style="text-align: center;">
+									<button class="ot-btn1" onclick="return validate();">로그인</button>
+								</div>
+							</div>
+						</form>
+						<div class="row mt-3" style="height: 40px">
+							<div class="col-md-12" style="text-align: center;"
+								id="google-btn-div">
+								<div class="g-signin2" data-onsuccess="onSignIn" data-width="100" data-height="40" data-longtitle="true"></div>
+								<div id="gSignInWrapper">
+									<span class="label"></span>
+									<div id="customBtn" class="customGPlusSignIn">
+										<span class="icon"></span> <span class="buttonText">구글
+											로그인</span>
+									</div>
+								</div>
+								<script>startApp();</script>
+							</div>
+						</div>
+						<div class="row mt-3" style="height: 40px">
+							<div class="col-md-12" style="text-align: center;">
+								<a id="custom-login-btn" class="ot-btn-kakao"
+									href="javascript:loginWithKakao()"> <img
+									src="KakaoLogo.PNG">&nbsp;카카오 로그인
+								</a>
+							</div>
+						</div>
+						<div class="row mt-3" style="height: 40px">
+							<div class="col-md-6" style="text-align: center;">
+								<button type="button" class="ot-btn2" onclick="changePwd();">비밀번호
+									찾기</button>
+							</div>
+							<div class="col-md-6" style="text-align: center;">
+								<button type="button" class="ot-btn2" onclick="signUpForm();">회원
+									가입</button>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div id="my-signin2"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> -->
 	<div class="wrap-loading display-none" id="loading">
         <div><img src="${contextPath}/resources/images/loadingBar.gif"/></div>
     </div>
@@ -160,7 +215,6 @@
         var nickname;
         var profile_url;
         var email;
-        var id;
 	    
 	    function loginWithKakao() {
 	        // 로그인 창을 띄웁니다.
@@ -175,20 +229,22 @@
 	                        nickname = res.kakao_account.profile.nickname;
 	                        profile_url = res.kakao_account.profile.profile_image_url;
 	                        email = res.kakao_account.email;
-	                        id = res.id;
+	                        
+	                        console.log("nickname : " + nickname);
+	                        console.log("profile_url : " + profile_url);
+	                        console.log("email : " + email);
 	                        
 	                        $.ajax({
 	                        	url : "kakaoLogin",
 	                        	type : "POST",
 	                        	data : {memberEmail : email,
-	                        			memberPwd : id,
 	                        			memberNickName : nickname,
 	                        			imagePath : profile_url},
 	                        	beforeSend : function(){
 	                        		$("#loading").removeClass("display-none");
 	                        	},
 	                        	success : function(result){
- 	                        		if(result == "success"){
+	                        		if(result == "success"){
 	                        			location.href = "${contextPath}";
 	                        		}else{
 	                        			location.href = "loginForm";
@@ -231,11 +287,17 @@
 	    })
 	
 	    function validate(){
+	        console.log(idCheck + "&&" + pwdCheck)
 	        if(!(idCheck&&pwdCheck)){
 	            alert("일부 입력값이 잘못되었습니다.");
 	            return false;
 	        }
 	    }
+	    
+	    // 회원가입 페이지로 이동
+	    function signUpForm(){ location.href="signUpForm.html"; }
+	    // 비밀번호 찾기 페이지로 이동
+	    function changePwd(){ location.href="changePwd.html"; }
 	
 	</script>
 </body>

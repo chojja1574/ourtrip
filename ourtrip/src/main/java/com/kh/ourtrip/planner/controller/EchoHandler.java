@@ -1,4 +1,4 @@
-package com.kh.ourtrip.websocket.controller;
+package com.kh.ourtrip.planner.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import com.kh.ourtrip.websocket.model.vo.UserInfo;
+import com.kh.ourtrip.planner.model.vo.UserInfo;
 
 public class EchoHandler extends TextWebSocketHandler {
 	private static Logger logger = LoggerFactory.getLogger(EchoHandler.class);

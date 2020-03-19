@@ -122,10 +122,8 @@
 			case 'green' :
 				chageback("green");
 				break;
-				
 			}
 		}
-		
 	}
 	
 	// 서버와 연결을 끊었을 때
