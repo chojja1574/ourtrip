@@ -1,0 +1,431 @@
+.divContent::-webkit-scrollbar {
+    width: 5px;
+    background-color: none;
+}
+.divContent::-webkit-scrollbar-thumb {
+    width: 5px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.15);
+}
+.divContent::-webkit-scrollbar-track {
+    width: 5px;
+    background-color: none;
+}
+.inputScheduleMemo::-webkit-scrollbar {
+    width: 5px;
+    background-color: none;
+}
+.inputScheduleMemo::-webkit-scrollbar-thumb {
+    width: 5px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.15);
+}
+.inputScheduleMemo::-webkit-scrollbar-track {
+    width: 5px;
+    background-color: none;
+}
+.chatarea::-webkit-scrollbar {
+    width: 5px;
+    background-color: none;
+}
+.chatarea::-webkit-scrollbar-thumb {
+    width: 5px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.15);
+}
+.chatarea::-webkit-scrollbar-track {
+    width: 5px;
+    background-color: none;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-clear-button,
+input[type=date]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
+}
+input[type="time"]::-webkit-clear-button {
+    display: none;
+}
+input[type="time"]::-webkit-outer-spin-button,
+input[type="time"]::-webkit-inner-spin-button {
+    -webkit-appearance:inherit;
+    margin: 0;
+}
+
+.tripinfo {
+    width: 200px;
+}
+
+#plandays {
+    height: 90%;
+    position: relative;
+    float: left;
+    margin-top: 20px;
+    overflow: auto;
+}
+
+.daystyle {
+    border-radius: 3px;
+    border: 2px solid #18a8f1;
+    background-color: #18a8f1;
+    width: 90%;
+    height: 45px;
+    clear: both;
+    margin: 5px;
+    color: black;
+    cursor: pointer;
+}
+.daystyleHighlight{
+    border-radius: 3px;
+    border: 2px solid #18a8f1;
+    width: 90%;
+    height: 70px;
+    clear: both;
+    margin: 4px;
+    color: black;
+}
+
+.addbtn {
+    width: 97%;
+    left: 20px;
+    bottom: 30px;
+}
+
+#inputplanner {
+    height: 90%;
+    position: relative;
+    float: left;
+    margin-top: 20px;
+    overflow: auto;
+}
+
+.maplace {
+    width: 100%;
+    height: 300px;
+    position: relative;
+
+}
+
+input {
+    border: 1px;
+}
+
+.content-size{
+    height: 950px;
+} 
+
+#chatpart {
+    height : 90%;
+    position: relative;
+    float: left;
+    margin-top: 20px;
+}
+
+#complaner {
+    height: 90%;
+    position: relative;
+    float: left;
+    margin-top: 20px;
+}
+
+.inputchat {
+    border-top: 1px solid skyblue;
+    width: 100%;
+    height: 20%;
+}
+
+textarea {
+    border: 0px;
+}
+
+
+.p-cont {
+    text-align: left;
+    display: block;
+}
+
+body {
+    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 24px;
+}
+
+.message{
+    margin-right:20px;
+    padding-right: 10px;
+    margin-left:20px;
+    padding-left: 10px;
+    max-width: 70%;
+    float: left;
+    background: #ffffff;
+    border-radius: 4px;
+}
+.myMessage{
+    margin-right:20px;
+    padding-right: 10px;
+    margin-left:20px;
+    padding-left: 10px;
+    max-width: 70%;
+    float: right;
+    background: #ffeb33;
+    border-radius: 4px;
+}
+.messageTime{
+    font-size: medium;
+    vertical-align: bottom;
+    float: left;
+    
+}
+.myMessageTime{
+    font-size: medium;
+    vertical-align: bottom;
+    float:right;
+}
+.chatbox{
+    width:100%;
+    margin-top: 30px;
+}
+.myChatbox{
+    width:100%;
+    margin-top: 30px;
+    text-align: right;
+}
+.overhidden{
+    overflow: hidden;
+}
+.profileImg{
+    border-radius: 50%;
+    height:40px;
+    width:40px;
+    vertical-align: top;
+}
+.inline{
+    display: inline-block;
+}
+.userId{
+    vertical-align: middle;
+    font-size: larger;
+    padding-left: 10px;
+}
+.inputMsg{
+    border: 1px solid #18A8F1;
+    border-radius:3px;
+    width: 100%; 
+    height: 100%;  
+    resize: none;
+}
+
+.sendBtn{
+    width:100%;
+    height:100%;
+}
+
+.hide{
+    display: none;
+}
+.updateBtn{
+    width:100%;
+    height:50px;
+    margin:auto;
+}
+.updateBtns{
+    width:90%;
+    position:absolute;
+    margin:auto;
+    bottom:0px;
+    left:0px;
+    right:0px;
+}
+.divBorder{
+    border:2px solid #18A8F1;
+    border-radius: 5px;
+    height: 100%;
+}
+.divContent{
+    overflow-y: scroll;
+    height: 73%;
+}
+.daleteinputBorder:focus{
+    outline:none;
+    pointer-events: none;
+}
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.disableInput:disabled{
+    background: white;
+    color:black;
+}
+.clear{
+    clear:both;
+}
+.chatBGC{
+    background: #b2c7d9;
+}
+.myMessageBGC{
+    background: #ffeb33;
+}
+.scheduleTime{
+   text-align: right; 
+   vertical-align: middle;
+}
+.toggleArrow{
+    padding-top : 10px;
+}
+.dayDeleteBtn{
+    float:right; 
+    height: 30px; 
+    width:30px;
+    line-height: 20px; 
+    margin: 4px 4px 0px 0px
+}
+.dayCount{
+    color:white;
+}
+.plannerHeader{
+    height:50px;
+    line-height: 50px;
+    border-radius: 5px;
+}
+.plannerHeader input{
+    height : 40px;
+    width: 100%;
+    border-radius: 3px;
+}
+.plannerHeader select{
+    height : 40px;
+    width: 100%;
+    border-radius: 3px;
+}
+.plannerHeader button{
+    line-height: 35px;
+    height : 40px;
+    width: 100%;
+    margin-top: 5px;
+    border-radius: 5px;
+    float: right;
+}
+.ModalBtnCss1{
+    width:80px;
+    border: solid 1px;
+    border-radius: 5px;
+    color: white;
+    background: #18a8f1;
+}
+.ModalBtnCss2{
+    width:80px;
+    border: solid 1px;
+    border-radius: 5px;
+    color: white;
+    background: gray;
+}
+.btnColor1{
+    background:#0894da; 
+    border:skyblue 2px solid;
+    border-bottom: #0180c0 2px solid;
+    border-right: #0180c0 2px solid;
+    border-radius: 5px;
+    color:white;
+}
+.btnColor1:active{
+    background:#0484c3; 
+    border:#0474ac 2px solid;
+    border-bottom: skyblue 2px solid;
+    border-right: skyblue 2px solid;
+    border-radius: 5px;
+    color:lightgray;
+}
+.btnColor2{
+    background:darkgray; 
+    border:lightgray 2px solid;
+    border-bottom: gray 2px solid;
+    border-right: gray 2px solid;
+    border-radius: 5px;
+    color:white;
+}
+.btnColor3{
+    background:#ff6756; 
+    border:#fa8a7e 2px solid;
+    border-bottom: #fb4d3a 2px solid;
+    border-right: #fb4d3a 2px solid;
+    border-radius: 5px;
+    color:white;
+}
+.btnColor3:active{
+    background:#e25747; 
+    border:#c83e2e 2px solid;
+    border-bottom: #fa8a7e 2px solid;
+    border-right: #fa8a7e 2px solid;
+    border-radius: 5px;
+    color:lightgray;
+}
+.plannerDivHeader{
+    height:90px; 
+    line-height: 60px;
+    text-align: center;
+}
+.chatarea{
+    width: 100%; 
+    height: 72%; 
+    overflow-y: scroll;
+}
+.dayHeader{
+    padding-left:0px;
+    padding-right:0px;
+    position:relative;
+}
+.dayHeader span{
+    width:120px;
+    position: absolute;
+    top:-5px;
+    left:40%;
+    transform: translate(-40%);
+}
+.plannerDay{
+    height: 30px;
+    width:80%; 
+    border: 1px solid #0474ac;
+    border-radius: 3px;
+    background: #0894da; 
+    vertical-align: middle; 
+    color: white;
+    position: relative;
+    top: 20px;
+    outline: none;
+}
+#scheduleList input{
+    background: white;
+}
+
+/* 지도 css */
+.title {
+    font-weight: bold;
+    display: block;
+}
+
+.bAddr {
+    padding: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    z-index: 5;
+}
+
+.sendBtn {
+	background : #f7e317;
+	color : #3c1e1e;
+	border : none;
+	border-radius : 3px;
+	font-weight:bold;
+}
