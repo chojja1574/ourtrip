@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="visitCounterMapper">
+	<resultMap type="VisitCount" id="visitCountResultSet">
+		<id column="visitNo" property="VISIT_NO"/>
+		<result column="visitDate" property="VISIT_DATE"/>
+		<result column="visitIp" property="VISIT_IP"/>
+	</resultMap>
+	
+	<insert id="insertVisitor" parameterType="VisitCount">
+		INSERT INTO MEMBER_VISIT_LOG 
+		VALUE(SEQ_VISIT_VNO, DEFAULT, #{visitIp}) 
+	</insert>
+</mapper>
