@@ -13,6 +13,11 @@ public class ProfileImage {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public ProfileImage(String imagePath) {
+		super();
+		this.imagePath = imagePath;
+	}
+
 	public ProfileImage(String imagePath, int memberNo) {
 		super();
 		this.imagePath = imagePath;

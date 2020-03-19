@@ -1,5 +1,7 @@
 package com.kh.ourtrip.member.model.service;
 
+import java.io.File;
+
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +10,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.ourtrip.common.FileRename;
 import com.kh.ourtrip.member.model.dao.MemberDAO;
 import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.member.model.vo.ProfileImage;
@@ -96,7 +100,7 @@ public class MemberServiceImpl implements MemberService{
 
 			mailSender.send(message);
 		}
-
+		
 		return result;
 	}
 
@@ -118,8 +122,138 @@ public class MemberServiceImpl implements MemberService{
 		
 		return result;
 	}
+
+	/** 회원 프로필 사진 등록용 Service
+	 * @param pi
+	 * @return result
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int insertProfileImage(ProfileImage pi) throws Exception {
+		return memberDAO.insertProfileImage(pi);
+	}
+
+	/** 회원 프로필 사진 조회용 Service
+	 * @param memberNo
+	 * @return profileImage
+	 * @throws Exception
+	 */
+	@Override
+	public ProfileImage selectProfileImage(int memberNo) throws Exception {
+		return memberDAO.selectProfileImage(memberNo);
+	}
+
+	/** 회원 닉네임 수정용 Service
+	 * @param member
+	 * @return result
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int updateNickName(Member member) throws Exception {
+		return memberDAO.updateNickName(member);
+	}
+
+	/** 회원 프로필 사진 삭제용 Service
+	 * @param memberNo
+	 * @return result
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int deleteProfileImage(int memberNo) throws Exception {
+		int result = 0;
+		ProfileImage pi = memberDAO.selectProfileImage(memberNo);
+		
+		// 회원의 프로필 사진이 존재하는 경우
+		if(pi != null) {
+			// 프로필 사진을 DB에서 삭제
+			result = memberDAO.deleteProfileImage(memberNo);
+			
+			// DB에서 삭제 성공한 경우
+			if(result > 0) {
+				
+			}
+		}
+		
+
+		// 삭제 성공시 서버에서도 해당 이미지 삭제
+		
+		return result;
+	}
+
+	/** 회원 프로필 사진 수정용 Service
+	 * @param memberNo
+	 * @param profileImage
+	 * @param savePath
+	 * @param isDefault
+	 * @return result
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int updateProfileImage(int memberNo, MultipartFile profileImage, String savePath, String isDefault) throws Exception {
+		int result = 0;
+		ProfileImage pi = memberDAO.selectProfileImage(memberNo);
+		
+		String changeFileName = null;
+		if(!profileImage.getOriginalFilename().equals("")) { // 이미지 변경시 rename
+			changeFileName = FileRename.rename(profileImage.getOriginalFilename());
+		}
+		
+		File deleteFile = null;
+		
+		// 회원의 기존 프로필 사진이 존재하는 경우
+		if(pi != null) {
+			
+			// 사진을 변경했는데 디폴트 이미지로 변경했을 경우
+			if(profileImage.getOriginalFilename().equals("") && isDefault.equals("true")) {
+				// DB에서 이미지 삭제
+				result = memberDAO.deleteProfileImage(memberNo);
+				
+				if(result > 0) { // 서버에서도 이미지 삭제
+					deleteFile = new File(pi.getImagePath());
+					deleteFile.delete();
+					
+				}else throw new Exception("이미지 삭제 중 오류 발생");
+				
+			// 사진을 변경한 경우
+			}else if(!profileImage.getOriginalFilename().equals("")) {
+				
+				// 서버에 존재하는 기존 이미지를 삭제하기 위해 저장
+				String originFilePath = pi.getImagePath();
+				
+				// DB에 update하기 위해 경로 값을 변경
+				pi.setImagePath(savePath + "/" + changeFileName);
+				
+				result = memberDAO.updateProfileImage(pi);
+				
+				// DB에서 수정 성공한 경우 서버에 새로운 이미지 저장
+				if(result > 0) profileImage.transferTo(new File(pi.getImagePath()));
+				else throw new Exception("이미지 수정 중 오류 발생");
+				
+				deleteFile = new File(originFilePath);
+				deleteFile.delete();
+			}
+			
+		// 회원의 기존 프로필 사진이 존재하지 않는 경우
+		}else {
+			
+			// 사진을 변경한 경우
+			if(!profileImage.getOriginalFilename().equals("")) {
+				pi = new ProfileImage(savePath + "/" + changeFileName, memberNo);
+				
+				result = memberDAO.insertProfileImage(pi);
+				
+				if(result > 0) profileImage.transferTo(new File(pi.getImagePath()));
+			}
+		}
+
+		return result;
+	}
 	
 	
-	
+
 
 }
