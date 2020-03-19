@@ -8,6 +8,6 @@ public interface AdminService {
 	 * @return visitCount
 	 * @throws Exception
 	 */
-	public abstract Map<String, Integer> getVisitCount() throws Exception;
+	public abstract Map<String, Object> getVisitCount() throws Exception;
 
 }

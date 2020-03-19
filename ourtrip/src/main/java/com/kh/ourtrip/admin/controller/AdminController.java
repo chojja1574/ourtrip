@@ -19,7 +19,7 @@ public class AdminController {
 	@RequestMapping("main")
 	public String adminMain() {
 		try {
-			Map<String, Integer> visitCounts = adminService.getVisitCount();
+			Map<String, Object> visitCounts = adminService.getVisitCount();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

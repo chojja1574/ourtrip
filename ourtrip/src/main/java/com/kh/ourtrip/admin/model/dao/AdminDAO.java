@@ -1,5 +1,6 @@
 package com.kh.ourtrip.admin.model.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -17,7 +18,7 @@ public class AdminDAO {
 	 * @return vList
 	 * @throws Exception
 	 */
-	public List<String> getVisitLog() throws Exception{
+	public List<Date> getVisitLog() throws Exception{
 		return sqlSession.selectList("adminMapper.getVisitLog");
 	}
 

@@ -37,7 +37,7 @@ public class VisitCounter implements HttpSessionListener {
 		//System.out.println("template : " + sqlSession);
 		try {
 			int result = visitCountDAO.insertVisitor(ip, sqlSession);
-			System.out.println(result);
+			//System.out.println(result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -7,7 +7,7 @@
 		<result property="visitIp" column="VISIT_IP"/>
 	</resultMap>
 	
-	<select id="getVisitLog" resultType="String">
+	<select id="getVisitLog" resultType="date">
 		SELECT VISIT_DATE FROM MEMBER_VISIT_LOG
 	</select>
 </mapper>
