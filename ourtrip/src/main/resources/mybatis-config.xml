@@ -12,12 +12,13 @@
 	<typeAliases>
 		<typeAlias type="com.kh.ourtrip.member.model.vo.Member" alias="Member"/>
 		<typeAlias type="com.kh.ourtrip.member.model.vo.ProfileImage" alias="ProfileImage"/>
-		<typeAlias type="com.kh.ourtrip.common.visitLog.model.vo.VisitCount" alias="VisitCount"/>
+		<typeAlias type="com.kh.ourtrip.admin.model.vo.VisitLog" alias="VisitLog"/>
 	</typeAliases>
 	
 	<!-- mapper 파일 등록 부분 -->
 	<mappers>
 		<mapper resource="/mapper/member-mapper.xml"/>
-		<mapper resource="/mapper/visitCount/visitCount.xml"/>
+		<mapper resource="/mapper/visitCount-mapper.xml"/>
+		<mapper resource="/mapper/admin-mapper.xml"/>
 	</mappers>
 </configuration>

@@ -32,6 +32,9 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
+	<!-- 초기 autowired를 통한 bean 등록 전에 사용하기 위해 bean 등록 -->
+	<bean id="visitCountDAO" class="com.kh.ourtrip.common.visitLog.model.DAO.VisitCountDAO"/>
+	
 	<!-- @Transactional 어노테이션이 붙은 메소드를 찾아 트랜잭션 처리를 할 수 있도록 트랜잭션 어드바이스를 자동으로 
 		적용하는 <tx:annotation-driven/> 추가 -->
 

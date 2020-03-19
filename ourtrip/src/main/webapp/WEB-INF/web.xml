@@ -17,11 +17,11 @@
 	
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 		<!-- 요청이 왔을때 동작 가능하게하기 -->
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
 		<!-- VisitCounter 리스너 등록 -->
 		<listener-class>com.kh.ourtrip.common.visitLog.VisitCounter</listener-class>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 
 	<!-- Processes application requests -->
