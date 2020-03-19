@@ -19,6 +19,7 @@
 	crossorigin="anonymous"></script>
 
 <link rel="stylesheet" href="resources/css/common.css">
+<link rel="stylesheet" href="resources/css/carousel.css">
 
 <title>ourtrip</title>
 
@@ -34,6 +35,11 @@ h5 {
 
 .carousel-caption {
 	margin-bottom: 30px;
+}
+
+.carousel-item {
+	background-repeat: no-repeat;
+	background-size: cover;
 }
 
 @media screen and (max-width: 767px) {
@@ -57,25 +63,22 @@ h5 {
 				<li data-slide-to="2" data-target="#carousel-628660"></li>
 			</ol>
 			<div class="carousel-inner">
-				<div class="carousel-item active">
-					<img class="d-block w-100 mainimg" alt="Carousel Bootstrap First"
-						src="http://img.earthtory.com/img/city_default/6/10034.jpg" />
+				<div class="carousel-item active"
+					style="background-image: url(resources/images/intro-image1.jpg);">
 					<div class="carousel-caption text-left">
 						<h1>Our Trip을 활용해 여행 계획을 같이 만들어보세요!</h1>
 						<p>Our Trip은 여러분의 여행 수정사항을 실시간으로 반영하여 즉각 배포해드립니다</p>
 					</div>
 				</div>
-				<div class="carousel-item">
-					<img class="d-block w-100 mainimg" alt="Carousel Bootstrap Second"
-						src="http://img.earthtory.com/img/city_images/243/singapore_1426840110.jpg" />
+				<div class="carousel-item"
+					style="background-image: url(resources/images/intro-image2.jpg);">
 					<div class="carousel-caption text-left">
 						<h1>Our Trip을 활용해 여행 계획을 같이 만들어보세요!</h1>
 						<p>Our Trip은 여러분의 여행 수정사항을 실시간으로 반영하여 즉각 배포해드립니다</p>
 					</div>
 				</div>
-				<div class="carousel-item">
-					<img class="d-block w-100 mainimg" alt="Carousel Bootstrap Third"
-						src="http://img.earthtory.com/img/city_images/309/london_1429516385.jpg" />
+				<div class="carousel-item"
+					style="background-image: url(resources/images/intro-image3.jpg);">
 					<div class="carousel-caption text-left">
 						<h1>Our Trip을 활용해 여행 계획을 같이 만들어보세요!</h1>
 						<p>Our Trip은 여러분의 여행 수정사항을 실시간으로 반영하여 즉각 배포해드립니다</p>
@@ -93,73 +96,175 @@ h5 {
 	</div>
 
 	<div class="container my-5 px-0">
-
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-7">
 				<div class="row">
-					<div class="col-md-4">
-						<div class="card">
-							<img class="card-img-top" alt="Bootstrap Thumbnail First"
-								src="https://www.layoutit.com/img/people-q-c-600-200-1.jpg" />
-							<div class="card-block">
-								<h5 class="card-title">Card title</h5>
-								<p class="card-text">Cras justo odio, dapibus ac facilisis
-									in, egestas eget quam. Donec id elit non mi porta gravida at
-									eget metus. Nullam id dolor id nibh ultricies vehicula ut id
-									elit.</p>
-								<p>
-									<a class="btn btn-primary" href="#">Action</a> <a class="btn"
-										href="#">Action</a>
-								</p>
+					<div id="demo" class="carousel slide" data-ride="carousel">
+						<div class="carousel-inner">
+							<div class="carousel-item active">
+								<div class="cardWrapper">
+									<div class="planner orn">
+										<a href="#"> <img class="card-img-top"
+											src="${contextPath}/resources/images/ourtrip_logo2.png"
+											alt="Card image">
+										</a>
+										<div class="card-body">
+											<h5 class="card-title">부천 맛집 투어</h5>
+											<p class="card-text">
+												<span>시작일 : 2020-02-01 7DAYS</span><br> <span>신혼여행</span><br>
+												<span>경기도 부천시...</span>
+											</p>
+											<div class="d-flex justify-content-between">
+												<div class="btn-wrapper">
+													<a type="button" href="#" class="btn btn-sm main-btn">바로가기</a>
+												</div>
+												<div>
+													<i class="fas fa-eye"></i>&nbsp;15
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="planner wen">
+										<a href="#"> <img class="card-img-top"
+											src="${contextPath}/resources/images/ourtrip_logo2.png"
+											alt="Card image">
+										</a>
+										<div class="card-body">
+											<h5 class="card-title">부천 맛집 투어</h5>
+											<p class="card-text">
+												<span>시작일 : 2020-02-01 7DAYS</span><br> <span>신혼여행</span><br>
+												<span>경기도 부천시...</span>
+											</p>
+											<div class="d-flex justify-content-between">
+												<div class="btn-wrapper">
+													<a type="button" href="#" class="btn btn-sm main-btn">바로가기</a>
+												</div>
+												<div>
+													<i class="fas fa-eye"></i>&nbsp;15
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="card">
-							<img class="card-img-top" alt="Bootstrap Thumbnail Second"
-								src="https://www.layoutit.com/img/city-q-c-600-200-1.jpg" />
-							<div class="card-block">
-								<h5 class="card-title">Card title</h5>
-								<p class="card-text">Cras justo odio, dapibus ac facilisis
-									in, egestas eget quam. Donec id elit non mi porta gravida at
-									eget metus. Nullam id dolor id nibh ultricies vehicula ut id
-									elit.</p>
-								<p>
-									<a class="btn btn-primary" href="#">Action</a> <a class="btn"
-										href="#">Action</a>
-								</p>
+							<div class="carousel-item">
+								<div class="planner orn">
+									<a href="#"> <img class="card-img-top"
+										src="${contextPath}/resources/images/ourtrip_logo2.png"
+										alt="Card image">
+									</a>
+									<div class="card-body">
+										<h5 class="card-title">부천 맛집 투어</h5>
+										<p class="card-text">
+											<span>시작일 : 2020-02-01 7DAYS</span><br> <span>신혼여행</span><br>
+											<span>경기도 부천시...</span>
+										</p>
+										<div class="d-flex justify-content-between">
+											<div class="btn-wrapper">
+												<a type="button" href="#" class="btn btn-sm main-btn">바로가기</a>
+											</div>
+											<div>
+												<i class="fas fa-eye"></i>&nbsp;15
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="planner wen">
+									<a href="#"> <img class="card-img-top"
+										src="${contextPath}/resources/images/ourtrip_logo2.png"
+										alt="Card image">
+									</a>
+									<div class="card-body">
+										<h5 class="card-title">부천 맛집 투어</h5>
+										<p class="card-text">
+											<span>시작일 : 2020-02-01 7DAYS</span><br> <span>신혼여행</span><br>
+											<span>경기도 부천시...</span>
+										</p>
+										<div class="d-flex justify-content-between">
+											<div class="btn-wrapper">
+												<a type="button" href="#" class="btn btn-sm main-btn">바로가기</a>
+											</div>
+											<div>
+												<i class="fas fa-eye"></i>&nbsp;15
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="card">
-							<img class="card-img-top" alt="Bootstrap Thumbnail Third"
-								src="https://www.layoutit.com/img/sports-q-c-600-200-1.jpg" />
-							<div class="card-block">
-								<h5 class="card-title">Card title</h5>
-								<p class="card-text">Cras justo odio, dapibus ac facilisis
-									in, egestas eget quam. Donec id elit non mi porta gravida at
-									eget metus. Nullam id dolor id nibh ultricies vehicula ut id
-									elit.</p>
-								<p>
-									<a class="btn btn-primary" href="#">Action</a> <a class="btn"
-										href="#">Action</a>
-								</p>
+							<div class="carousel-item">
+								<div class="planner orn">
+									<a href="#"> <img class="card-img-top"
+										src="${contextPath}/resources/images/ourtrip_logo2.png"
+										alt="Card image">
+									</a>
+									<div class="card-body">
+										<h5 class="card-title">부천 맛집 투어</h5>
+										<p class="card-text">
+											<span>시작일 : 2020-02-01 7DAYS</span><br> <span>신혼여행</span><br>
+											<span>경기도 부천시...</span>
+										</p>
+										<div class="d-flex justify-content-between">
+											<div class="btn-wrapper">
+												<a type="button" href="#" class="btn btn-sm main-btn">바로가기</a>
+											</div>
+											<div>
+												<i class="fas fa-eye"></i>&nbsp;15
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="planner wen">
+									<a href="#"> <img class="card-img-top"
+										src="${contextPath}/resources/images/ourtrip_logo2.png"
+										alt="Card image">
+									</a>
+									<div class="card-body">
+										<h5 class="card-title">부천 맛집 투어</h5>
+										<p class="card-text">
+											<span>시작일 : 2020-02-01 7DAYS</span><br> <span>신혼여행</span><br>
+											<span>경기도 부천시...</span>
+										</p>
+										<div class="d-flex justify-content-between">
+											<div class="btn-wrapper">
+												<a type="button" href="#" class="btn btn-sm main-btn">바로가기</a>
+											</div>
+											<div>
+												<i class="fas fa-eye"></i>&nbsp;15
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
+
+							<a class="carousel-control-prev" href="#demo" data-slide="prev">
+								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+								<span>Previous</span> -->
+							</a> <a class="carousel-control-next" href="#demo" data-slide="next">
+								<span class="carousel-control-next-icon" aria-hidden="true"></span>
+								<span>Next</span> -->
+							</a>
+
+							<ul class="carousel-indicators">
+								<li data-target="#demo" data-slide-to="0" class="active"></li>
+								<li data-target="#demo" data-slide-to="1"></li>
+								<li data-target="#demo" data-slide-to="2"></li>
+							</ul>
 						</div>
+
 					</div>
 				</div>
 			</div>
-			<div class="col-md-6">
-				<h2>Heading</h2>
-				<p>Donec id elit non mi porta gravida at eget metus. Fusce
-					dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh,
-					ut fermentum massa justo sit amet risus. Etiam porta sem malesuada
-					magna mollis euismod. Donec sed odio dui.</p>
+			<div class="col-md-5">
+				<h2>플레너 생성하기</h2>
+				<p>플래너가 처음이신가요? <br>
+				ourTrip 플래너는 여러분의 여행을 보다 즐겁게 만들어드립니다.<br>
+				지금 바로 여러분의 여행파트너와 플래너를 작성해 보세요 <br>
+				단 몇분이면 여러분만의 여행플래너가 완성됩니다.</p>
 				<p>
-					<a class="btn" href="#">View details »</a>
+					<a class="btn" href="#">자세히 보기.. »</a>
 				</p>
-				<a href="#" class="btn btn-lg btn-primary" type="button">Button</a>
+				<a href="#" class="btn btn-lg btn-primary" type="button">플래너
+					생성하기</a>
 			</div>
 		</div>
 	</div>

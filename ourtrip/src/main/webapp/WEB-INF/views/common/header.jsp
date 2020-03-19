@@ -17,13 +17,13 @@
 <div class="container-fluid px-0" style="background-color: white;">
     <div class="container my-0 px-0">
         <div class="d-flex">
-            <a href="main.html">
+            <a href="${contextPath}">
                 <img class="logo" id="mainlogo" src="${contextPath}/resources/images/ourtrip_logo2.png" alt="이미지"
                     style="width: 220px; height: auto;">
             </a>
             <div class="btn-wrapper ml-auto mt-3">
             	<c:if test="${!empty loginMember}">
-            		<a href="${contextPath}/member/myPage" class="btn main-btn-rev" type="button">마이페이지</a>
+            		<a href="${contextPath}/member/myPage" class="btn main-btn-rev" type="button">${loginMember.memberNickName}</a>
             		<a href="${contextPath}/member/logout" class="btn btn-outline-danger" type="button">로그아웃</a>
             	</c:if>
             	<c:if test="${empty loginMember}">

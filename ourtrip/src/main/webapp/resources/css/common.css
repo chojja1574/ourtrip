@@ -99,3 +99,22 @@ label {
 .planner-wrapper {
     padding: 0;
 }
+.carousel-caption{
+    margin-bottom: 30px;   
+}
+.planner {
+    font-family: 'Stylish';
+    padding: 10px;
+    width: 40%;
+    float: left;
+    height: 400px;
+    
+}
+.orn{
+    margin-left: 55px;
+    margin-right: 10px;
+}
+.wen{
+    margin-right: 55px;
+    margin-left: 10px;
+}

@@ -9,7 +9,7 @@
 		<result property="memberPwd" column="MEMBER_PWD" />
 		<result property="memberNickName" column="MEMBER_NICK_NAME" />
 		<result property="memberEnrollDt" column="MEMBER_ENROLLDATE" />
-		<result property="memberStatus" column="MEMBER_STATUS" />
+		<result property="memberStatus" column="MEMBER_DELETE_YN" />
 		<result property="memberGrade" column="MEMBER_GRADE" />
 		<result property="signUpRoute" column="SIGNUP_ROUTE"/>
 	</resultMap>
@@ -19,7 +19,7 @@
 
 		<result property="imagePath" column="IMAGE_PATH" />
 		<result property="imageUploadDate" column="IMAGE_UPLOAD_DT" />
-		<result property="imageStatus" column="IMAGE_STATUS" />
+		<result property="imageStatus" column="IMAGE_DELETE_YN" />
 		<result property="memberNo" column="MEMBER_NO" />
 	</resultMap>
 
@@ -28,8 +28,7 @@
 		resultMap="memberResultSet">
 		SELECT * FROM MEMBER
 		WHERE MEMBER_EMAIL= #{memberEmail}
-		AND MEMBER_PWD= #{memberPwd}
-		AND	MEMBER_STATUS= 'Y'
+		AND	MEMBER_DELETE_YN= 'N'
 		AND SIGNUP_ROUTE= '1'
 	</select>
 	
@@ -38,7 +37,7 @@
 		resultMap="memberResultSet">
 		SELECT * FROM MEMBER
 		WHERE MEMBER_EMAIL= #{memberEmail}
-		AND	MEMBER_STATUS= 'Y'
+		AND	MEMBER_DELETE_YN= 'N'
 		AND SIGNUP_ROUTE= #{signUpRoute}
 	</select>
 	
@@ -46,7 +45,7 @@
 	<select id="isMember" parameterType="Member" resultType="_int">
 		SELECT COUNT(*) FROM MEMBER
 		WHERE MEMBER_EMAIL= #{memberEmail}
-		AND MEMBER_STATUS= 'Y'
+		AND MEMBER_DELETE_YN= 'N'
 		AND SIGNUP_ROUTE= #{signUpRoute}
 	</select>
 	
@@ -62,4 +61,18 @@
 		INSERT INTO PROFILE_IMAGE VALUES
 		(SEQ_PROFILE_I_INO.NEXTVAL, #{imagePath}, SYSDATE, DEFAULT, #{memberNo})
 	</insert>
+	
+	<!-- 이메일 중복확인 -->
+	<select id="emailCertify" parameterType="string" resultType="_int">
+		SELECT COUNT(*) FROM MEMBER
+		WHERE MEMBER_EMAIL= #{email}
+		AND MEMBER_DELETE_YN= 'N'
+	</select>
+	
+	<!-- 회원번호 조회 -->
+	<select id="selectMemberNo" parameterType="Member" resultType="_int">
+		SELECT MEMBER_NO FROM MEMBER
+		WHERE MEMBER_EMAIL= #{memberEmail}
+		AND SIGNUP_ROUTE= #{signUpRoute}
+	</select>
 </mapper>
