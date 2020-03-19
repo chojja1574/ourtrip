@@ -64,6 +64,7 @@ public class MemberController {
 	public String kakaoLogin(Member member, String imagePath,
 							Model model) { 
 		member.setSignUpRoute("2");
+		System.out.println(member.getMemberPwd());
 		
 		String result = "fail";
 		
@@ -107,11 +108,19 @@ public class MemberController {
 	
 	@RequestMapping("signUp")
 	public String signUp(Member member, Model model, RedirectAttributes rdAttr,
-			@RequestParam(value = "profileImage", required = false) MultipartFile profileImagge) {
+			@RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
 		member.setSignUpRoute("1");
+		
+		if(profileImage != null) {
+			System.out.println("controller : " + profileImage.getOriginalFilename());
+		}
 		
 		try {
 			int result = memberService.signUp(member);
+			
+			if(result > 0) {
+				
+			}
 			
 			String msg = null;
 			String path = null;

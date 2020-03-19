@@ -60,7 +60,11 @@ public class MemberServiceImpl implements MemberService{
 		// 2) 안되있을 시 회원가입
 		if(result == 0) {
 			result = memberDAO.signUp(member);
-			result = memberDAO.insertProfileImage(new ProfileImage(imagePath, member.getMemberNo()));
+			
+			if(result > 0) {
+				result = memberDAO.selectMemberNo(member);
+				result = memberDAO.insertProfileImage(new ProfileImage(imagePath, result));
+			}
 		}
 		
 		// 3) 회원 객체 반환

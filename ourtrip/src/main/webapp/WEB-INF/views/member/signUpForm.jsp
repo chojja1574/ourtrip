@@ -63,7 +63,7 @@
 		<div class="container py-3" id="signUp-container">
 			<h1 style="text-align: center;">회원가입</h1>
 			<hr>
-			<form action="signUp" method="POST" onsubmit="return validate();">
+			<form action="signUp" method="POST" enctype="multipart/form-data" role="form" onsubmit="return validate();">
 				<h4 class="mt-5">회원 정보 입력(필수사항)</h4>
 				<div class="row mt-5">
 					<div class="col-md-3">
@@ -124,9 +124,8 @@
 						<button type="button" id="btn-upload"
 						class="btn main-btn">사진 등록</button>
 						<input type="file" id="ot-input-profileImg" name="profileImage"
-							onchange="LoadImg(this,1)" accept="image/png, image/jpeg" alt=""
-							src="profile.png">
-						<button class="btn gray-btn" onclick="DefaultImg();">등록 취소</button>
+							onchange="LoadImg(this,1)" accept="image/png, image/jpeg">
+						<button type="button" class="btn gray-btn" onclick="DefaultImg();">등록 취소</button>
 					</div>
 				</div>
 				<hr>

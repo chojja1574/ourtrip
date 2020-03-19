@@ -139,7 +139,6 @@ function validate() {
 }
 
 // 각각의 영역에 파일을 첨부 했을 경우 미리 보기가 가능하도록 하는 함수
-
 function LoadImg(value, num) {
 	// multiple 속성을 사용하면 사진이 배열의 형태로 올라옴
 	// 파일 업로드 시 업로드 된 파일의 경로는 files라는 배열이 생성되면 저장됨
@@ -171,7 +170,6 @@ $(function() {
 	$('#btn-upload').click(function(e) {
 
 		e.preventDefault();
-		console.log("c")
 		$('#ot-input-profileImg').click();
 
 	});
@@ -189,8 +187,3 @@ $(function() {
 		$("#email-authentication-div").show();
 	})
 });
-
-// 비밀번호 찾기 페이지로 이동
-function changePwd() {
-	location.href = "changePwd.html";
-}

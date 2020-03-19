@@ -160,6 +160,7 @@
         var nickname;
         var profile_url;
         var email;
+        var id;
 	    
 	    function loginWithKakao() {
 	        // 로그인 창을 띄웁니다.
@@ -174,22 +175,20 @@
 	                        nickname = res.kakao_account.profile.nickname;
 	                        profile_url = res.kakao_account.profile.profile_image_url;
 	                        email = res.kakao_account.email;
-	                        
-	                        console.log("nickname : " + nickname);
-	                        console.log("profile_url : " + profile_url);
-	                        console.log("email : " + email);
+	                        id = res.id;
 	                        
 	                        $.ajax({
 	                        	url : "kakaoLogin",
 	                        	type : "POST",
 	                        	data : {memberEmail : email,
+	                        			memberPwd : id,
 	                        			memberNickName : nickname,
 	                        			imagePath : profile_url},
 	                        	beforeSend : function(){
 	                        		$("#loading").removeClass("display-none");
 	                        	},
 	                        	success : function(result){
-	                        		if(result == "success"){
+ 	                        		if(result == "success"){
 	                        			location.href = "${contextPath}";
 	                        		}else{
 	                        			location.href = "loginForm";
@@ -232,7 +231,6 @@
 	    })
 	
 	    function validate(){
-	        console.log(idCheck + "&&" + pwdCheck)
 	        if(!(idCheck&&pwdCheck)){
 	            alert("일부 입력값이 잘못되었습니다.");
 	            return false;
