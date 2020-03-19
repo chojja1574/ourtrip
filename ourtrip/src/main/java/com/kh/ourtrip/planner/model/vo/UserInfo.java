@@ -1,4 +1,4 @@
-package com.kh.ourtrip.websocket.model.vo;
+package com.kh.ourtrip.planner.model.vo;
 
 import org.springframework.web.socket.WebSocketSession;
 

@@ -28,7 +28,7 @@
 	<!-- Websocket -->
 	<!-- websocket-handler 등록, 이 핸들러는 클라이언트들을 관리하게 된다. handler 속성을 이용해서 핸들러로 처리할 클래스를 참조한다. -->
 	
-	<beans:bean id="echoHandler" class="com.kh.ourtrip.websocket.controller.EchoHandler"/>
+	<beans:bean id="echoHandler" class="com.kh.ourtrip.planner.controller.EchoHandler"/>
 	
  	<websocket:handlers>
 	       <websocket:mapping handler="echoHandler" path="/echo" />

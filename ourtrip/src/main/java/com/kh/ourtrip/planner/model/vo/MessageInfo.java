@@ -1,4 +1,4 @@
-package com.kh.ourtrip.websocket.model.vo;
+package com.kh.ourtrip.planner.model.vo;
 
 public class MessageInfo {
 	private String id;

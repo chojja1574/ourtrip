@@ -9,11 +9,18 @@
 	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:spring/root-context.xml</param-value>
+		<param-value>
+			classpath:spring/root-context.xml
+			classpath:spring/spring-security.xml
+		</param-value>
 	</context-param>
 	
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
+		<!-- 요청이 왔을때 동작 가능하게하기 -->
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+		<!-- VisitCounter 리스너 등록 -->
+		<listener-class>com.kh.ourtrip.common.visitLog.VisitCounter</listener-class>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 

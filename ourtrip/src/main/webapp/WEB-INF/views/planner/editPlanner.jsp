@@ -352,7 +352,19 @@
 </body>
 
 <script>
+
+//페이지 로딩 시 일정 수에 맞게 위치정보 Array에 자리생성
+// 0 = schedule 번호
+// 1 = 카카오 위치 객체
+// 2 = lat + lng
+// 3 = 인포 윈도우
+var scheduleMarkers;
+
+var date = -1;
+var schedule= -1;
+
 $(function() {
+	scheduleMarkers = new Array(new Array(), new Array(), new Array(),new Array());
 	$("#join").click(function(){
 		console.log('1');
 		sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'JOIN', writer: "${userId}", content: ""}));
@@ -360,6 +372,7 @@ $(function() {
 	console.log('1');
     // 페이지 입장 시 참여버튼 모달 출력
     $("#modalBtn").click();
+    
 });
 //웹소켓을 지정한 url로 연결한다.
 let sock = new SockJS("<c:url value="/echo"/>");
@@ -413,12 +426,14 @@ function onMessage(msg) {
 function onClose(evt) {
 	$("#data").append("연결 끊김");
 }
-var scheduleMarkers = new Array(new Array(), new Array(), new Array(),new Array());
-var date = -1;
-var schedule= -1;
+
 $(function () {
     
     // 페이지 로딩 시 일정 수에 맞게 위치정보 Array에 자리생성
+    // 0 = schedule 번호
+    // 1 = 카카오 위치 객체
+    // 2 = lat + lng
+    // 3 = 인포 윈도우
     $('.schedule').each(function(i, el){
         scheduleMarkers[0].push($(el).data('scheduleno'));
         scheduleMarkers[1].push(new kakao.maps.LatLng(0, 0));

@@ -3,92 +3,110 @@ package com.kh.ourtrip.planner.model.vo;
 public class Schedule {
 	
 	private int scheduleNo;
-	private String title;
-	private int cost;
-	private String memo;
-	private String time;
-	private String location;
-	private double lat;
-	private double lng;
+	private String scheduleTitle;
+	private int scheduleCost;
+	private String scheduleTime;
+	private String scheduleMemo;
+	private String scheduleLocationNM;
+	private double scheduleLat;
+	private double scheduleLng;
 	private int dateNo;
 	
 	public Schedule() {
-		super();
 	}
 
-	public Schedule(int scheduleNo, String title, int cost, String memo, String time, String location, double lat,
-			double lng, int dateNo) {
+	public Schedule(int scheduleNo, String scheduleTitle, int scheduleCost, String scheduleTime, String scheduleMemo,
+			String scheduleLocationNM, double scheduleLat, double scheduleLng, int dateNo) {
 		super();
 		this.scheduleNo = scheduleNo;
-		this.title = title;
-		this.cost = cost;
-		this.memo = memo;
-		this.time = time;
-		this.location = location;
-		this.lat = lat;
-		this.lng = lng;
+		this.scheduleTitle = scheduleTitle;
+		this.scheduleCost = scheduleCost;
+		this.scheduleTime = scheduleTime;
+		this.scheduleMemo = scheduleMemo;
+		this.scheduleLocationNM = scheduleLocationNM;
+		this.scheduleLat = scheduleLat;
+		this.scheduleLng = scheduleLng;
 		this.dateNo = dateNo;
 	}
 
 	public int getScheduleNo() {
 		return scheduleNo;
 	}
+
 	public void setScheduleNo(int scheduleNo) {
 		this.scheduleNo = scheduleNo;
 	}
-	public String getTitle() {
-		return title;
+
+	public String getScheduleTitle() {
+		return scheduleTitle;
 	}
-	public void setTitle(String title) {
-		this.title = title;
+
+	public void setScheduleTitle(String scheduleTitle) {
+		this.scheduleTitle = scheduleTitle;
 	}
-	public int getCost() {
-		return cost;
+
+	public int getScheduleCost() {
+		return scheduleCost;
 	}
-	public void setCost(int cost) {
-		this.cost = cost;
+
+	public void setScheduleCost(int scheduleCost) {
+		this.scheduleCost = scheduleCost;
 	}
-	public String getMemo() {
-		return memo;
+
+	public String getScheduleTime() {
+		return scheduleTime;
 	}
-	public void setMemo(String memo) {
-		this.memo = memo;
+
+	public void setScheduleTime(String scheduleTime) {
+		this.scheduleTime = scheduleTime;
 	}
-	public String getTime() {
-		return time;
+
+	public String getScheduleMemo() {
+		return scheduleMemo;
 	}
-	public void setTime(String time) {
-		this.time = time;
+
+	public void setScheduleMemo(String scheduleMemo) {
+		this.scheduleMemo = scheduleMemo;
 	}
-	public String getLocation() {
-		return location;
+
+	public String getScheduleLocationNM() {
+		return scheduleLocationNM;
 	}
-	public void setLocation(String location) {
-		this.location = location;
+
+	public void setScheduleLocationNM(String scheduleLocationNM) {
+		this.scheduleLocationNM = scheduleLocationNM;
 	}
-	public double getLat() {
-		return lat;
+
+	public double getScheduleLat() {
+		return scheduleLat;
 	}
-	public void setLat(double lat) {
-		this.lat = lat;
+
+	public void setScheduleLat(double scheduleLat) {
+		this.scheduleLat = scheduleLat;
 	}
-	public double getLng() {
-		return lng;
+
+	public double getScheduleLng() {
+		return scheduleLng;
 	}
-	public void setLng(double lng) {
-		this.lng = lng;
+
+	public void setScheduleLng(double scheduleLng) {
+		this.scheduleLng = scheduleLng;
 	}
+
 	public int getDateNo() {
 		return dateNo;
 	}
+
 	public void setDateNo(int dateNo) {
 		this.dateNo = dateNo;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Schedule [scheduleNo=" + scheduleNo + ", title=" + title + ", cost=" + cost + ", memo=" + memo
-				+ ", time=" + time + ", location=" + location + ", lat=" + lat + ", lng=" + lng + ", dateNo=" + dateNo
-				+ "]";
+		return "Schedule [scheduleNo=" + scheduleNo + ", scheduleTitle=" + scheduleTitle + ", scheduleCost="
+				+ scheduleCost + ", scheduleTime=" + scheduleTime + ", scheduleMemo=" + scheduleMemo
+				+ ", scheduleLocationNM=" + scheduleLocationNM + ", scheduleLat=" + scheduleLat + ", scheduleLng="
+				+ scheduleLng + ", dateNo=" + dateNo + "]";
 	}
+	
 }
