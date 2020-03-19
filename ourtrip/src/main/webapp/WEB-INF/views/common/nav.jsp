@@ -40,12 +40,12 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <div class="container my-0 px-0">
             <div class="col-sm-3 nav-item">
-                <a href="${contextPath}" class="nav-text">
+                <a href="#" class="nav-text">
                     <h5>홈</h5>
                 </a>
             </div>
             <div class="col-sm-3 nav-item">
-                <a href="${contextPath}/planner/create" class="nav-text">
+                <a href="#" class="nav-text">
                     <h5>나의 플래너</h5>
                 </a>
             </div>

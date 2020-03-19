@@ -355,7 +355,7 @@
 $(function() {
 	$("#join").click(function(){
 		console.log('1');
-		sock.send(JSON.stringify({plannerId: "${selectRoom}", type: 'JOIN', writer: "${userId}", content: ""}));
+		sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'JOIN', writer: "${userId}", content: ""}));
 	})
 	console.log('1');
     // 페이지 입장 시 참여버튼 모달 출력
@@ -450,15 +450,15 @@ $(function () {
         	m = '0' + d.getMinutes();
         if(h < 10)
         	h = '0' + d.getHours();
-        
+        	
         // 현재 시간
         var now = h + ':' + m;
 
         // 채팅 입력창 비어있지 않으면 실행
         if( msg != ''){
             
-            console.log("send : " + JSON.stringify({plannerId: "${selectRoom}", type: 'msg', id: "${userId}", content: msg, time: now}));
-            sock.send(JSON.stringify({plannerId: "${selectRoom}", type: 'msg', id: "${userId}", content: msg, time: now}));
+            console.log("send : " + JSON.stringify({chatRoomId: "${selectRoom}", type: 'msg', id: "${userId}", content: msg, time: now}));
+            sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'msg', id: "${userId}", content: msg, time: now}));
         }
 
         // 메세지 전송 후 채팅 입력창 비워줌
