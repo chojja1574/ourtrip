@@ -221,7 +221,7 @@ public class MemberServiceImpl implements MemberService{
 			// 사진을 변경한 경우
 			}else if(!profileImage.getOriginalFilename().equals("")) {
 				
-				// 서버에 존재하는 기존 이미지를 삭제하기 위해 저장
+				// 서버에 존재하는 기존 이미지를 삭제하기 위해 저장k
 				String originFilePath = pi.getImagePath();
 				
 				// DB에 update하기 위해 경로 값을 변경
