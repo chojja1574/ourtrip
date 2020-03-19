@@ -23,7 +23,7 @@
             </a>
             <div class="btn-wrapper ml-auto mt-3">
             	<c:if test="${!empty loginMember}">
-            		<a href="${contextPath}/member/myPage" class="btn main-btn-rev" type="button">마이페이지</a>
+            		<a href="${contextPath}/member/myPage" class="btn main-btn-rev" type="button">${loginMember.memberNickName}</a>
             		<a href="${contextPath}/member/logout" class="btn btn-outline-danger" type="button">로그아웃</a>
             	</c:if>
             	<c:if test="${empty loginMember}">
