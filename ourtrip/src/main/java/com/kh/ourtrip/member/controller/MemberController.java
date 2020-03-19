@@ -1,5 +1,9 @@
 package com.kh.ourtrip.member.controller;
 
+import java.io.File;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,8 +15,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.ourtrip.common.FileRename;
 import com.kh.ourtrip.member.model.service.MemberService;
 import com.kh.ourtrip.member.model.vo.Member;
+import com.kh.ourtrip.member.model.vo.ProfileImage;
 
 @SessionAttributes({"loginMember", "msg", "profilePath"})
 @Controller
@@ -21,6 +27,7 @@ public class MemberController {
 	
 	@Autowired
 	private MemberService memberService;
+	
 	
 	@RequestMapping(value="loginForm")
 	public String loginForm() {
@@ -62,9 +69,9 @@ public class MemberController {
 	@RequestMapping(value="kakaoLogin")
 	@ResponseBody
 	public String kakaoLogin(Member member, String imagePath,
-							Model model) { 
+							Model model) {
+		// 카카오 회원가입은 경로가 2
 		member.setSignUpRoute("2");
-		System.out.println(member.getMemberPwd());
 		
 		String result = "fail";
 		
@@ -107,24 +114,43 @@ public class MemberController {
 	}
 	
 	@RequestMapping("signUp")
-	public String signUp(Member member, Model model, RedirectAttributes rdAttr,
+	public String signUp(Member member, Model model, RedirectAttributes rdAttr, HttpServletRequest request,
 			@RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
+		// 기존 회원가입은 경로가 1
 		member.setSignUpRoute("1");
 		
-		if(profileImage != null) {
-			System.out.println("controller : " + profileImage.getOriginalFilename());
-		}
+		// 파일 저장 경로
+		String root = request.getSession().getServletContext().getRealPath("resources");
+		
+		String savePath = root + "/profileImages";
+		
+		// 저장 폴더 선택
+		File folder = new File(savePath);
+
+		// 만약 해당 폴더가 없는 경우 -> 폴더 만들기
+		if (!folder.exists()) folder.mkdir();
 		
 		try {
 			int result = memberService.signUp(member);
 			
-			if(result > 0) {
-				
-			}
-			
 			String msg = null;
 			String path = null;
+			
+			// 회원가입 성공 시
 			if(result > 0) {
+				// 회원이 이미지를 등록 했을 경우
+				if(!profileImage.getOriginalFilename().equals("")) {
+					String changeFileName = FileRename.rename(profileImage.getOriginalFilename());
+					
+					ProfileImage pi = new ProfileImage(savePath + "/" + changeFileName, result);
+					
+					result = memberService.insertProfileImage(pi);
+					// DB에 프로필 등록 성공 시
+					if(result > 0) {
+						profileImage.transferTo(new File(pi.getImagePath()));
+					}
+				}
+				
 				msg = "회원가입 되었습니다.";
 				path = "/member/loginForm";
 			}else {
@@ -141,5 +167,83 @@ public class MemberController {
 			model.addAttribute("errorMsg", "회원가입 과정 중 오류 발생");
 			return "common/errorPage";
 		}
+	}
+	
+	@RequestMapping("updateForm")
+	public String updateForm(Model model) {
+		// 회원정보 수정 페이지 진입 시 DB에서 프로필사진 얻어옴
+		Member loginMember = (Member)model.getAttribute("loginMember");
+		
+		try {
+			if(loginMember == null) {
+				model.addAttribute("msg", "로그인 후 진입가능한 페이지입니다.");
+				return "redirect:/";
+			}
+			
+			ProfileImage pi = memberService.selectProfileImage(loginMember.getMemberNo());
+			model.addAttribute("profileImage", pi);
+			
+			return "member/updateForm";
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMsg", "회원정보 수정 페이지 이동중 에러 발생");
+			return "common/errorPage";
+		}
+	}
+	
+	@RequestMapping("update")
+	public String update(String memberNickName, String isDefault, 
+			Model model, RedirectAttributes rdAttr, HttpServletRequest request,
+			@RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
+		
+		Member loginMember = (Member)model.getAttribute("loginMember");
+		
+		try {
+			String msg = null;
+			String path = null;
+			int result = 1; // 닉네임을 변경안했을 경우 조건문을 통과하기 위해 초기값 1
+			
+			// 입력한 닉네임 값이 변경 되었을 때
+			if(!loginMember.getMemberNickName().equals(memberNickName)) {
+				
+				// DB에 보낼 VO를 생성
+				Member member = new Member(loginMember.getMemberNo(), memberNickName);
+				
+				result = memberService.updateNickName(member);
+				
+				// 닉네임 변경 성공 시
+				if(result > 0) {
+					// 세션 객체에서 업데이트(세션 객체가 모든 값을 갖고있기 때문)
+					loginMember.setMemberNickName(member.getMemberNickName());
+				}
+			}
+			
+			if(result > 0) {
+				// 파일 저장 경로
+				String root = request.getSession().getServletContext().getRealPath("resources");
+				
+				String savePath = root + "/profileImages";
+				
+				// 저장 폴더 선택
+				File folder = new File(savePath);
+				
+				// 만약 해당 폴더가 없는 경우 -> 폴더 만들기
+				if (!folder.exists()) folder.mkdir();
+				
+				result = memberService.updateProfileImage(loginMember.getMemberNo(), profileImage, savePath, isDefault);
+			}
+			
+			if(result > 0) msg = "회원정보가 수정되었습니다";
+			else msg = "회원정보 수정에 실패하였습니다.";
+			
+			return "redirect:updateForm";
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMsg", "회원정보 수정과정중 오류 발생");
+			return "common/errorPage";
+		}
+		
 	}
 }

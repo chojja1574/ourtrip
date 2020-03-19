@@ -59,7 +59,7 @@
 	<!-- 프로필 이미지 삽입 -->
 	<insert id="insertProfileImage" parameterType="ProfileImage">
 		INSERT INTO PROFILE_IMAGE VALUES
-		(SEQ_PROFILE_I_INO.NEXTVAL, #{imagePath}, SYSDATE, DEFAULT, #{memberNo})
+		(SEQ_PROFILE_I_INO.NEXTVAL, #{imagePath}, SYSDATE, #{memberNo})
 	</insert>
 	
 	<!-- 이메일 중복확인 -->
@@ -75,4 +75,31 @@
 		WHERE MEMBER_EMAIL= #{memberEmail}
 		AND SIGNUP_ROUTE= #{signUpRoute}
 	</select>
+	
+	<!-- 프로필 이미지 조회 -->
+	<select id="selectProfileImage" parameterType="_int" resultMap="piResultSet">
+		SELECT * FROM PROFILE_IMAGE
+		WHERE MEMBER_NO= #{memberNo}
+	</select>
+	
+	<!-- 회원 닉네임 수정 -->
+	<update id="updateNickName" parameterType="Member">
+		UPDATE MEMBER SET
+		MEMBER_NICK_NAME= #{memberNickName}
+		WHERE MEMBER_NO= #{memberNo}
+	</update>
+	
+	<!-- 프로필 사진 삭제 -->
+	<delete id="deleteProfileImage" parameterType="_int">
+		DELETE FROM PROFILE_IMAGE
+		WHERE MEMBER_NO= #{memberNo}
+	</delete>
+	
+	<!-- 프로필 사진 수정 -->
+	<update id="updateProfileImage" parameterType="ProfileImage">
+		UPDATE PROFILE_IMAGE SET
+		IMAGE_PATH= #{imagePath},
+		IMAGE_UPLOAD_DT= SYSDATE
+		WHERE IMAGE_NO= #{imageNo}
+	</update>
 </mapper>
