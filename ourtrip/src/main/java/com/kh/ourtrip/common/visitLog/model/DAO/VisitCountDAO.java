@@ -1,18 +1,17 @@
 package com.kh.ourtrip.common.visitLog.model.DAO;
 
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
-import com.kh.ourtrip.common.visitLog.model.vo.VisitCount;
-
-@Repository
 public class VisitCountDAO {
 	
-	@Autowired
-	public SqlSessionTemplate sqlSession;
-	
-	public int insertVisitor(VisitCount vc) throws Exception{
-		return sqlSession.insert("visitCounterMapper.insertVisitor", vc);
+		
+	/** 방문자수 저장용 DAO
+	 * @param ip
+	 * @param sqlSession
+	 * @return result
+	 * @throws Exception
+	 */
+	public int insertVisitor(String ip, SqlSessionTemplate sqlSession) throws Exception{
+		return sqlSession.insert("visitCounterMapper.insertVisitor", ip);
 	}
 }

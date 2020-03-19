@@ -1,17 +1,25 @@
-package com.kh.ourtrip.common.visitLog.model.vo;
+package com.kh.ourtrip.admin.model.vo;
 
 import java.sql.Date;
 
-public class VisitCount {
+public class VisitLog {
 	private int visitNo;
 	private Date visitDate;
 	private String visitIp;
 	
-	public VisitCount() {
+	public VisitLog() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public VisitCount(int visitNo, Date visitDate, String visitIp) {
+	
+	public VisitLog(int visitNo, Date visitDate) {
+		super();
+		this.visitNo = visitNo;
+		this.visitDate = visitDate;
+	}
+
+
+	public VisitLog(int visitNo, Date visitDate, String visitIp) {
 		super();
 		this.visitNo = visitNo;
 		this.visitDate = visitDate;
@@ -19,10 +27,6 @@ public class VisitCount {
 	}
 
 	
-	public VisitCount(String visitIp) {
-		super();
-		this.visitIp = visitIp;
-	}
 	
 	public int getVisitNo() {
 		return visitNo;
