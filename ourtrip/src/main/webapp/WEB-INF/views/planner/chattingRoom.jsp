@@ -9,7 +9,7 @@
         <title>채팅방 선택</title>
     </head>
     <body>
-        <form method="GET" action="/ourtrip/planner1/update">
+        <form method="GET" action="/ourtrip/planner1/editplanner">
             ID : <input type="text" name="userId" id="userId">
             ChatRoomId : <input type="text" name="selectRoom" id="selectRoom">
 

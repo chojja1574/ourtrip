@@ -15,7 +15,7 @@ public class PlannerDAO2 {
 	SqlSessionTemplate sqlSessionTemplate;
 	
 	public List<PlannerView> selectPlannerView(int no) throws Exception {
-		return sqlSessionTemplate.selectList("plannerMapper1.selectPlannerView");
+		return sqlSessionTemplate.selectList("planner1Mapper.selectPlannerView",no);
 	}
 	
 }

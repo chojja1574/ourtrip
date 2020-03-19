@@ -22,7 +22,7 @@ public class Planner1 {
 	public Planner1() {
 	}
 	
-	public Planner1(int plannerNo, String plannerTitle, String plannerPwd, int cost, Date plannerCreateDT,
+	public Planner1(int plannerNo, String plannerTitle, String plannerPwd, int plannerCost, Date plannerCreateDT,
 			Date plannerModifyDT, Date plannerStartDT, String plannerPublicYN, String plannerDeleteYN,
 			String plannerExpiry, int plannerCount, String plannerUrl, int groupCode) {
 		this.plannerNo = plannerNo;
@@ -38,6 +38,27 @@ public class Planner1 {
 		this.plannerCount = plannerCount;
 		this.plannerUrl = plannerUrl;
 		this.groupCode = groupCode;
+	}
+	
+
+	public Planner1(int plannerNo, String plannerTitle, String plannerPwd, int plannerCost, Date plannerCreateDT,
+			Date plannerModifyDT, Date plannerStartDT, String plannerPublicYN, String plannerDeleteYN,
+			String plannerExpiry, int plannerCount, String plannerUrl, int groupCode, List<Day> days) {
+		super();
+		this.plannerNo = plannerNo;
+		this.plannerTitle = plannerTitle;
+		this.plannerPwd = plannerPwd;
+		this.plannerCost = plannerCost;
+		this.plannerCreateDT = plannerCreateDT;
+		this.plannerModifyDT = plannerModifyDT;
+		this.plannerStartDT = plannerStartDT;
+		this.plannerPublicYN = plannerPublicYN;
+		this.plannerDeleteYN = plannerDeleteYN;
+		this.plannerExpiry = plannerExpiry;
+		this.plannerCount = plannerCount;
+		this.plannerUrl = plannerUrl;
+		this.groupCode = groupCode;
+		this.days = days;
 	}
 
 	public int getPlannerNo() {
@@ -152,13 +173,22 @@ public class Planner1 {
 		this.days = days;
 	}
 
+	private String listToString() {
+		String str = "";
+		for(Day sc : days) {
+			str += sc.toString()+",";
+		}
+		str = str.substring(0, str.length()-1);
+		return str;
+	}
+	
 	@Override
 	public String toString() {
-		return "Planner1 [plannerNo=" + plannerNo + ", plannerTitle=" + plannerTitle + ", plannerPwd=" + plannerPwd
-				+ ", plannerCost=" + plannerCost + ", plannerCreateDT=" + plannerCreateDT + ", plannerModifyDT=" + plannerModifyDT
-				+ ", plannerStartDT=" + plannerStartDT + ", plannerPublicYN=" + plannerPublicYN + ", plannerDeleteYN="
-				+ plannerDeleteYN + ", plannerExpiry=" + plannerExpiry + ", plannerCount=" + plannerCount
-				+ ", plannerUrl=" + plannerUrl + ", groupCode=" + groupCode + ", days=" + days + "]";
+		return "{plannerNo:\'" + plannerNo + "\',plannerTitle:\'" + plannerTitle + "\',plannerPwd:\'" + plannerPwd
+				+ "\',plannerCost:\'" + plannerCost + "\',plannerCreateDT:\'" + plannerCreateDT + "\',plannerModifyDT:\'" + plannerModifyDT
+				+ "\',plannerStartDT:\'" + plannerStartDT + "\',plannerPublicYN:\'" + plannerPublicYN + "\',plannerDeleteYN:\'"
+				+ plannerDeleteYN + "\',plannerExpiry:\'" + plannerExpiry + "\',plannerCount:\'" + plannerCount
+				+ "\',plannerUrl:\'" + plannerUrl + "\',groupCode:\'" + groupCode + "\',days:[" + listToString() + "]}";
 	}
 	
 	

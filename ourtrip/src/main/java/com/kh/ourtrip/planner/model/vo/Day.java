@@ -17,6 +17,15 @@ public class Day {
 		this.tripDate = tripDate;
 		this.plannerNo = plannerNo;
 	}
+	
+
+	public Day(int dateNo, int tripDate, int plannerNo, List<Schedule> schedules) {
+		super();
+		this.dateNo = dateNo;
+		this.tripDate = tripDate;
+		this.plannerNo = plannerNo;
+		this.schedules = schedules;
+	}
 
 	public int getDateNo() {
 		return dateNo;
@@ -50,10 +59,18 @@ public class Day {
 		this.schedules = schedules;
 	}
 
+	private String listToString() {
+		String str = "";
+		for(Schedule sc : schedules) {
+			str += sc.toString()+",";
+		}
+		str = str.substring(0, str.length()-1);
+		return str;
+	}
 	@Override
 	public String toString() {
-		return "Day [dateNo=" + dateNo + ", tripDate=" + tripDate + ", plannerNo=" + plannerNo + ", schedules="
-				+ schedules + "]";
+		return "{dateNo:\'" + dateNo + "\',tripDate:\'" + tripDate + "\',plannerNo:\'" + plannerNo + "\',schedules:["
+				+ listToString() + "]}";
 	}
 
 }
