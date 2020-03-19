@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="adminMapper">
+	<resultMap type="VisitLog" id="visitLogResultSet">
+		<id property="visitNo" column="VISIT_NO"/>
+		<result property="visitDate" column="VISIT_DATE"/>
+		<result property="visitIp" column="VISIT_IP"/>
+	</resultMap>
+	
+	<select id="getVisitLog" resultType="String">
+		SELECT VISIT_DATE FROM MEMBER_VISIT_LOG
+	</select>
+</mapper>

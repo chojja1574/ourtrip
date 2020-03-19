@@ -35,10 +35,16 @@
 			<attribute name="owner.project.facets" value="jst.web"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_212">
+
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/dev/JSTL/taglibs-standard-compat-1.2.5.jar"/>
+	<classpathentry kind="lib" path="C:/dev/JSTL/taglibs-standard-impl-1.2.5.jar"/>
+	<classpathentry kind="lib" path="C:/dev/JSTL/taglibs-standard-jstlel-1.2.5.jar"/>
+	<classpathentry kind="lib" path="C:/dev/JSTL/taglibs-standard-spec-1.2.5.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
