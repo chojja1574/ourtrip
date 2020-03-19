@@ -421,3 +421,11 @@ body {
     white-space: nowrap;
     z-index: 5;
 }
+
+.sendBtn {
+	background : #f7e317;
+	color : #3c1e1e;
+	border : none;
+	border-radius : 3px;
+	font-weight:bold;
+}

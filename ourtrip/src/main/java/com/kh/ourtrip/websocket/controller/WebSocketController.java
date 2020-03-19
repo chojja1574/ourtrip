@@ -26,7 +26,7 @@ public class WebSocketController {
 		model.addAttribute("userId", userId);
 		model.addAttribute("selectRoom", selectRoom);
 		
-		return "websocket-echo";
+		return "planner/updatePlanner";
 	}
 	
 	@RequestMapping("chattingForm2")
@@ -34,6 +34,6 @@ public class WebSocketController {
 		model.addAttribute("userId", userId);
 		model.addAttribute("selectRoom", selectRoom);
 		
-		return "planner/updatePlanner";
+		return "websocket-echo";
 	}
 }

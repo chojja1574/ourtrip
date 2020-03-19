@@ -28,15 +28,21 @@ $(function () {
 
         // 날짜 객체
         var d = new Date();
+        var h = d.getHours();
+        var m = d.getMinutes();
+        if(m < 10)
+        	m = '0' + d.getMinutes();
+        if(h < 10)
+        	h = '0' + d.getHours();
+        	
         // 현재 시간
-        var now = d.getHours() + ':' + d.getMinutes();
+        var now = h + ':' + m;
 
         // 채팅 입력창 비어있지 않으면 실행
         if( msg != ''){
-            // inputChat = 채팅 내역에 채팅창 올리는 함수
-            // mkMyChatMsg = 내가 보낸 메세지로 채팅창 만드는 함수
-            // mkMyChatMsg 매개변수 = (msgContent,msgTime)
-            inputChat(mkMyChatMsg(msg,now));
+            
+            console.log("send : " + JSON.stringify({chatRoomId: "${selectRoom}", type: 'msg', id: "${userId}", content: msg, time: now}));
+            sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'msg', id: "${userId}", content: msg, time: now}));
         }
 
         // 메세지 전송 후 채팅 입력창 비워줌
@@ -46,10 +52,7 @@ $(function () {
     // #send2 버튼은 테스트하려고 만듦            
     $("#send2").click(function(){
 
-        // inputChat = 채팅 내역에 채팅창 올리는 함수
-        // mkChatMsg = 다른사람이 보낸 메세지로 채팅창 만드는 함수
-        // mkChatMsg 매개변수 = (profileImg,userId,msgContent,msgTime)
-        inputChat(mkChatMsg(1,2,3,4));
+        
     })
 
     // 일차 마우스로 이동 가능하게 하고 정렬하는 함수
