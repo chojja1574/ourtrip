@@ -14,7 +14,9 @@
 		<typeAlias type="com.kh.ourtrip.member.model.vo.ProfileImage" alias="ProfileImage"/>
 
 		<typeAlias type="com.kh.ourtrip.admin.model.vo.VisitLog" alias="VisitLog"/>
-		
+
+    
+    
 		<!-- 박지현 -->
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerView" alias="PlannerView"/>
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.Planner1" alias="Planner1"/>

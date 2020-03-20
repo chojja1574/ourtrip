@@ -37,8 +37,8 @@ public class AdminServiceImpl implements AdminService{
 		System.out.println("수정후값 : " + fixList);
 		int totalCount = 0;
 		int monthCount = 0;
-		int dayCount = 0;
-		
+		List<Integer> dayCount = new ArrayList<Integer>();
+						
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMdd");
 		Date time = new Date();
 		int today = Integer.parseInt(format1.format(time));
@@ -55,16 +55,24 @@ public class AdminServiceImpl implements AdminService{
 			}
 		}
 		//일
+		int count = 0;
 		for(Integer list : fixList) {
-			if(list%100 == today%100) {
-				dayCount++;
+			for(int i=0; i<7; i++) {
+				if(list%100 == (today-i)%100) {
+					count++;
+					dayCount.add(i, count);
+				} 
 			}
 		}
 		
 		
+		
 		System.out.println("총합 : " + totalCount);
 		System.out.println("이번달갯수 : " + monthCount);
-		System.out.println("일일갯수 : " + dayCount);
+		for(int i=0; i<dayCount.size(); i++) {
+			System.out.println("i번째 : " + dayCount.get(i));
+		}
+		//System.out.println("이번주갯수 : " + dayCount);
 		
 		
 		return null;

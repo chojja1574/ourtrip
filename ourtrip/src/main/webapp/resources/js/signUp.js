@@ -87,7 +87,6 @@ $(document).ready(
 		    				type: "POST",
 		    				data: {email: $email.val()},
 		    				success: function(result){
-		    					console.log(result);
 		    					
 		    					if(result == "0"){
 		    						$("#checkEmail").html("이미 가입된 이메일입니다.")
@@ -101,6 +100,7 @@ $(document).ready(
 		    						.addClass("del-btn");
 		    						
 		    						signUpCheck.email = true;
+		    						console.log(result);
 		    						certifyCode = result;
 		    					}
 		    				},
