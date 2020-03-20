@@ -383,7 +383,7 @@ public class MemberController {
 	
 	// 비밀번호 찾기(임시 비밀번호 전송)
 	@RequestMapping("findPwd")
-	public String findPwd(String memberEmail, Model model) {
+	public String findPwd(String memberEmail, Model model, RedirectAttributes rdAttr) {
 		
 		try {
 			int result = memberService.findPwd(memberEmail);
@@ -392,14 +392,14 @@ public class MemberController {
 			String path = null;
 			
 			if(result > 0) {
-				msg = "임시 비밀번호가 메일로 전송되었습니다.\n메일을 확인해주세요.";
+				msg = "임시 비밀번호가 메일로 전송되었습니다.";
 				path = "loginForm";
 			}else {
 				msg = "비밀번호 찾기에 실패하였습니다.";
 				path = "findPwdForm";
 			}
 			
-			model.addAttribute("msg", msg);
+			rdAttr.addFlashAttribute("msg", msg);
 			
 			return "redirect:" + path;
 			

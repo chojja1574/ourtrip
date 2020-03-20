@@ -48,6 +48,10 @@
  	padding: 15px;
 }
 
+.display-none{
+    display:none;
+}
+
 @media screen and (max-width: 1199px) {
     #email-authentication-btn{
     	font-size: 14px;
@@ -103,6 +107,10 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="wrap-loading display-none" id="loading">
+        <div><img src="${contextPath}/resources/images/loadingBar.gif"/></div>
+    </div>
 
 	<jsp:include page="../common/footer.jsp" />
 
@@ -182,7 +190,8 @@
 			if(certifyCode != $("#certifyCode").val()){
 				alert("인증번호가 일치하지않습니다.");
 				return false;
-			}			
+			}
+			$("#loading").removeClass("display-none");
 		}
 	</script>
 </body>
