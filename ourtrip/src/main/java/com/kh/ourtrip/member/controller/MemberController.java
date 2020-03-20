@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,7 +36,7 @@ public class MemberController {
 	}
 	
 	@RequestMapping(value="login")
-	public String login(Member member, Model model) {
+	public String login(Member member, Model model, RedirectAttributes rdAttr) {
 		member.setSignUpRoute("1");
 		
 		try {
@@ -43,11 +44,14 @@ public class MemberController {
 			
 			String path = null;
 			if(loginMember != null) {
+				
+				if(loginMember.getMemberGrade().equals("A")) path = "redirect:/admin/main";
+				else path = "redirect:/";
+				
 				model.addAttribute("loginMember", loginMember);
-				path = "redirect:/";
 			}else {
-				model.addAttribute("msg", "이메일, 비밀번호를 확인해주세요");
-				path = "redirect:/loginForm";
+				rdAttr.addFlashAttribute("msg", "이메일, 비밀번호를 확인해주세요");
+				path = "redirect:loginForm";
 			}
 			
 			return path;
@@ -245,5 +249,87 @@ public class MemberController {
 			return "common/errorPage";
 		}
 		
+	}
+	
+	// 비밀번호 변경 폼
+	@RequestMapping("changePwdForm")
+	public String changePwdForm() {
+		return "member/changePwdForm";
+	}
+	
+	// 비밀번호 변경
+	@RequestMapping("changePwd")
+	public String changePwd(Member member, String changePwd, Model model, RedirectAttributes rdAttr) {
+		// 세션에 있는 회원번호 저장
+		member.setMemberNo(((Member)model.getAttribute("loginMember")).getMemberNo());
+		
+		try {
+			int result = memberService.changePwd(member, changePwd);
+			
+			String msg = null;
+			String path = null;
+			
+			if(result > 0) {
+				msg = "비밀번호가 변경되었습니다.";
+				path = "updateForm";
+			}else if(result == 0) {
+				msg = "비밀번호 변경에 실패하였습니다.";
+				path = "changePwdForm";
+			}else {
+				msg = "비밀번호가 일치하지 않습니다.";
+				path = "changePwdForm";
+			}
+			
+			rdAttr.addFlashAttribute("msg", msg);
+			
+			return "redirect:" + path;
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMsg", "비밀번호 변경 과정중 오류 발생");
+			return "common/errorPage";
+		}
+	}
+	
+	// 회원탈퇴 폼
+	@RequestMapping("secessionForm")
+	public String secessionForm() {
+		return "member/secession";
+	}
+	
+	// 회원탈퇴
+	@RequestMapping("secession")
+	public String secession(Member member, Model model, RedirectAttributes rdAttr, SessionStatus session) {
+		
+		// 세션에 있는 회원번호 저장
+		member.setMemberNo(((Member)model.getAttribute("loginMember")).getMemberNo());
+		
+		try {
+			int result = memberService.secession(member);
+			
+			String msg = null;
+			String path = null;
+			
+			if(result > 0) {
+				session.setComplete();
+				msg = "회원 탈퇴 되었습니다.";
+				path = "/";
+			}else if(result == 0) {
+				msg = "회원 탈퇴에 실패하였습니다.";
+				path = "secessionForm";
+			}else {
+				msg = "비밀번호가 일치하지 않습니다.";
+				path = "secessionForm";
+			}
+			
+			rdAttr.addFlashAttribute("msg", msg);
+			
+			return "redirect:" + path;
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMsg", "회원탈퇴 과정 중 오류 발생");
+			return "common/errorPage";
+		}
 	}
 }

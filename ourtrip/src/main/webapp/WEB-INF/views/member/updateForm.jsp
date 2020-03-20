@@ -120,7 +120,7 @@
 								<label>비밀번호</label>
 							</div>
 							<div class="col-md-9">
-								<a href="#" class="btn gray-btn btn-block">비밀번호 변경하기</a>
+								<a href="changePwdForm" class="btn gray-btn btn-block">비밀번호 변경하기</a>
 							</div>
 						</div>
 						<div class="row mt-3">
@@ -136,7 +136,7 @@
 				</div>
 				<div class="row mt-5 mb-3">
 					<div class="col-md-4">
-						<a href="secession" class="btn del-btn btn-block">회원 탈퇴</a>
+						<a href="secessionForm" class="btn del-btn btn-block">회원 탈퇴</a>
 					</div>
 					<div class="col-md-4">
 						<a href="#" class="btn gray-btn btn-block">이전으로</a>

@@ -13,6 +13,8 @@ var defaultImg = "../resources/images/default-profile.png";
 // 정규표현식
 $(document).ready(
 		function() {
+			// 인증번호 입력 폼 숨김
+			$("#email-authentication-div").hide();
 
 			// jQuery 변수 : 변수에 직접적으로 jQuery메소드를 사용할 수 있음.
 			var $email = $("#email");
@@ -72,6 +74,9 @@ $(document).ready(
 					
 					$("#checkEmail").html("이메일을 다시 입력해주세요.")
 						.css("color", "red");
+					
+					// 인증번호 입력 폼 숨김
+					$("#email-authentication-div").hide();
 		    		
 		    	}else{
 		    		var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
@@ -100,6 +105,9 @@ $(document).ready(
 		    						.addClass("del-btn");
 		    						
 		    						signUpCheck.email = true;
+		    						
+		    						// 인증번호 입력 폼 보여줌
+		    						$("#email-authentication-div").show();
 		    						console.log(result);
 		    						certifyCode = result;
 		    					}
@@ -112,7 +120,14 @@ $(document).ready(
 		    		}
 		    	}
 		    });
-		});
+			
+			$('#btn-upload').click(function(e) {
+
+				e.preventDefault();
+				$('#ot-input-profileImg').click();
+
+			});
+});
 
 // submit 동작
 function validate() {
@@ -165,25 +180,3 @@ function LoadImg(value, num) {
 function DefaultImg() {
 	LoadImg($("#ot-input-profileImg"), 2)
 }
-
-$(function() {
-	$('#btn-upload').click(function(e) {
-
-		e.preventDefault();
-		$('#ot-input-profileImg').click();
-
-	});
-});
-
-function changeValue(obj) {
-
-	alert(obj.value);
-
-}
-
-$(function() {
-	$("#email-authentication-div").hide();
-	$("#email-authentication-btn").click(function(e) {
-		$("#email-authentication-div").show();
-	})
-});

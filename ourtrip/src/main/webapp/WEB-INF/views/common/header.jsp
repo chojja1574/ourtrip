@@ -17,7 +17,7 @@
 <div class="container-fluid px-0" style="background-color: white;">
     <div class="container my-0 px-0">
         <div class="d-flex">
-            <a href="main.html">
+            <a href="${contextPath}">
                 <img class="logo" id="mainlogo" src="${contextPath}/resources/images/ourtrip_logo2.png" alt="이미지"
                     style="width: 220px; height: auto;">
             </a>

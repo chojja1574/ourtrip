@@ -176,10 +176,8 @@ public class MemberServiceImpl implements MemberService{
 				
 			}
 		}
-		
 
 		// 삭제 성공시 서버에서도 해당 이미지 삭제
-		
 		return result;
 	}
 
@@ -250,6 +248,57 @@ public class MemberServiceImpl implements MemberService{
 			}
 		}
 
+		return result;
+	}
+
+	/** 회원 비밀번호 변경용 Service
+	 * @param member
+	 * @param changePwd
+	 * @return result
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int changePwd(Member member, String changePwd) throws Exception {
+		
+		// 비밀번호가 일치하지 않을 경우의 초기값
+		int result = -1;
+		
+		// 로그인한 회원의 비밀번호 조회
+		String memberPwd = memberDAO.selectMemberPwd(member.getMemberNo());
+		
+		if(bCryptPasswordEncoder.matches(member.getMemberPwd(), memberPwd)){
+			
+			member.setMemberPwd(bCryptPasswordEncoder.encode(changePwd));
+			
+			// 변경 성공시 1, 실패시 0 저장
+			result = memberDAO.updatePwd(member);
+		}
+		
+		return result;
+	}
+
+	/** 회원탈퇴용 Service
+	 * @param member
+	 * @return result
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int secession(Member member) throws Exception {
+		
+		// 비밀번호가 일치하지 않을 경우의 초기값
+		int result = -1;
+		
+		// 로그인한 회원의 비밀번호 조회
+		String memberPwd = memberDAO.selectMemberPwd(member.getMemberNo());
+		
+		if(bCryptPasswordEncoder.matches(member.getMemberPwd(), memberPwd)){
+			
+			// 회원 상태값 변경(성공시 1, 실패시 0)
+			result = memberDAO.secession(member);
+		}
+		
 		return result;
 	}
 	
