@@ -12,7 +12,6 @@
 	<typeAliases>
 		<typeAlias type="com.kh.ourtrip.member.model.vo.Member" alias="Member"/>
 		<typeAlias type="com.kh.ourtrip.member.model.vo.ProfileImage" alias="ProfileImage"/>
-
 		<typeAlias type="com.kh.ourtrip.admin.model.vo.VisitLog" alias="VisitLog"/>
 
     

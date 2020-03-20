@@ -33,6 +33,7 @@ var infowindowAll = new kakao.maps.InfoWindow({
 // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
 kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
     searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
+    	console.log(mouseEvent.latLng);
         if (status === kakao.maps.services.Status.OK) {
             var detailAddr = !!result[0].road_address ? '<div style="font-size: 14px;">도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
             detailAddr += '<div style="font-size: 14px;">지번 주소 : ' + result[0].address.address_name + '</div>';
@@ -311,3 +312,4 @@ function initMarker(scheduleLocation,locationContent){
         infowindow.open(map, marker);
     }
 }
+

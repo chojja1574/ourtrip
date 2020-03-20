@@ -58,7 +58,7 @@
 		<result property="scheduleCost" column="SCHEDULE_COST"/>
 		<result property="scheduleTime" column="SCHEDULE_TIME"/>
 		<result property="scheduleMemo" column="SCHEDULE_MEMO"/>
-		<result property="scheduleLocationNM" column="SCHEDULE_LOCATION_NAME"/>
+		<result property="scheduleLocationNM" column="SCHEDULE_LOCATION_NM"/>
 		<result property="scheduleLat" column="SCHEDULE_LAT"/>
 		<result property="scheduleLng" column="SCHEDULE_LNG"/>
 	</resultMap>

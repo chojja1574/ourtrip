@@ -57,7 +57,7 @@
     <script type="text/javascript"
         src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3265d67cbccb2a931046b989ef45ad5f&libraries=services,clusterer,drawing"></script>
     
-    <title>플래너 수정</title>
+    <title>${plannerTitle}</title>
 </head>
 
 <body>
@@ -147,26 +147,7 @@
                         </div>
                         <!-- 일자 카드 -->
                         <div id="sortable" class="divContent">
-                            <div data-dateno="1" id="days" class="daystyle" onclick="selectDay(1);">
-                                <span class="dayCount pl-2">1일차</span>
-                                <button class="dayDeleteBtn btnColor3" onclick="deleteDay(1);">-</button>
-                            </div>
-                            <div data-dateno="2" id="days" class="daystyle" onclick="selectDay(2);">
-                                <span class="dayCount pl-2">2일차</span>
-                                <button class="dayDeleteBtn btnColor3" onclick="deleteDay(2);">-</button>
-                            </div>
-                            <div data-dateno="3" id="days" class="daystyle" onclick="selectDay(3);">
-                                <span class="dayCount pl-2">3일차</span>
-                                <button class="dayDeleteBtn btnColor3" onclick="deleteDay(3);">-</button>
-                            </div>
-                            <div data-dateno="4" id="days" class="daystyle" onclick="selectDay(4);">
-                                <span class="dayCount pl-2">4일차</span>
-                                <button class="dayDeleteBtn btnColor3" onclick="deleteDay(4);">-</button>
-                            </div>
-                            <div data-dateno="5" id="days" class="daystyle" onclick="selectDay(5);">
-                                <span class="dayCount pl-2">5일차</span>
-                                <button class="dayDeleteBtn btnColor3" onclick="deleteDay(5);">-</button>
-                            </div>
+                        
                         </div>
                         
                         <div class="updateBtns p-3">
@@ -261,43 +242,7 @@
                         <h2 class="card-header main-back plannerDivHeader" id="selectedDay">n일차</h2>
                         <div class="card-body divContent p-3">
                             <div class="plannerAccodian" id="scheduleList">
-                                <div data-scheduleno="1" class="btn p-cont schedule" onclick="selectSchedule(1);">
-                                    <div class="row font-weight-bold accodianElement mb-1">
-                                        <div class="col-md-8">
-                                            <h1 class="scheduleTitle">첫번째 일정</h1>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <h3><input type="time" value="08:00" class="disableInput scheduleTime" disabled></h3>
-                                        </div>
-                                        <div class="col-md-1 toggleArrow" onclick="toggleArrow(this)">▼</div>
-                                    </div>
-                                    <div style="display:none">
-                                        <h4 class="mb-4 mt-4 scheduleLocation">서울역</h4>
-                                        <h4 class="mb-4 ">경비 : <span class="scheduleCost">10000</span>원 </h4>
-                                        <h4 class="mb-3 ">메모 내용</h4>
-                                        <h5 class="pl-3 scheduleMemo">가나다라 마바사</h5>
-                                    </div>
-                                    <hr class="mt-4 mb-3">
-                                </div>
-                                <div data-scheduleno="2" class="btn p-cont schedule" onclick="selectSchedule(2);">
-                                    <div class="row font-weight-bold accodianElement mb-1">
-                                        <div class="col-md-8">
-                                            <h1 class="scheduleTitle">두번째 일정</h1>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <h3><input type="time" value="09:00" class="disableInput scheduleTime" disabled></h3>
-                                        </div>
-                                        <div class="col-md-1 toggleArrow" onclick="toggleArrow(this)">▼</div>
-                                    </div>
-                                    <div style="display:none">
-                                        <h4 class="mb-4 mt-4 scheduleLocation">종각역</h4>
-                                        <h4 class="mb-4 ">경비 : <span class="scheduleCost">12000</span>원 </h4>
-                                        <h4 class="mb-3 ">메모 내용</h4>
-                                        <h5 class="pl-3 scheduleMemo">사바마 라다나가</h5>
-                                    </div>
-                                    <hr class="mt-4 mb-3">
-                                </div>                                 
-                                                                                  
+                                                                    
                             </div>
                             <div id="allMapPlace" style="width:100%; height: 350px;"></div>
                         </div>
@@ -308,30 +253,7 @@
                     <div class="divBorder chatBGC">
                         <h2 class="card-header main-back plannerDivHeader noselect">채팅</h2>
                         <div class="chatarea p-3">
-                        <!-- 페이지 생성 시 채팅내역 출력 -->
-                        	<!-- 다른사람의 채팅내역 -->
-                            <div class="chatbox overhidden">
-                            
-                                <div>
-                                    <img src = "" class="profileImg">
-                                    <span class="userId">발신자 id</span>
-                                </div>
-                                <div>
-                                    <div class="message">
-                                        <span>다른사람의 채팅내역</span>
-                                    </div>
-                                    <span class="messageTime">발신 시간</span>
-                                </div>
-                            </div>
-                            <!-- 내가 쓴 채팅내역 -->
-                            <div class="myChatbox overhidden">
-                                <div class="myMessage">
-                                    <span>나의 채팅내역</span>
-                                </div>
-                                <div>
-                                    <span class="myMessageTime">발신 시간</span>
-                                </div>
-                            </div>
+
                         </div>
                         
                         <div class="row p-4" style=" height: 18%;">
@@ -351,6 +273,7 @@
     <jsp:include page="../common/footer.jsp" />
 </body>
 
+<script type="text/javascript" src="${contextPath}/resources/js/map.js"></script>
 <script>
 
 //페이지 로딩 시 일정 수에 맞게 위치정보 Array에 자리생성
@@ -358,22 +281,21 @@
 // 1 = 카카오 위치 객체
 // 2 = lat + lng
 // 3 = 인포 윈도우
-var scheduleMarkers;
-
-var date = -1;
-var schedule= -1;
+var scheduleMarkers = new Array(new Array(), new Array(), new Array(),new Array());
+var planner = new Object();
+var days = new Array();
+var loadingInfo = 0;
+var loadingAddr = 0;
 
 $(function() {
 	var plannerInfo = '${plannerInfo}';
-/* 	var qwe = 522
-	console.log(plannerInfo[qwe-1] + "," + plannerInfo[qwe] + "," + plannerInfo[qwe+1]); */
 	var plannerJson = JSON.parse(plannerInfo)
-	
-	scheduleMarkers = new Array(new Array(), new Array(), new Array(),new Array());
+	/* var qwe = 538;
+	console.log(plannerInfo[qwe-2],plannerInfo[qwe-1],plannerInfo[qwe],plannerInfo[qwe+1],plannerInfo[qwe+2]); */
 	$("#join").click(function(){
 		console.log('1');
 		sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'JOIN', writer: "${userId}", content: ""}));
-		initPlanner(pj);
+		initPlanner(plannerJson);
 	})
 	console.log('1');
     // 페이지 입장 시 참여버튼 모달 출력
@@ -381,235 +303,290 @@ $(function() {
     
     
 });
+var iwContent = '';
 function initPlanner(pj){
+	planner.no = pj.plannerNo;
+	planner.title = pj.plannerTitle;
+	planner.pwd = pj.plannerPwd;
+	planner.cost = pj.plannerCost;
+	planner.createDT = pj.plannerCreateDT;
+	planner.modifyDT = pj.plannerModifyDT;
+	planner.startDT = pj.plannerStartDT;
+	planner.publicYN = pj.plannerPublicYN;
+	planner.deleteYN = pj.plannerDeleteYN;
+	planner.expiry = pj.plannerExpiry;
+	planner.count = pj.plannerCount;
+	planner.url = pj.plannerUrl;
+	planner.groupCode = pj.groupCode;
+	console.log(planner.no);
+	for(var d in pj.days){
+		var day = new Object();
+		day.no = pj.days[d].dateNo;
+		day.tripDate = pj.days[d].tripDate;
+		day.plannerNo = planner.no;
+		day.schedules = new Array();
+		for(var s in pj.days[d].schedules){
+			var schedule = new Object();
+			schedule.no = pj.days[d].schedules[s].scheduleNo;
+			schedule.title = pj.days[d].schedules[s].scheduleTitle;
+			schedule.cost = pj.days[d].schedules[s].scheduleCost;
+			schedule.time = pj.days[d].schedules[s].scheduleTime;
+			schedule.memo = pj.days[d].schedules[s].scheduleMemo;
+			schedule.locationNM = pj.days[d].schedules[s].scheduleLocationNM;
+			schedule.lat = pj.days[d].schedules[s].scheduleLat;
+			schedule.lng = pj.days[d].schedules[s].scheduleLng;
+			schedule.infoWindow = pj.days[d].schedules[s].infoWindow;
+			schedule.dateNo = pj.days[d].dateNo;
+			day.schedules.push(schedule);
+			
+			//페이지 로딩 시 일정 수에 맞게 위치정보 Array에 자리생성
+			// 0 = schedule 번호
+			// 1 = 카카오 위치 객체
+			// 2 = lat + lng
+			// 3 = 인포 윈도우
+			scheduleLatLng = new kakao.maps.LatLng(schedule.lat,schedule.lng)
+			var templocation = new kakao.maps.LatLng(36.435358898687994,127.5578038205071)
+			scheduleMarkers[0].push(schedule.no);
+			scheduleMarkers[1].push(scheduleLatLng)
+			scheduleMarkers[2].push(Number(schedule.lat)+Number(schedule.lng));
+			scheduleMarkers[3].push(null);
+			loadingInfo += 1;
+			//console.log("promise : " + getScheduleAddr(templocation,'나와라'));
+			getScheduleAddr(scheduleLatLng,schedule.locationNM,schedule.no).then(function(args){
+				for(var i in scheduleMarkers[0]){
+					if(scheduleMarkers[0][i] == args[0]){
+						scheduleMarkers[3][i] = args[1];
+						loadingAddr += 1;
+						if(loadingInfo == loadingAddr){
+							for(var i = 0; i < days.length; i++){
+								createDate(days[i].no);
+							}
+						}
+					}
+				}
+			});
+		}
+		days.push(day);
+	}
+	console.log("planner");
+	console.log(planner);
+	console.log("days");
+	sortDays(days);
+	for(var i = 0; i < days.length; i++){
+		sortSchedules(days[i].schedules);
+	}
+	console.log(days);
+	console.log("scheduleMarkers");
+	console.log(scheduleMarkers);
 	
 }
-//웹소켓을 지정한 url로 연결한다.
-let sock = new SockJS("<c:url value="/echo"/>");
-sock.onmessage = onMessage;
-sock.onclose = onClose;
-console.log('2');
 
-// 메시지 전송
-function chageback(color){
-	console.log(color);
-	$("#testbox").css("background",color);
-}
+//=======================================================================================//
+//====================================== 변환 관련 함수  ======================================//
+//=======================================================================================//
+function timeToTime(time){
+	var str = time.replace(/(.{2})/g,"$1:").slice(0,-1);
+	return str;
+} 
 
-// 서버로부터 메시지를 받았을 때
-function onMessage(msg) {
-	var jsonData = msg.data;
-	var data = JSON.parse(jsonData)
-	console.log("receive : " + data);
-	switch(data['type']){
-	case 'msg':
-		
-		if(data['id'] == '${userId}'){
-	     	// inputChat = 채팅 내역에 채팅창 올리는 함수
-	        // mkMyChatMsg = 내가 보낸 메세지로 채팅창 만드는 함수
-	        // mkMyChatMsg 매개변수 = (msgContent,msgTime)
-	        inputChat(mkMyChatMsg(data['content'],data['time']));
-		}else {
-			// inputChat = 채팅 내역에 채팅창 올리는 함수
-	        // mkChatMsg = 다른사람이 보낸 메세지로 채팅창 만드는 함수
-	        // mkChatMsg 매개변수 = (profileImg,userId,msgContent,msgTime)
-	        inputChat(mkChatMsg('',data['id'],data['content'],data['time']));
-		}
-		break;
-	case 'changeback':
-		console.log(dataFlag['content']);
-		switch(dataFlag['content']){
-		case 'red' :
-			chageback("red");
-			break;
-		case 'blue' :
-			chageback("blue");
-			break;
-		case 'green' :
-			chageback("green");
-			break;
-		}
+//=======================================================================================//
+//====================================== 정렬 관련 함수  ======================================//
+//=======================================================================================//
+
+function sortSchedules(schedules){
+	for(var i = schedules.length-1; i > 0; i--){
+        for(var j = 0; j < i; j++){
+        	if(schedules[j+1].time < schedules[j].time){
+                var temp = schedules[j];
+                schedules[j] = schedules[j+1];
+                schedules[j+1] = temp;
+            }   
+	    }
 	}
 }
-
-// 서버와 연결을 끊었을 때
-function onClose(evt) {
-	$("#data").append("연결 끊김");
+function sortDays(days){
+	for(var i = days.length-1; i > 0; i--){
+        for(var j = 0; j < i; j++){
+            if(days[j+1].tripDate < days[j].tripDate){
+                var temp = days[j];
+                days[j] = days[j+1];
+                days[j+1] = temp;
+            }   
+        }
+    }
 }
 
-$(function () {
-    
-    // 페이지 로딩 시 일정 수에 맞게 위치정보 Array에 자리생성
-    // 0 = schedule 번호
-    // 1 = 카카오 위치 객체
-    // 2 = lat + lng
-    // 3 = 인포 윈도우
-    $('.schedule').each(function(i, el){
-        scheduleMarkers[0].push($(el).data('scheduleno'));
-        scheduleMarkers[1].push(new kakao.maps.LatLng(0, 0));
-        scheduleMarkers[2].push('0');
-        scheduleMarkers[3].push(null);
-    });
 
-    var index = 1;
-    
-    // 복사 버튼 클릭 시 페이지 url 클립보드에 복사
-    $("#copy").on("click", function () {
-        var urlbox = document.getElementById('url');
-        urlbox.select();
-        document.execCommand('Copy');
-        alert('URL 이 복사 되었습니다.');
-    })
-
-    // 내가 쓴 채팅 보내는 함수
-    $("#send").click(function(){
-        // 채팅 입력창 내용 변수에 저장
-        var msg = document.getElementById("mymsg").value;
-        msg = msg.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-        
-        // 날짜 객체
-        var d = new Date();
-        var h = d.getHours();
-        var m = d.getMinutes();
-        if(m < 10)
-        	m = '0' + d.getMinutes();
-        if(h < 10)
-        	h = '0' + d.getHours();
-        	
-        // 현재 시간
-        var now = h + ':' + m;
-
-        // 채팅 입력창 비어있지 않으면 실행
-        if( msg != ''){
-            
-            console.log("send : " + JSON.stringify({chatRoomId: "${selectRoom}", type: 'msg', id: "${userId}", content: msg, time: now}));
-            sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'msg', id: "${userId}", content: msg, time: now}));
+function sortSchedule(){
+    var scheduleArr = $(".schedule");
+    for(var i = scheduleArr.length-1; i > 0; i--){
+        for(var j = 0; j < i; j++){
+            if($(scheduleArr[j+1]).find(".scheduleTime").val() 
+            < $(scheduleArr[j]).find(".scheduleTime").val()){
+                var temp = scheduleArr[j];
+                var temp1 = scheduleMarkers[0][j];
+                var temp2 = scheduleMarkers[1][j];
+                var temp3 = scheduleMarkers[2][j];
+                var temp4 = scheduleMarkers[3][j];
+                scheduleArr[j] = scheduleArr[j+1];
+                scheduleMarkers[0][j] = scheduleMarkers[0][j+1];
+                scheduleMarkers[1][j] = scheduleMarkers[1][j+1];
+                scheduleMarkers[2][j] = scheduleMarkers[2][j+1];
+                scheduleMarkers[3][j] = scheduleMarkers[3][j+1];
+                scheduleArr[j+1] = temp;
+                scheduleMarkers[0][j+1] = temp1;
+                scheduleMarkers[1][j+1] = temp2;
+                scheduleMarkers[2][j+1] = temp3;
+                scheduleMarkers[3][j+1] = temp4;
+            }   
         }
-
-        // 메세지 전송 후 채팅 입력창 비워줌
-        $('#mymsg').val('');
-    })
-
-    // 일차 마우스로 이동 가능하게 하고 정렬하는 함수
-    $("#sortable").disableSelection();
-    $("#sortable").sortable({
-        placeholder:".daystyleHighlight",
-        // 드래그 시작했을 때 작동
-        start: function(event, ui) {
-            ui.item.data('start_pos', ui.item.index());
-        },
-        // 드래그 끝났을 때 작동
-        stop: function(event, ui) {
-            var spos = ui.item.data('start_pos');
-            var epos = ui.item.index();
-            // 일차 정렬하는 함수
-            reorder();
-        }
+    }
+    $('#scheduleList').html('');
+    $(scheduleArr).each(function(i, arr){
+        $('#scheduleList').append(arr);
     });
-    var dayInd=6;
+    
+    displayAllPlaces(scheduleMarkers[1],scheduleMarkers[3]);
+    for(var i = 0; i < scheduleMarkers[0].length; i++ ){
+        console.log(i+"[0 : "+ scheduleMarkers[0][i] + ", 1 : " + scheduleMarkers[1][i] + ", 2 : " + scheduleMarkers[2][i] + "]");
+    }
+}
 
-    // 일차 추가하는 함수
-    // 매개변수 dateNo = PLANNER_DATE 테이블의 DATE_NO값을 넣어야함
-    $("#addDayBtn").click(function(dateNo){
-        
-        // 일차 만드는 HTML코드, dayInd는 테스트용이고 dateNo로 바꿔줘야함
-        var dayForm = 
-        '<div data-dateno="' + dayInd + '" id="days" class="daystyle" onclick="selectDay(' + dayInd + ');">' +
-        '<span class="dayCount pl-2">1일차</span>' +
-        '<button class="dayDeleteBtn btnColor3" onclick="deleteDay(' + dayInd + ');">-</button>' +
-        '</div>';
+//=======================================================================================//
+//====================================== 지도 관련 함수  ======================================//
+//=======================================================================================//
 
-        // 일차 목록에 추가함
-        $("#sortable").append(dayForm)
+function getScheduleAddr(templocation,locationName,scheduleNo){
+	if(templocation.getLng() + templocation.getLat() != 0){
+		return new Promise(function(resolve, reject){
+			try{
+				var contentArr= new Array();
+				contentArr.push(scheduleNo);
+				searchDetailAddrFromCoords(templocation, function(result, status) {
+				    if (status === kakao.maps.services.Status.OK) {
+				        var detailAddr = !!result[0].road_address ? '<div style="font-size: 14px;">도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
+				        detailAddr += '<div style="font-size: 14px;">지번 주소 : ' + result[0].address.address_name + '</div>';
+				        
+			        	content = 	'<div class="bAddr">' +
+				                        '<span class="title">' + locationName + '</span>' + 
+				                        detailAddr + 
+			                        '</div>';
+				      	contentArr.push(content);
+				        resolve(contentArr);
+				    }
+				});
+				
+			} catch(error){
+				reject(error)
+			}
+		});
+	}else{
+		return new Promise(function(resolve, reject){
+			try{
+				var contentArr= new Array();
+				contentArr.push(scheduleNo);
+				contentArr.push(null);
+				resolve(contentArr);
+			}catch(error){
+				reject(error);
+			}
+		});
+	}
+} 
 
-        // dayInd 변수는 테스트때만 사용하고 실제 DB사용할때는 지울것
-        dayInd = dayInd+1;
+//=======================================================================================//
+//====================================== Day 관련 함수 ======================================//
+//=======================================================================================//
 
-        // 추가하고 정렬(몇일차인지 계산해서 텍스트 바꿔줌)
-        reorder();
+//일차 추가하는 함수
+// 매개변수 dateNo = PLANNER_DATE 테이블의 DATE_NO값을 넣어야함
+function createDate(dateNo){
+    
+    // 일차 만드는 HTML코드, dayInd는 테스트용이고 dateNo로 바꿔줘야함
+    var dayForm = 
+    '<div data-dateno="' + dateNo + '" id="days" class="daystyle" onclick="selectDay(' + dateNo + ');">' +
+    '<span class="dayCount pl-2">1일차</span>' +
+    '<button class="dayDeleteBtn btnColor3" onclick="deleteDay(' + dateNo + ');">-</button>' +
+    '</div>';
+
+    // 일차 목록에 추가함
+    $("#sortable").append(dayForm)
+
+    // 추가하고 정렬(몇일차인지 계산해서 텍스트 바꿔줌)
+    reorder();
+}
+
+//일차 선택하는 함수
+function selectDay(no){
+
+    // 매개변수로 받은 인덱스로 div를 찾아 저장할 변수
+    var selectedDay;
+
+    // .daystyle 속성을 가진 요소들의 배열중
+    // ind와 같은 번호의 요소를 selectedDay에 저장
+    $('.daystyle').each(function(i, box) {
+        if($(box).data('dateno') == no)
+            selectedDay = box;
     });
 
-    // 페이지 로딩될 때 지도영역 감추는거 그냥 함수로 하는부분
-    $("#inputScheduleLocationArea").toggle();
+    // 몇일차인지 찾아서 바꿔줌
+    $('#selectedDay').html($(selectedDay).find('span').html());
+    $('#selectedDay').data('dateno',no)
 
-    // 지도추가 버튼 클릭 시 보이고 안보이고 토글, 버튼 텍스트 변경
-    $("#toggleMap").click(function(){
-        $("#inputScheduleLocationArea").toggle(['slow']);
-        if($("#toggleMap").html() == '지도 추가')
-            $("#toggleMap").html('지도 삭제');
-        else
-        $("#toggleMap").html('지도 추가');
-        
-    });
-    $('textarea').keyup(function (evt) {
-    	console.log("textarea keyup");
-    	if (evt.keyCode == 13 && !evt.shiftKey) {
-    		console.log('click');
-    	    $('#send').click();
-    	}else if(evt.keyCode == 13 && evt.shiftKey){
-    		console.log('\r\n');
-    		$('#send').val($('#send').val()+'<br>');
+    // 여기서 data('dateno')=DATE_NO 조건을 만족하는 행을 가져와 일정 목록에 추가하면서
+    // scheduleMarkers을 scheduleMarkers = new Array(new Array(), new Array());로 초기화
+    // scheduleMarkers[0] 에 add()함수를 이용하여 SCHEDULE_NO를 추가
+    // scheduleMarkers[1] 에 좌표 두개를 카카오맵 객체로 묶어서 add() 해야함
+    console.log("befor");
+    $("#scheduleList").html('');
+    for(var i = 0; i < days.length; i++){
+    	if(days[i].no == no){
+    		for(var j = 0; j < days[i].schedules.length; j++){
+    			var sno = days[i].schedules[j].no;
+    			var stitle = days[i].schedules[j].title;
+    			var stime = timeToTime(days[i].schedules[j].time);
+    			var scost = days[i].schedules[j].cost;
+    			var smemo = days[i].schedules[j].memo;
+    			var slocationName = days[i].schedules[j].locationNM;
+    			
+   				createSchedule(sno,stitle,stime,scost,smemo,slocationName);
+    		}
     	}
-    });
-});
-
-// 뒤로가기 하는 함수(참여 모달창의 이전으로 버튼에 사용)
-function goBack(){
-    console.log("돌아가기");
-    history.go(-1);
+    }
+    console.log("after");
 }
 
-// 다른사람이 보낸 채팅 메세지 만들어서 리턴하는 함수
-function mkChatMsg(profileImg,userId,msgContent,msgTime){
-    var chatMsg =
-    '<div class="chatbox overhidden">' +
-    '<div>' +
-    '<img src = "' + profileImg + '" class="profileImg">' +
-    '<span class="userId">' + userId + '</span>' +
-    '</div>' +
-    '<div>' +
-    '<div class="message">' +
-    '<span>' + msgContent + '</span>' +
-    '</div>' +
-    '<span class="messageTime">' + msgTime + '</span>' +
-    '</div>' +
-    '</div>';
+//=======================================================================================//
+//==================================== Schedule 관련 함수 ===================================//
+//=======================================================================================//
 
-    return chatMsg;
+//일정 만드는 코드 반환하는 함수
+//첫번째 매개변수는 SCHEDULE 테이블에서 SCHEDULE_NO값이 들어가야 하는데
+//새로운 일정을 만드는 것이니 시퀀스 NEXTVAL 얻어와서 넣어야함
+function createSchedule(no,title,time,cost,memo,locationName){
+	var schedule = 
+	'<div data-scheduleno="' + no + '" class="btn p-cont schedule" onclick="selectSchedule(' + no + ')">' +
+	'<div class="row font-weight-bold accodianElement mb-1">' +
+	'<div class="col-md-8">' +
+	'<h1 class="scheduleTitle">' + title + '</h1>' +
+	'</div>' +
+	'<div class="col-md-3">' +
+	'<h3><input type="time" value="' + time + '" class="disableInput scheduleTime" disabled></h3>' +
+	'</div>' +
+	'<div class="col-md-1 toggleArrow" onclick="toggleArrow(this)">▼</div>' +
+	'</div>' +
+	'<div style="display:none">' +
+	'<h4 class="mb-4 mt-4 scheduleLocation">' + locationName + '</h4>' +
+	'<h4 class="mb-4 ">경비 : <span class="scheduleCost">' + cost + '</span>원</h4>' +
+	'<h4 class="mb-3 ">메모 내용</h4>' +
+	'<h5 class="pl-3 scheduleMemo">' + memo + '</h5>' +
+	'</div>' +
+	'<hr class="mt-4 mb-3">' +
+	'</div>';
+	$("#scheduleList").append(schedule);
 }
 
-// 내가 보낸 채팅 메세지 만들어서 리턴하는 함수
-function mkMyChatMsg(msgContent,msgTime){
-    var myChatMsg =
-    // '<div class="myChatbox">' +
-    // '<span class="messageTime">' + msgTime + '</span>' +
-    // '<span class="myMessage">' + msgContent + '</span>' +
-    // '</div>';
-    '<div class="myChatbox overhidden">' +
-    '<div class="myMessage">' +
-    '<span>' + msgContent + '</span>' +
-    '</div>' +
-    '<div>' +
-    '<span class="myMessageTime">' + msgTime + '</span>' +
-    '</div>' +
-    '</div>';
-        
-    return myChatMsg;
-}
-
-// 채팅내역에 채팅창 추가하는 함수( 매개변수 msg = 채팅창)
-function inputChat(msg){
-    var $chatArea = $(".chatarea")
-    $chatArea.append(msg);
-
-    // 스크롤 자동으로 아래로 내려주는 함수
-    $chatArea.scrollTop($chatArea.prop("scrollHeight"));
-}
-
-// createNo 변수는 테스트때만 사용하고 실제 DB사용할때는 지울것
-var createNo=5;
-
-// 일정 추가하는 함수
+//일정 추가하는 함수
 $('#addSchedule').click(function(){
     
     var title = $('#inputScheduleTitle').val();
@@ -660,31 +637,8 @@ $('#addSchedule').click(function(){
     }
 });
 
-// 일정 만드는 코드 반환하는 함수
-// 첫번째 매개변수는 SCHEDULE 테이블에서 SCHEDULE_NO값이 들어가야 하는데
-// 새로운 일정을 만드는 것이니 시퀀스 NEXTVAL 얻어와서 넣어야함
-function createSchedule(no,title,time,cost,memo,locationName){
-    var schedule = 
-    '<div data-scheduleno="' + no + '" class="btn p-cont schedule" onclick="selectSchedule(' + no + ')">' +
-    '<div class="row font-weight-bold accodianElement mb-1">' +
-    '<div class="col-md-8">' +
-    '<h1 class="scheduleTitle">' + title + '</h1>' +
-    '</div>' +
-    '<div class="col-md-3">' +
-    '<h3><input type="time" value="' + time + '" class="disableInput scheduleTime" disabled></h3>' +
-    '</div>' +
-    '<div class="col-md-1 toggleArrow" onclick="toggleArrow(this)">▼</div>' +
-    '</div>' +
-    '<div style="display:none">' +
-    '<h4 class="mb-4 mt-4 scheduleLocation">' + locationName + '</h4>' +
-    '<h4 class="mb-4 ">경비 : <span class="scheduleCost">' + cost + '</span>원</h4>' +
-    '<h4 class="mb-3 ">메모 내용</h4>' +
-    '<h5 class="pl-3 scheduleMemo">' + memo + '</h5>' +
-    '</div>' +
-    '<hr class="mt-4 mb-3">' +
-    '</div>';
-    $("#scheduleList").append(schedule);
-}
+//createNo 변수는 테스트때만 사용하고 실제 DB사용할때는 지울것
+var createNo=5;
 
 function selectScheduleNo(no){
     var selectedSchedule;
@@ -795,41 +749,208 @@ $('#removeSchedule').click(function(){
 });
 
 
+//=======================================================================================//
+//==================================== Websocket 관련 함수 ==================================//
+//=======================================================================================//
 
-function sortSchedule(){
-    var scheduleArr = $(".schedule");
-    for(var i = scheduleArr.length-1; i > 0; i--){
-        for(var j = 0; j < i; j++){
-            if($(scheduleArr[j+1]).find(".scheduleTime").val() 
-            < $(scheduleArr[j]).find(".scheduleTime").val()){
-                var temp = scheduleArr[j];
-                var temp1 = scheduleMarkers[0][j];
-                var temp2 = scheduleMarkers[1][j];
-                var temp3 = scheduleMarkers[2][j];
-                var temp4 = scheduleMarkers[3][j];
-                scheduleArr[j] = scheduleArr[j+1];
-                scheduleMarkers[0][j] = scheduleMarkers[0][j+1];
-                scheduleMarkers[1][j] = scheduleMarkers[1][j+1];
-                scheduleMarkers[2][j] = scheduleMarkers[2][j+1];
-                scheduleMarkers[3][j] = scheduleMarkers[3][j+1];
-                scheduleArr[j+1] = temp;
-                scheduleMarkers[0][j+1] = temp1;
-                scheduleMarkers[1][j+1] = temp2;
-                scheduleMarkers[2][j+1] = temp3;
-                scheduleMarkers[3][j+1] = temp4;
-            }   
+//웹소켓을 지정한 url로 연결한다.
+let sock = new SockJS("<c:url value="/echo"/>");
+sock.onmessage = onMessage;
+sock.onclose = onClose;
+console.log('2');
+
+// 메시지 전송
+function chageback(color){
+	console.log(color);
+	$("#testbox").css("background",color);
+}
+
+// 서버로부터 메시지를 받았을 때
+function onMessage(msg) {
+	var jsonData = msg.data;
+	var data = JSON.parse(jsonData)
+	console.log("receive : " + data);
+	switch(data['type']){
+	case 'msg':
+		
+		if(data['id'] == '${userId}'){
+	     	// inputChat = 채팅 내역에 채팅창 올리는 함수
+	        // mkMyChatMsg = 내가 보낸 메세지로 채팅창 만드는 함수
+	        // mkMyChatMsg 매개변수 = (msgContent,msgTime)
+	        inputChat(mkMyChatMsg(data['content'],data['time']));
+		}else {
+			// inputChat = 채팅 내역에 채팅창 올리는 함수
+	        // mkChatMsg = 다른사람이 보낸 메세지로 채팅창 만드는 함수
+	        // mkChatMsg 매개변수 = (profileImg,userId,msgContent,msgTime)
+	        inputChat(mkChatMsg('',data['id'],data['content'],data['time']));
+		}
+		break;
+	case 'changeback':
+		console.log(dataFlag['content']);
+		switch(dataFlag['content']){
+		case 'red' :
+			chageback("red");
+			break;
+		case 'blue' :
+			chageback("blue");
+			break;
+		case 'green' :
+			chageback("green");
+			break;
+		}
+	}
+}
+
+// 서버와 연결을 끊었을 때
+function onClose(evt) {
+	$("#data").append("연결 끊김");
+}
+
+//=======================================================================================//
+//====================================== 채팅 관련 함수  ======================================//
+//=======================================================================================//
+
+// 다른사람이 보낸 채팅 메세지 만들어서 리턴하는 함수
+function mkChatMsg(profileImg,userId,msgContent,msgTime){
+    var chatMsg =
+    '<div class="chatbox overhidden">' +
+    '<div>' +
+    '<img src = "' + profileImg + '" class="profileImg">' +
+    '<span class="userId">' + userId + '</span>' +
+    '</div>' +
+    '<div>' +
+    '<div class="message">' +
+    '<span>' + msgContent + '</span>' +
+    '</div>' +
+    '<span class="messageTime">' + msgTime + '</span>' +
+    '</div>' +
+    '</div>';
+
+    return chatMsg;
+}
+
+// 내가 보낸 채팅 메세지 만들어서 리턴하는 함수
+function mkMyChatMsg(msgContent,msgTime){
+    var myChatMsg =
+    // '<div class="myChatbox">' +
+    // '<span class="messageTime">' + msgTime + '</span>' +
+    // '<span class="myMessage">' + msgContent + '</span>' +
+    // '</div>';
+    '<div class="myChatbox overhidden">' +
+    '<div class="myMessage">' +
+    '<span>' + msgContent + '</span>' +
+    '</div>' +
+    '<div>' +
+    '<span class="myMessageTime">' + msgTime + '</span>' +
+    '</div>' +
+    '</div>';
+        
+    return myChatMsg;
+}
+
+// 채팅내역에 채팅창 추가하는 함수( 매개변수 msg = 채팅창)
+function inputChat(msg){
+    var $chatArea = $(".chatarea")
+    $chatArea.append(msg);
+
+    // 스크롤 자동으로 아래로 내려주는 함수
+    $chatArea.scrollTop($chatArea.prop("scrollHeight"));
+}
+
+//=======================================================================================//
+//======================================== 기타 함수 ========================================//
+//=======================================================================================//
+
+$(function () {
+    
+    var index = 1;
+    
+    // 복사 버튼 클릭 시 페이지 url 클립보드에 복사
+    $("#copy").on("click", function () {
+        var urlbox = document.getElementById('url');
+        urlbox.select();
+        document.execCommand('Copy');
+        alert('URL 이 복사 되었습니다.');
+    })
+
+    // 내가 쓴 채팅 보내는 함수
+    $("#send").click(function(){
+        // 채팅 입력창 내용 변수에 저장
+        var msg = document.getElementById("mymsg").value;
+        msg = msg.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+        
+        // 날짜 객체
+        var d = new Date();
+        var h = d.getHours();
+        var m = d.getMinutes();
+        if(m < 10)
+        	m = '0' + d.getMinutes();
+        if(h < 10)
+        	h = '0' + d.getHours();
+        	
+        // 현재 시간
+        var now = h + ':' + m;
+
+        // 채팅 입력창 비어있지 않으면 실행
+        if( msg != ''){
+            
+            console.log("send : " + JSON.stringify({chatRoomId: "${selectRoom}", type: 'msg', id: "${userId}", content: msg, time: now}));
+            sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'msg', id: "${userId}", content: msg, time: now}));
         }
-    }
-    $('#scheduleList').html('');
-    $(scheduleArr).each(function(i, arr){
-        $('#scheduleList').append(arr);
+
+        // 메세지 전송 후 채팅 입력창 비워줌
+        $('#mymsg').val('');
+    })
+
+    // 일차 마우스로 이동 가능하게 하고 정렬하는 함수
+    $("#sortable").disableSelection();
+    $("#sortable").sortable({
+        placeholder:".daystyleHighlight",
+        // 드래그 시작했을 때 작동
+        start: function(event, ui) {
+            ui.item.data('start_pos', ui.item.index());
+        },
+        // 드래그 끝났을 때 작동
+        stop: function(event, ui) {
+            var spos = ui.item.data('start_pos');
+            var epos = ui.item.index();
+            // 일차 정렬하는 함수
+            reorder();
+        }
     });
     
-    displayAllPlaces(scheduleMarkers[1],scheduleMarkers[3]);
-    for(var i = 0; i < scheduleMarkers[0].length; i++ ){
-        console.log(i+"[0 : "+ scheduleMarkers[0][i] + ", 1 : " + scheduleMarkers[1][i] + ", 2 : " + scheduleMarkers[2][i] + "]");
-    }
+    // 페이지 로딩될 때 지도영역 감추는거 그냥 함수로 하는부분
+    $("#inputScheduleLocationArea").toggle();
+
+    // 지도추가 버튼 클릭 시 보이고 안보이고 토글, 버튼 텍스트 변경
+    $("#toggleMap").click(function(){
+        $("#inputScheduleLocationArea").toggle(['slow']);
+        if($("#toggleMap").html() == '지도 추가')
+            $("#toggleMap").html('지도 삭제');
+        else
+        $("#toggleMap").html('지도 추가');
+        
+    });
+    $('textarea').keyup(function (evt) {
+    	console.log("textarea keyup");
+    	if (evt.keyCode == 13 && !evt.shiftKey) {
+    		console.log('click');
+    	    $('#send').click();
+    	}else if(evt.keyCode == 13 && evt.shiftKey){
+    		console.log('\r\n');
+    		$('#send').val($('#send').val()+'<br>');
+    	}
+    });
+});
+
+// 뒤로가기 하는 함수(참여 모달창의 이전으로 버튼에 사용)
+function goBack(){
+    console.log("돌아가기");
+    history.go(-1);
 }
+
+
+
 // 일정목록의 삼각형 클릭하면 일정 자세히 보여주면서 삼각형 모양 바꿔주는 함수
 function toggleArrow(e){
     if(!$(e).parent().next().is(":visible"))
@@ -854,38 +975,7 @@ function deleteDay(ind){
 
 }
 
-// 일차 선택하는 함수
-function selectDay(ind){
 
-    // 매개변수로 받은 인덱스로 div를 찾아 저장할 변수
-    var selectedDay;
-
-    // .daystyle 속성을 가진 요소들의 배열중
-    // ind와 같은 번호의 요소를 selectedDay에 저장
-    $('.daystyle').each(function(i, box) {
-        if($(box).data('dateno')==ind)
-            selectedDay = box;
-    });
-
-    // 몇일차인지 찾아서 바꿔줌
-    $('#selectedDay').html($(selectedDay).find('span').html());
-    $('#selectedDay').data('dateno',$(selectedDay).data('dateno'))
-
-    // 여기서 data('dateno')=DATE_NO 조건을 만족하는 행을 가져와 일정 목록에 추가하면서
-    // scheduleMarkers을 scheduleMarkers = new Array(new Array(), new Array());로 초기화
-    // scheduleMarkers[0] 에 add()함수를 이용하여 SCHEDULE_NO를 추가
-    // scheduleMarkers[1] 에 좌표 두개를 카카오맵 객체로 묶어서 add() 해야함
-
-    // 아래는 테스트용 코드
-    scheduleMarkers = new Array(new Array(), new Array(), new Array(), new Array());
-    $('.schedule').each(function(i, el){
-        scheduleMarkers[0].push($(el).data('scheduleno'));
-        scheduleMarkers[1].push(new kakao.maps.LatLng(0, 0));
-        scheduleMarkers[2].push('0');
-        scheduleMarkers[3].push(null);
-    }); 
-    console.log(scheduleMarkers);
-}
 
 // 일차 정렬하여 몇일차인지 텍스트 바꿔줌
 function reorder() {
@@ -893,7 +983,5 @@ function reorder() {
         $(box).find(".dayCount").html(i + 1 + "일차");
     });
 };
-
 </script>
-<script type="text/javascript" src="${contextPath}/resources/js/map.js"></script>
 </html>

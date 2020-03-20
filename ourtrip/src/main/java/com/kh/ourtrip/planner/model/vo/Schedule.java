@@ -10,7 +10,9 @@ public class Schedule {
 	private String scheduleLocationNM;
 	private double scheduleLat;
 	private double scheduleLng;
+	//private String infoWindow;
 	private int dateNo;
+
 	
 	public Schedule() {
 	}
@@ -92,6 +94,14 @@ public class Schedule {
 	public void setScheduleLng(double scheduleLng) {
 		this.scheduleLng = scheduleLng;
 	}
+
+//	public String getInfoWindow() {
+//		return infoWindow;
+//	}
+//
+//	public void setInfoWindow(String infoWindow) {
+//		this.infoWindow = infoWindow;
+//	}
 
 	public int getDateNo() {
 		return dateNo;

@@ -249,6 +249,14 @@ public class PlannerView {
 		this.scheduleLng = scheduleLng;
 	}
 
+//	public String getInfoWindow() {
+//		return infoWindow;
+//	}
+//	
+//	public void setInfoWindow(String infoWindow) {
+//		this.infoWindow = infoWindow;
+//	}
+	
 	public int getSmallAreaCode() {
 		return smallAreaCode;
 	}
@@ -277,6 +285,8 @@ public class PlannerView {
 				+ ", scheduleLocationNM=" + scheduleLocationNM + ", scheduleLat=" + scheduleLat + ", scheduleLng="
 				+ scheduleLng + ", smallAreaCode=" + smallAreaCode + ", largeAreaCode=" + largeAreaCode + "]";
 	}
+
+	
 
 	
 }
