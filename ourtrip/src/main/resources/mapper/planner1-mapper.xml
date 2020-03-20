@@ -30,7 +30,7 @@
 		<result property="largeAreaCode" column="SMALL_AREA_CODE"/>
 	</resultMap>
 	
-	<resultMap type="Planner1" id="planner1ResultSet">
+	<resultMap type="Planner" id="planner1ResultSet">
 		<id property="plannerNo" column="PLANNER_NO"/>
 		<result property="plannerTitle" column="PLANNER_TITLE"/>
 		<result property="plannerPwd" column="PLANNER_PWD"/>
