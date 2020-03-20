@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,51 +19,154 @@ public class AdminServiceImpl implements AdminService{
 	@Autowired
 	public AdminDAO adminDAO;
 	
-	/** 방문정보조회용 Service
-	 * @return visitCounts
+	/** dashBoard 정보 조회용 Service
+	 * @return dashBoardData
 	 * @throws Exception
 	 */
 	@Override
-	public Map<String, Object> getVisitCount() throws Exception {
-		//List<Date> fixList = new ArrayList<Date>();
+	public Map<String, Object> getDashBoardData() throws Exception {
+				
+		// 방문수와 플래너 갯수를 담을 객체
+		Map<String, Object> dashBoardData = new HashMap<String, Object>();
 		
 		// 포맷형식
-		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+		// SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 		SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+		SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
 		
-		// DB에서 가져온 정보(java.util.Date타입)
-		List<Date> vList = adminDAO.getVisitLog();
+		// 방문자 전체 날짜 가져오기(java.util.Date타입)
+		List<Date> vList = adminDAO.getVisitDateList();
 		
+		// 오늘날짜 생성
 		Date today = new Date();
-		String strToday = monthFormat.format(today);
 		
+		// MM만 나오게 포맷
+		String strMonth = monthFormat.format(today);
+		// dd만 나오게 포맷
+		String strDay = dayFormat.format(today);
 		
+		// dd를 int타입으로 형변환
+		int intDay = Integer.parseInt(strDay);
+		
+		// 날짜별 방문수 담을 배열 생성
 		Integer[] weekVisitCount = {0,0,0,0,0,0,0};
-		Integer monthCount = 0;
+		
+		// 이번달 방문수 담을 객체
+		Integer vMonthCount = 0;
+		
 		for(Date date : vList) {
-			if(strToday.equals(monthFormat.format(date))) {
-				monthCount++;
+			// 달부분이 같은 경우 이번달 방문수 증가
+			if(strMonth.equals(monthFormat.format(date))) {
+				vMonthCount++;
 			}
 			
-			long calTime = (today.getTime()-date.getTime())/(24*60*60*1000);
-			calTime = Math.abs(calTime);
+			// 일일 방문 통계 계산
 			
-			if(calTime == 0) weekVisitCount[6]++;
-			else if(calTime == 1) weekVisitCount[5]++;
-			else if(calTime == 2) weekVisitCount[4]++;
-			else if(calTime == 3) weekVisitCount[3]++;
-			else if(calTime == 4) weekVisitCount[2]++;
-			else if(calTime == 5) weekVisitCount[1]++;
-			else if(calTime == 6) weekVisitCount[0]++;
+			// 날짜만 추출
+			String strDate = dayFormat.format(date);
+			// 비교계산을 위해 숫자형으로 형변환
+			int intDate = Integer.parseInt(strDate);
+			// 현재날짜 - 데이터날짜  = 경과시간
+			int result = intDay - intDate;
+			
+			switch (result) {
+			case 0: weekVisitCount[6]++; break;
+			case 1: weekVisitCount[5]++; break;
+			case 2: weekVisitCount[4]++; break;
+			case 3: weekVisitCount[3]++; break;
+			case 4: weekVisitCount[2]++; break;
+			case 5: weekVisitCount[1]++; break;
+			case 6: weekVisitCount[0]++; break;
+			}
+
 		}
 		
 		for(int i=0; i<weekVisitCount.length; i++) {
 			System.out.println("날짜별 방문수 : " + weekVisitCount[i]);
 		}
 		
-		System.out.println("이달방문수 : " + monthCount);
+		// 총 방문수 
+		Integer vTotal = vList.size();
+		dashBoardData.put("weekVisitCount", weekVisitCount);
+		dashBoardData.put("vMonthCount", vMonthCount);
+		dashBoardData.put("vTotal", vTotal);
 		
-		System.out.println("총방문수 : " + vList.size());
+		///////////////////////////////////////////////////////
+		// 플래너 생성 전체 날짜  가져오기
+		List<Date> pList = adminDAO.getPlannerDateList();
+		
+		// 이번달 플래너수 담을 객체
+		Integer pMonthCount = 0;
+		
+		// 날짜별 planner 담을 배열 생성
+		Integer[] weekPlannerCount = {0,0,0,0,0,0,0};
+		
+		for(Date date : pList) {
+			
+			// 달부분이 같은 경우 이번달 플래너수 증가
+			if(strMonth.equals(monthFormat.format(date))) {
+				pMonthCount++;
+			}
+			
+			// 일일 방문 통계 계산
+			
+			// 날짜만 추출
+			String strDate = dayFormat.format(date);
+			// 비교계산을 위해 숫자형으로 형변환
+			int intDate = Integer.parseInt(strDate);
+			// 현재날짜 - 데이터날짜  = 경과시간
+			int result = intDay - intDate;
+			
+			switch (result) {
+			case 0: weekPlannerCount[6]++; break;
+			case 1: weekPlannerCount[5]++; break;
+			case 2: weekPlannerCount[4]++; break;
+			case 3: weekPlannerCount[3]++; break;
+			case 4: weekPlannerCount[2]++; break;
+			case 5: weekPlannerCount[1]++; break;
+			case 6: weekPlannerCount[0]++; break;
+			}
+
+		}
+		
+		for(int i=0; i<weekVisitCount.length; i++) {
+			System.out.println("날짜별 플래너 수 : " + weekPlannerCount[i]);
+		}
+		
+		// 총 플래너수 
+		Integer pTotal = pList.size();
+		dashBoardData.put("weekPlannerCount", weekPlannerCount);
+		dashBoardData.put("pMonthCount", pMonthCount);
+		dashBoardData.put("pTotal", pTotal);
+		
+		System.out.println(dashBoardData);
+		//System.out.println(pList);
+		
+		return dashBoardData;
+		
+		// 오늘날짜 - 지난날짜 / 하루 = 경과시간
+		// long calTime = (today.getTime()-date.getTime())/(24*60*60*1000);
+		// calTime = Math.abs(calTime);
+		
+		// 각 경과 날짜를 카운트 하여 최근꺼부터 뒤부터 저장
+//			if(calTime == 0) weekVisitCount[6]++;
+//			else if(calTime == 1) weekVisitCount[5]++;
+//			else if(calTime == 2) weekVisitCount[4]++;
+//			else if(calTime == 3) weekVisitCount[3]++;
+//			else if(calTime == 4) weekVisitCount[2]++;
+//			else if(calTime == 5) weekVisitCount[1]++;
+//			else if(calTime == 6) weekVisitCount[0]++;
+//		
+//		System.out.println("이달방문수 : " + monthCount);
+//		
+//		System.out.println("총방문수 : " + vList.size());
+//		
+//		
+//		System.out.println("map에 담긴 일주일 방문자수 : " + visitCounts.get("weekVisitCount"));
+//		System.out.println("map에 담긴 한달 방문자수 : " + visitCounts.get("monthCount"));
+//		System.out.println("map에 담긴 총 방문자수 : " + visitCounts.get("vTotal"));
+//		
+		
 //		// 오늘날짜
 //        Calendar cal = Calendar.getInstance();
 //        cal.setTime(new Date());
@@ -147,7 +251,7 @@ public class AdminServiceImpl implements AdminService{
 //		//System.out.println("이번주갯수 : " + dayCount);
 //		
 		
-		return null;
+		
 	}
 
 }
