@@ -76,5 +76,41 @@ public class MemberDAO {
 		return sqlSession.selectOne("memberMapper.selectMemberNo", member);
 	}
 
+	/** 회원 프로필 사진 조회용 DAO
+	 * @param memberNo
+	 * @return profileIamge
+	 * @throws Exception
+	 */
+	public ProfileImage selectProfileImage(int memberNo) throws Exception{
+		return sqlSession.selectOne("memberMapper.selectProfileImage", memberNo);
+	}
+
+	/** 회원 닉네임 수정용 DAO
+	 * @param member
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateNickName(Member member) throws Exception{
+		return sqlSession.update("memberMapper.updateNickName", member);
+	}
+
+	/** 회원 프로필 사진 삭제용 DAO
+	 * @param memberNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int deleteProfileImage(int memberNo) throws Exception{
+		return sqlSession.delete("memberMapper.deleteProfileImage", memberNo);
+	}
+
+	/** 회원 프로필 사진 수정용 DAO
+	 * @param pi
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateProfileImage(ProfileImage pi) throws Exception{
+		return sqlSession.update("memberMapper.updateProfileImage", pi);
+	}
+
 
 }
