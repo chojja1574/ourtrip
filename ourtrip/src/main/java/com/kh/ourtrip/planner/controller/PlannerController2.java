@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.ourtrip.planner.model.service.PlannerService2;
 import com.kh.ourtrip.planner.model.vo.Day;
-import com.kh.ourtrip.planner.model.vo.Planner1;
+import com.kh.ourtrip.planner.model.vo.Planner;
 import com.kh.ourtrip.planner.model.vo.PlannerView;
 import com.kh.ourtrip.planner.model.vo.Schedule;
 
@@ -41,7 +41,7 @@ public class PlannerController2 {
 		
 		JSONObject jsonObj = null;
 		JSONParser jsonParser = new JSONParser();
-		Planner1 selectedPlanner = null;
+		Planner selectedPlanner = null;
 		System.out.println("editplanner");
 		try {
 			boolean inputPvVal = true; 
@@ -116,7 +116,7 @@ public class PlannerController2 {
 			    System.out.println("key : " + entry.getKey() + " / value : " + entry.getValue());
 			    
 			}
-			selectedPlanner = new Planner1(no, plannerTitle, plannerPwd, plannerCost, 
+			selectedPlanner = new Planner(no, plannerTitle, plannerPwd, plannerCost, 
 					plannerCreateDT, plannerModifyDT, plannerStartDT, plannerPublicYN, plannerDeleteYN, 
 					plannerExpiry, plannerCount, plannerUrl, groupCode, dayList);
 			//selectedPlanner.toString()
