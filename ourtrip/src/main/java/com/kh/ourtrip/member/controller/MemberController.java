@@ -2,12 +2,15 @@ package com.kh.ourtrip.member.controller;
 
 import java.io.File;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,24 +32,47 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
-	
+	// 로그인 화면 이동
 	@RequestMapping(value="loginForm")
-	public String loginForm() {
+	public String loginForm(Model model, @CookieValue(value = "saveEmail", required = false) String saveEmail) {
+		
+		if(saveEmail != null) {
+			model.addAttribute("saveEmail", saveEmail);
+		}
+		
 		return "member/login";
 	}
 	
+	// 로그인
 	@RequestMapping(value="login")
-	public String login(Member member, Model model, RedirectAttributes rdAttr) {
+	public String login(Member member, String saveEmail, Model model, RedirectAttributes rdAttr,
+			HttpSession session, HttpServletResponse response ) {
 		member.setSignUpRoute("1");
+		
+		System.out.println("saveEmail : " + saveEmail);
 		
 		try {
 			Member loginMember = memberService.login(member);
 			
 			String path = null;
 			if(loginMember != null) {
+				// 세션 만료시간 1시간
+				session.setMaxInactiveInterval(60 * 60);
 				
+				// 로그인 성공 시 아이디를 쿠키에 저장
+				// 관리자는 저장하지 않음
 				if(loginMember.getMemberGrade().equals("A")) path = "redirect:/admin/main";
-				else path = "redirect:/";
+				else {
+					Cookie cookie = new Cookie("saveEmail", member.getMemberEmail());
+					
+					if(saveEmail != null) cookie.setMaxAge(60 * 60 * 24 * 7); // 세션 유효 기간 7일
+					else cookie.setMaxAge(0); // 쿠키 만료
+					
+					cookie.setPath("/"); // 쿠키 사용할 수 있는 도메인 설정
+					response.addCookie(cookie); // 쿠키를 브라우저에 전송
+					
+					path = "redirect:/";
+				}
 				
 				model.addAttribute("loginMember", loginMember);
 			}else {
