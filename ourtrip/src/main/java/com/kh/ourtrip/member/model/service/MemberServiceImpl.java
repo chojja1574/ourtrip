@@ -88,7 +88,7 @@ public class MemberServiceImpl implements MemberService{
 		} else { // 존재하지 않을 경우
 			result = (int) (Math.random() * 999999) + 1;
 
-			String setfrom = "jysrmb@gmail.com";
+			String setfrom = "khourtrip@gmail.com";
 
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
