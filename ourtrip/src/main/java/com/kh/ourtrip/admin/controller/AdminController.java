@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.kh.ourtrip.admin.model.service.AdminService;
 
-@SessionAttributes({"loginMember","Msg"})
+@SessionAttributes({"loginMember","msg"})
 @Controller
 @RequestMapping("/admin/*")
 public class AdminController {
@@ -23,11 +23,11 @@ public class AdminController {
 	public String adminMain(Model model) {
 		try {
 			Map<String, Object> dashBoardData = adminService.getDashBoardData();
-			if(dashBoardData.isEmpty()) {
+			if(!dashBoardData.isEmpty()) {
 				model.addAttribute("dashBoardData", dashBoardData);
-				System.out.println("대시보드 성공");
+				//System.out.println("대시보드 성공");
 			} else {
-				model.addAttribute("Msg", "데쉬보드 정보 조회 실패");
+				model.addAttribute("msg", "데쉬보드 정보 조회 실패");
 			}
 			return "admin/main";
 		} catch (Exception e) {
