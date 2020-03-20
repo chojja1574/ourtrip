@@ -32,7 +32,7 @@
 
 	<div class="container my-5">
         <h1 style="text-align: center;">회원가입 약관</h1>
-        <textarea id="agree-textarea" readonly>
+        <textarea class="form-control" id="agree-textarea" readonly>
     제 1 장 총칙 
 
     제 1 조 (목 적)
