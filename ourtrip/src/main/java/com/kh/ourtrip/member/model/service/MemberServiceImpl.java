@@ -1,6 +1,7 @@
 package com.kh.ourtrip.member.model.service;
 
 import java.io.File;
+import java.util.Random;
 
 import javax.mail.internet.MimeMessage;
 
@@ -88,7 +89,7 @@ public class MemberServiceImpl implements MemberService{
 		} else { // 존재하지 않을 경우
 			result = (int) (Math.random() * 999999) + 1;
 
-			String setfrom = "jysrmb@gmail.com";
+			String setfrom = "khourtrip@gmail.com";
 
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
@@ -297,6 +298,93 @@ public class MemberServiceImpl implements MemberService{
 			
 			// 회원 상태값 변경(성공시 1, 실패시 0)
 			result = memberDAO.secession(member);
+		}
+		
+		return result;
+	}
+
+
+	/** 회원가입된 이메일인지 확인용 Service
+	 * @param email
+	 * @return result
+	 * @throws Exception
+	 */
+	@Override
+	public int signUpedEmail(String email) throws Exception {
+		
+		int result = memberDAO.signUpedEmail(email);
+		
+		if (result > 0) { // 이메일이 존재할 경우
+
+			result = (int) (Math.random() * 999999) + 1;
+
+			String setfrom = "khourtrip@gmail.com";
+
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+
+			messageHelper.setFrom(setfrom); // 보내는사람 생략하거나 하면 정상작동을 안함
+			messageHelper.setTo(email); // 받는사람 이메일
+			messageHelper.setSubject("OurTrip 인증번호"); // 메일제목은 생략이 가능하다
+			messageHelper.setText(Integer.toString(result)); // 메일 내용
+
+			mailSender.send(message);
+		}
+		
+		return result;
+	}
+
+	/** 회원 비밀번호 찾기용 Service
+	 * @param memberEmail
+	 * @return result
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int findPwd(String memberEmail) throws Exception {
+		Member member = memberDAO.selectMember(memberEmail);
+		System.out.println("service : " + member);
+		int result = 0;
+		
+		if(member != null) {
+			
+			String tempPwd = "";
+			Random rand = new Random();
+			
+			int pwdSize = rand.nextInt(3) + 10;
+			
+			// 10 ~ 12자리의 임시 비밀번호 생성
+			for(int i=0; i<pwdSize; i++) {
+				int index = rand.nextInt(3);
+				
+				switch(index) {
+				case 0: tempPwd += String.valueOf((char) ((int)(rand.nextInt(26)) + 97)); break; // a-z
+				case 1: tempPwd += String.valueOf((char) ((int)(rand.nextInt(26)) + 65)); break; // A-Z
+				case 2: tempPwd += String.valueOf(rand.nextInt(10)); break; // 0-9
+				}
+			}
+			
+			System.out.println("tempPwd : " + tempPwd);
+			
+			// 생성한 임시 비밀번호 암호화
+			member.setMemberPwd(bCryptPasswordEncoder.encode(tempPwd));
+			
+			result = memberDAO.updatePwd(member);
+
+			// 비밀번호 변경 성공 시 임시 비밀번호 메일로 전송
+			if(result > 0) {
+				String setfrom = "khourtrip@gmail.com";
+				
+				MimeMessage message = mailSender.createMimeMessage();
+				MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+				
+				messageHelper.setFrom(setfrom); // 보내는사람 생략하거나 하면 정상작동을 안함
+				messageHelper.setTo(memberEmail); // 받는사람 이메일
+				messageHelper.setSubject("OurTrip 임시 비밀번호"); // 메일제목은 생략이 가능하다
+				messageHelper.setText(tempPwd); // 메일 내용
+				
+				mailSender.send(message);
+			}
 		}
 		
 		return result;

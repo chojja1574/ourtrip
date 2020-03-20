@@ -139,5 +139,22 @@ public class MemberDAO {
 		return sqlSession.update("memberMapper.secession", member);
 	}
 
+	/** 회원가입된 이메일인지 확인용 DAO
+	 * @param email
+	 * @return result
+	 */
+	public int signUpedEmail(String email) {
+		return sqlSession.selectOne("memberMapper.signUpedEmail", email);
+	}
+
+	/** 기존 회원 이메일로 접속용 DAO
+	 * @param memberEmail
+	 * @return member
+	 * @throws Exception
+	 */
+	public Member selectMember(String memberEmail) throws Exception{
+		return sqlSession.selectOne("memberMapper.selectMember", memberEmail);
+	}
+
 
 }

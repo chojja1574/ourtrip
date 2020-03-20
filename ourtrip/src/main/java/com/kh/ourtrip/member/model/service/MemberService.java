@@ -89,5 +89,19 @@ public interface MemberService {
 	 */
 	public abstract int secession(Member member) throws Exception;
 
+	/** 회원가입된 이메일인지 확인용 Service
+	 * @param email
+	 * @return result
+	 * @throws Exception
+	 */
+	public abstract int signUpedEmail(String email) throws Exception;
+
+	/** 회원 비밀번호 찾기용 Service
+	 * @param memberEmail
+	 * @return result
+	 * @throws Exception
+	 */
+	public abstract int findPwd(String memberEmail) throws Exception;
+
 
 }

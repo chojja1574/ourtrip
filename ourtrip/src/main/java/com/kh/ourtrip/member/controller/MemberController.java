@@ -2,12 +2,15 @@ package com.kh.ourtrip.member.controller;
 
 import java.io.File;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,24 +32,47 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
-	
+	// 로그인 화면 이동
 	@RequestMapping(value="loginForm")
-	public String loginForm() {
+	public String loginForm(Model model, @CookieValue(value = "saveEmail", required = false) String saveEmail) {
+		
+		if(saveEmail != null) {
+			model.addAttribute("saveEmail", saveEmail);
+		}
+		
 		return "member/login";
 	}
 	
+	// 로그인
 	@RequestMapping(value="login")
-	public String login(Member member, Model model, RedirectAttributes rdAttr) {
+	public String login(Member member, String saveEmail, Model model, RedirectAttributes rdAttr,
+			HttpSession session, HttpServletResponse response ) {
 		member.setSignUpRoute("1");
+		
+		System.out.println("saveEmail : " + saveEmail);
 		
 		try {
 			Member loginMember = memberService.login(member);
 			
 			String path = null;
 			if(loginMember != null) {
+				// 세션 만료시간 1시간
+				session.setMaxInactiveInterval(60 * 60);
 				
+				// 로그인 성공 시 아이디를 쿠키에 저장
+				// 관리자는 저장하지 않음
 				if(loginMember.getMemberGrade().equals("A")) path = "redirect:/admin/main";
-				else path = "redirect:/";
+				else {
+					Cookie cookie = new Cookie("saveEmail", member.getMemberEmail());
+					
+					if(saveEmail != null) cookie.setMaxAge(60 * 60 * 24 * 7); // 세션 유효 기간 7일
+					else cookie.setMaxAge(0); // 쿠키 만료
+					
+					cookie.setPath("/"); // 쿠키 사용할 수 있는 도메인 설정
+					response.addCookie(cookie); // 쿠키를 브라우저에 전송
+					
+					path = "redirect:/";
+				}
 				
 				model.addAttribute("loginMember", loginMember);
 			}else {
@@ -329,6 +355,57 @@ public class MemberController {
 		}catch(Exception e) {
 			e.printStackTrace();
 			model.addAttribute("errorMsg", "회원탈퇴 과정 중 오류 발생");
+			return "common/errorPage";
+		}
+	}
+	
+	// 비밀번호 찾기 폼
+	@RequestMapping("findPwdForm")
+	public String findPwdForm() {
+		return "member/findPwdForm";
+	}
+	
+	// 가입된 이메일인지 확인
+	@RequestMapping("signUpedEmail")
+	@ResponseBody
+	public int signUpedEmail(String email) {
+		
+		int result = 0;
+		try {
+			result = memberService.signUpedEmail(email);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	// 비밀번호 찾기(임시 비밀번호 전송)
+	@RequestMapping("findPwd")
+	public String findPwd(String memberEmail, Model model) {
+		
+		try {
+			int result = memberService.findPwd(memberEmail);
+			
+			String msg = null;
+			String path = null;
+			
+			if(result > 0) {
+				msg = "임시 비밀번호가 메일로 전송되었습니다.\n메일을 확인해주세요.";
+				path = "loginForm";
+			}else {
+				msg = "비밀번호 찾기에 실패하였습니다.";
+				path = "findPwdForm";
+			}
+			
+			model.addAttribute("msg", msg);
+			
+			return "redirect:" + path;
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMsg", "비밀번호 찾기 과정 중 오류 발생");
 			return "common/errorPage";
 		}
 	}

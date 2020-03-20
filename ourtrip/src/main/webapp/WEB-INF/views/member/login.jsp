@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -105,6 +106,10 @@
 #find-pwd{
 	color: black;
 }
+
+#find-pwd:hover{
+	color: blue;
+}
 </style>
 
 </head>
@@ -116,17 +121,16 @@
 		<form class="form-login" action="login" method="POST">
 			<h3 class="mb-3 font-weight-normal" style="text-align: center;">Login</h3>
 			<label for="email">이메일</label>
-			<input class="form-control mb-2" type="email" name="memberEmail" id="email"
+			<input class="form-control mb-2" type="email" name="memberEmail" id="email" <c:if test="${!empty saveEmail}">value="${saveEmail}"</c:if>
 				placeholder="ourtrip@example.com" required autofocus>
 			<label for="email">비밀번호</label>
 			<input class="form-control mb-2" type="password" name="memberPwd" id="pwd"
 				placeholder="비밀번호를 입력해주세요" required autofocus>
 			<div class="checkbox mb-3">
-				<label>
-					<input type="checkbox" value="saveId">&nbsp;아이디 저장
-				</label>
+				<input type="checkbox" name="saveEmail" id="saveEmail" <c:if test="${!empty saveEmail}">checked</c:if> >
+				<label for="saveEmail">&nbsp;아이디 저장</label>
+				<a class="float-right" href="findPwdForm" id="find-pwd">비밀번호 찾기</a>
 			</div>
-			<a href="findPwdForm" id="find-pwd">비밀번호 찾기</a>
 			<button class="btn btn-lg main-btn btn-block" onclick="return validate();">로그인</button>
 			<a id="custom-login-btn" class="btn btn-lg kakao-btn btn-block" href="javascript:loginWithKakao()">카카오 계정으로 로그인</a>
 		</form>
@@ -214,9 +218,10 @@
 	    };
 	    //]]>
 	
-	    var idCheck = false;
+/* 	    var idCheck = false;
 	    var pwdCheck = false;
 	    $(function(){
+	    	
 	        $("#pwd").on("input", function(){
 	            if($("#pwd").val() != ""){
 	                pwdCheck = true;
@@ -234,7 +239,7 @@
 	            alert("일부 입력값이 잘못되었습니다.");
 	            return false;
 	        }
-	    }
+	    } */
 	</script>
 </body>
 </html>
