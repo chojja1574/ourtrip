@@ -44,8 +44,11 @@ public class MemberController {
 			
 			String path = null;
 			if(loginMember != null) {
+				
+				if(loginMember.getMemberGrade().equals("A")) path = "redirect:/admin/main";
+				else path = "redirect:/";
+				
 				model.addAttribute("loginMember", loginMember);
-				path = "redirect:/";
 			}else {
 				rdAttr.addFlashAttribute("msg", "이메일, 비밀번호를 확인해주세요");
 				path = "redirect:loginForm";

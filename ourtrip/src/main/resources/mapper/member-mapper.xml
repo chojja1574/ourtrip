@@ -66,7 +66,7 @@
 	<select id="emailCertify" parameterType="string" resultType="_int">
 		SELECT COUNT(*) FROM MEMBER
 		WHERE MEMBER_EMAIL= #{email}
-		AND MEMBER_DELETE_YN= 'N'
+		AND SIGNUP_ROUTE= '1'
 	</select>
 	
 	<!-- 회원번호 조회 -->
