@@ -26,15 +26,17 @@ public class PlannerView {
 	private String scheduleLocationNM;
 	private double scheduleLat;
 	private double scheduleLng;
+	private int smallAreaCode;
+	private int largeAreaCode;
 	
 	public PlannerView() {
 	}
-
+	
 	public PlannerView(int plannerNo, String plannerTitle, String plannerPwd, int plannerCost, Date plannerCreateDT,
 			Date plannerModifyDT, Date plannerStartDT, String plannerPublicYN, String plannerDeleteYN,
 			String plannerExpiry, int plannerCount, String plannerUrl, int groupCode, int dateNo, int tripDate,
 			int scheduleNo, String scheduleTitle, int scheduleCost, String scheduleTime, String scheduleMemo,
-			String scheduleLocationNM, double scheduleLat, double scheduleLng) {
+			String scheduleLocationNM, double scheduleLat, double scheduleLng, int smallAreaCode, int largeAreaCode) {
 		super();
 		this.plannerNo = plannerNo;
 		this.plannerTitle = plannerTitle;
@@ -59,6 +61,8 @@ public class PlannerView {
 		this.scheduleLocationNM = scheduleLocationNM;
 		this.scheduleLat = scheduleLat;
 		this.scheduleLng = scheduleLng;
+		this.smallAreaCode = smallAreaCode;
+		this.largeAreaCode = largeAreaCode;
 	}
 
 	public int getPlannerNo() {
@@ -245,17 +249,34 @@ public class PlannerView {
 		this.scheduleLng = scheduleLng;
 	}
 
+	public int getSmallAreaCode() {
+		return smallAreaCode;
+	}
+
+	public void setSmallAreaCode(int smallAreaCode) {
+		this.smallAreaCode = smallAreaCode;
+	}
+
+	public int getLargeAreaCode() {
+		return largeAreaCode;
+	}
+
+	public void setLargeAreaCode(int largeAreaCode) {
+		this.largeAreaCode = largeAreaCode;
+	}
+
 	@Override
 	public String toString() {
 		return "PlannerView [plannerNo=" + plannerNo + ", plannerTitle=" + plannerTitle + ", plannerPwd=" + plannerPwd
-				+ ", plannerCost=" + plannerCost + ", plannerCreateDT=" + plannerCreateDT + ", plannerModifyDT=" + plannerModifyDT
-				+ ", plannerStartDT=" + plannerStartDT + ", plannerPublicYN=" + plannerPublicYN + ", plannerDeleteYN="
-				+ plannerDeleteYN + ", plannerExpiry=" + plannerExpiry + ", plannerCount=" + plannerCount
-				+ ", plannerUrl=" + plannerUrl + ", groupCode=" + groupCode + ", dateNo=" + dateNo + ", tripDate="
-				+ tripDate + ", scheduleNo=" + scheduleNo + ", scheduleTitle=" + scheduleTitle + ", scheduleCost="
-				+ scheduleCost + ", scheduleTime=" + scheduleTime + ", scheduleMemo=" + scheduleMemo
+				+ ", plannerCost=" + plannerCost + ", plannerCreateDT=" + plannerCreateDT + ", plannerModifyDT="
+				+ plannerModifyDT + ", plannerStartDT=" + plannerStartDT + ", plannerPublicYN=" + plannerPublicYN
+				+ ", plannerDeleteYN=" + plannerDeleteYN + ", plannerExpiry=" + plannerExpiry + ", plannerCount="
+				+ plannerCount + ", plannerUrl=" + plannerUrl + ", groupCode=" + groupCode + ", dateNo=" + dateNo
+				+ ", tripDate=" + tripDate + ", scheduleNo=" + scheduleNo + ", scheduleTitle=" + scheduleTitle
+				+ ", scheduleCost=" + scheduleCost + ", scheduleTime=" + scheduleTime + ", scheduleMemo=" + scheduleMemo
 				+ ", scheduleLocationNM=" + scheduleLocationNM + ", scheduleLat=" + scheduleLat + ", scheduleLng="
-				+ scheduleLng + "]";
+				+ scheduleLng + ", smallAreaCode=" + smallAreaCode + ", largeAreaCode=" + largeAreaCode + "]";
 	}
+
 	
 }
