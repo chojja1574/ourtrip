@@ -101,6 +101,13 @@ public class Schedule {
 		this.dateNo = dateNo;
 	}
 
+	public String toJsonString() {
+		return "{\"scheduleNo\":\"" + scheduleNo + "\",\"scheduleTitle\":\"" + scheduleTitle + "\",\"scheduleCost\":\""
+				+ scheduleCost + "\",\"scheduleTime\":\"" + scheduleTime + "\",\"scheduleMemo\":\"" + scheduleMemo
+				+ "\",\"scheduleLocationNM\":\"" + scheduleLocationNM + "\",\"scheduleLat\":\"" + scheduleLat + "\",\"scheduleLng\":\""
+				+ scheduleLng + "\",\"dateNo\":\"" + dateNo + "\"}";
+	}
+
 	@Override
 	public String toString() {
 		return "Schedule [scheduleNo=" + scheduleNo + ", scheduleTitle=" + scheduleTitle + ", scheduleCost="

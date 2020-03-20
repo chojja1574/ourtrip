@@ -364,16 +364,26 @@ var date = -1;
 var schedule= -1;
 
 $(function() {
+	var plannerInfo = '${plannerInfo}';
+/* 	var qwe = 522
+	console.log(plannerInfo[qwe-1] + "," + plannerInfo[qwe] + "," + plannerInfo[qwe+1]); */
+	var plannerJson = JSON.parse(plannerInfo)
+	
 	scheduleMarkers = new Array(new Array(), new Array(), new Array(),new Array());
 	$("#join").click(function(){
 		console.log('1');
 		sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'JOIN', writer: "${userId}", content: ""}));
+		initPlanner(pj);
 	})
 	console.log('1');
     // 페이지 입장 시 참여버튼 모달 출력
     $("#modalBtn").click();
     
+    
 });
+function initPlanner(pj){
+	
+}
 //웹소켓을 지정한 url로 연결한다.
 let sock = new SockJS("<c:url value="/echo"/>");
 sock.onmessage = onMessage;

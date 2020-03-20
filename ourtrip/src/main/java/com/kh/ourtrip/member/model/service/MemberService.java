@@ -74,5 +74,20 @@ public interface MemberService {
 	 */
 	public abstract int updateProfileImage(int memberNo, MultipartFile profileImage, String savePath, String isDefault) throws Exception;
 
+	/** 회원 비밀번호 변경용 Service
+	 * @param member
+	 * @param changePwd
+	 * @return result
+	 * @throws Exception
+	 */
+	public abstract int changePwd(Member member, String changePwd) throws Exception;
+
+	/** 회원탈퇴용 Service
+	 * @param member
+	 * @return result
+	 * @throws Exception
+	 */
+	public abstract int secession(Member member) throws Exception;
+
 
 }

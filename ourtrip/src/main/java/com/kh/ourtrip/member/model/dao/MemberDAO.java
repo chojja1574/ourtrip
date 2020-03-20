@@ -112,5 +112,32 @@ public class MemberDAO {
 		return sqlSession.update("memberMapper.updateProfileImage", pi);
 	}
 
+	/** 회원 비밀번호 조회용 DAO
+	 * @param memberNo
+	 * @return memberPwd
+	 * @throws Exception
+	 */
+	public String selectMemberPwd(int memberNo) throws Exception{
+		return sqlSession.selectOne("memberMapper.selectMemberPwd", memberNo);
+	}
+
+	/** 회원 비밀번호 변경용 DAO
+	 * @param member
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updatePwd(Member member) throws Exception{
+		return sqlSession.update("memberMapper.updatePwd", member);
+	}
+
+	/** 회원탈퇴용 DAO
+	 * @param member
+	 * @return result
+	 * @throws Exception
+	 */
+	public int secession(Member member) throws Exception{
+		return sqlSession.update("memberMapper.secession", member);
+	}
+
 
 }

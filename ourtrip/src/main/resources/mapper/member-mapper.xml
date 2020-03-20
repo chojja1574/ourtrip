@@ -66,7 +66,7 @@
 	<select id="emailCertify" parameterType="string" resultType="_int">
 		SELECT COUNT(*) FROM MEMBER
 		WHERE MEMBER_EMAIL= #{email}
-		AND MEMBER_DELETE_YN= 'N'
+		AND SIGNUP_ROUTE= '1'
 	</select>
 	
 	<!-- 회원번호 조회 -->
@@ -101,5 +101,25 @@
 		IMAGE_PATH= #{imagePath},
 		IMAGE_UPLOAD_DT= SYSDATE
 		WHERE IMAGE_NO= #{imageNo}
+	</update>
+	
+	<!-- 회원 비밀번호 조회 -->
+	<select id="selectMemberPwd" parameterType="_int" resultType="string">
+		SELECT MEMBER_PWD FROM MEMBER
+		WHERE MEMBER_NO= #{memberNo}
+	</select>
+	
+	<!-- 회원 비밀번호 변경 -->
+	<update id="updatePwd" parameterType="Member">
+		UPDATE MEMBER SET
+		MEMBER_PWD= #{memberPwd}
+		WHERE MEMBER_NO= #{memberNo}
+	</update>
+	
+	<!-- 회원 탈퇴 -->
+	<update id="secession" parameterType="Member">
+		UPDATE MEMBER SET
+		MEMBER_DELETE_YN= 'Y'
+		WHERE MEMBER_NO= #{memberNo}
 	</update>
 </mapper>
