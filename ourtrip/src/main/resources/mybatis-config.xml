@@ -19,7 +19,7 @@
     
 		<!-- 박지현 -->
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerView" alias="PlannerView"/>
-		<typeAlias type="com.kh.ourtrip.planner.model.vo.Planner1" alias="Planner1"/>
+		<typeAlias type="com.kh.ourtrip.planner.model.vo.Planner" alias="Planner"/>
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.Day" alias="Day"/>
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.Schedule" alias="Schedule"/>
 
