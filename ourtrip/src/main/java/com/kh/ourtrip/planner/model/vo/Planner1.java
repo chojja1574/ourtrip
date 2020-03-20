@@ -176,22 +176,27 @@ public class Planner1 {
 	private String listToString() {
 		String str = "";
 		for(Day sc : days) {
-			str += sc.toString()+",";
+			str += sc.toJsonString()+",";
 		}
 		str = str.substring(0, str.length()-1);
 		return str;
 	}
 	
+	public String toJsonString() {
+		return "{\"plannerNo\":\"" + plannerNo + "\",\"plannerTitle\":\"" + plannerTitle + "\",\"plannerPwd\":\"" + plannerPwd
+				+ "\",\"plannerCost\":\"" + plannerCost + "\",\"plannerCreateDT\":\"" + plannerCreateDT + "\",\"plannerModifyDT\":\"" + plannerModifyDT
+				+ "\",\"plannerStartDT\":\"" + plannerStartDT + "\",\"plannerPublicYN\":\"" + plannerPublicYN + "\",\"plannerDeleteYN\":\""
+				+ plannerDeleteYN + "\",\"plannerExpiry\":\"" + plannerExpiry + "\",\"plannerCount\":\"" + plannerCount
+				+ "\",\"plannerUrl\":\"" + plannerUrl + "\",\"groupCode\":\"" + groupCode + "\",\"days\":[" + listToString() + "]}";
+	}
+
 	@Override
 	public String toString() {
-		return "{plannerNo:\'" + plannerNo + "\',plannerTitle:\'" + plannerTitle + "\',plannerPwd:\'" + plannerPwd
-				+ "\',plannerCost:\'" + plannerCost + "\',plannerCreateDT:\'" + plannerCreateDT + "\',plannerModifyDT:\'" + plannerModifyDT
-				+ "\',plannerStartDT:\'" + plannerStartDT + "\',plannerPublicYN:\'" + plannerPublicYN + "\',plannerDeleteYN:\'"
-				+ plannerDeleteYN + "\',plannerExpiry:\'" + plannerExpiry + "\',plannerCount:\'" + plannerCount
-				+ "\',plannerUrl:\'" + plannerUrl + "\',groupCode:\'" + groupCode + "\',days:[" + listToString() + "]}";
+		return "Planner1 [plannerNo=" + plannerNo + ", plannerTitle=" + plannerTitle + ", plannerPwd=" + plannerPwd
+				+ ", plannerCost=" + plannerCost + ", plannerCreateDT=" + plannerCreateDT + ", plannerModifyDT="
+				+ plannerModifyDT + ", plannerStartDT=" + plannerStartDT + ", plannerPublicYN=" + plannerPublicYN
+				+ ", plannerDeleteYN=" + plannerDeleteYN + ", plannerExpiry=" + plannerExpiry + ", plannerCount="
+				+ plannerCount + ", plannerUrl=" + plannerUrl + ", groupCode=" + groupCode + ", days=" + days + "]";
 	}
-	
-	
-	
 	
 }

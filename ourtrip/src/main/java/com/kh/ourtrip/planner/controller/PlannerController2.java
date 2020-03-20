@@ -41,7 +41,7 @@ public class PlannerController2 {
 		
 		JSONObject jsonObj = null;
 		JSONParser jsonParser = new JSONParser();
-		
+		Planner1 selectedPlanner = null;
 		System.out.println("editplanner");
 		try {
 			boolean inputPvVal = true; 
@@ -116,7 +116,7 @@ public class PlannerController2 {
 			    System.out.println("key : " + entry.getKey() + " / value : " + entry.getValue());
 			    
 			}
-			Planner1 selectedPlanner = new Planner1(no, plannerTitle, plannerPwd, plannerCost, 
+			selectedPlanner = new Planner1(no, plannerTitle, plannerPwd, plannerCost, 
 					plannerCreateDT, plannerModifyDT, plannerStartDT, plannerPublicYN, plannerDeleteYN, 
 					plannerExpiry, plannerCount, plannerUrl, groupCode, dayList);
 			//selectedPlanner.toString()
@@ -128,7 +128,7 @@ public class PlannerController2 {
 		}
 		model.addAttribute("userId", userId);
 		model.addAttribute("selectRoom", selectRoom);
-		
+		model.addAttribute("plannerInfo", selectedPlanner.toString());
 		System.out.println("editplannerend");
 		
 		return "planner/editPlanner";

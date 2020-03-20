@@ -62,15 +62,21 @@ public class Day {
 	private String listToString() {
 		String str = "";
 		for(Schedule sc : schedules) {
-			str += sc.toString()+",";
+			str += sc.toJsonString()+",";
 		}
 		str = str.substring(0, str.length()-1);
 		return str;
 	}
-	@Override
-	public String toString() {
-		return "{dateNo:\'" + dateNo + "\',tripDate:\'" + tripDate + "\',plannerNo:\'" + plannerNo + "\',schedules:["
+	
+	public String toJsonString() {
+		return "{\"dateNo\":\"" + dateNo + "\",\"tripDate\":\"" + tripDate + "\",\"plannerNo\":\"" + plannerNo + "\",\"schedules\":["
 				+ listToString() + "]}";
 	}
 
+	@Override
+	public String toString() {
+		return "Day [dateNo=" + dateNo + ", tripDate=" + tripDate + ", plannerNo=" + plannerNo + ", schedules="
+				+ schedules + "]";
+	}
+	
 }
