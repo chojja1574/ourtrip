@@ -4,10 +4,10 @@ import java.util.Map;
 
 public interface AdminService {
 
-	/** 방문정보조회용 Service
-	 * @return visitCount
+	/** dashBoard 정보 조회용 Service
+	 * @return dashBoardData
 	 * @throws Exception
 	 */
-	public abstract Map<String, Integer> getVisitCount() throws Exception;
+	public abstract Map<String, Object> getDashBoardData() throws Exception;
 
 }
