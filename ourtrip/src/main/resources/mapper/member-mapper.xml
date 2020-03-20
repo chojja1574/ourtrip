@@ -122,4 +122,20 @@
 		MEMBER_DELETE_YN= 'Y'
 		WHERE MEMBER_NO= #{memberNo}
 	</update>
+	
+	<!-- 가입된 이메일인지 확인 -->
+	<select id="signUpedEmail" parameterType="string" resultType="_int">
+		SELECT COUNT(*) FROM MEMBER
+		WHERE MEMBER_EMAIL= #{email}
+		AND MEMBER_DELETE_YN= 'N'
+		AND SIGNUP_ROUTE= '1'
+	</select>
+	
+	<!-- 기존 회원 이메일로  -->
+	<select id="selectMember" parameterType="string" resultMap="memberResultSet">
+		SELECT MEMBER_NO, MEMBER_PWD FROM MEMBER
+		WHERE MEMBER_EMAIL= #{email}
+		AND MEMBER_DELETE_YN= 'N'
+		AND SIGNUP_ROUTE= '1'
+	</select>
 </mapper>

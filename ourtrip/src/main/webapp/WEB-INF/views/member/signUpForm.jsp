@@ -79,7 +79,7 @@
 				</div>
 				<div class="row mt-3" id="email-authentication-div">
 					<div class="col-md-3">
-						<label for="memberEmail">인증번호 입력</label>
+						<label for="certifyCode">인증번호 입력</label>
 					</div>
 					<div class="col-md-6">
 						<input type="text" class="form-control" id="certifyCode">
@@ -131,7 +131,7 @@
 				<hr>
 				<div class="row my-3">
 					<div class="col-md-6">
-						<a href="#" class="btn btn-lg gray-btn btn-block">비밀번호 찾기</a>
+						<a href="findPwdForm" class="btn btn-lg gray-btn btn-block">비밀번호 찾기</a>
 					</div>
 					<div class="col-md-6">
 						<button class="btn btn-lg main-btn btn-block">회원 가입</button>

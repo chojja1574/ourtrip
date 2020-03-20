@@ -332,4 +332,55 @@ public class MemberController {
 			return "common/errorPage";
 		}
 	}
+	
+	// 비밀번호 찾기 폼
+	@RequestMapping("findPwdForm")
+	public String findPwdForm() {
+		return "member/findPwdForm";
+	}
+	
+	// 가입된 이메일인지 확인
+	@RequestMapping("signUpedEmail")
+	@ResponseBody
+	public int signUpedEmail(String email) {
+		
+		int result = 0;
+		try {
+			result = memberService.signUpedEmail(email);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	// 비밀번호 찾기(임시 비밀번호 전송)
+	@RequestMapping("findPwd")
+	public String findPwd(String memberEmail, Model model) {
+		
+		try {
+			int result = memberService.findPwd(memberEmail);
+			
+			String msg = null;
+			String path = null;
+			
+			if(result > 0) {
+				msg = "임시 비밀번호가 메일로 전송되었습니다.\n메일을 확인해주세요.";
+				path = "loginForm";
+			}else {
+				msg = "비밀번호 찾기에 실패하였습니다.";
+				path = "findPwdForm";
+			}
+			
+			model.addAttribute("msg", msg);
+			
+			return "redirect:" + path;
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMsg", "비밀번호 찾기 과정 중 오류 발생");
+			return "common/errorPage";
+		}
+	}
 }

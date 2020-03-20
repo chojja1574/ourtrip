@@ -105,6 +105,10 @@
 #find-pwd{
 	color: black;
 }
+
+#find-pwd:hover{
+	color: blue;
+}
 </style>
 
 </head>
@@ -122,11 +126,10 @@
 			<input class="form-control mb-2" type="password" name="memberPwd" id="pwd"
 				placeholder="비밀번호를 입력해주세요" required autofocus>
 			<div class="checkbox mb-3">
-				<label>
-					<input type="checkbox" value="saveId">&nbsp;아이디 저장
-				</label>
+				<input type="checkbox" value="saveId" id="saveId">
+				<label for="saveId">&nbsp;아이디 저장</label>
+				<a class="float-right" href="findPwdForm" id="find-pwd">비밀번호 찾기</a>
 			</div>
-			<a href="findPwdForm" id="find-pwd">비밀번호 찾기</a>
 			<button class="btn btn-lg main-btn btn-block" onclick="return validate();">로그인</button>
 			<a id="custom-login-btn" class="btn btn-lg kakao-btn btn-block" href="javascript:loginWithKakao()">카카오 계정으로 로그인</a>
 		</form>
