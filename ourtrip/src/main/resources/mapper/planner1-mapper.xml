@@ -30,7 +30,7 @@
 		<result property="largeAreaCode" column="SMALL_AREA_CODE"/>
 	</resultMap>
 	
-	<resultMap type="Planner1" id="planner1ResultSet">
+	<resultMap type="Planner" id="planner1ResultSet">
 		<id property="plannerNo" column="PLANNER_NO"/>
 		<result property="plannerTitle" column="PLANNER_TITLE"/>
 		<result property="plannerPwd" column="PLANNER_PWD"/>
@@ -58,7 +58,7 @@
 		<result property="scheduleCost" column="SCHEDULE_COST"/>
 		<result property="scheduleTime" column="SCHEDULE_TIME"/>
 		<result property="scheduleMemo" column="SCHEDULE_MEMO"/>
-		<result property="scheduleLocationNM" column="SCHEDULE_LOCATION_NAME"/>
+		<result property="scheduleLocationNM" column="SCHEDULE_LOCATION_NM"/>
 		<result property="scheduleLat" column="SCHEDULE_LAT"/>
 		<result property="scheduleLng" column="SCHEDULE_LNG"/>
 	</resultMap>

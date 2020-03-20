@@ -128,7 +128,8 @@ public class PlannerController2 {
 		}
 		model.addAttribute("userId", userId);
 		model.addAttribute("selectRoom", selectRoom);
-		model.addAttribute("plannerInfo", selectedPlanner.toString());
+		model.addAttribute("plannerInfo", selectedPlanner.toJsonString());
+		model.addAttribute("plannerTitle", selectedPlanner.getPlannerTitle());
 		System.out.println("editplannerend");
 		
 		return "planner/editPlanner";

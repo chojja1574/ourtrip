@@ -18,6 +18,8 @@ public class Planner {
 	private String plannerUrl;
 	private int groupCode;
 	private List<Day> days;
+	private String largeAreaCode;
+	private String smallAreaCode;
 	
 	public Planner() {
 	}
@@ -59,6 +61,31 @@ public class Planner {
 		this.plannerUrl = plannerUrl;
 		this.groupCode = groupCode;
 		this.days = days;
+	}
+
+	
+	
+	public Planner(int plannerNo, String plannerTitle, String plannerPwd, int plannerCost, Date plannerCreateDT,
+			Date plannerModifyDT, Date plannerStartDT, String plannerPublicYN, String plannerDeleteYN,
+			String plannerExpiry, int plannerCount, String plannerUrl, int groupCode, List<Day> days,
+			String largeAreaCode, String smallAreaCode) {
+		super();
+		this.plannerNo = plannerNo;
+		this.plannerTitle = plannerTitle;
+		this.plannerPwd = plannerPwd;
+		this.plannerCost = plannerCost;
+		this.plannerCreateDT = plannerCreateDT;
+		this.plannerModifyDT = plannerModifyDT;
+		this.plannerStartDT = plannerStartDT;
+		this.plannerPublicYN = plannerPublicYN;
+		this.plannerDeleteYN = plannerDeleteYN;
+		this.plannerExpiry = plannerExpiry;
+		this.plannerCount = plannerCount;
+		this.plannerUrl = plannerUrl;
+		this.groupCode = groupCode;
+		this.days = days;
+		this.largeAreaCode = largeAreaCode;
+		this.smallAreaCode = smallAreaCode;
 	}
 
 	public int getPlannerNo() {
@@ -173,6 +200,22 @@ public class Planner {
 		this.days = days;
 	}
 
+	public String getLargeAreaCode() {
+		return largeAreaCode;
+	}
+
+	public void setLargeAreaCode(String largeAreaCode) {
+		this.largeAreaCode = largeAreaCode;
+	}
+
+	public String getSmallAreaCode() {
+		return smallAreaCode;
+	}
+
+	public void setSmallAreaCode(String smallAreaCode) {
+		this.smallAreaCode = smallAreaCode;
+	}
+
 	private String listToString() {
 		String str = "";
 		for(Day sc : days) {
@@ -192,11 +235,11 @@ public class Planner {
 
 	@Override
 	public String toString() {
-		return "Planner1 [plannerNo=" + plannerNo + ", plannerTitle=" + plannerTitle + ", plannerPwd=" + plannerPwd
+		return "Planner [plannerNo=" + plannerNo + ", plannerTitle=" + plannerTitle + ", plannerPwd=" + plannerPwd
 				+ ", plannerCost=" + plannerCost + ", plannerCreateDT=" + plannerCreateDT + ", plannerModifyDT="
 				+ plannerModifyDT + ", plannerStartDT=" + plannerStartDT + ", plannerPublicYN=" + plannerPublicYN
 				+ ", plannerDeleteYN=" + plannerDeleteYN + ", plannerExpiry=" + plannerExpiry + ", plannerCount="
-				+ plannerCount + ", plannerUrl=" + plannerUrl + ", groupCode=" + groupCode + ", days=" + days + "]";
+				+ plannerCount + ", plannerUrl=" + plannerUrl + ", groupCode=" + groupCode + ", days=" + days
+				+ ", largeAreaCode=" + largeAreaCode + ", smallAreaCode=" + smallAreaCode + "]";
 	}
-	
 }
