@@ -24,6 +24,7 @@
 <title>ourtrip</title>
 
 <style>
+
 h5 {
 	margin-bottom: 0px;
 }
@@ -50,8 +51,8 @@ h5 {
 </style>
 </head>
 <body>
-	<jsp:include page="WEB-INF/views/common/header.jsp" />
-	<jsp:include page="WEB-INF/views/common/nav.jsp" />
+	<jsp:include page="/WEB-INF/views/common/header.jsp" />
+	<jsp:include page="/WEB-INF/views/common/nav.jsp" />
 
 	<!-- main content -->
 	<div class="container-fluid mx-0 mt-2 px-0">
@@ -238,10 +239,10 @@ h5 {
 
 							<a class="carousel-control-prev" href="#demo" data-slide="prev">
 								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-								<span>Previous</span> -->
+								
 							</a> <a class="carousel-control-next" href="#demo" data-slide="next">
 								<span class="carousel-control-next-icon" aria-hidden="true"></span>
-								<span>Next</span> -->
+								
 							</a>
 
 							<ul class="carousel-indicators">
@@ -260,17 +261,19 @@ h5 {
 				ourTrip 플래너는 여러분의 여행을 보다 즐겁게 만들어드립니다.<br>
 				지금 바로 여러분의 여행파트너와 플래너를 작성해 보세요 <br>
 				단 몇분이면 여러분만의 여행플래너가 완성됩니다.</p>
-				<p>
+				<!-- <p>
 					<a class="btn" href="#">자세히 보기.. »</a>
-				</p>
-				<a href="#" class="btn btn-lg btn-primary" type="button">플래너
-					생성하기</a>
+				</p> -->
+				<a href="#" class="btn btn-lg btn-primary" type="button">
+				플래너 생성하기</a>
+				<a href="#" class="btn btn-lg btn-success" type="button">
+				플래너 생성 가이드</a>
 			</div>
 		</div>
 	</div>
 	<!-- main content end -->
 
-	<jsp:include page="WEB-INF/views/common/footer.jsp" />
+	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
 		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
