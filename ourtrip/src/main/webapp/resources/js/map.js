@@ -197,20 +197,19 @@ function displayInfowindow(marker, i) {
 }
 
 // 검색 결과 목록과 마커를 표출하는 함수입니다
-function displayAllPlaces(points,locations) {
-    // 버튼을 클릭하면 아래 배열의 좌표들이 모두 보이게 지도 범위를 재설정합니다
-
+function displayAllPlaces(pointsArr) {
+    
+	// 버튼을 클릭하면 아래 배열의 좌표들이 모두 보이게 지도 범위를 재설정합니다
     var allBounds = new kakao.maps.LatLngBounds();
 
     // 지도에 표시되고 있는 마커를 제거합니다
     removeAllMarker();
     
     var i;
-    for (i = 0; i < points.length; i++) {
+    for (i = 0; i < pointsArr.scheduleMarker.length; i++) {
 
         // 경도, 위도의 합이 0이면(위치지정 안한 값) 마커 찍는거 건너뜀
-        console.log("points : " + points[i].getLat()+points[i].getLng());
-        if(points[i].getLat()+points[i].getLng() == 0){
+        if(!pointsArr.scheduleMarker[i].unselect){
             console.log("continue : " + i);
             continue;
         }
@@ -225,7 +224,7 @@ function displayAllPlaces(points,locations) {
        },
        markerImage = new kakao.maps.MarkerImage(numImageSrc, numImageSize, imgOptions),
         allMarker = new kakao.maps.Marker({
-           position: points[i], // 마커의 위치
+           position: pointsArr.scheduleMarker[i].LatLng, // 마커의 위치
            image: markerImage,
            clickable: true
        });
@@ -233,7 +232,7 @@ function displayAllPlaces(points,locations) {
         (function(allMarker, i){
             kakao.maps.event.addListener(allMarker, 'click', function() {
                 // 마커 위에 인포윈도우를 표시합니다
-                displayInfowindow(allMarker, locations[i]);
+                displayInfowindow(allMarker, pointsArr.scheduleMarker[i].infoWindow);
             });
         })(allMarker, i);
 
@@ -242,7 +241,7 @@ function displayAllPlaces(points,locations) {
        allMarkers.push(allMarker);
        
        // LatLngBounds 객체에 좌표를 추가합니다
-       allBounds.extend(points[i]);
+       allBounds.extend(pointsArr.scheduleMarker[i].LatLng);
    }
 
     // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
@@ -288,7 +287,7 @@ $(function(){
 
     // 처음 지도 설정
     var plannerPoint = new Array();
-    displayAllPlaces();
+    //displayAllPlaces();
 });
 
 function initMarker(scheduleLocation,locationContent){
@@ -312,4 +311,3 @@ function initMarker(scheduleLocation,locationContent){
         infowindow.open(map, marker);
     }
 }
-

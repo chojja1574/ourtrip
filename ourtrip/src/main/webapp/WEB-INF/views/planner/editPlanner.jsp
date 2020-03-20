@@ -281,7 +281,7 @@
 // 1 = 카카오 위치 객체
 // 2 = lat + lng
 // 3 = 인포 윈도우
-var scheduleMarkers = new Array(new Array(), new Array(), new Array(),new Array());
+var scheduleMarkers = new Array();
 var planner = new Object();
 var days = new Array();
 var loadingInfo = 0;
@@ -325,6 +325,7 @@ function initPlanner(pj){
 		day.tripDate = pj.days[d].tripDate;
 		day.plannerNo = planner.no;
 		day.schedules = new Array();
+		var scheduleMarker = new Array();
 		for(var s in pj.days[d].schedules){
 			var schedule = new Object();
 			schedule.no = pj.days[d].schedules[s].scheduleNo;
@@ -346,26 +347,28 @@ function initPlanner(pj){
 			// 3 = 인포 윈도우
 			scheduleLatLng = new kakao.maps.LatLng(schedule.lat,schedule.lng)
 			var templocation = new kakao.maps.LatLng(36.435358898687994,127.5578038205071)
-			scheduleMarkers[0].push(schedule.no);
-			scheduleMarkers[1].push(scheduleLatLng)
-			scheduleMarkers[2].push(Number(schedule.lat)+Number(schedule.lng));
-			scheduleMarkers[3].push(null);
+			scheduleMarker.push({"sno" : schedule.no, "LatLng" : scheduleLatLng, "unselect" : (schedule.lat+schedule.lng==0?false:true), "infoWindow" : null}); 
+				
 			loadingInfo += 1;
+			
 			//console.log("promise : " + getScheduleAddr(templocation,'나와라'));
 			getScheduleAddr(scheduleLatLng,schedule.locationNM,schedule.no).then(function(args){
-				for(var i in scheduleMarkers[0]){
-					if(scheduleMarkers[0][i] == args[0]){
-						scheduleMarkers[3][i] = args[1];
-						loadingAddr += 1;
-						if(loadingInfo == loadingAddr){
-							for(var i = 0; i < days.length; i++){
-								createDate(days[i].no);
+				for(var i in scheduleMarkers){
+					for(var j in scheduleMarkers[i].scheduleMarker){
+						if(scheduleMarkers[i].scheduleMarker[j].sno == args[0]){
+							scheduleMarkers[i].scheduleMarker[j].infoWindow = args[1];
+							loadingAddr += 1;
+							if(loadingInfo == loadingAddr){
+								for(var i = 0; i < days.length; i++){
+									createDate(days[i].no);
+								}
 							}
 						}
 					}
 				}
 			});
 		}
+		scheduleMarkers.push({"dno" : day.no, "scheduleMarker" : scheduleMarker});
 		days.push(day);
 	}
 	console.log("planner");
@@ -494,6 +497,14 @@ function getScheduleAddr(templocation,locationName,scheduleNo){
 	}
 } 
 
+function extractDayMarker(dno){
+	for(var i = 0; i < scheduleMarkers.length; i++){
+		if(scheduleMarkers[i].dno == dno){
+			return scheduleMarkers[i];
+		}
+	}
+}
+
 //=======================================================================================//
 //====================================== Day 관련 함수 ======================================//
 //=======================================================================================//
@@ -537,7 +548,6 @@ function selectDay(no){
     // scheduleMarkers을 scheduleMarkers = new Array(new Array(), new Array());로 초기화
     // scheduleMarkers[0] 에 add()함수를 이용하여 SCHEDULE_NO를 추가
     // scheduleMarkers[1] 에 좌표 두개를 카카오맵 객체로 묶어서 add() 해야함
-    console.log("befor");
     $("#scheduleList").html('');
     for(var i = 0; i < days.length; i++){
     	if(days[i].no == no){
@@ -548,13 +558,36 @@ function selectDay(no){
     			var scost = days[i].schedules[j].cost;
     			var smemo = days[i].schedules[j].memo;
     			var slocationName = days[i].schedules[j].locationNM;
-    			
    				createSchedule(sno,stitle,stime,scost,smemo,slocationName);
+   				displayAllPlaces(extractDayMarker(no));
+   				
     		}
     	}
     }
-    console.log("after");
+    
+    //displayAllPlaces(points,locations)
 }
+
+//일차 제거하는 함수
+function deleteDay(ind){
+    
+    $(".daystyle").each(function(i, box) {
+        if($(box).data("dateno")==ind)
+            $(box).remove();
+    });
+    reorder();
+    selectDay($($(".daystyle").get(0)).data('dateno'));
+
+}
+
+
+
+// 일차 정렬하여 몇일차인지 텍스트 바꿔줌
+function reorder() {
+    $(".daystyle").each(function(i, box) {
+        $(box).find(".dayCount").html(i + 1 + "일차");
+    });
+};
 
 //=======================================================================================//
 //==================================== Schedule 관련 함수 ===================================//
@@ -961,27 +994,6 @@ function toggleArrow(e){
         $(e).parent().next().slideUp();
         $(e).html("▼");
     }
-};
-
-// 일차 제거하는 함수
-function deleteDay(ind){
-    
-    $(".daystyle").each(function(i, box) {
-        if($(box).data("dateno")==ind)
-            $(box).remove();
-    });
-    reorder();
-    selectDay($($(".daystyle").get(0)).data('dateno'));
-
-}
-
-
-
-// 일차 정렬하여 몇일차인지 텍스트 바꿔줌
-function reorder() {
-    $(".daystyle").each(function(i, box) {
-        $(box).find(".dayCount").html(i + 1 + "일차");
-    });
 };
 </script>
 </html>
