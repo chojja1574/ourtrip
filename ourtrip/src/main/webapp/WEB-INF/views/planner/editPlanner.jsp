@@ -226,7 +226,7 @@
 
                             <div class="updateBtns p-3">
                                 <div class="row mb-3">
-                                    <div class="col-md-6"><button type="button" class="updateBtn btnColor1" id="toggleMap">지도 추가</button></div>
+                                    <div class="col-md-6"><button type="button" class="updateBtn btnColor1" id="toggleMap">지도 초기화</button></div>
                                     <div class="col-md-6"><button type="button" class="updateBtn btnColor1" id="addSchedule">일정 추가</button></div>
                                 </div>
                                 <div class="row">
@@ -288,8 +288,8 @@ var loadingInfo = 0;
 var loadingAddr = 0;
 
 $(function() {
-	//var plannerInfo = '${plannerInfo}';
-	var plannerInfo = '{"plannerNo":"1","plannerTitle":"제목1","plannerPwd":"1234","plannerCost":"0","plannerCreateDT":"2020-03-20","plannerModifyDT":"null","plannerStartDT":"2020-03-20","plannerPublicYN":"Y","plannerDeleteYN":"N","plannerExpiry":"N","plannerCount":"1","plannerUrl":"1","groupCode":"1","days":[{"dateNo":"1","tripDate":"1","plannerNo":"1","schedules":[{"scheduleNo":"1","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"0900","scheduleMemo":"가","scheduleLocationNM":"null","scheduleLat":"35.435358898687994","scheduleLng":"128.1578038205071","dateNo":"1"},{"scheduleNo":"2","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1000","scheduleMemo":"나","scheduleLocationNM":"null","scheduleLat":"36.435358898687994","scheduleLng":"127.4578038205071","dateNo":"1"},{"scheduleNo":"3","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1100","scheduleMemo":"다","scheduleLocationNM":"null","scheduleLat":"37.33535889868799","scheduleLng":"127.3578038205071","dateNo":"1"}]},{"dateNo":"2","tripDate":"4","plannerNo":"1","schedules":[{"scheduleNo":"4","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1200","scheduleMemo":"라","scheduleLocationNM":"null","scheduleLat":"36.73535889868799","scheduleLng":"127.1578038205071","dateNo":"2"},{"scheduleNo":"5","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1300","scheduleMemo":"마","scheduleLocationNM":"null","scheduleLat":"35.935358898687994","scheduleLng":"127.9578038205071","dateNo":"2"}]},{"dateNo":"4","tripDate":"3","plannerNo":"1","schedules":[{"scheduleNo":"9","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1700","scheduleMemo":"자","scheduleLocationNM":"null","scheduleLat":"36.935358898687994","scheduleLng":"128.0578038205071","dateNo":"4"},{"scheduleNo":"10","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1800","scheduleMemo":"차","scheduleLocationNM":"null","scheduleLat":"35.73535889868799","scheduleLng":"127.7578038205071","dateNo":"4"}]},{"dateNo":"6","tripDate":"2","plannerNo":"1","schedules":[{"scheduleNo":"13","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"2100","scheduleMemo":"파","scheduleLocationNM":"null","scheduleLat":"35.935358898687994","scheduleLng":"127.6578038205071","dateNo":"6"},{"scheduleNo":"14","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"2200","scheduleMemo":"하","scheduleLocationNM":"null","scheduleLat":"36.73535889868799","scheduleLng":"127.5578038205071","dateNo":"6"}]}]}';
+	var plannerInfo = '${plannerInfo}';
+	//var plannerInfo = '{"plannerNo":"1","plannerTitle":"제목1","plannerPwd":"1234","plannerCost":"0","plannerCreateDT":"2020-03-20","plannerModifyDT":"null","plannerStartDT":"2020-03-20","plannerPublicYN":"Y","plannerDeleteYN":"N","plannerExpiry":"N","plannerCount":"1","plannerUrl":"1","groupCode":"1","days":[{"dateNo":"1","tripDate":"1","plannerNo":"1","schedules":[{"scheduleNo":"1","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"0900","scheduleMemo":"가","scheduleLocationNM":"null","scheduleLat":"35.435358898687994","scheduleLng":"128.1578038205071","dateNo":"1"},{"scheduleNo":"2","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1000","scheduleMemo":"나","scheduleLocationNM":"null","scheduleLat":"36.435358898687994","scheduleLng":"127.4578038205071","dateNo":"1"},{"scheduleNo":"3","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1100","scheduleMemo":"다","scheduleLocationNM":"null","scheduleLat":"37.33535889868799","scheduleLng":"127.3578038205071","dateNo":"1"}]},{"dateNo":"2","tripDate":"4","plannerNo":"1","schedules":[{"scheduleNo":"4","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1200","scheduleMemo":"라","scheduleLocationNM":"null","scheduleLat":"36.73535889868799","scheduleLng":"127.1578038205071","dateNo":"2"},{"scheduleNo":"5","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1300","scheduleMemo":"마","scheduleLocationNM":"null","scheduleLat":"35.935358898687994","scheduleLng":"127.9578038205071","dateNo":"2"}]},{"dateNo":"4","tripDate":"3","plannerNo":"1","schedules":[{"scheduleNo":"9","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1700","scheduleMemo":"자","scheduleLocationNM":"null","scheduleLat":"36.935358898687994","scheduleLng":"128.0578038205071","dateNo":"4"},{"scheduleNo":"10","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1800","scheduleMemo":"차","scheduleLocationNM":"null","scheduleLat":"35.73535889868799","scheduleLng":"127.7578038205071","dateNo":"4"}]},{"dateNo":"6","tripDate":"2","plannerNo":"1","schedules":[{"scheduleNo":"13","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"2100","scheduleMemo":"파","scheduleLocationNM":"null","scheduleLat":"35.935358898687994","scheduleLng":"127.6578038205071","dateNo":"6"},{"scheduleNo":"14","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"2200","scheduleMemo":"하","scheduleLocationNM":"null","scheduleLat":"36.73535889868799","scheduleLng":"127.5578038205071","dateNo":"6"}]}]}';
 	var plannerJson = JSON.parse(plannerInfo)
 	/* var qwe = 538;
 	console.log(plannerInfo[qwe-2],plannerInfo[qwe-1],plannerInfo[qwe],plannerInfo[qwe+1],plannerInfo[qwe+2]); */
@@ -348,7 +348,7 @@ function initPlanner(pj){
 			// 3 = 인포 윈도우
 			scheduleLatLng = new kakao.maps.LatLng(schedule.lat,schedule.lng)
 			var templocation = new kakao.maps.LatLng(36.435358898687994,127.5578038205071)
-			scheduleMarker.push({"sno" : schedule.no, "LatLng" : scheduleLatLng, "unselect" : (schedule.lat+schedule.lng==0?false:true), "infoWindow" : null}); 
+			scheduleMarker.push({"sno" : schedule.no, "LatLng" : scheduleLatLng, "unselect" : (schedule.lat+schedule.lng==0?true:false), "infoWindow" : null}); 
 				
 			loadingInfo += 1;
 			
@@ -449,11 +449,9 @@ function sortSchedule(){
     $(scheduleArr).each(function(i, arr){
         $('#scheduleList').append(arr);
     });
-    
+    var locationArr = new Array();
+    var infoWindowArr = new Array()
     displayAllPlaces(scheduleMarkers[1],scheduleMarkers[3]);
-    for(var i = 0; i < scheduleMarkers[0].length; i++ ){
-        console.log(i+"[0 : "+ scheduleMarkers[0][i] + ", 1 : " + scheduleMarkers[1][i] + ", 2 : " + scheduleMarkers[2][i] + "]");
-    }
 }
 
 //=======================================================================================//
@@ -565,8 +563,7 @@ function selectDay(no){
     		}
     	}
     }
-    
-    //displayAllPlaces(points,locations)
+    infowindowAll.close();
 }
 
 //일차 제거하는 함수
@@ -672,49 +669,62 @@ $('#addSchedule').click(function(){
 });
 
 //createNo 변수는 테스트때만 사용하고 실제 DB사용할때는 지울것
-var createNo=5;
+var createNo=100;
 
 function selectScheduleNo(no){
-    var selectedSchedule;
-    var order;
-    $(".schedule").each(function(index, item){
-        if($(item).data("scheduleno") == no){
-            selectedSchedule = item;
-            order = index;
-        }
-    });
-    console.log(order);
-    return new Array(selectedSchedule, order);
+	var dayIdx = -1;
+	var scheIdx = -1;
+	var scheDiv = null;
+	if(dayIdx == -1){
+		for(var i in scheduleMarkers){
+			for(var j in scheduleMarkers[i].scheduleMarker){
+				if(scheduleMarkers[i].scheduleMarker[j].sno == no){
+					console.log("i : " + i + ", dno : " + scheduleMarkers[i].dno);
+					console.log("j : " + j + ", sno : " + scheduleMarkers[i].scheduleMarker[j].sno);
+					dayIdx = i;
+					scheIdx = j;
+				}
+			}
+		}
+	}
+	
+	$('.schedule').each(function(i, item){
+		console.log("i : " + i);
+		console.log("item : " + item);
+		
+		if($(item).data('scheduleno') == no){
+			scheDiv = item; 
+		}
+	})
+	
+    return new Array(dayIdx, scheIdx, scheDiv);
 }
 
 function selectSchedule(no){
-    var selectedSchedule = selectScheduleNo(no);
+    var scheInfo = selectScheduleNo(no);
     
-    $('#inputScheduleTitle').val($(selectedSchedule[0]).find(".scheduleTitle").html());
-    $('#inputScheduleTime').val($(selectedSchedule[0]).find(".scheduleTime").val());
-    $('#inputScheduleCost').val($(selectedSchedule[0]).find(".scheduleCost").html());
-    $('#inputScheduleMemo').val($(selectedSchedule[0]).find(".scheduleMemo").html());
-    $('#inputScheduleLocationName').val($(selectedSchedule[0]).find(".scheduleLocation").html());
+    $('#inputScheduleTitle').val($(scheInfo[2]).find(".scheduleTitle").html());
+    console.log("scheInfoTitle" + $(scheInfo[2]).find(".scheduleTitle").html());
+    console.log(scheInfo[2]);
+    $('#inputScheduleTime').val($(scheInfo[2]).find(".scheduleTime").val());
+    $('#inputScheduleCost').val($(scheInfo[2]).find(".scheduleCost").html());
+    $('#inputScheduleMemo').val($(scheInfo[2]).find(".scheduleMemo").html());
+    $('#inputScheduleLocationName').val($(scheInfo[2]).find(".scheduleLocation").html());
     $('#scheduleInfo').data('scheduleno',no);
 
-    console.log('selectSchedule()');
-    for(var i = 0; i < scheduleMarkers[0].length; i++ ){
-        console.log(i+"[0 : "+ scheduleMarkers[0][i] + ", 1 : " + scheduleMarkers[1][i] + ", 2 : " + scheduleMarkers[2][i] + "]");
-    }
-
-    console.log("selectedSchedule[1]" + selectedSchedule[1]);
-    console.log("scheduleMarkers[2]" + scheduleMarkers[2][selectedSchedule[1]]);
-    console.log("scheduleMarkers[2]" + scheduleMarkers[1][selectedSchedule[1]]);
-    if(scheduleMarkers[2][selectedSchedule[1]]!=0){
-        allMap.panTo(scheduleMarkers[1][selectedSchedule[1]]);
-        map.panTo(scheduleMarkers[1][selectedSchedule[1]]);
+    if(!scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].unselect){
+    	console.log("panTo");
+    	console.log(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng);
+    	console.log("dayIdx : " + scheInfo[0] + ", scheIdx : " + scheInfo[1]);
+        allMap.panTo(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng);
+        map.panTo(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng);
     }
     
-    lat = scheduleMarkers[1][selectedSchedule[1]].getLat();
-    lng = scheduleMarkers[1][selectedSchedule[1]].getLng();
+    lat = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLat();
+    lng = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLng();
     // marker.setPosition(mouseEvent.latLng);
     // marker.setMap(map);
-    initMarker(scheduleMarkers[1][selectedSchedule[1]],scheduleMarkers[3][selectedSchedule[1]]);
+    initMarker(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng,scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].infoWindow);
 };
 $('#scheduleUpdate').click(function(){
     if($('#scheduleInfo').data('scheduleno')==0){
@@ -726,43 +736,30 @@ $('#scheduleUpdate').click(function(){
     }else if($('#inputScheduleTime').val() == ''){
         alert('시간을 입력해주세요');
     }else {
-        var selectedSchedule = selectScheduleNo($('#scheduleInfo').data('scheduleno'));
-        $(selectedSchedule[0]).find(".scheduleTitle").html($('#inputScheduleTitle').val());
-        $(selectedSchedule[0]).find(".scheduleTime").val($('#inputScheduleTime').val());
-        $(selectedSchedule[0]).find(".scheduleLocation").html( $('#inputScheduleLocationName').val());
-        $(selectedSchedule[0]).find(".scheduleCost").html($('#inputScheduleCost').val());
-        $(selectedSchedule[0]).find(".scheduleMemo").html($('#inputScheduleMemo').val());
+        var scheInfo = selectScheduleNo($('#scheduleInfo').data('scheduleno'));
+        $(scheInfo[2]).find(".scheduleTitle").html($('#inputScheduleTitle').val());
+        $(scheInfo[2]).find(".scheduleTime").val($('#inputScheduleTime').val());
+        $(scheInfo[2]).find(".scheduleLocation").html( $('#inputScheduleLocationName').val());
+        $(scheInfo[2]).find(".scheduleCost").html($('#inputScheduleCost').val());
+        $(scheInfo[2]).find(".scheduleMemo").html($('#inputScheduleMemo').val());
 
         var flag = false;
         var i;
         var dupIdx;
-        
-        for(i = 0; i < scheduleMarkers[0].length; i++){
-            if($('#scheduleInfo').data('scheduleno') == scheduleMarkers[0][i]){
-                dupIdx = i;
-            }
-        }
 
         scheduleLatLng = new kakao.maps.LatLng(lat, lng);
-        console.log(scheduleLatLng + ", order = " + dupIdx);
-        scheduleMarkers[1][dupIdx] = scheduleLatLng;
-        scheduleMarkers[2][dupIdx] = lat + lng;
-        scheduleMarkers[3][dupIdx] = iwContent;
+        scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng = scheduleLatLng;
+        scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].unselect = lat + lng == 0 ?true:false;
+        scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].infoWindow = iwContent;
         console.log("updateIwContent");
         console.log(iwContent);
-        console.log("getLat : " + scheduleMarkers[1][dupIdx].getLat());
-        console.log("getLng : " + scheduleMarkers[1][dupIdx].getLng());
 
-        
-        
-        
-        for(var i = 0; i < scheduleMarkers[0].length; i++ ){
-            console.log(i+"[0 : "+ scheduleMarkers[0][i] + ", 1 : " + scheduleMarkers[1][i] + ", 2 : " + scheduleMarkers[2][i] + "]");
-        }
-        
+
         sortSchedule();
 
-        initMarker(scheduleMarkers[1][dupIdx], scheduleMarkers[3][dupIdx]);
+        // initMarker(scheduleMarkers[1][dupIdx], scheduleMarkers[3][dupIdx]);
+        console.log(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].infoWindow);
+        initMarker(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng, scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].infoWindow);
     }
 });
 $('#removeSchedule').click(function(){
@@ -771,7 +768,7 @@ $('#removeSchedule').click(function(){
     } else {
         var selectedSchedule = selectScheduleNo($('#scheduleInfo').data('scheduleno'));
 
-        $(selectedSchedule[0]).remove();
+        $(selectedSchedule).remove();
         $('#inputScheduleTitle').val('');
         $('#inputScheduleTime').val('');
         $('#inputScheduleCost').val('');
@@ -954,17 +951,17 @@ $(function () {
     });
     
     // 페이지 로딩될 때 지도영역 감추는거 그냥 함수로 하는부분
-    $("#inputScheduleLocationArea").toggle();
+    //$("#inputScheduleLocationArea").toggle();
 
     // 지도추가 버튼 클릭 시 보이고 안보이고 토글, 버튼 텍스트 변경
-    $("#toggleMap").click(function(){
+    /* $("#toggleMap").click(function(){
         $("#inputScheduleLocationArea").toggle(['slow']);
         if($("#toggleMap").html() == '지도 추가')
             $("#toggleMap").html('지도 삭제');
         else
         $("#toggleMap").html('지도 추가');
         
-    });
+    }); */
     $('textarea').keyup(function (evt) {
     	console.log("textarea keyup");
     	if (evt.keyCode == 13 && !evt.shiftKey) {
