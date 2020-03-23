@@ -339,14 +339,10 @@ $(function() {
 	var plannerInfo = '${plannerInfo}';
 	//var plannerInfo = '{"plannerNo":"1","plannerTitle":"제목1","plannerPwd":"1234","plannerCost":"0","plannerCreateDT":"2020-03-20","plannerModifyDT":"null","plannerStartDT":"2020-03-20","plannerPublicYN":"Y","plannerDeleteYN":"N","plannerExpiry":"N","plannerCount":"1","plannerUrl":"1","groupCode":"1","days":[{"dateNo":"1","tripDate":"1","plannerNo":"1","schedules":[{"scheduleNo":"1","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"0900","scheduleMemo":"가","scheduleLocationNM":"null","scheduleLat":"35.435358898687994","scheduleLng":"128.1578038205071","dateNo":"1"},{"scheduleNo":"2","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1000","scheduleMemo":"나","scheduleLocationNM":"null","scheduleLat":"36.435358898687994","scheduleLng":"127.4578038205071","dateNo":"1"},{"scheduleNo":"3","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1100","scheduleMemo":"다","scheduleLocationNM":"null","scheduleLat":"37.33535889868799","scheduleLng":"127.3578038205071","dateNo":"1"}]},{"dateNo":"2","tripDate":"4","plannerNo":"1","schedules":[{"scheduleNo":"4","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1200","scheduleMemo":"라","scheduleLocationNM":"null","scheduleLat":"36.73535889868799","scheduleLng":"127.1578038205071","dateNo":"2"},{"scheduleNo":"5","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1300","scheduleMemo":"마","scheduleLocationNM":"null","scheduleLat":"35.935358898687994","scheduleLng":"127.9578038205071","dateNo":"2"}]},{"dateNo":"4","tripDate":"3","plannerNo":"1","schedules":[{"scheduleNo":"9","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1700","scheduleMemo":"자","scheduleLocationNM":"null","scheduleLat":"36.935358898687994","scheduleLng":"128.0578038205071","dateNo":"4"},{"scheduleNo":"10","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"1800","scheduleMemo":"차","scheduleLocationNM":"null","scheduleLat":"35.73535889868799","scheduleLng":"127.7578038205071","dateNo":"4"}]},{"dateNo":"6","tripDate":"2","plannerNo":"1","schedules":[{"scheduleNo":"13","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"2100","scheduleMemo":"파","scheduleLocationNM":"null","scheduleLat":"35.935358898687994","scheduleLng":"127.6578038205071","dateNo":"6"},{"scheduleNo":"14","scheduleTitle":"제목1","scheduleCost":"0","scheduleTime":"2200","scheduleMemo":"하","scheduleLocationNM":"null","scheduleLat":"36.73535889868799","scheduleLng":"127.5578038205071","dateNo":"6"}]}]}';
 	var plannerJson = JSON.parse(plannerInfo)
-	/* var qwe = 538;
-	console.log(plannerInfo[qwe-2],plannerInfo[qwe-1],plannerInfo[qwe],plannerInfo[qwe+1],plannerInfo[qwe+2]); */
 	$("#join").click(function(){
-		console.log('1');
-		sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'JOIN', writer: "${userId}", content: ""}));
+		sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'JOIN', writer: "${userId}", content: ""}));
 		initPlanner(plannerJson);
 	})
-	console.log('1');
     // 페이지 입장 시 참여버튼 모달 출력
     $("#modalBtn").click();
     
@@ -367,7 +363,6 @@ function initPlanner(pj){
 	planner.count = pj.plannerCount;
 	planner.url = pj.plannerUrl;
 	planner.groupCode = pj.groupCode;
-	console.log(planner.no);
 	for(var d in pj.days){
 		var day = new Object();
 		day.no = pj.days[d].dateNo;
@@ -395,7 +390,8 @@ function initPlanner(pj){
 			// 2 = lat + lng
 			// 3 = 인포 윈도우
 			scheduleLatLng = new kakao.maps.LatLng(schedule.lat,schedule.lng)
-			scheduleMarker.push({"sno" : schedule.no, "LatLng" : scheduleLatLng, "unselect" : (schedule.lat+schedule.lng==0?true:false), "infoWindow" : null}); 
+			console.log("lat+lng = " + (schedule.lat + schedule.lng) + ", d : " + d + ", s : " + s);
+			scheduleMarker.push({"sno" : schedule.no, "LatLng" : scheduleLatLng, "unselect" : (scheduleLatLng.getLat()+scheduleLatLng.getLng()==0?true:false), "infoWindow" : null}); 
 				
 			loadingInfo += 1;
 			
@@ -508,13 +504,14 @@ function sortSchedule(){
 function reorder() {
 	var dateInfo = new Array();
     $(".daystyle").each(function(i, box) {
+    	var dno = $(box).data('dateno');
         $(box).find(".dayCount").html(i + 1 + "일차");
         var before = $(box).data('dateorder')
         $(box).data('dateorder',i);
         dateInfo.push({order:i,dno:$(box).data('dateno')});
     });
     //sock.send로 afterDayOrder 보내줌
-    sock.send(JSON.stringify({chatRoomId: "${no}", type: 'orderDate', id: "${loginMember.getMemberEmail()}", dateInfo:dateInfo}));
+    sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'orderDate', id: "${loginMember.getMemberEmail()}", dateInfo:dateInfo}));
 }
 
 //=======================================================================================//
@@ -577,13 +574,13 @@ var tempDayno = 100;
 
 function addDate(){
 	// date_no는 DB 에서 가져옴
-	sock.send(JSON.stringify({chatRoomId: "${no}", type: 'addDate', id: "${loginMember.getMemberEmail()}"}));
+	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'addDate', id: "${loginMember.getMemberEmail()}"}));
 	// trip_date 값은  reorder에서 수정
 	
 	
 }
 
-function createDate(dateNo,tripdate){
+function createDate(dateNo){
 
 	dayIndex = dayIndex + 1;
 	
@@ -599,8 +596,6 @@ function createDate(dateNo,tripdate){
 	
     // 추가하고 정렬(몇일차인지 계산해서 텍스트 바꿔줌)
     reorder();
-    
-    
 }
 
 //일차 선택하는 함수
@@ -625,6 +620,9 @@ function selectDay(no){
     // scheduleMarkers[0] 에 add()함수를 이용하여 SCHEDULE_NO를 추가
     // scheduleMarkers[1] 에 좌표 두개를 카카오맵 객체로 묶어서 add() 해야함
     $("#scheduleList").html('');
+    
+    var existMarker = false;
+    var todayMarker = null;
     for(var i = 0; i < days.length; i++){
     	if(days[i].no == no){
     		for(var j = 0; j < days[i].schedules.length; j++){
@@ -635,23 +633,39 @@ function selectDay(no){
     			var smemo = days[i].schedules[j].memo;
     			var slocationName = days[i].schedules[j].locationNM;
    				createSchedule(sno,stitle,stime,scost,smemo,slocationName);
-   				displayAllPlaces(extractDayMarker(no));
+   				todayMarker = extractDayMarker(no);
+   				
     		}
     	}
     }
+    console.log(todayMarker.scheduleMarker);
+	for(var i in todayMarker.scheduleMarker){
+		console.log("i : " + i);
+		if(!todayMarker.scheduleMarker[i].unselect)
+			existMarker = true;
+	}
+	if(existMarker){
+		displayAllPlaces(extractDayMarker(no));
+	}else{
+		console.log(1);
+		initMapBtn();
+		removeAllMarker();
+	}
     infowindowAll.close();
 }
 
 //일차 제거하는 함수
 function deleteDay(ind){
-    dayIndex--;
+	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'deleteDate', id: "${loginMember.getMemberEmail()}", dno:ind));
+}
+function deleteDate(ind){
+	dayIndex--;
     $(".daystyle").each(function(i, box) {
         if($(box).data("dateno")==ind)
             $(box).remove();
     });
     reorder();
     selectDay($($(".daystyle").get(0)).data('dateno'));
-
 }
 
 //=======================================================================================//
@@ -706,13 +720,13 @@ $('#addSchedule').click(function(){
     }else if(location == ''){
         alert('장소 이름을 입력해주세요');
     }else{
-    	sock.send(JSON.stringify({chatRoomId: "${no}", type: 'addSchedule', id: "${loginMember.getMemberEmail()}",
+    	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'addSchedule', id: "${loginMember.getMemberEmail()}",
     		dno: dno, title: title, time: time, location: location, cost: cost, memo: memo, lat: lat, lng: lng, iwContent: iwContent}));
     }
 });
 
 function addSchedule(dno,sno,title,time,location,cost,memo,llat,llng,luserId){
-    
+
     // 새로운 일정을 만드는 것이니 시퀀스 NEXTVAL 얻어와서 넣어야함
     // 테스트때 임시로 createNo 변수 사용
     var dayIdx;
@@ -723,16 +737,20 @@ function addSchedule(dno,sno,title,time,location,cost,memo,llat,llng,luserId){
 		}
 	}
 	// 마커 배열에 새로운 자리를 만듦
-	var today = extractDayMarker(sno);
+	var today = extractDayMarker(dno);
+
 	var locationLatLng = new kakao.maps.LatLng(llat,llng)
-	today.scheduleMarker.push({"sno" : sno, "LatLng" : locationLatLng, "unselect" : (lat+lng==0?true:false), "infoWindow" : null});
+	today.scheduleMarker.push({"sno" : sno, "LatLng" : locationLatLng, "unselect" : (llat+llng==0?true:false), "infoWindow" : null});
 	
 	getScheduleAddr(locationLatLng,location,sno).then(function(args){
 		for(var i in scheduleMarkers){
 			for(var j in scheduleMarkers[i].scheduleMarker){
 				if(scheduleMarkers[i].scheduleMarker[j].sno == args[0]){
 					scheduleMarkers[i].scheduleMarker[j].infoWindow = args[1];
-					sortSchedules(days[dayIdx].schedules)
+					console.log(scheduleMarkers[i].scheduleMarker[j].sno + ", " + args[0]);
+					console.log(scheduleMarkers[i].scheduleMarker[j].sno + ", " + sno);
+					console.log(days[dayIdx]);
+					sortSchedules(days[dayIdx].schedules);
 					
 					if($('#selectedDay').data('dateno') == dno){
 						createSchedule(sno,title,time,cost,memo,location);
@@ -756,8 +774,6 @@ function selectScheduleNo(no){
 		for(var i in scheduleMarkers){
 			for(var j in scheduleMarkers[i].scheduleMarker){
 				if(scheduleMarkers[i].scheduleMarker[j].sno == no){
-					console.log("i : " + i + ", dno : " + scheduleMarkers[i].dno);
-					console.log("j : " + j + ", sno : " + scheduleMarkers[i].scheduleMarker[j].sno);
 					dayIdx = i;
 					scheIdx = j;
 				}
@@ -766,9 +782,6 @@ function selectScheduleNo(no){
 	}
 	
 	$('.schedule').each(function(i, item){
-		console.log("i : " + i);
-		console.log("item : " + item);
-		
 		if($(item).data('scheduleno') == no){
 			scheDiv = item; 
 		}
@@ -781,8 +794,6 @@ function selectSchedule(no){
     var scheInfo = selectScheduleNo(no);
     
     $('#inputScheduleTitle').val($(scheInfo[2]).find(".scheduleTitle").html());
-    console.log("scheInfoTitle" + $(scheInfo[2]).find(".scheduleTitle").html());
-    console.log(scheInfo[2]);
     $('#inputScheduleTime').val($(scheInfo[2]).find(".scheduleTime").val());
     $('#inputScheduleCost').val($(scheInfo[2]).find(".scheduleCost").html());
     $('#inputScheduleMemo').val($(scheInfo[2]).find(".scheduleMemo").html());
@@ -790,9 +801,6 @@ function selectSchedule(no){
     $('#scheduleInfo').data('scheduleno',no);
 
     if(!scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].unselect){
-    	console.log("panTo");
-    	console.log(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng);
-    	console.log("dayIdx : " + scheInfo[0] + ", scheIdx : " + scheInfo[1]);
         allMap.panTo(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng);
         map.panTo(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng);
     }
@@ -801,8 +809,6 @@ function selectSchedule(no){
     lng = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLng();
     // marker.setPosition(mouseEvent.latLng);
     // marker.setMap(map);
-    console.log("select infoWindow");
-    console.log(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].infoWindow);
     initMarker(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng,scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].infoWindow);
 };
 
@@ -819,14 +825,11 @@ function scheduleUpdate(sno,title,time,location,cost,memo,llat,llng,liwContent){
 	scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng = scheduleLatLng;
 	scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].unselect = llat + llng == 0 ?true:false;
 	scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].infoWindow = liwContent;
-	console.log("updateIwContent");
-	console.log(liwContent);
 	
 	sortSchedule();
 	
 	scheInfo = selectScheduleNo($('#scheduleInfo').data('scheduleno'));
 	// initMarker(scheduleMarkers[1][dupIdx], scheduleMarkers[3][dupIdx]);
-	console.log(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].infoWindow);
 	initMarker(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng, scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].infoWindow);
 	
 }
@@ -852,7 +855,7 @@ $('#scheduleUpdate').click(function(){
     }else if(location == ''){
     	alert('장소를 입력해주세요');
     }else{
-    	sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'updateSchedule', id: "${userId}",
+    	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'updateSchedule', id: "${userId}",
     		sno: sno, title: title, time: time, location: location, cost: cost, memo: memo, lat: lat, lng: lng, iwContent: iwContent}));
     }
 });
@@ -866,7 +869,6 @@ function removeSchedule(dno,sno){
     		for(var j in scheduleMarkers[i].scheduleMarker){
     			if(scheduleMarkers[i].scheduleMarker[j].sno == sno){
     				scheduleMarkers[i].scheduleMarker.splice(j,1);
-    				console.log(scheduleMarkers[i].scheduleMarker);
     			}
     		}
     	}
@@ -884,7 +886,7 @@ $('#removeSchedule').click(function(){
     	var sno = $('#scheduleInfo').data('scheduleno');
     	var dno = $('#selectedDay').data('dateno');
     	
-    	sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'removeSchedule', id: "${userId}",
+    	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'removeSchedule', id: "${userId}",
     		dno: dno, sno: sno}));
     	
     	$('#inputScheduleTitle').val('');
@@ -905,19 +907,11 @@ $('#removeSchedule').click(function(){
 let sock = new SockJS("<c:url value="/echo"/>");
 sock.onmessage = onMessage;
 sock.onclose = onClose;
-console.log('2');
-
-// 메시지 전송
-function chageback(color){
-	console.log(color);
-	$("#testbox").css("background",color);
-}
 
 // 서버로부터 메시지를 받았을 때
 function onMessage(msg) {
 	var jsonData = msg.data;
 	var data = JSON.parse(jsonData)
-	console.log("receive : " + data);
 	switch(data['type']){
 	case 'msg':
 		if(data['id'] == '${userId}'){
@@ -933,8 +927,15 @@ function onMessage(msg) {
 		}
 		break;
 	case 'addDate': 
+		console.log(data);
+		days.push({no:data['dno'],tripDate:-1,plannerNo:planner.no,schedules:new Array()});
+		scheduleMarkers.push(
+				{dno:data['dno'],scheduleMarker:new Array({sno:data['sno'],LatLng:new kakao.maps.LatLng(0,0),unselect:true,infoWindow:null})});
+		createDate(data['dno']);
+		addSchedule(data['dno'],data['sno'],'','','',0,'',0,0,userId);
 		break;
 	case 'deleteDate': 
+		
 		break;
 	case 'updateSchedule': 
 		break;
@@ -1036,8 +1037,7 @@ $(function () {
         // 채팅 입력창 비어있지 않으면 실행
         if( msg != ''){
             
-            console.log("send : " + JSON.stringify({chatRoomId: "${selectRoom}", type: 'msg', id: "${userId}", content: msg, time: now}));
-            sock.send(JSON.stringify({chatRoomId: "${selectRoom}", type: 'msg', id: "${userId}", content: msg, time: now}));
+            sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'msg', id: "${userId}", content: msg, time: now}));
         }
 
         // 메세지 전송 후 채팅 입력창 비워줌
@@ -1074,12 +1074,9 @@ $(function () {
         
     }); */
     $('#mymsg').keyup(function (evt) {
-    	console.log("textarea keyup");
     	if (evt.keyCode == 13 && !evt.shiftKey) {
-    		console.log('click');
     	    $('#send').click();
     	}else if(evt.keyCode == 13 && evt.shiftKey){
-    		console.log('\r\n');
     		$('#send').val($('#send').val()+'<br>');
     	}
     });
@@ -1087,7 +1084,6 @@ $(function () {
 
 // 뒤로가기 하는 함수(참여 모달창의 이전으로 버튼에 사용)
 function goBack(){
-    console.log("돌아가기");
     history.go(-1);
 }
 

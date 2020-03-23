@@ -198,7 +198,7 @@ function displayInfowindow(marker, i) {
 
 // 검색 결과 목록과 마커를 표출하는 함수입니다
 function displayAllPlaces(pointsArr) {
-    
+
 	// 버튼을 클릭하면 아래 배열의 좌표들이 모두 보이게 지도 범위를 재설정합니다
     var allBounds = new kakao.maps.LatLngBounds();
 
@@ -310,4 +310,11 @@ function initMarker(scheduleLocation,locationContent){
         infowindow.setContent(locationContent);
         infowindow.open(map, marker);
     }
+}
+
+function removeAllMarker(){
+    for(var i in allMarkers){
+    	allMarkers[i].setMap(null);
+    }
+    infowindowAll.setMap(null);
 }
