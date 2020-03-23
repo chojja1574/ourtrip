@@ -20,7 +20,7 @@ public class PlannerDAO {
 	 */
 	public int selectNextNo() throws Exception{
 		
-		return sqlSessionTemplate.selectOne("planner1Mapper.selectNextNo");
+		return sqlSessionTemplate.selectOne("plannerMapper.selectNextNo");
 	}
 	/**플래너생성용 DAO
 	 * @param planner
@@ -28,7 +28,7 @@ public class PlannerDAO {
 	 * @throws Exception
 	 */
 	public int createPlanner(Planner planner) throws Exception{
-		return sqlSessionTemplate.insert("planner1Mapper.createPlanner",planner);
+		return sqlSessionTemplate.insert("plannerMapper.createPlanner",planner);
 	}
 	
 	
@@ -38,7 +38,7 @@ public class PlannerDAO {
 	 * @throws Exception
 	 */
 	public int createLocation(Planner planner) throws Exception{
-		return sqlSessionTemplate.insert("planner1Mapper.createLocation",planner);
+		return sqlSessionTemplate.insert("plannerMapper.createLocation",planner);
 	}
 	
 	
@@ -48,7 +48,7 @@ public class PlannerDAO {
 	 * @throws Exception
 	 */
 	public int createpMember(PlannerMember pMember)throws Exception{
-		return sqlSessionTemplate.insert("planner1Mapper.createpMember",pMember);
+		return sqlSessionTemplate.insert("plannerMapper.createpMember",pMember);
 	}
 
 

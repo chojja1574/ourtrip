@@ -91,9 +91,9 @@ body {
 			<div class="col-md-3"></div>
 			<div class="col-md-6">
 				<div id="createContent">
-					<form>
+					<form action="createPlanner" method="POST">
 						<div
-							style="width: 100%; height: 20%; position: relative; padding:30px 30px;">
+							style="width: 100%; height: 20%; position: relative; padding: 30px 30px;">
 							<label for="planerTitle">
 								<h2 class="inputtext">*플래너 제목입력</h2>
 							</label> <input type="text" name="plannerTitle"
@@ -104,48 +104,49 @@ body {
 						<hr>
 
 						<div class="triPlace"
-							style="width: 100%; height: 20%; padding:30px 30px;">
+							style="width: 100%; height: 20%; padding: 30px 30px;">
 							<div class="selectArea">
 								<label for="selectbox">
 									<h2 class="inputtext">*여행장소 입력</h2>
-								</label> <br> <select name="plannerArea1" id="largeArea"
+								</label> <br> <select name="largeAreaCode" id="largeArea"
 									class="required areaselect">
 									<option selected disabled hidden>지역 선택</option>
-									<option value="서울">서울</option>
-									<option value="경기">경기</option>
-									<option value="강원">강원</option>
-									<option value="충북">충북</option>
-									<option value="충남">충남</option>
-									<option value="전북">전북</option>
-									<option value="전남">전남</option>
-									<option value="경북">경북</option>
-									<option value="경남">경남</option>
-									<option value="제주">제주</option>
-								</select> <select name="plannerArea2" id="smallArea"
+									<option value="1">서울</option>
+									<option value="2">경기</option>
+									<option value="3">강원</option>
+									<option value="4">충북</option>
+									<option value="5">충남</option>
+									<option value="6">전북</option>
+									<option value="7">전남</option>
+									<option value="8">경북</option>
+									<option value="9">경남</option>
+									<option value="0">제주</option>
+								</select> 
+								<select name="smallAreaCode" id="smallArea"
 									class="required areaselect">
 									<option selected disabled hidden>장소 선택</option>
-									<option value="서울">서울</option>
-									<option value="경기">경기</option>
-									<option value="강원">강원</option>
-									<option value="충북">충북</option>
-									<option value="충남">충남</option>
-									<option value="전북">전북</option>
-									<option value="전남">전남</option>
-									<option value="경북">경북</option>
-									<option value="경남">경남</option>
-									<option value="제주">제주</option>
+									<option value="11">서울</option>
+									<option value="12">경기</option>
+									<option value="13">강원</option>
+									<option value="14">충북</option>
+									<option value="15">충남</option>
+									<option value="16">전북</option>
+									<option value="17">전남</option>
+									<option value="18">경북</option>
+									<option value="19">경남</option>
+									<option value="00">제주</option>
 								</select>
 							</div>
 							<div class="selectGroup" style="width: 49%;">
 								<label for="selectbox">
 									<h2 class="inputtext">*여행 그룹선택</h2>
-								</label><br> <select name="plannerGroup" id="tripgroup"
+								</label><br> <select name="groupCode" id="tripgroup"
 									class="required">
 									<option selected disabled hidden>그룹 선택</option>
-									<option>혼자 여행하기</option>
-									<option>친구랑 여행하기</option>
-									<option>연인이랑 여행하기</option>
-									<option>가족과 여행하기</option>
+									<option value="1">혼자 여행하기</option>
+									<option value="2">친구랑 여행하기</option>
+									<option value="3">연인이랑 여행하기</option>
+									<option value="4">가족과 여행하기</option>
 								</select>
 							</div>
 							<br> <input type="text" class="planPlaces" readonly>
@@ -153,35 +154,36 @@ body {
 
 						<hr>
 
-						<div style="width: 100%; height: 30%; padding:30px 30px;">
+						<div style="width: 100%; height: 30%; padding: 30px 30px;">
 							<div class="selectdate">
 								<label for="datePlanner">
 									<h2 class="inputtext">*여행 일자 선택</h2>
-								</label> <br> <input name="plannerStartDate" type="date"
+								</label> <br> <input name="plannerStartDT" type="date"
 									id="startPlanner">
 							</div>
 							<div class="selectdate">
 
-								<input name="plannerEndDate" type="date" id="endPlanner">
+								<input name="plannerExpiry" type="date" id="endPlanner">
+								<button type="button" id="event">이벤트</button>
 							</div>
 						</div>
 
 						<hr>
 
-						<div style="width: 100%; padding:30px 30px;">
+						<div style="width: 100%; padding: 30px 30px;">
 							<h2 class="inputtext">플래너 공개여부 설정</h2>
-							<input name="plannerOpen" type="checkbox" id="openplanner"
+							<input name=plannerPublicYN type="checkbox" id="openplanner"
 								checked="checked" /> <label for="openplanner"> (선택 시
-								비공개) </label>
+								비공개) </label> <input name="plannerPwd" type="text"
+								placeholder="비밀번호 입력 ">
 
 							<hr>
 						</div>
-						<div style="width: 100%; height: 20%; padding: 30px 30px;" >
+						<div style="width: 100%; height: 20%; padding: 30px 30px;">
 							<button type="submit" class="btn btn-primary"
 								style="width: 40%; height: 50px;">생성</button>
 							<button type="reset" class="btn btn-primary"
 								style="width: 40%; height: 50px;">취소</button>
-						<hr>
 						</div>
 					</form>
 				</div>
@@ -189,6 +191,41 @@ body {
 			<div class="col-md-3"></div>
 		</div>
 	</div>
+
+	<script type="text/javascript">
+	
+		$(function(){
+			
+        	$("#event").on("click",function(){
+			var today = new Date(); 
+			var dd = today.getDate();
+			var mm = today.getMonth() +1;
+			var yyyy = today.getFullYear();
+		
+			var startDate = $("#startPlanner").val(); 
+       		var startDateArr = startDate.split('-');
+         
+        	var endDate = $("#endPlanner").val(); 
+        	var endDateArr = endDate.split('-');
+                 
+        	var startDateCompare = new Date(startDateArr[0], parseInt(startDateArr[1])-1, startDateArr[2]);
+        	var endDateCompare = new Date(endDateArr[0], parseInt(endDateArr[1])-1, endDateArr[2]);
+         
+        	if(startDateCompare.getDate() > endDateCompare.getDate()) {
+        		 alert("시작날짜와 종료날짜를 확인해 주세요.");
+                 
+                 return;	
+        	}
+        	
+        	
+        		console.log(startDate);
+        		console.log(today)
+        	})
+		
+			
+		})
+	
+	</script>
 
 
 
