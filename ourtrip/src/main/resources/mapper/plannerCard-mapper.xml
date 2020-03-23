@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="plannerCardMapper">
+	<resultMap type="PlannerCard" id="PlannerCardResultSet">
+		<id property="plannerNo" column="PLANNER_NO"/>
+		<result property="plannerTitle" column="PLANNER_TITLE"/>
+		<result property="plannerStartDT" column="PLANNER_START_DT"/>
+		<result property="groupName" column="GROUP_NAME"/>
+		<result property="plannerCount" column="PLANNER_COUNT"/>
+		<result property="plannerUrl" column="PLANNER_URL"/>
+		<result property="plannerPermission" column="PLANNER_PERMISSION"/>
+	</resultMap>
+	
+	<resultMap type="AreaName" id="AreaNameResultSet">
+		<id property="plannerNo" column="PLANNER_NO"/>
+		<result property="largeAreaCode" column="LARGE_AREA_CODE"/>
+		<result property="largeAreaName" column="LARGE_AREA_NAME"/>
+		<result property="smallAreaCode" column="SMALL_AREA_CODE"/>
+		<result property="smallAreaName" column="SMALL_AREA_NAME"/>
+		
+		
+	</resultMap>
+	
+	<select id="selectRecommendPCList" resultMap="PlannerCardResultSet">
+	
+		SELECT * FROM V_PLANNER_CARD
+	
+	</select>
+	
+	
+</mapper>
