@@ -69,7 +69,7 @@ public class MemberController {
 				
 				// 로그인 성공 시 아이디를 쿠키에 저장
 				// 관리자는 저장하지 않음
-				if(loginMember.getMemberGrade().equals("A")) path = "redirect:/admin/main";
+				if(loginMember.getMemberGrade().equals("A")) path = "/admin/main";
 				else {
 					Cookie cookie = new Cookie("saveEmail", member.getMemberEmail());
 					
