@@ -41,7 +41,7 @@
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/common/header.jsp"/>
-	<jsp:include page="/WEB-INF/views/common/nav.jsp"/>
+	<jsp:include page="/WEB-INF/views/admin/nav.jsp"/>
 	<div class="container">
 		<div class="row justify-content-center my-3">
 			<div class="card text-white bg-primary"

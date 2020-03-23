@@ -44,12 +44,12 @@
                 </a>
             </div>
             <div class="col-sm-3 nav-item">
-                <a href="#" class="nav-text">
+                <a href="${contextPath}/admin/List" class="nav-text">
                     <h5>회원목록</h5>
                 </a>
             </div>
             <div class="col-sm-3 nav-item">
-                <a href="#" class="nav-text">
+                <a href="${contextPath}/admin/adminplannerList" class="nav-text">
                     <h5>플래너목록</h5>
                 </a>
             </div>
