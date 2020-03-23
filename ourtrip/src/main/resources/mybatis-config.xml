@@ -21,6 +21,7 @@
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.Planner" alias="Planner"/>
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.Day" alias="Day"/>
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.Schedule" alias="Schedule"/>
+		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerMember" alias="PlannerMember"/>
 
 	</typeAliases>
 	
@@ -30,5 +31,6 @@
 		<mapper resource="/mapper/visitCount-mapper.xml"/>
 		<mapper resource="/mapper/admin-mapper.xml"/>
 		<mapper resource="/mapper/planner1-mapper.xml"/>
+		<mapper resource="/mapper/planner-mapper.xml"/>
 	</mappers>
 </configuration>

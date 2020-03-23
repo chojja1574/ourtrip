@@ -264,13 +264,29 @@ h5 {
 				<!-- <p>
 					<a class="btn" href="#">자세히 보기.. »</a>
 				</p> -->
-				<a href="#" class="btn btn-lg btn-primary" type="button">
-				플래너 생성하기</a>
+				<c:if test="${!empty loginMember }">
+					<a onclick="location.href = '${contextPath}/planner/create';"
+						id="createButton" class="btn btn-lg btn-primary" type="button">플래너
+						생성하기</a>
+				</c:if>
+				<c:if test="${empty loginMember }">
+					<a id="nologincreate" class="btn btn-lg btn-primary" type="button">로그인
+						후 생성</a>
+				</c:if>
 				<a href="#" class="btn btn-lg btn-success" type="button">
 				플래너 생성 가이드</a>
 			</div>
 		</div>
 	</div>
+	
+	<script>
+		$(function() {
+			$("#nologincreate").on("click", function() {
+				alert("로그인후 이용해 주세요")
+				location.href = "${contextPath}/member/loginForm";
+			});
+		});
+	</script>
 	<!-- main content end -->
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
