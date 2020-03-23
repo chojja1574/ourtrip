@@ -19,7 +19,7 @@ public class PlannerServiceimpl implements PlannerService{
 
 
 	/**플레너 생성용 Service
-	 * @param planner
+	 * @param planner member
 	 * @return result
 	 * @throws Exception
 	 */
