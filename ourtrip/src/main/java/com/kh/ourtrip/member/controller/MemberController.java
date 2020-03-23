@@ -43,8 +43,9 @@ public class MemberController {
 		}
 		
 		// 이전 페이지의 URL 저장
-		model.addAttribute("detailUrl", request.getHeader("referer"));
-		System.out.println(request.getHeader("referer"));
+		if(model.getAttribute("detailUrl") != null && !model.getAttribute("detailUrl").equals(request.getHeader("referer"))) {
+			model.addAttribute("detailUrl", request.getHeader("referer"));
+		}
 		
 		if(saveEmail != null) {
 			model.addAttribute("saveEmail", saveEmail);
@@ -139,7 +140,10 @@ public class MemberController {
 			return "redirect:/";
 		}
 		
-		model.addAttribute("detailUrl", request.getHeader("referer"));
+		// 이전 페이지의 URL 저장
+		if(model.getAttribute("detailUrl") != null && !model.getAttribute("detailUrl").equals(request.getHeader("referer"))) {
+			model.addAttribute("detailUrl", request.getHeader("referer"));
+		}
 		
 		if(isAgree != null && isAgree.equals("1")) {
 			return "member/signUpForm";
@@ -298,8 +302,8 @@ public class MemberController {
 	// 비밀번호 변경 폼
 	@RequestMapping("changePwdForm")
 	public String changePwdForm(Model model) {
-		if((Member)model.getAttribute("loginMember") != null) {
-			model.addAttribute("msg", "로그아웃 후 진입가능한 페이지입니다.");
+		if((Member)model.getAttribute("loginMember") == null) {
+			model.addAttribute("msg", "로그인 후 진입가능한 페이지입니다.");
 			return "redirect:/";
 		}
 		
