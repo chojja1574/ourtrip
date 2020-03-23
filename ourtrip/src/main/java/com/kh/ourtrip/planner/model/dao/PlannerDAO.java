@@ -15,7 +15,7 @@ public class PlannerDAO {
 	SqlSessionTemplate sqlSessionTemplate;
 
 	/** 플래너 번호 조회용 DAO
-	 * @return palnnerNo test1123
+	 * @return palnnerNo test
 	 * @throws Exception
 	 */
 	public int selectNextNo() throws Exception{
