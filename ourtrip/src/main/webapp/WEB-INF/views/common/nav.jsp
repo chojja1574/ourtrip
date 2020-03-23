@@ -45,7 +45,7 @@
                 </a>
             </div>
             <div class="col-sm-3 nav-item">
-                <a href="#" class="nav-text">
+                <a href="${contextPath}/planner/myPlanner" class="nav-text">
                     <h5>나의 플래너</h5>
                 </a>
             </div>
