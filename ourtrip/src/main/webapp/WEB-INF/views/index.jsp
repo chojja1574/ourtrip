@@ -104,23 +104,24 @@ h5 {
 						<div class="carousel-inner">
 							<div class="carousel-item active">
 								<div class="cardWrapper">
+									<!--  -->
 									<div class="planner orn">
 										<a href="#"> <img class="card-img-top"
 											src="${contextPath}/resources/images/ourtrip_logo2.png"
 											alt="Card image">
 										</a>
 										<div class="card-body">
-											<h5 class="card-title">부천 맛집 투어</h5>
+											<h5 class="card-title">${recommendPCList[0].plannerTitle}</h5>
 											<p class="card-text">
-												<span>시작일 : 2020-02-01 7DAYS</span><br> <span>신혼여행</span><br>
-												<span>경기도 부천시...</span>
+												<span>시작일 : ${recommendPCList[0].plannerStartDT} ${recommendPCList[0].tripDate}</span><br> <span>${recommendPCList[0].groupName }</span><br>
+												<span>대지역명 소지역명</span>
 											</p>
 											<div class="d-flex justify-content-between">
 												<div class="btn-wrapper">
 													<a type="button" href="#" class="btn btn-sm main-btn">바로가기</a>
 												</div>
 												<div>
-													<i class="fas fa-eye"></i>&nbsp;15
+													<i class="fas fa-eye"></i>&nbsp;${recommendPCList[0].plannerCount}
 												</div>
 											</div>
 										</div>
