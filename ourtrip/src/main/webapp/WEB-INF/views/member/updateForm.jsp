@@ -139,7 +139,7 @@
 						<a href="secessionForm" class="btn del-btn btn-block">회원 탈퇴</a>
 					</div>
 					<div class="col-md-4">
-						<a href="#" class="btn gray-btn btn-block">이전으로</a>
+						<a href="${detailUrl}" class="btn gray-btn btn-block">이전으로</a>
 					</div>
 					<div class="col-md-4">
 						<button class="btn main-btn btn-block">수정 완료</button>

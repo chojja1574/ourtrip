@@ -97,7 +97,7 @@
 					</div>
 					<div class="row mt-5 mb-3">
 						<div class="col-sm-6">
-							<a href="#" class="btn gray-btn btn-block">이전 페이지</a>
+							<a href="${detailUrl}" class="btn gray-btn btn-block">이전 페이지</a>
 						</div>
 						<div class="col-sm-6">
 							<button class="btn main-btn btn-block">비밀번호 찾기</button>

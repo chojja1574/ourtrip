@@ -24,7 +24,7 @@ import com.kh.ourtrip.member.model.service.MemberService;
 import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.member.model.vo.ProfileImage;
 
-@SessionAttributes({"loginMember", "msg", "profilePath"})
+@SessionAttributes({"loginMember", "msg", "detailUrl"})
 @Controller
 @RequestMapping(value="/member/*")
 public class MemberController {
@@ -34,7 +34,17 @@ public class MemberController {
 	
 	// 로그인 화면 이동
 	@RequestMapping(value="loginForm")
-	public String loginForm(Model model, @CookieValue(value = "saveEmail", required = false) String saveEmail) {
+	public String loginForm(Model model, HttpServletRequest request,
+			@CookieValue(value = "saveEmail", required = false) String saveEmail) {
+		
+		if((Member)model.getAttribute("loginMember") != null) {
+			model.addAttribute("msg", "로그아웃 후 진입가능한 페이지입니다.");
+			return "redirect:/";
+		}
+		
+		// 이전 페이지의 URL 저장
+		model.addAttribute("detailUrl", request.getHeader("referer"));
+		System.out.println(request.getHeader("referer"));
 		
 		if(saveEmail != null) {
 			model.addAttribute("saveEmail", saveEmail);
@@ -48,8 +58,6 @@ public class MemberController {
 	public String login(Member member, String saveEmail, Model model, RedirectAttributes rdAttr,
 			HttpSession session, HttpServletResponse response ) {
 		member.setSignUpRoute("1");
-		
-		System.out.println("saveEmail : " + saveEmail);
 		
 		try {
 			Member loginMember = memberService.login(member);
@@ -71,16 +79,17 @@ public class MemberController {
 					cookie.setPath("/"); // 쿠키 사용할 수 있는 도메인 설정
 					response.addCookie(cookie); // 쿠키를 브라우저에 전송
 					
-					path = "redirect:/";
+					// 로그인 전 화면으로 이동
+					path = (String)model.getAttribute("detailUrl");
 				}
 				
 				model.addAttribute("loginMember", loginMember);
 			}else {
 				rdAttr.addFlashAttribute("msg", "이메일, 비밀번호를 확인해주세요");
-				path = "redirect:loginForm";
+				path = "loginForm";
 			}
 			
-			return path;
+			return "redirect:" + path;
 			
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -124,7 +133,14 @@ public class MemberController {
 	}
 	
 	@RequestMapping("signUpForm")
-	public String signUpForm(String isAgree) {
+	public String signUpForm(String isAgree, Model model, HttpServletRequest request) {
+		if((Member)model.getAttribute("loginMember") != null) {
+			model.addAttribute("msg", "로그아웃 후 진입가능한 페이지입니다.");
+			return "redirect:/";
+		}
+		
+		model.addAttribute("detailUrl", request.getHeader("referer"));
+		
 		if(isAgree != null && isAgree.equals("1")) {
 			return "member/signUpForm";
 		}else {
@@ -200,7 +216,7 @@ public class MemberController {
 	}
 	
 	@RequestMapping("updateForm")
-	public String updateForm(Model model) {
+	public String updateForm(Model model, HttpServletRequest request) {
 		// 회원정보 수정 페이지 진입 시 DB에서 프로필사진 얻어옴
 		Member loginMember = (Member)model.getAttribute("loginMember");
 		
@@ -209,6 +225,8 @@ public class MemberController {
 				model.addAttribute("msg", "로그인 후 진입가능한 페이지입니다.");
 				return "redirect:/";
 			}
+			
+			model.addAttribute("detailUrl", request.getHeader("referer"));
 			
 			ProfileImage pi = memberService.selectProfileImage(loginMember.getMemberNo());
 			model.addAttribute("profileImage", pi);
@@ -279,7 +297,12 @@ public class MemberController {
 	
 	// 비밀번호 변경 폼
 	@RequestMapping("changePwdForm")
-	public String changePwdForm() {
+	public String changePwdForm(Model model) {
+		if((Member)model.getAttribute("loginMember") != null) {
+			model.addAttribute("msg", "로그아웃 후 진입가능한 페이지입니다.");
+			return "redirect:/";
+		}
+		
 		return "member/changePwdForm";
 	}
 	
@@ -319,7 +342,12 @@ public class MemberController {
 	
 	// 회원탈퇴 폼
 	@RequestMapping("secessionForm")
-	public String secessionForm() {
+	public String secessionForm(Model model) {
+		if((Member)model.getAttribute("loginMember") == null) {
+			model.addAttribute("msg", "로그인 후 진입가능한 페이지입니다.");
+			return "redirect:/";
+		}
+		
 		return "member/secession";
 	}
 	
@@ -361,7 +389,14 @@ public class MemberController {
 	
 	// 비밀번호 찾기 폼
 	@RequestMapping("findPwdForm")
-	public String findPwdForm() {
+	public String findPwdForm(Model model, HttpServletRequest request) {
+		if((Member)model.getAttribute("loginMember") != null) {
+			model.addAttribute("msg", "로그아웃 후 진입가능한 페이지입니다.");
+			return "redirect:/";
+		}
+		
+		model.addAttribute("detailUrl", request.getHeader("referer"));
+		
 		return "member/findPwdForm";
 	}
 	
