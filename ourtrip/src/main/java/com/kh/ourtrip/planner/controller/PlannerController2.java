@@ -29,7 +29,7 @@ import com.kh.ourtrip.planner.model.vo.Schedule;
 public class PlannerController2 {
 	
 	@Autowired
-	PlannerService2 plannerService2;
+	PlannerService2 plannerService;
 	
 	@RequestMapping("testInput")
 	public String chattingRoom() {
@@ -59,7 +59,7 @@ public class PlannerController2 {
 			String plannerUrl = null;
 			int groupCode = -1;
 			
-			List<PlannerView> selectPlannerView = plannerService2.selectPlannerView(no);
+			List<PlannerView> selectPlannerView = plannerService.selectPlannerView(no);
 			
 			Map<Integer,List<PlannerView>> dateMap = new HashMap<Integer,List<PlannerView>>();
 			for(PlannerView pv : selectPlannerView) {
