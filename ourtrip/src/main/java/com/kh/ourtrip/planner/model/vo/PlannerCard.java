@@ -19,6 +19,20 @@ public class PlannerCard {
 		// TODO Auto-generated constructor stub
 	}
 
+	public PlannerCard(int plannerNo, String plannerTitle, Date plannerStartDT, int tripDate, String groupName,
+			List<AreaName> areaNames, int plannerCount, String plannerUrl, String plannerPermission) {
+		super();
+		this.plannerNo = plannerNo;
+		this.plannerTitle = plannerTitle;
+		this.plannerStartDT = plannerStartDT;
+		this.tripDate = tripDate;
+		this.groupName = groupName;
+		this.areaNames = areaNames;
+		this.plannerCount = plannerCount;
+		this.plannerUrl = plannerUrl;
+		this.plannerPermission = plannerPermission;
+	}
+	
 	public int getPlannerNo() {
 		return plannerNo;
 	}
@@ -91,19 +105,16 @@ public class PlannerCard {
 		this.plannerPermission = plannerPermission;
 	}
 
-	public PlannerCard(int plannerNo, String plannerTitle, Date plannerStartDT, int tripDate, String groupName,
-			List<AreaName> areaNames, int plannerCount, String plannerUrl, String plannerPermission) {
-		super();
-		this.plannerNo = plannerNo;
-		this.plannerTitle = plannerTitle;
-		this.plannerStartDT = plannerStartDT;
-		this.tripDate = tripDate;
-		this.groupName = groupName;
-		this.areaNames = areaNames;
-		this.plannerCount = plannerCount;
-		this.plannerUrl = plannerUrl;
-		this.plannerPermission = plannerPermission;
+
+	@Override
+	public String toString() {
+		return "PlannerCard [plannerNo=" + plannerNo + ", plannerTitle=" + plannerTitle + ", plannerStartDT="
+				+ plannerStartDT + ", tripDate=" + tripDate + ", groupName=" + groupName + ", areaNames=" + areaNames
+				+ ", plannerCount=" + plannerCount + ", plannerUrl=" + plannerUrl + ", plannerPermission="
+				+ plannerPermission + "]";
 	}
+	
+	
 
 	
 }

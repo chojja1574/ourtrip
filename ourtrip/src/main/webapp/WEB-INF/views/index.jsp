@@ -24,7 +24,6 @@
 <title>ourtrip</title>
 
 <style>
-
 h5 {
 	margin-bottom: 0px;
 }
@@ -48,6 +47,40 @@ h5 {
 		display: none;
 	}
 }
+
+#local-area {
+	margin-top: 24px;
+}
+
+#check-wrapper {
+	margin-top: 20px;
+}
+
+#search-wrapper {
+	min-width: 300px;
+}
+
+
+.planner {
+	font-family: 'Stylish';
+	padding: 10px;
+	width: 100%;
+	height: 400px;
+}
+
+.card {
+	height: 100%;
+}
+
+.card-body {
+	height: 50%;
+}
+
+.card-img-top {
+	width: 100%;
+	height: 50%;
+}
+
 </style>
 </head>
 <body>
@@ -98,196 +131,74 @@ h5 {
 
 	<div class="container my-5 px-0">
 		<div class="row">
-			<div class="col-md-7">
-				<div class="row">
-					<div id="demo" class="carousel slide" data-ride="carousel">
-						<div class="carousel-inner">
-							<div class="carousel-item active">
-								<div class="cardWrapper">
-									<!--  -->
-									<div class="planner orn">
-										<a href="#"> <img class="card-img-top"
-											src="${contextPath}/resources/images/ourtrip_logo2.png"
-											alt="Card image">
-										</a>
-										<div class="card-body">
-											<h5 class="card-title">${recommendPCList[0].plannerTitle}</h5>
-											<p class="card-text">
-												<span>시작일 : ${recommendPCList[0].plannerStartDT} ${recommendPCList[0].tripDate}</span><br> <span>${recommendPCList[0].groupName }</span><br>
-												<span>대지역명 소지역명</span>
-											</p>
-											<div class="d-flex justify-content-between">
-												<div class="btn-wrapper">
-													<a type="button" href="#" class="btn btn-sm main-btn">바로가기</a>
-												</div>
-												<div>
-													<i class="fas fa-eye"></i>&nbsp;${recommendPCList[0].plannerCount}
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="planner wen">
-										<a href="#"> <img class="card-img-top"
-											src="${contextPath}/resources/images/ourtrip_logo2.png"
-											alt="Card image">
-										</a>
-										<div class="card-body">
-											<h5 class="card-title">부천 맛집 투어</h5>
-											<p class="card-text">
-												<span>시작일 : 2020-02-01 7DAYS</span><br> <span>신혼여행</span><br>
-												<span>경기도 부천시...</span>
-											</p>
-											<div class="d-flex justify-content-between">
-												<div class="btn-wrapper">
-													<a type="button" href="#" class="btn btn-sm main-btn">바로가기</a>
-												</div>
-												<div>
-													<i class="fas fa-eye"></i>&nbsp;15
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="carousel-item">
-								<div class="planner orn">
-									<a href="#"> <img class="card-img-top"
-										src="${contextPath}/resources/images/ourtrip_logo2.png"
-										alt="Card image">
-									</a>
-									<div class="card-body">
-										<h5 class="card-title">부천 맛집 투어</h5>
-										<p class="card-text">
-											<span>시작일 : 2020-02-01 7DAYS</span><br> <span>신혼여행</span><br>
-											<span>경기도 부천시...</span>
-										</p>
-										<div class="d-flex justify-content-between">
-											<div class="btn-wrapper">
-												<a type="button" href="#" class="btn btn-sm main-btn">바로가기</a>
-											</div>
-											<div>
-												<i class="fas fa-eye"></i>&nbsp;15
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="planner wen">
-									<a href="#"> <img class="card-img-top"
-										src="${contextPath}/resources/images/ourtrip_logo2.png"
-										alt="Card image">
-									</a>
-									<div class="card-body">
-										<h5 class="card-title">부천 맛집 투어</h5>
-										<p class="card-text">
-											<span>시작일 : 2020-02-01 7DAYS</span><br> <span>신혼여행</span><br>
-											<span>경기도 부천시...</span>
-										</p>
-										<div class="d-flex justify-content-between">
-											<div class="btn-wrapper">
-												<a type="button" href="#" class="btn btn-sm main-btn">바로가기</a>
-											</div>
-											<div>
-												<i class="fas fa-eye"></i>&nbsp;15
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="carousel-item">
-								<div class="planner orn">
-									<a href="#"> <img class="card-img-top"
-										src="${contextPath}/resources/images/ourtrip_logo2.png"
-										alt="Card image">
-									</a>
-									<div class="card-body">
-										<h5 class="card-title">부천 맛집 투어</h5>
-										<p class="card-text">
-											<span>시작일 : 2020-02-01 7DAYS</span><br> <span>신혼여행</span><br>
-											<span>경기도 부천시...</span>
-										</p>
-										<div class="d-flex justify-content-between">
-											<div class="btn-wrapper">
-												<a type="button" href="#" class="btn btn-sm main-btn">바로가기</a>
-											</div>
-											<div>
-												<i class="fas fa-eye"></i>&nbsp;15
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="planner wen">
-									<a href="#"> <img class="card-img-top"
-										src="${contextPath}/resources/images/ourtrip_logo2.png"
-										alt="Card image">
-									</a>
-									<div class="card-body">
-										<h5 class="card-title">부천 맛집 투어</h5>
-										<p class="card-text">
-											<span>시작일 : 2020-02-01 7DAYS</span><br> <span>신혼여행</span><br>
-											<span>경기도 부천시...</span>
-										</p>
-										<div class="d-flex justify-content-between">
-											<div class="btn-wrapper">
-												<a type="button" href="#" class="btn btn-sm main-btn">바로가기</a>
-											</div>
-											<div>
-												<i class="fas fa-eye"></i>&nbsp;15
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<a class="carousel-control-prev" href="#demo" data-slide="prev">
-								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-								
-							</a> <a class="carousel-control-next" href="#demo" data-slide="next">
-								<span class="carousel-control-next-icon" aria-hidden="true"></span>
-								
-							</a>
-
-							<ul class="carousel-indicators">
-								<li data-target="#demo" data-slide-to="0" class="active"></li>
-								<li data-target="#demo" data-slide-to="1"></li>
-								<li data-target="#demo" data-slide-to="2"></li>
-							</ul>
-						</div>
-
-					</div>
+			<c:if test="${empty recommendPCList}">
+				<div class="col-xl-6">
+					존재하는 추천 리스트가 없습니다.
 				</div>
-			</div>
-			<div class="col-md-5">
+			</c:if>
+			<c:if test="${!empty recommendPCList}">
+				<c:forEach var="recommendCard" items="${recommendPCList}" varStatus="vs">
+					<div class="col-xl-3">
+						<div class="planner">
+		                    <div class="card">
+		                        <img class="card-img-top" src="images/example1.jpg" alt="Card image">
+		                        <div class="card-body">
+		                            <h5 class="card-title">${recommendCard.plannerTitle}</h5>
+		                            <p class="card-text">
+		                                <span>시작일 : ${recommendCard.plannerStartDT} ${recommendCard.tripDate}DAYS</span><br>
+		                                <span>${recommendCard.groupName }</span><br>
+		                                <c:if test="${recommendCard.areaNames.size()>1 }">
+		                                	<span>${recommendCard.areaNames[0].largeAreaName}
+		                                		  ${recommendCard.areaNames[0].smallAreaName} ...</span>
+		                                </c:if>
+		                                <c:if test="${recommendCard.areaNames.size()==1 }">
+		                                	<span>${recommendCard.areaNames[0].largeAreaName}
+		                                		  ${recommendCard.areaNames[0].smallAreaName} </span>
+		                                </c:if>
+		                                <c:if test="${recommendCard.areaNames.size()<1 }">
+		                                	<span>없음 </span>
+		                                </c:if>
+		                            </p>
+		                            <div class="d-flex justify-content-between">
+		                                <div class="btn-wrapper">
+		                                    <button type="button" class="btn btn-sm main-btn">바로가기</button>
+		                                    <button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>
+		                                </div>
+		                                <div><i class="fas fa-eye"></i>&nbsp;${recommendCard.plannerCount}</div>
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div>
+					</div>
+				</c:forEach>
+			</c:if>
+						
+			<!-- 플래너생성하기 -->
+			<div class="col-xl-6">
 				<h2>플레너 생성하기</h2>
-				<p>플래너가 처음이신가요? <br>
-				ourTrip 플래너는 여러분의 여행을 보다 즐겁게 만들어드립니다.<br>
-				지금 바로 여러분의 여행파트너와 플래너를 작성해 보세요 <br>
-				단 몇분이면 여러분만의 여행플래너가 완성됩니다.</p>
+				<p>
+					플래너가 처음이신가요? <br> ourTrip 플래너는 여러분의 여행을 보다 즐겁게 만들어드립니다.<br>
+					지금 바로 여러분의 여행파트너와 플래너를 작성해 보세요 <br> 단 몇분이면 여러분만의 여행플래너가 완성됩니다.
+				</p>
 				<!-- <p>
 					<a class="btn" href="#">자세히 보기.. »</a>
 				</p> -->
 				<c:if test="${!empty loginMember }">
-					<a onclick="location.href = '${contextPath}/planner/create';"
-						id="createButton" class="btn btn-lg btn-primary" type="button">플래너
+					<a href= '${contextPath}/planner/create'
+						id="createButton" class="btn btn-lg btn-primary" type="button" style="color:white;">플래너
 						생성하기</a>
 				</c:if>
 				<c:if test="${empty loginMember }">
-					<a id="nologincreate" class="btn btn-lg btn-primary" type="button">로그인
+					<a href= '${contextPath}/member/loginForm'
+						id="nologincreate" class="btn btn-lg btn-primary" type="button" style="color:white;">로그인
 						후 생성</a>
 				</c:if>
-				<a href="#" class="btn btn-lg btn-success" type="button">
-				플래너 생성 가이드</a>
+				<a href="#" class="btn btn-lg btn-success" type="button"> 플래너 생성
+					가이드</a>
 			</div>
-		</div>
+		</div>	
 	</div>
-	
-	<script>
-		$(function() {
-			$("#nologincreate").on("click", function() {
-				alert("로그인후 이용해 주세요")
-				location.href = "${contextPath}/member/loginForm";
-			});
-		});
-	</script>
+
 	<!-- main content end -->
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
@@ -303,5 +214,14 @@ h5 {
 		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
 		integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
 		crossorigin="anonymous"></script>
+		
+	<script>
+		$(function() {
+			$("#nologincreate").on("click", function() {
+				alert("로그인후 이용해 주세요")
+				location.href = "${contextPath}/member/loginForm";
+			});
+		});
+	</script>
 </body>
 </html>
