@@ -13,7 +13,7 @@
 		<typeAlias type="com.kh.ourtrip.member.model.vo.Member" alias="Member"/>
 		<typeAlias type="com.kh.ourtrip.member.model.vo.ProfileImage" alias="ProfileImage"/>
 		<typeAlias type="com.kh.ourtrip.admin.model.vo.VisitLog" alias="VisitLog"/>
-
+		
     
     
 		<!-- 박지현 -->
@@ -23,6 +23,11 @@
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.Schedule" alias="Schedule"/>
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerMember" alias="PlannerMember"/>
 
+		
+		<!-- 신덕수 -->
+		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerCard" alias="PlannerCard"/>
+		<typeAlias type="com.kh.ourtrip.planner.model.vo.AreaName" alias="AreaName"/>
+
 	</typeAliases>
 	
 	<!-- mapper 파일 등록 부분 -->
@@ -31,6 +36,11 @@
 		<mapper resource="/mapper/visitCount-mapper.xml"/>
 		<mapper resource="/mapper/admin-mapper.xml"/>
 		<mapper resource="/mapper/planner1-mapper.xml"/>
+
 		<mapper resource="/mapper/planner-mapper.xml"/>
+		
+		<!-- 신덕수 -->
+		<mapper resource="/mapper/plannerCard-mapper.xml"/>
+
 	</mappers>
 </configuration>

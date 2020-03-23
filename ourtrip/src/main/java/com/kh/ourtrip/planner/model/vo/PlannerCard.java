@@ -1,6 +1,7 @@
 package com.kh.ourtrip.planner.model.vo;
 
 import java.sql.Date;
+import java.util.List;
 
 public class PlannerCard {
 	
@@ -9,27 +10,13 @@ public class PlannerCard {
 	private Date plannerStartDT; //여행시작일
 	private int tripDate; // 여행기간
 	private String groupName; // 그룹네임
-	private String LargeAreaName; // 대지역명
-	private String SmallAreaName; // 소지역명
+	private List<AreaName> areaNames; // 지역
 	private int plannerCount;  //조회수
 	private String plannerUrl; //바로가기 
+	private String plannerPermission; //권한등급
 	
 	public PlannerCard() {
 		// TODO Auto-generated constructor stub
-	}
-
-	public PlannerCard(int plannerNo, String plannerTitle, Date plannerStartDT, int tripDate, String groupName,
-			String largeAreaName, String smallAreaName, int plannerCount, String plannerUrl) {
-		super();
-		this.plannerNo = plannerNo;
-		this.plannerTitle = plannerTitle;
-		this.plannerStartDT = plannerStartDT;
-		this.tripDate = tripDate;
-		this.groupName = groupName;
-		LargeAreaName = largeAreaName;
-		SmallAreaName = smallAreaName;
-		this.plannerCount = plannerCount;
-		this.plannerUrl = plannerUrl;
 	}
 
 	public int getPlannerNo() {
@@ -72,20 +59,12 @@ public class PlannerCard {
 		this.groupName = groupName;
 	}
 
-	public String getLargeAreaName() {
-		return LargeAreaName;
+	public List<AreaName> getareaNames() {
+		return areaNames;
 	}
 
-	public void setLargeAreaName(String largeAreaName) {
-		LargeAreaName = largeAreaName;
-	}
-
-	public String getSmallAreaName() {
-		return SmallAreaName;
-	}
-
-	public void setSmallAreaName(String smallAreaName) {
-		SmallAreaName = smallAreaName;
+	public void setareaNames(List<AreaName> areaNames) {
+		this.areaNames = areaNames;
 	}
 
 	public int getPlannerCount() {
@@ -104,13 +83,27 @@ public class PlannerCard {
 		this.plannerUrl = plannerUrl;
 	}
 
-	@Override
-	public String toString() {
-		return "PlannerCard [plannerNo=" + plannerNo + ", plannerTitle=" + plannerTitle + ", plannerStartDT="
-				+ plannerStartDT + ", tripDate=" + tripDate + ", groupName=" + groupName + ", LargeAreaName="
-				+ LargeAreaName + ", SmallAreaName=" + SmallAreaName + ", plannerCount=" + plannerCount
-				+ ", plannerUrl=" + plannerUrl + "]";
+	public String getPlannerPermission() {
+		return plannerPermission;
 	}
-	
+
+	public void setPlannerPermission(String plannerPermission) {
+		this.plannerPermission = plannerPermission;
+	}
+
+	public PlannerCard(int plannerNo, String plannerTitle, Date plannerStartDT, int tripDate, String groupName,
+			List<AreaName> areaNames, int plannerCount, String plannerUrl, String plannerPermission) {
+		super();
+		this.plannerNo = plannerNo;
+		this.plannerTitle = plannerTitle;
+		this.plannerStartDT = plannerStartDT;
+		this.tripDate = tripDate;
+		this.groupName = groupName;
+		this.areaNames = areaNames;
+		this.plannerCount = plannerCount;
+		this.plannerUrl = plannerUrl;
+		this.plannerPermission = plannerPermission;
+	}
+
 	
 }
