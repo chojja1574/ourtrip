@@ -21,7 +21,7 @@ public class HomeController {
 	public String intro(Model model) {
 		try {
 			List<PlannerCard> recommendPCList = plannerServiceSDS.selectRecommendPCList();
-			System.out.println(recommendPCList);
+			//System.out.println(recommendPCList);
 			if(!recommendPCList.isEmpty()) {
 				model.addAttribute("recommendPCList", recommendPCList);
 			} else {

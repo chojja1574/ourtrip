@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.PlannerCard;
 
 @Repository
@@ -18,8 +19,8 @@ public class PlannerDAOSDS {
 		return sqlSession.selectList("plannerCardMapper.selectRecommendPCList");
 	}
 
-	public int selectTripDate() throws Exception{
-		return sqlSession.selectOne("plannerCardMapper.selectTripDate");
+	public List<AreaName> selectAreaNames(List<Integer> rListNo) throws Exception {
+		return sqlSession.selectList("plannerCardMapper.selectAreaNames", rListNo);
 	}
 
 }

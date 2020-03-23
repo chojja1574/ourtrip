@@ -12,7 +12,7 @@
 	</resultMap>
 	
 	<resultMap type="AreaName" id="AreaNameResultSet">
-		<id property="plannerNo" column="PLANNER_NO"/>
+		<result property="plannerNo" column="PLANNER_NO"/>
 		<result property="largeAreaCode" column="LARGE_AREA_CODE"/>
 		<result property="largeAreaName" column="LARGE_AREA_NAME"/>
 		<result property="smallAreaCode" column="SMALL_AREA_CODE"/>
@@ -22,9 +22,24 @@
 	</resultMap>
 	
 	<select id="selectRecommendPCList" resultMap="PlannerCardResultSet">
+		SELECT ROWNUM, PLANNER_NO, PLANNER_TITLE, PLANNER_START_DT, 
+				TRIP_DATE, GROUP_NAME, PLANNER_COUNT, PLANNER_URL
+		FROM (SELECT * FROM V_PLANNER_CARD
+			WHERE PLANNER_DELETE_YN = 'N'
+			AND PLANNER_PUBLIC_YN = 'Y'
+			ORDER BY PLANNER_COUNT DESC)
+		WHERE ROWNUM BETWEEN 1 AND 2
+	</select>
 	
-		SELECT * FROM V_PLANNER_CARD
-	
+	<select id="selectAreaNames" parameterType="list" 
+	resultMap="AreaNameResultSet">
+		SELECT * FROM V_AREA_NAME
+		WHERE PLANNER_NO IN 
+		<foreach item="item" index="index" collection="list" 
+		 open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		
 	</select>
 	
 	
