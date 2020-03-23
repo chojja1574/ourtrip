@@ -18,7 +18,7 @@
 				</div>
 				<div class="col-md-4">
 					<p class="float-right">
-						1:1문의 Email<br> ourtrip@naver.com
+						1:1문의 Email<br> khourtrip@gmail.com
 					</p>
 				</div>
 			</div>

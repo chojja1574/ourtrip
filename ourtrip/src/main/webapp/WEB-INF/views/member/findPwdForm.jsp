@@ -48,6 +48,10 @@
  	padding: 15px;
 }
 
+.display-none{
+    display:none;
+}
+
 @media screen and (max-width: 1199px) {
     #email-authentication-btn{
     	font-size: 14px;
@@ -93,7 +97,7 @@
 					</div>
 					<div class="row mt-5 mb-3">
 						<div class="col-sm-6">
-							<a href="#" class="btn gray-btn btn-block">이전 페이지</a>
+							<a href="${detailUrl}" class="btn gray-btn btn-block">이전 페이지</a>
 						</div>
 						<div class="col-sm-6">
 							<button class="btn main-btn btn-block">비밀번호 찾기</button>
@@ -103,6 +107,10 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="wrap-loading display-none" id="loading">
+        <div><img src="${contextPath}/resources/images/loadingBar.gif"/></div>
+    </div>
 
 	<jsp:include page="../common/footer.jsp" />
 
@@ -182,7 +190,8 @@
 			if(certifyCode != $("#certifyCode").val()){
 				alert("인증번호가 일치하지않습니다.");
 				return false;
-			}			
+			}
+			$("#loading").removeClass("display-none");
 		}
 	</script>
 </body>

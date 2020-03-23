@@ -178,7 +178,7 @@
         <div id="btn-wrapper" class="mt-3">
         	<form action="signUpForm" method="POST" onsubmit="return signUpForm();">
         		<input id="isAgree" type="hidden" value="0" name="isAgree">
-	            <a href="#" class="btn gray-btn">이전 화면</a>
+	            <a href="${detailUrl}" class="btn gray-btn">이전 화면</a>
 	            <button class="btn main-btn float-right">가입하기</button>
         	</form>
         </div>
