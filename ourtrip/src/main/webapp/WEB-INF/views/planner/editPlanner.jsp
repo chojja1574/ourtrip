@@ -469,7 +469,7 @@ function reorder() {
         dateInfo.push({order:i,dno:$(box).data('dateno')});
     });
     //sock.send로 afterDayOrder 보내줌
-    sock.send(JSON.stringify({chatRoomId: "${no}", type: 'orderDate', id: "${loginMember.getMemberEmail()}", dateInfo:dateInfo});
+    sock.send(JSON.stringify({chatRoomId: "${no}", type: 'orderDate', id: "${loginMember.getMemberEmail()}", dateInfo:dateInfo}));
 };
 
 //=======================================================================================//
@@ -532,7 +532,7 @@ var tempDayno = 100;
 
 function addDate(){
 	// date_no는 DB 에서 가져옴
-	sock.send(JSON.stringify({chatRoomId: "${no}", type: 'addDate', id: "${loginMember.getMemberEmail()}"});
+	sock.send(JSON.stringify({chatRoomId: "${no}", type: 'addDate', id: "${loginMember.getMemberEmail()}"}));
 	// trip_date 값은  reorder에서 수정
 	
 	
