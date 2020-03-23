@@ -209,7 +209,7 @@ function displayAllPlaces(pointsArr) {
     for (i = 0; i < pointsArr.scheduleMarker.length; i++) {
 
         // 경도, 위도의 합이 0이면(위치지정 안한 값) 마커 찍는거 건너뜀
-        if(!pointsArr.scheduleMarker[i].unselect){
+        if(pointsArr.scheduleMarker[i].unselect){
             console.log("continue : " + i);
             continue;
         }

@@ -136,4 +136,17 @@ public class EchoHandler extends TextWebSocketHandler {
 			System.out.println("메세지 전송 실패");
 		}
 	}
+	
+	// get DATE_NO NEXTVAL
+	private int getDateNo() {
+		int result = 0;
+		
+		return result;
+	}
+	
+	// 일차 추가
+	private void createDate() {
+		
+	}
+	
 }

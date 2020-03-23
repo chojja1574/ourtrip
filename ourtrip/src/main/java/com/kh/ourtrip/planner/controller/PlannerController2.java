@@ -134,12 +134,4 @@ public class PlannerController2 {
 		
 		return "planner/editPlanner";
 	}
-	
-	@RequestMapping("chattingForm2")
-	public String chattingForm2(Model model, Integer no, RedirectAttributes rdAttr, String userId, String selectRoom) {
-		model.addAttribute("userId", userId);
-		model.addAttribute("selectRoom", selectRoom);
-		
-		return "websocket-echo";
-	}
 }
