@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -16,6 +17,8 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.kh.ourtrip.planner.model.service.PlannerService2;
+import com.kh.ourtrip.planner.model.vo.Day;
+import com.kh.ourtrip.planner.model.vo.Schedule;
 import com.kh.ourtrip.planner.model.vo.UserInfo;
 
 public class EchoHandler extends TextWebSocketHandler {
@@ -56,13 +59,24 @@ public class EchoHandler extends TextWebSocketHandler {
             
             if(jsonObj.get("type").equals("JOIN")) {
             	joinChattingRoom(session, jsonObj);
-            }
-            else {
+            }else if(jsonObj.get("type").equals("addDate")) {
+            	addDate(session, jsonObj);
+            }else if(jsonObj.get("type").equals("deleteDate")) {
+            	deleteDate(session, jsonObj);
+            }else if(jsonObj.get("type").equals("orderDate")) {
+            	orderDate(session, jsonObj);
+            }else if(jsonObj.get("type").equals("updateSchedule")) {
+            	updateSchedule(session, jsonObj);
+            }else if(jsonObj.get("type").equals("addSchedule")) {
+            	addSchedule(session, jsonObj);
+            }else if(jsonObj.get("type").equals("removeSchedule")) {
+            	removeSchedule(session, jsonObj);
+            }else {
             	sendChatroom(session, jsonObj);
             }
             
 		} catch(Exception e){
-			System.out.println("json 아님");
+			e.printStackTrace();
 		}
 		/*
 		 * for (WebSocketSession sess : sessionList) { sess.sendMessage(new
@@ -131,9 +145,7 @@ public class EchoHandler extends TextWebSocketHandler {
 	private void sendChatroom(WebSocketSession session, JSONObject msgJson){
 		System.out.println(userList);
 		UserInfo sendUInf = findUserInfo(session);
-		System.out.println(sendUInf);
 		List<UserInfo> uInfList = chatroomMap.get(sendUInf.getChatRoom());
-		System.out.println(uInfList);
 		try {
 			for(UserInfo uInf : uInfList ) {
 				uInf.getSession().sendMessage(new TextMessage(msgJson.toJSONString()));
@@ -144,8 +156,100 @@ public class EchoHandler extends TextWebSocketHandler {
 	}
 	
 	// 일차 추가
-	private void createDate() {
+	private int addDate(WebSocketSession session, JSONObject msgJson) throws Exception{
+		int result = 0;
+		System.out.println("addDate");
 		
+		int dateNo = plannerService.getNextDateNo();
+		int scheduleNo = plannerService.getNextScheduleNo();
+		Day day = new Day();
+		day.setPlannerNo(Integer.parseInt(msgJson.get("pno").toString()));
+		day.setDateNo(dateNo);
+		
+		day.setSchedules(new ArrayList<Schedule>());
+		
+		day.getSchedules().add(new Schedule());
+		day.getSchedules().get(0).setScheduleNo(scheduleNo);
+		day.getSchedules().get(0).setDateNo(dateNo);
+		
+		result = plannerService.insertDate(day);
+		if(result > 0) {
+			System.out.println("날짜 생성 완료");
+			result = plannerService.insertDefaultSchedule(day.getSchedules().get(0));
+			if(result > 0) {
+				System.out.println("기본일정 생성 완료");
+			}
+		}
+		msgJson.putIfAbsent("dno", dateNo);
+		msgJson.putIfAbsent("sno", scheduleNo);
+		System.out.println(msgJson);
+		sendChatroom(session, msgJson);
+		return result;
 	}
 	
+	// 일차 정렬
+	private int orderDate(WebSocketSession session, JSONObject msgJson) throws Exception {
+		int result = 0;
+
+		JSONArray dateInfo = (JSONArray)(msgJson.get("dateInfo"));
+		
+		List<Day> dayList = new ArrayList<Day>();
+		Day tempDay = null;
+		
+		if (dateInfo != null) { 
+		   for (int i=0;i<dateInfo.size();i++){ 
+			   JSONParser jsonParser = new JSONParser();
+			   JSONObject jsonObj = (JSONObject) jsonParser.parse(dateInfo.get(i).toString());
+			   tempDay = new Day();
+			   int dno = Integer.parseInt(jsonObj.get("dno").toString());
+			   int order = Integer.parseInt(jsonObj.get("order").toString());
+			   tempDay.setDateNo(dno);
+			   tempDay.setTripDate(order);
+			   dayList.add(tempDay);
+		   } 
+		}
+		
+		result = plannerService.updateTripDate(dayList);
+		
+		System.out.println("orderDate result : " + result);
+		
+		return result;
+	}
+	
+	// 일차 삭제
+	private int deleteDate(WebSocketSession session, JSONObject msgJson) throws Exception {
+		int result = 0;
+		System.out.println("deleteDate");
+		int dateNo = Integer.parseInt(msgJson.get("dno").toString());
+		System.out.println("dateNo : " + dateNo);
+		result = plannerService.deleteDate(dateNo);
+		
+		sendChatroom(session, msgJson);
+		
+		return result;
+	}
+	
+	// 일정 저장
+	private int updateSchedule(WebSocketSession session, JSONObject msgJson) throws Exception {
+		int result = 0;
+		System.out.println("updateSchedule");
+		sendChatroom(session, msgJson);
+		return result;
+	}
+	
+	// 일정 추가
+	private int addSchedule(WebSocketSession session, JSONObject msgJson) throws Exception {
+		int result = 0;
+		System.out.println("addSchedule");
+		sendChatroom(session, msgJson);
+		return result;
+	}
+	
+	// 일정 삭제
+	private int removeSchedule(WebSocketSession session, JSONObject msgJson) throws Exception {
+		int result = 0;
+		System.out.println("removeSchedule");
+		sendChatroom(session, msgJson);
+		return result;
+	}
 }

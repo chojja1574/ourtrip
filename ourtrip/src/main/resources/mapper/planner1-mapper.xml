@@ -64,7 +64,32 @@
 	</resultMap>
 
 	<select id="selectPlannerView" parameterType="_int" resultMap="plannerViewResultSet">
-		SELECT * FROM V_PLANNER WHERE PLANNER_NO = ${no}
+		SELECT * FROM V_PLANNER WHERE PLANNER_NO = #{no}
 	</select>
-		
+	
+	<select id="selectDateNo" resultType="_int">
+		SELECT SEQ_PLANNER_DATE_DNO.NEXTVAL FROM DUAL
+	</select>
+	
+	<select id="selectScheduleNo" resultType="_int">
+		SELECT SEQ_SCHEDULE_SNO.NEXTVAL FROM DUAL
+	</select>
+	
+	<insert id="insertDate" parameterType="Day">
+		INSERT INTO PLANNER_DATE VALUES(
+			#{dateNo},-1,0,#{plannerNo}
+		)
+	</insert>
+	
+	<update id="updateTripDate" parameterType="java.util.List">
+		<foreach item="day" index="i" collection="list" separator=";" open="DECLARE BEGIN" close="; END;">
+			UPDATE PLANNER_DATE SET TRIP_DATE = #{day.tripDate} WHERE DATE_NO = #{day.dateNo}
+		</foreach>
+	</update>
+	
+	<insert id="insertDefaultSchedule" parameterType="Schedule">
+		INSERT INTO SCHEDULE VALUES(
+			#{scheduleNo},'제목 없음',0,'메모 없음','','이름 없음',0,0,#{dateNo}
+		)
+	</insert>
 </mapper>
