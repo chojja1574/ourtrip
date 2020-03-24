@@ -42,6 +42,9 @@
 		
 		<!-- 신덕수 -->
 		<mapper resource="/mapper/plannerCard-mapper.xml"/>
+		
+		<!-- 조유상 -->
+		<mapper resource="/mapper/plannerCard-mapper2.xml"/>
 
 	</mappers>
 </configuration>
