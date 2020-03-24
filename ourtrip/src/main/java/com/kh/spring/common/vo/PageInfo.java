@@ -1,4 +1,4 @@
-package com.kh.ourtrip.common.vo;
+package com.kh.spring.common.vo;
 
 public class PageInfo {
 	private int listCount; 		// 전체 게시글 수
@@ -10,9 +10,7 @@ public class PageInfo {
 	private int startPage;	 	// 페이징바 시작 페이지 번호
 	private int endPage; 	 	// 페이징바 끝 페이지 번호
 	
-	public PageInfo() {
-		// TODO Auto-generated constructor stub
-	}
+	public PageInfo() {}
 
 	public PageInfo(int listCount, int limit, int pagingBarSize, int currentPage, int maxPage, int startPage,
 			int endPage) {

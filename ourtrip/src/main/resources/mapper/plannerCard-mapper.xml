@@ -42,5 +42,8 @@
 		
 	</select>
 	
+	<select id="updatePlannerCount" parameterType="_int" resultType="_int">
+	</select>
+	
 	
 </mapper>
