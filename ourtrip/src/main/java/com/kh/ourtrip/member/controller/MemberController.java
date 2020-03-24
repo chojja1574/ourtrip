@@ -81,7 +81,8 @@ public class MemberController {
 					response.addCookie(cookie); // 쿠키를 브라우저에 전송
 					
 					// 로그인 전 화면으로 이동
-					path = (String)model.getAttribute("detailUrl");
+					if(model.getAttribute("detailUrl") != null) path = (String)model.getAttribute("detailUrl");
+					else path = "/";
 				}
 				
 				model.addAttribute("loginMember", loginMember);
