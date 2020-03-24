@@ -38,6 +38,7 @@
 		<mapper resource="/mapper/planner1-mapper.xml"/>
 
 		<mapper resource="/mapper/planner-mapper.xml"/>
+		<mapper resource="/mapper/adminhun-mapper.xml"/>
 		
 		<!-- 신덕수 -->
 		<mapper resource="/mapper/plannerCard-mapper.xml"/>

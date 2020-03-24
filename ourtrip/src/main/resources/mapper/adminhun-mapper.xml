@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="adminhunMapper">
+
+	<resultMap type="Member" id="memberResultSet">
+		<id property="memberNo" column="MEMBER_NO" />
+		<result property="memberEmail" column="MEMBER_EMAIL" />
+		<result property="memberPwd" column="MEMBER_PWD" />
+		<result property="memberNickName" column="MEMBER_NICK_NAME" />
+		<result property="memberEnrollDt" column="MEMBER_ENROLL_DT" />
+		<result property="memberStatus" column="MEMBER_DELETE_YN" />
+		<result property="memberGrade" column="MEMBER_GRADE" />
+		<result property="signUpRoute" column="SIGNUP_ROUTE" />
+	</resultMap>
+	
+		<resultMap type="PlannerMember" id="PlannerMemberResultSet">
+		<id property="memberNo" column="MEMBER_NO"/>
+		<id property="plannerNo" column="PLANNER_NO"/>
+	</resultMap>
+	
+	
+	<resultMap type="Planner" id="plannerResultSet">
+		<id property="plannerNo" column="PLANNER_NO"/>
+		<result property="plannerTitle" column="PLANNER_TITLE"/>
+		<result property="plannerPwd" column="PLANNER_PWD"/>
+		<result property="plannerCost" column="PLANNER_COST"/>
+		<result property="plannerCreateDT" column="PLANNER_CREATE_DT"/>
+		<result property="plannerModifyDT" column="PLANNER_MODIFT_DT"/>
+		<result property="plannerStartDT" column="PLANNER_START_DT"/>
+		<result property="plannerPublicYN" column="PLANNER_PUBLIC_YN"/>
+		<result property="plannerDeleteYN" column="PLANNER_DELETE_YN"/>
+		<result property="plannerExpiry" column="PLANNER_EXPIRY"/>
+		<result property="plannerCount" column="PLANNER_COUNT"/>
+		<result property="plannerUrl" column="PLANNER_URL"/>
+		<result property="groupCode" column="GROUP_CODE"/>
+	</resultMap>
+
+	<select id="listFullCount" resultType="_int">
+		SELECT COUNT(*) FROM
+		MEMBER WHERE
+
+		MEMBER_DELETE_YN = 'N'
+
+		ORDER BY MEMBER_NO DESC
+	</select>
+
+	<select id="selectFullList" resultMap="memberResultSet">
+		SELECT *
+		FROM MEMBER WHERE
+		MEMBER_DELETE_YN = 'N'
+		ORDER BY MEMBER_NO DESC
+	</select>
+
+	<select id="listCount" parameterType="map" resultType="_int">
+		SELECT COUNT(*) FROM MEMBER
+		<where>
+			<if test="searchKey != null">
+				<bind name="sv" value="'%' + _parameter.searchValue + '%'" />
+				<choose>
+					<when test="searchKey == 'email'">
+						AND MEMBER_EMAIL LIKE #{sv}
+					</when>
+					<when test="searchKey == 'nickName'">
+						AND MEMBER_NICK_NAME LIKE #{sv}
+					</when>
+					<otherwise>
+						AND (MEMBER_EMAIL LIKE #{sv}
+						OR MEMBER_NICK_NAME LIKE
+						#{sv})
+					</otherwise>
+				</choose>
+			</if>
+			AND MEMBER_DELETE_YN = 'N'
+		</where>
+		ORDER BY MEMBER_NO DESC
+	</select>
+
+
+	<select id="selectList" parameterType="map"
+		resultMap="memberResultSet">
+		SELECT *
+		FROM MEMBER
+		<where>
+			<if test="searchKey != null">
+				<bind name="sv" value="'%' + _parameter.searchValue + '%'" />
+				<choose>
+					<when test="searchKey == 'title'">
+						AND MEMBER_EMAIL LIKE #{sv}
+					</when>
+					<when test="searchKey == 'content'">
+						AND MEMBER_NICK_NAME LIKE #{sv}
+					</when>
+					<otherwise>
+						AND (MEMBER_EMAIL LIKE #{sv}
+						OR MEMBER_NICK_NAME LIKE
+						#{sv})
+					</otherwise>
+				</choose>
+			</if>
+			AND MEMBER_DELETE_YN = 'N'
+		</where>
+		ORDER BY MEMBER_NO DESC
+	</select>
+
+	<select id="detail" parameterType="_int" resultMap="memberResultSet">
+		SELECT * FROM MEMBER
+		WHERE MEMBER_NO = #{memberNo}
+	</select>
+
+	<select id="plannerCount" parameterType="_int" resultType="_int">
+		SELECT COUNT(*) FROM
+		MEMBER_PLANNER WHERE MEMBER_NO = #{memberNo}
+	</select>
+
+	<select id="plannerList" parameterType="_int" resultMap="PlannerMemberResultSet">
+		SELECT * FROM
+		MEMBER_PLANNER WHERE MEMBER_NO = #{memberNo}
+	</select>
+
+	<select id="plannerInfo" parameterType="list" resultMap="plannerResultSet">
+		SELECT * FROM PLANNER WHERE PLANNER_NO IN
+		<foreach item="planner" collection="list" open="(" separator="," close=")">
+			#{planner.plannerNo}
+		</foreach>
+	</select>
+
+
+</mapper>
