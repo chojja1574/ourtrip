@@ -1,5 +1,6 @@
 package com.kh.ourtrip.admin.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import com.kh.ourtrip.admin.model.service.AdminHunService;
 import com.kh.ourtrip.common.Pagination;
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
+import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.Planner;
 
 @SessionAttributes({ "memberList", "msg" })
@@ -49,7 +51,7 @@ public class AdminHunController {
 			List<Member> memberList = adminHunService.selectFullList(pInf);
 
 			model.addAttribute("memberList", memberList);
-			model.addAttribute("pInf", pInf);
+			model.addAttribute("pInfom", pInf);
 			return "admin/memberList";
 
 		} catch (Exception e) {
@@ -103,29 +105,29 @@ public class AdminHunController {
 		try {
 			Member detailMem = adminHunService.detail(no);
 			
-			System.out.println(detailMem);
-
-			int plannerCount = adminHunService.plannerCount(no);
-			
-			System.out.println(plannerCount);
-
 			List<Integer> plannerList = adminHunService.plannerList(no);
-			
-			System.out.println(plannerList);
 
 			if (currentPage == null) {
 				currentPage = 1;
 			}
-			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, plannerCount);
+			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, plannerList.size());
 
-			List<Planner> plannerInfo = adminHunService.plannerInfo(plannerList, pInf);
+			List<Planner> plannerInfo = new ArrayList<Planner>();
+			List<AreaName> plannerArea = new ArrayList<AreaName>();
 			
-			System.out.println(plannerInfo);
+			plannerArea = adminHunService.plannerArea(plannerList);
+			
+			if(!plannerList.isEmpty()) {
+				
+				 plannerInfo = adminHunService.plannerInfo(plannerList, pInf);
+			}
 
 			if (detailMem != null && plannerInfo != null) {
 				
 				model.addAttribute("detailMember", detailMem);
+				model.addAttribute("pInfom", pInf);
 				model.addAttribute("plannerInfo", plannerInfo);
+				model.addAttribute("plannerArea", plannerArea);
 				return "admin/memberDetail";
 			}else {
 				model.addAttribute("msg", "회원정보 상세조회 실패 .");

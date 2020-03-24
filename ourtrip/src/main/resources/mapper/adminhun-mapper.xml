@@ -12,35 +12,55 @@
 		<result property="memberGrade" column="MEMBER_GRADE" />
 		<result property="signUpRoute" column="SIGNUP_ROUTE" />
 	</resultMap>
-	
-		<resultMap type="PlannerMember" id="PlannerMemberResultSet">
-		<id property="memberNo" column="MEMBER_NO"/>
-		<id property="plannerNo" column="PLANNER_NO"/>
+
+	<resultMap type="PlannerMember" id="PlannerMemberResultSet">
+		<id property="memberNo" column="MEMBER_NO" />
+		<id property="plannerNo" column="PLANNER_NO" />
+	</resultMap>
+
+	<resultMap type="Planner" id="plannerResultSet">
+		<id property="plannerNo" column="PLANNER_NO" />
+		<result property="plannerTitle" column="PLANNER_TITLE" />
+		<result property="plannerPwd" column="PLANNER_PWD" />
+		<result property="plannerCost" column="PLANNER_COST" />
+		<result property="plannerCreateDT" column="PLANNER_CREATE_DT" />
+		<result property="plannerModifyDT" column="PLANNER_MODIFT_DT" />
+		<result property="plannerStartDT" column="PLANNER_START_DT" />
+		<result property="plannerPublicYN" column="PLANNER_PUBLIC_YN" />
+		<result property="plannerDeleteYN" column="PLANNER_DELETE_YN" />
+		<result property="plannerExpiry" column="PLANNER_EXPIRY" />
+		<result property="plannerCount" column="PLANNER_COUNT" />
+		<result property="plannerUrl" column="PLANNER_URL" />
+		<result property="groupCode" column="GROUP_CODE" />
+	</resultMap>
+
+	<resultMap type="PlannerInfo" id="plannerInfoResultSet">
+		<id property="memberNo" column="MEMBER_No" />
+		<result property="plannerNo" column="PLANNER_NO" />
+		<result property="plannerTitle" column="PLANNER_TITLE" />
+		<result property="plannerCreateDT" column="PLANNER_CREATE_DT" />
+		<result property="plannerStartDT" column="PLANNER_START_DT" />
+		<result property="plannerDeleteYN" column="PLANNER_DELETE_YN" />
+		<result property="plannerCount" column="PLANNER_COUNT" />
+		<result property="plannerUrl" column="PLANNER_URL" />
+		<result property="groupName" column="GROUP_NAME" />
+		<result property="largeAreaName" column="LARGE_AREA_NAME" />
+		<result property="smallAreaName" column="SMALL_AREA_NAME" />
 	</resultMap>
 	
 	
-	<resultMap type="Planner" id="plannerResultSet">
-		<id property="plannerNo" column="PLANNER_NO"/>
-		<result property="plannerTitle" column="PLANNER_TITLE"/>
-		<result property="plannerPwd" column="PLANNER_PWD"/>
-		<result property="plannerCost" column="PLANNER_COST"/>
-		<result property="plannerCreateDT" column="PLANNER_CREATE_DT"/>
-		<result property="plannerModifyDT" column="PLANNER_MODIFT_DT"/>
-		<result property="plannerStartDT" column="PLANNER_START_DT"/>
-		<result property="plannerPublicYN" column="PLANNER_PUBLIC_YN"/>
-		<result property="plannerDeleteYN" column="PLANNER_DELETE_YN"/>
-		<result property="plannerExpiry" column="PLANNER_EXPIRY"/>
-		<result property="plannerCount" column="PLANNER_COUNT"/>
-		<result property="plannerUrl" column="PLANNER_URL"/>
-		<result property="groupCode" column="GROUP_CODE"/>
+	<resultMap type="AreaName" id="AreaNameResultSet">
+		<result property="plannerNo" column="PLANNER_NO"/>
+		<result property="largeAreaCode" column="LARGE_AREA_CODE"/>
+		<result property="largeAreaName" column="LARGE_AREA_NAME"/>
+		<result property="smallAreaCode" column="SMALL_AREA_CODE"/>
+		<result property="smallAreaName" column="SMALL_AREA_NAME"/>
 	</resultMap>
 
 	<select id="listFullCount" resultType="_int">
 		SELECT COUNT(*) FROM
 		MEMBER WHERE
-
 		MEMBER_DELETE_YN = 'N'
-
 		ORDER BY MEMBER_NO DESC
 	</select>
 
@@ -102,27 +122,30 @@
 		ORDER BY MEMBER_NO DESC
 	</select>
 
-	<select id="detail" parameterType="_int" resultMap="memberResultSet">
+	<select id="detail" parameterType="_int"
+		resultMap="memberResultSet">
 		SELECT * FROM MEMBER
 		WHERE MEMBER_NO = #{memberNo}
 	</select>
 
-	<select id="plannerCount" parameterType="_int" resultType="_int">
-		SELECT COUNT(*) FROM
+	<select id="plannerList" parameterType="_int"
+		resultMap="PlannerMemberResultSet">
+		SELECT PLANNER_NO FROM
 		MEMBER_PLANNER WHERE MEMBER_NO = #{memberNo}
 	</select>
 
-	<select id="plannerList" parameterType="_int" resultMap="PlannerMemberResultSet">
-		SELECT * FROM
-		MEMBER_PLANNER WHERE MEMBER_NO = #{memberNo}
-	</select>
-
-	<select id="plannerInfo" parameterType="list" resultMap="plannerResultSet">
-		SELECT * FROM PLANNER WHERE PLANNER_NO IN
-		<foreach item="planner" collection="list" open="(" separator="," close=")">
+	<select id="plannerInfo" parameterType="list" resultMap="plannerInfoResultSet">
+		SELECT * FROM V_PLANNER_INFO WHERE PLANNER_NO IN
+		<foreach index="index" item="planner" collection="list" open="(" separator="," close=")">
 			#{planner.plannerNo}
 		</foreach>
 	</select>
 
+	<select id="plannerArea" parameterType="list" resultMap="AreaNameResultSet">
+		SELECT PLANNER_NO, LARGE_AREA_NAME , SMALL_AREA_NAME FROM V_PLANNER_INFO WHERE PLANNER_NO IN
+		<foreach index="index" item="planner" collection="list" open="(" separator="," close=")">
+			#{planner.plannerNo}
+		</foreach>
+	</select>
 
 </mapper>

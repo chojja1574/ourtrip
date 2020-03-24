@@ -27,7 +27,9 @@
 		<!-- 신덕수 -->
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerCard" alias="PlannerCard"/>
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.AreaName" alias="AreaName"/>
-
+		
+		<!--이훈-->
+		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerInfo" alias="PlannerInfo"/>
 	</typeAliases>
 	
 	<!-- mapper 파일 등록 부분 -->

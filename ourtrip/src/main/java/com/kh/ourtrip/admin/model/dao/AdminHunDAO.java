@@ -1,5 +1,6 @@
 package com.kh.ourtrip.admin.model.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
+import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.Planner;
 
 @Repository
@@ -60,26 +62,49 @@ public class AdminHunDAO {
 		return sqlSession.selectList("adminhunMapper.selectList",map,rowBounds);
 	}
 
+	/** 회원 정보 조회용 DAO
+	 * @param no
+	 * @return detailMember
+	 * @throws Exception
+	 */
 	public Member detail(int no) throws Exception{
 		
 		return sqlSession.selectOne("adminhunMapper.detail", no);
 	}
 
-	public int plannerCount(int no)throws Exception {
-		
-		return sqlSession.selectOne("adminhunMapper.plannerCount", no);
-	}
-
-	public List<Integer> plannerList(int no) {
+	
+	/** 회원 플래너 조회용 DAO
+	 * @param no
+	 * @return plannerList
+	 * @throws Exception
+	 */
+	public List<Integer> plannerList(int no) throws Exception{
 		
 		return sqlSession.selectList("adminhunMapper.plannerList",no);
 	}
 
+	/** 플래너 페이징 처리용 DAO
+	 * @param plannerList
+	 * @param pInf
+	 * @return int count
+	 * @throws Exception
+	 */
 	public List<Planner> plannerInfo(List<Integer> plannerList, PageInfo pInf) throws Exception{
 		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
 		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
 		
 		return sqlSession.selectList("adminhunMapper.plannerInfo", plannerList ,rowBounds);
+	}
+
+	
+	/**지역조회용 DAO
+	 * @param plannerList
+	 * @return list PlannerCard
+	 * @throws Exception
+	 */
+	public List<AreaName> plannerArea(List<Integer> plannerList) throws Exception{
+		
+		return sqlSession.selectList("adminhunMapper.plannerArea" , plannerList);
 	}
 
 

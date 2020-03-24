@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.kh.ourtrip.admin.model.dao.AdminHunDAO;
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
+import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.Planner;
 
 @Service
@@ -72,16 +73,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 		return adminHunDAO.detail(no);
 	}
 
-	/** 맴버별 플래너 수 조회용 service
-	 * @param no
-	 * @return int plannerCount
-	 * @throws Exception
-	 */
-	@Override
-	public int plannerCount(int no) throws Exception {
-		
-		return adminHunDAO.plannerCount(no);
-	}
 
 	/** 플래너 넘버 조회용 service
 	 * @param no
@@ -104,6 +95,16 @@ public class AdminHunServiceimpl implements AdminHunService {
 	public List<Planner> plannerInfo(List<Integer> plannerList, PageInfo pInf) throws Exception {
 		
 		return adminHunDAO.plannerInfo(plannerList,pInf);
+	}
+
+	/** 지역조회용 service
+	 * @param plannerList
+	 * @return plannerArea
+	 * @throws Exception
+	 */
+	@Override
+	public List<AreaName> plannerArea(List<Integer> plannerList) throws Exception {
+		return adminHunDAO.plannerArea(plannerList);
 	}
 
 

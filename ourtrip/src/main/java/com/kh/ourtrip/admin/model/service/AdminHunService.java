@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
+import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.Planner;
-import com.kh.ourtrip.planner.model.vo.PlannerMember;
 
 public interface AdminHunService {
 
@@ -49,12 +49,6 @@ public interface AdminHunService {
 	 */
 	public abstract Member detail(int no)throws Exception;
 
-	/** 맴버별 플래너 수 조회용 service
-	 * @param no
-	 * @return int plannerCount
-	 * @throws Exception
-	 */
-	public abstract int plannerCount(int no)throws Exception;
 
 	
 	/** 플래너 넘버 조회용 service
@@ -71,6 +65,13 @@ public interface AdminHunService {
 	 * @throws Exception
 	 */
 	public abstract List<Planner> plannerInfo(List<Integer> plannerList, PageInfo pInf)throws Exception;
+
+	/** 지역조회용 service
+	 * @param plannerList
+	 * @return plannerArea
+	 * @throws Exception
+	 */
+	public abstract List<AreaName> plannerArea(List<Integer> plannerList) throws Exception;
 
 	
 
