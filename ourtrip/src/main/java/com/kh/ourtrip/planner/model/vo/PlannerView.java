@@ -285,8 +285,4 @@ public class PlannerView {
 				+ ", scheduleLocationNM=" + scheduleLocationNM + ", scheduleLat=" + scheduleLat + ", scheduleLng="
 				+ scheduleLng + ", smallAreaCode=" + smallAreaCode + ", largeAreaCode=" + largeAreaCode + "]";
 	}
-
-	
-
-	
 }

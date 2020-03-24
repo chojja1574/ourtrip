@@ -1,6 +1,9 @@
 package com.kh.ourtrip.planner.controller;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +20,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.kh.ourtrip.planner.model.service.PlannerService2;
+import com.kh.ourtrip.planner.model.vo.ChattingLog;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.Schedule;
 import com.kh.ourtrip.planner.model.vo.UserInfo;
@@ -71,6 +75,8 @@ public class EchoHandler extends TextWebSocketHandler {
             	addSchedule(session, jsonObj);
             }else if(jsonObj.get("type").equals("removeSchedule")) {
             	removeSchedule(session, jsonObj);
+            }else if(jsonObj.get("type").equals("msg")) {
+            	chattingMessage(session, jsonObj);
             }else {
             	sendChatroom(session, jsonObj);
             }
@@ -192,7 +198,7 @@ public class EchoHandler extends TextWebSocketHandler {
 		int result = 0;
 
 		JSONArray dateInfo = (JSONArray)(msgJson.get("dateInfo"));
-		
+
 		List<Day> dayList = new ArrayList<Day>();
 		Day tempDay = null;
 		
@@ -232,6 +238,21 @@ public class EchoHandler extends TextWebSocketHandler {
 	private int updateSchedule(WebSocketSession session, JSONObject msgJson) throws Exception {
 		int result = 0;
 		System.out.println("updateSchedule");
+		
+		Schedule sche = new Schedule();
+		sche.setScheduleNo(Integer.parseInt(msgJson.get("sno").toString()));
+		sche.setScheduleTitle(msgJson.get("title").toString());
+		sche.setScheduleCost(Integer.parseInt(msgJson.get("cost").toString()));
+		sche.setScheduleTime(msgJson.get("time").toString().replace(":",""));
+		sche.setScheduleMemo(msgJson.get("memo").toString());
+		sche.setScheduleLocationNM(msgJson.get("location").toString());
+		sche.setScheduleLat(Double.parseDouble(msgJson.get("lat").toString()));
+		sche.setScheduleLng(Double.parseDouble(msgJson.get("lng").toString()));
+		System.out.println(sche);
+		result = plannerService.updateSchedule(sche);
+		
+		System.out.println(result);
+		
 		sendChatroom(session, msgJson);
 		return result;
 	}
@@ -240,6 +261,23 @@ public class EchoHandler extends TextWebSocketHandler {
 	private int addSchedule(WebSocketSession session, JSONObject msgJson) throws Exception {
 		int result = 0;
 		System.out.println("addSchedule");
+		int scheduleNo = plannerService.getNextScheduleNo();
+		msgJson.put("sno", scheduleNo);
+		 //{"pno":"1","chatRoomId":"","type":"addSchedule","id":"","dno":59,"title":"제목1111","time":"11:02","location":"11","cost":"11111","memo":"113412","lat":36.41451465711704,"lng":128.75637817215454}
+		
+		Schedule sche = new Schedule();
+		sche.setScheduleNo(Integer.parseInt(msgJson.get("sno").toString()));
+		sche.setScheduleTitle(msgJson.get("title").toString());
+		sche.setScheduleCost(Integer.parseInt(msgJson.get("cost").toString()));
+		sche.setScheduleTime(msgJson.get("time").toString().replace(":",""));
+		sche.setScheduleMemo(msgJson.get("memo").toString());
+		sche.setScheduleLocationNM(msgJson.get("location").toString());
+		sche.setScheduleLat(Double.parseDouble(msgJson.get("lat").toString()));
+		sche.setScheduleLng(Double.parseDouble(msgJson.get("lng").toString()));
+		sche.setDateNo(Integer.parseInt(msgJson.get("dno").toString()));
+		
+		result = plannerService.insertSchedule(sche);
+		
 		sendChatroom(session, msgJson);
 		return result;
 	}
@@ -248,6 +286,33 @@ public class EchoHandler extends TextWebSocketHandler {
 	private int removeSchedule(WebSocketSession session, JSONObject msgJson) throws Exception {
 		int result = 0;
 		System.out.println("removeSchedule");
+		
+		result = plannerService.deleteSchedule(Integer.parseInt(msgJson.get("sno").toString()));
+		
+		sendChatroom(session, msgJson);
+		return result;
+	}
+	
+	private int chattingMessage(WebSocketSession session, JSONObject msgJson) throws Exception {
+		int result = 0;
+		System.out.println("chattingMessage");
+		
+		ChattingLog chatLog = new ChattingLog();
+		
+		chatLog.setMemberNo(Integer.parseInt(msgJson.get("userId").toString()));
+		chatLog.setPlannerNo(Integer.parseInt(msgJson.get("pno").toString()));
+		chatLog.setChatContent(msgJson.get("content").toString());
+		SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		String today = null;
+		today = formatter.format(cal.getTime());
+		Timestamp ts = Timestamp.valueOf(today);
+		chatLog.setChatTime(ts);
+		System.out.println("timestamp substring : " + ts.toString().substring(11, 16));
+		msgJson.put("time",today.substring(11, 16));
+		
+		result = plannerService.insertChattingLog(chatLog);
+		//{"pno":"1","chatRoomId":"","type":"msg","id":"2","content":"asdf","time":"18:15"}
 		sendChatroom(session, msgJson);
 		return result;
 	}

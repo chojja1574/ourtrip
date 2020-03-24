@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.ourtrip.planner.model.vo.ChattingLog;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.PlannerView;
 import com.kh.ourtrip.planner.model.vo.Schedule;
@@ -41,6 +42,28 @@ public class PlannerDAO2 {
 
 	public int deleteDate(int dateNo) throws Exception {
 		return sqlSessionTemplate.delete("planner1Mapper.deleteDate", dateNo);
+	}
+
+	public int updateSchedule(Schedule sche) throws Exception {
+		return sqlSessionTemplate.update("planner1Mapper.updateSchedule", sche);
+	}
+
+	public int insertSchedule(Schedule sche) throws Exception {
+		return sqlSessionTemplate.insert("planner1Mapper.insertSchedule", sche);
+	}
+
+	public int deleteSchedule(int sno) throws Exception {
+		return sqlSessionTemplate.delete("planner1Mapper.deleteSchedule", sno);
+	}
+
+	public int insertChattingLog(ChattingLog chatLog) throws Exception {
+		return sqlSessionTemplate.insert("planner1Mapper.insertChattingLog", chatLog);
+	}
+
+	public List<ChattingLog> selectChatList(int no) throws Exception {
+		System.out.println("hihi");
+		System.out.println("hi" + sqlSessionTemplate.selectList("planner1Mapper.selectChatList", no));
+		return sqlSessionTemplate.selectList("planner1Mapper.selectChatList", no);
 	}
 	
 }

@@ -1,7 +1,6 @@
 package com.kh.ourtrip.planner.controller;
 
 import java.sql.Date;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.json.*;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.ourtrip.planner.model.service.PlannerService2;
+import com.kh.ourtrip.planner.model.vo.ChattingLog;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.Planner;
 import com.kh.ourtrip.planner.model.vo.PlannerView;
@@ -41,9 +41,12 @@ public class PlannerController2 {
 		
 		JSONObject jsonObj = null;
 		JSONParser jsonParser = new JSONParser();
+		JSONArray chatArray = new JSONArray();
 		Planner selectedPlanner = null;
 		System.out.println("editplanner");
 		try {
+			
+			// PlannerView에 데이터 통째로 얻어와서 분리작업
 			boolean inputPvVal = true; 
 			int plannerNo = -1;
 			String plannerTitle = null;
@@ -104,7 +107,7 @@ public class PlannerController2 {
 						plannerNo = pv.getPlannerNo();
 					}
 			    	Schedule schedule = new Schedule(
-			    			pv.getScheduleNo(), pv.getPlannerTitle(), pv.getScheduleCost(),
+			    			pv.getScheduleNo(), pv.getScheduleTitle(), pv.getScheduleCost(),
 			    			pv.getScheduleTime(), pv.getScheduleMemo(), pv.getScheduleLocationNM(),
 			    			pv.getScheduleLat(),pv.getScheduleLng(),pv.getDateNo());
 			    	scheduleList.add(schedule);
@@ -122,13 +125,27 @@ public class PlannerController2 {
 			jsonObj = (JSONObject) jsonParser.parse(selectedPlanner.toString());
 			System.out.println("json : " + selectedPlanner.toString());
 			
-		}catch(Exception e) {
+			// 채팅내역 얻어와서 jsonString으로 변환
+			List<ChattingLog> chatList = null;
+			chatList = plannerService.selectChatList(no);
+			System.out.println("chatList");
+			System.out.println(chatList);
+			for(ChattingLog cl : chatList) {
+				jsonObj = (JSONObject) jsonParser.parse(cl.toJsonString());
+				chatArray.add(jsonObj);
+			}
 			
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 		model.addAttribute("userId", userId);
 		model.addAttribute("selectRoom", selectRoom);
 		model.addAttribute("plannerInfo", selectedPlanner.toJsonString());
 		model.addAttribute("plannerTitle", selectedPlanner.getPlannerTitle());
+		model.addAttribute("chatList", chatArray);
+		System.out.println("chatList");
+		System.out.println(chatArray.toJSONString());
+		System.out.println(no);
 		System.out.println("editplannerend");
 		
 		return "planner/editPlanner";

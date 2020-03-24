@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.ourtrip.planner.model.dao.PlannerDAO2;
+import com.kh.ourtrip.planner.model.vo.ChattingLog;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.PlannerView;
 import com.kh.ourtrip.planner.model.vo.Schedule;
@@ -44,14 +45,46 @@ public class PlannerService2Imlp implements PlannerService2 {
 		return plannerDAO2.updateTripDate(dayList);
 	}
 
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public int insertDefaultSchedule(Schedule schedule) throws Exception {
 		return plannerDAO2.insertDefaultSchedule(schedule);
 	}
 
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public int deleteDate(int dateNo) throws Exception {
 		return plannerDAO2.deleteDate(dateNo);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int updateSchedule(Schedule sche) throws Exception {
+		return plannerDAO2.updateSchedule(sche);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int insertSchedule(Schedule sche) throws Exception {
+		return plannerDAO2.insertSchedule(sche);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int deleteSchedule(int sno) throws Exception {
+		return plannerDAO2.deleteSchedule(sno);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int insertChattingLog(ChattingLog chatLog) throws Exception {
+		return plannerDAO2.insertChattingLog(chatLog);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public List<ChattingLog> selectChatList(int no) throws Exception {
+		return plannerDAO2.selectChatList(no);
 	}
 
 }

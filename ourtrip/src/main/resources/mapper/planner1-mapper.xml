@@ -23,7 +23,7 @@
 		<result property="scheduleCost" column="SCHEDULE_COST"/>
 		<result property="scheduleTime" column="SCHEDULE_TIME"/>
 		<result property="scheduleMemo" column="SCHEDULE_MEMO"/>
-		<result property="scheduleLocationNM" column="SCHEDULE_LOCATION_NAME"/>
+		<result property="scheduleLocationNM" column="SCHEDULE_LOCATION_NM"/>
 		<result property="scheduleLat" column="SCHEDULE_LAT"/>
 		<result property="scheduleLng" column="SCHEDULE_LNG"/>
 		<result property="smallAreaCode" column="LARGE_AREA_CODE"/>
@@ -62,6 +62,15 @@
 		<result property="scheduleLat" column="SCHEDULE_LAT"/>
 		<result property="scheduleLng" column="SCHEDULE_LNG"/>
 	</resultMap>
+	
+	<resultMap type="ChattingLog" id="ChattingLogResultSet">
+		<id property="chatNo" column="CHAT_NO"/>
+		<result property="chatContent" column="CHAT_CONTENT"/>
+		<result property="chatTime" column="CHAT_TIME"/>
+		<result property="plannerNo" column="PLANNER_NO"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+	</resultMap>
+	
 
 	<select id="selectPlannerView" parameterType="_int" resultMap="plannerViewResultSet">
 		SELECT * FROM V_PLANNER WHERE PLANNER_NO = #{no}
@@ -96,4 +105,26 @@
 	<delete id="deleteDate" parameterType="_int">
 		DELETE FROM PLANNER_DATE WHERE DATE_NO = #{dateNo}
 	</delete>
+	
+	<update id="updateSchedule" parameterType="Schedule">
+		UPDATE SCHEDULE SET SCHEDULE_TITLE = #{scheduleTitle}, SCHEDULE_COST = #{scheduleCost}, SCHEDULE_MEMO = #{scheduleMemo},
+		SCHEDULE_TIME = #{scheduleTime}, SCHEDULE_LOCATION_NM = #{scheduleLocationNM}, SCHEDULE_LAT = #{scheduleLat}, SCHEDULE_LNG = #{scheduleLng}
+		WHERE SCHEDULE_NO = #{scheduleNo}
+	</update>
+	
+	<insert id="insertSchedule" parameterType="Schedule">
+		INSERT INTO SCHEDULE VALUES(#{scheduleNo},#{scheduleTitle},#{scheduleCost},#{scheduleMemo},#{scheduleTime},#{scheduleLocationNM},#{scheduleLat},#{scheduleLng},#{dateNo})
+	</insert>
+	
+	<delete id="deleteSchedule">
+		DELETE FROM SCHEDULE WHERE SCHEDULE_NO = #{sno}
+	</delete>
+	
+	<insert id="insertChattingLog">
+		INSERT INTO CHATTING_LOG VALUES(SEQ_CHAT_LOG_CNO.NEXTVAL,#{chatContent},#{chatTime},#{plannerNo},#{memberNo})
+	</insert>
+	
+	<select id="selectChatList" parameterType="_int" resultMap="ChattingLogResultSet">
+		SELECT * FROM CHATTING_LOG WHERE PLANNER_NO = #{no}
+	</select>
 </mapper>

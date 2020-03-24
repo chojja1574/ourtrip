@@ -166,6 +166,13 @@ body {
     background: #ffffff;
     border-radius: 4px;
 }
+
+.message span{
+	word-break:break-all;
+	display:block;
+	width:100%;
+}
+
 .myMessage{
     margin-right:20px;
     padding-right: 10px;
@@ -176,6 +183,12 @@ body {
     background: #ffeb33;
     border-radius: 4px;
 }
+.myMessage span{
+	word-break:break-all;
+	display:block;
+	width:100%;
+}
+
 .messageTime{
     font-size: medium;
     vertical-align: bottom;
@@ -191,11 +204,13 @@ body {
     width:100%;
     margin-top: 30px;
 }
+
 .myChatbox{
     width:100%;
     margin-top: 30px;
     text-align: right;
 }
+
 .overhidden{
     overflow: hidden;
 }
