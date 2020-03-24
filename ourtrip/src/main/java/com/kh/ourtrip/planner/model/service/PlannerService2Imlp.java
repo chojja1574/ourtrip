@@ -49,4 +49,9 @@ public class PlannerService2Imlp implements PlannerService2 {
 		return plannerDAO2.insertDefaultSchedule(schedule);
 	}
 
+	@Override
+	public int deleteDate(int dateNo) throws Exception {
+		return plannerDAO2.deleteDate(dateNo);
+	}
+
 }

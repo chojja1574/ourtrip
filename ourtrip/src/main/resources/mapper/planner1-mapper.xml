@@ -92,4 +92,8 @@
 			#{scheduleNo},'제목 없음',0,'메모 없음','','이름 없음',0,0,#{dateNo}
 		)
 	</insert>
+	
+	<delete id="deleteDate" parameterType="_int">
+		DELETE FROM PLANNER_DATE WHERE DATE_NO = #{dateNo}
+	</delete>
 </mapper>

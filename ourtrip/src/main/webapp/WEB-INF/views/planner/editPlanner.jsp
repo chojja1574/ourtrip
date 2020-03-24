@@ -588,7 +588,7 @@ function createDate(dateNo){
     var dayForm = 
     '<div data-dateorder="' + dayIndex + '" data-dateno="' + dateNo + '" id="days" class="daystyle" onclick="selectDay(' + dateNo + ');">' +
     '<span class="dayCount pl-2">1일차</span>' +
-    '<button class="dayDeleteBtn btnColor3" onclick="deleteDay(' + dateNo + ');">-</button>' +
+    '<button type="button" class="dayDeleteBtn btnColor3" onclick="deleteDay(' + dateNo + ');">-</button>' +
     '</div>';
 
     // 일차 목록에 추가함
@@ -656,7 +656,7 @@ function selectDay(no){
 
 //일차 제거하는 함수
 function deleteDay(ind){
-	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'deleteDate', id: "${loginMember.getMemberEmail()}", dno:ind));
+	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'deleteDate', id: "${loginMember.getMemberEmail()}", dno:ind}));
 }
 function deleteDate(ind){
 	dayIndex--;
@@ -935,7 +935,7 @@ function onMessage(msg) {
 		addSchedule(data['dno'],data['sno'],'','','',0,'',0,0,userId);
 		break;
 	case 'deleteDate': 
-		
+		deleteDate(date['dno']);
 		break;
 	case 'updateSchedule': 
 		break;

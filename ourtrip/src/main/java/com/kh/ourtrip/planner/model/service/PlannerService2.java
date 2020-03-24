@@ -18,4 +18,6 @@ public interface PlannerService2 {
 	public abstract int updateTripDate(List<Day> dayList) throws Exception;
 
 	public abstract int insertDefaultSchedule(Schedule schedule) throws Exception;
+
+	public abstract int deleteDate(int dateNo) throws Exception;
 }
