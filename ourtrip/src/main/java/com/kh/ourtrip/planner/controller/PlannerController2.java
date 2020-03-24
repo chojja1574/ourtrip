@@ -108,7 +108,6 @@ public class PlannerController2 {
 			    			pv.getScheduleTime(), pv.getScheduleMemo(), pv.getScheduleLocationNM(),
 			    			pv.getScheduleLat(),pv.getScheduleLng(),pv.getDateNo());
 			    	scheduleList.add(schedule);
-			    	System.out.println("pvpvpv");
 			    }
 			   
 			    Day oneDay = new Day(dateNo,tripDate,no,scheduleList);
@@ -119,7 +118,7 @@ public class PlannerController2 {
 			selectedPlanner = new Planner(no, plannerTitle, plannerPwd, plannerCost, 
 					plannerCreateDT, plannerModifyDT, plannerStartDT, plannerPublicYN, plannerDeleteYN, 
 					plannerExpiry, plannerCount, plannerUrl, groupCode, dayList);
-			//selectedPlanner.toString()
+			System.out.println(selectedPlanner.toString());
 			jsonObj = (JSONObject) jsonParser.parse(selectedPlanner.toString());
 			System.out.println("json : " + selectedPlanner.toString());
 			
