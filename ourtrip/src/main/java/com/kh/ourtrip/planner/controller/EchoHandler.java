@@ -222,7 +222,7 @@ public class EchoHandler extends TextWebSocketHandler {
 		System.out.println("deleteDate");
 		int dateNo = Integer.parseInt(msgJson.get("dno").toString());
 		System.out.println("dateNo : " + dateNo);
-		result = plannerService.deleteDate(dateNo);
+		// result = plannerService.deleteDate(dateNo);
 		
 		sendChatroom(session, msgJson);
 		
