@@ -10,8 +10,11 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
+import com.kh.ourtrip.member.model.vo.ProfileImage;
+import com.kh.ourtrip.planner.model.vo.AreaName;
+import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.Planner;
-import com.kh.ourtrip.planner.model.vo.PlannerCard;
+import com.kh.ourtrip.planner.model.vo.PlannerInfo;
 
 @Repository
 public class AdminHunDAO {
@@ -85,10 +88,10 @@ public class AdminHunDAO {
 	/** 플래너 페이징 처리용 DAO
 	 * @param plannerList
 	 * @param pInf
-	 * @return int count
+	 * @return list
 	 * @throws Exception
 	 */
-	public List<Planner> plannerInfo(List<Integer> plannerList, PageInfo pInf) throws Exception{
+	public List<PlannerInfo> plannerInfo(List<Integer> plannerList, PageInfo pInf) throws Exception{
 		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
 		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
 		
@@ -101,9 +104,53 @@ public class AdminHunDAO {
 	 * @return list PlannerCard
 	 * @throws Exception
 	 */
-	public List<PlannerCard> plannerArea(List<Integer> plannerList) throws Exception{
+	public List<AreaName> plannerArea(List<Integer> plannerList) throws Exception{
 		
 		return sqlSession.selectList("adminhunMapper.plannerArea" , plannerList);
+	}
+
+	/** 프로필 이미지 조회용 DAO
+	 * @param no
+	 * @return pi
+	 * @throws Exception
+	 */
+	public ProfileImage selectProfileImage(int no) throws Exception{
+		return sqlSession.selectOne("adminhunMapper.selectProfileImage" , no);
+	}
+
+	/** 전체 플래너 리스트 조회용 DAO
+	 * @param pInf
+	 * @return list<PlannerInfo>
+	 */
+	public List<PlannerInfo> plannerTotal(PageInfo pInf) {
+		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
+		return sqlSession.selectList("adminhunMapper.plannerTotal" , rowBounds);
+	}
+
+	
+	/** 플래너 카운트 조회용 DAO
+	 * @return int 
+	 * @throws Exception
+	 */
+	public int plannerCount() throws Exception{
+		return sqlSession.selectOne("adminhunMapper.plannerCount");
+	}
+
+	/** 플래너 위치 조회용 DAO
+	 * @return List<AreaName>
+	 * @throws Exception
+	 */
+	public List<AreaName> areaList()throws Exception {
+		return sqlSession.selectList("adminhunMapper.areaList");
+	}
+
+	/** 플래너 날짜 조회용 DAO
+	 * @return List<Day>
+	 * @throws Exception
+	 */
+	public List<Day> dayList()throws Exception{
+		return sqlSession.selectList("adminhunMapper.dayList");
 	}
 
 

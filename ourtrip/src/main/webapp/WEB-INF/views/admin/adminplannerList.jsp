@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -8,79 +9,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/76b49c6d9b.js" crossorigin="anonymous"></script>
-
     <link rel="stylesheet" href="css/common.css">
-
-    <title>플래너 탐색</title>
+    <title>회원목록</title>
 
     <style>
-        #local-area {
-            margin-top: 24px;
-        }
-
-        #check-wrapper {
-            margin-top: 20px;
-        }
-
-        #search-wrapper {
-            min-width: 300px;
-        }
-
-        .planner-wrapper {
-            width: 100%;
-            position: relative;
-        }
-
-        .planner {
-            font-family: 'Stylish';
-            padding: 10px;
-            width: 25%;
-            float: left;
-            height: 400px;
-        }
-
-        .pagination-wrapper {
-            width: 100%;
-            clear: both;
-            margin-top: 20px;
-        }
-
-        .card {
-            height: 100%;
-        }
-
-        .card-body {
-            height: 50%;
-        }
-
-        .card-img-top {
-            width: 100%;
-            height: 50%;
-        }
-
-        @media screen and (max-width: 1199px) {
-            .planner {
-                width: 33%;
+        @media screen and (max-width: 500px) {
+            table {
+                font-size: 10px;
             }
         }
-
-        @media screen and (max-width: 991px) {
-            .planner {
-                width: 50%;
-            }
-        }
-
-        @media screen and (max-width: 506px) {
-            .planner {
-                width: 100%;
-            }
-        }
+        
     </style>
 </head>
 
 <body>
+	
+	<jsp:include page="/WEB-INF/views/common/header.jsp" />
+	<jsp:include page="/WEB-INF/views/admin/nav.jsp" />
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -89,380 +35,256 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
-
-    <!-- 탐색 컨텐츠 시작 부분 -->
+    
+    
+    <hr>
     <div class="container my-5">
+        <hr>
+        <form action="#" method="GET" id="searchInfo" name="searchInfo">
+        <!-- 검색창 -->
+        <div>
+            <!-- 가운데정렬시 class="text-center" -->
+            <div class="text-center" 
+                id="searchForm" onsubmit="return checkValue();">
+                <select name="searchKey" class="form-control" 
+                style="width:100px; display: inline-block;">
+                    <option value="제목">제목</option>
+                    <option value="아이디">아이디</option>
+                </select>
+                <input type="text" name="searchValue" id="searchValue"
+                class="form-control" style="width:25%; display: inline-block;">
+                <button class="form-control btn main-btn" 
+                style="width:100px; display: inline-block; 
+                margin-bottom: 5px;">검색</button>
+            </div>
+        </div>
+        <!-- 첫번째 검색 조건 -->
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <label class="col-3">여행기간</label>&nbsp;
+                <input name="startTrip" type="date"> ~ <input name="endTrip" type="date">
+            </div>
+        
+            <div class="col-md-6 custom-control custom-checkbox">
+                <div><label style="float:left;">그룹카테고리 : </label></div>
+                <div class="form-check form-check-inline">
+                    <input type="checkbox" name="serchGroup" value="1" class="form-check-input custom-control-input" id="customCheck1" checked="">
+                    <label class="form-check-label custom-control-label" for="customCheck1">혼자</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="checkbox" name="serchGroup" value="2" class="form-check-input custom-control-input" id="customCheck2" checked="">
+                    <label class="form-check-label custom-control-label" for="customCheck2">친구</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="checkbox" name="serchGroup" value="3" class="form-check-input custom-control-input" id="customCheck3" checked="">
+                    <label class="form-check-label custom-control-label" for="customCheck3">커플</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="checkbox" name="serchGroup" value="4" class="form-check-input custom-control-input" id="customCheck4" checked="">
+                    <label class="form-check-label custom-control-label" for="customCheck4">가족</label>
+                </div>
+            </div>
+            
+        </div>
+        <!-- 두번째 검색조건 -->
+        <div id="select-option" class="col-md-12 mb-3 mt-3">
+            <div class="row">
 
-        <h2 class="font-weight-bold">플래너 검색</h2>
+                <div class="col-md-6" id="location-wrapper">
+                    <div class="row">
+                        <label class="col-2" style="margin-top: 7px;">지역</label>
+                        <div class="col-4">
+                            <select name="searchArea" id="wide-area" class="custom-select">
+                                <option value="전체" selected>전체</option>
+                                <option value="경기도">경기도</option>
+                                <option value="서울특별시">서울특별시</option>
+                                <option value="강원도">강원도</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <select name="searchLocal" id="local-area" class="custom-select">
+                                <option value="전체" selected>전체</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6" id="group-wrapper">
+                    <div class="row">
+                        <label class="col-3 ml-2" style="margin-top: 7px;">삭제여부</label>
+                        <div class="col-4">
+                            <select name="deleted" id="wide-area" class="custom-select">
+                                <option value="전체" selected>전체</option>
+                                <option value="Y">존제</option>
+                                <option value="N">삭제</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
         <hr>
 
-        <form id="search-form" method="GET" action="" onsubmit="false">
+        <h2>플래너 목록</h2>
+        <table class="table table-hover" style="text-align: center;">
+            <thead class="thead-dark">
+                <tr>
+                    <th>플래너번호</th>
+                    <th>제목</th>
+                    <th>여행기간</th>
+                    <th>지역</th>
+                    <th>그룹</th>
+                    <th>생성일</th>
+                </tr>
+            </thead>
+            <tbody>
+            <c:if test="${empty plannerList }">
+					<tr>
+						<td colspan="6" id="none-board">존재하는 플래너가 없습니다.</td>
+					</tr>
+				</c:if>
+				<c:if test="${!empty plannerList }">
+					<c:forEach var="planner" items="${plannerList}" varStatus="vs">
+						<tr>
+							<td>${planner.plannerNo}</td>
+							<td>${planner.plannerTitle}</td>
+							<td>${planner.plannerStartDT}~ ${planner.plannerEndDate}</td>
+							
+							<td><c:if test="${planner.areaNames.size()>1 }">
+		                                	${planner.areaNames[0].largeAreaName}
+		                                	${planner.areaNames[0].smallAreaName} ...
+		                                </c:if>
+		                                <c:if test="${planner.areaNames.size()==1 }">
+		                                	${planner.areaNames[0].largeAreaName}
+		                                	${planner.areaNames[0].smallAreaName} 
+		                                </c:if></td>
+							<td>${planner.groupName}</td>
+							<td>${planner.plannerCreateDT}</td>
+						</tr>
+					</c:forEach>
+				</c:if>
+            </tbody>
+        </table>
+        
+        <!-- 페이징바 -->
+        <div class="pagination-wrapper mt-5" id="pagination-wrapper">
+            <nav aria-label="Page navigation" id="pagination">
+                <ul class="pagination justify-content-center">
+                    <c:if test="${pInfom.currentPage > 1}">
+						<li>
+							<!-- 맨 처음으로(<<) --> <!--c: url 태그에 var속성이 존재하지 않으면 변수처럼 사용되는 것이 아니라 작성된 자리에 바로 url형식으로 표기된다.  -->
+							<a class="page-link text-success"
+							href=" 
+		                    	<c:url value="list"> 
+		                    		<c:if test="${!empty param.searchKey }">
+						        		<c:param name="searchKey" value="${param.searchKey}"/>
+						        	</c:if>
+						        	
+						        	<c:if test="${!empty param.searchValue }">
+						        		<c:param name="searchValue" value="${param.searchValue}"/>
+						        	</c:if>
+		                    		<c:param name="currentPage" value="1"/>
+		                    	</c:url>
+	                    	">
+								&lt;&lt; </a>
+						</li>
 
-            <!-- 검색창 -->
-            <div class="col-md-6 mx-auto" id="search-wrapper">
-                <div class="input-group mb-3">
-                    <input type="text" id="input-title" name="inputTitle" class="form-control"
-                        placeholder="플래너 제목을 입력하세요">
-                    <div class="input-group-append">
-                        <button class="btn main-btn" type="submit">검색</button>
-                    </div>
-                </div>
-            </div>
+						<li>
+							<!-- 이전으로(<) --> <a class="page-link text-success"
+							href=" 
+		                    	<c:url value="list">
+		                    		<c:if test="${!empty param.searchKey }">
+						        		<c:param name="searchKey" value="${param.searchKey}"/>
+						        	</c:if>
+						        	
+						        	<c:if test="${!empty param.searchValue }">
+						        		<c:param name="searchValue" value="${param.searchValue}"/>
+						        	</c:if>
+		                    		<c:param name="currentPage" value="${pInfom.currentPage-1}"/>
+		                    	</c:url>
+	                    	">
+								&lt; </a>
+						</li>
+					</c:if>
 
-            <!-- 검색 옵션 -->
-            <div id="select-option" class="col-md-12 mb-3">
-                <div class="row">
+					<!-- 10개의 페이지 목록 -->
+					<c:forEach var="p" begin="${pInfom.startPage}" end="${pInfom.endPage}">
 
-                    <div class="col-md-6" id="location-wrapper">
-                        <div class="row">
-                            <div class="col-6">
-                                <label>지역</label>
-                                <select name="wide" id="wide-area" class="custom-select">
-                                    <option value="전체" selected>전체</option>
-                                    <option value="경기도">경기도</option>
-                                    <option value="서울특별시">서울특별시</option>
-                                    <option value="강원도">강원도</option>
-                                </select>
-                            </div>
-                            <div class="col-6">
-                                <select name="local" id="local-area" class="custom-select">
-                                    <option value="전체" selected>전체</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-md-6" id="group-wrapper">
-                        <div class="row">
-                            <div class="col-6">
-                                <label>그룹</label>
-                                <select name="group" id="group" class="custom-select">
-                                    <option value="전체" selected>전체</option>
-                                    <option value="혼지">혼자</option>
-                                    <option value="친구">친구</option>
-                                    <option value="커플">커플</option>
-                                    <option value="가족">가족</option>
-                                </select>
-                            </div>
-                            <div class="col-6">
-                                <div class="custom-control custom-checkbox" id="check-wrapper">
-                                    <input type="checkbox" class="custom-control-input" id="check" name="check">
-                                    <label class="custom-control-label" for="check">경유 여부</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+						<c:if test="${p == pInfom.currentPage}">
+							<li><a class="page-link">${p}</a></li>
+						</c:if>
 
-            </div>
+						<c:if test="${p != pInfom.currentPage}">
+							<li><a class="page-link text-success"
+								href=" 
+			                    	<c:url value="list">
+			                    		<c:if test="${!empty param.searchKey }">
+							        		<c:param name="searchKey" value="${param.searchKey}"/>
+							        	</c:if>
+							        	
+							        	<c:if test="${!empty param.searchValue }">
+							        		<c:param name="searchValue" value="${param.searchValue}"/>
+							        	</c:if>
+			                    		<c:param name="currentPage" value="${p}"/>
+			                    	</c:url>
+		                    	">
+									${p} </a></li>
+						</c:if>
 
-        </form>
+					</c:forEach>
 
-        <!-- 플래너 컨테이너 -->
-        <div class="py-3">
-            <h4>검색된 플래너</h4>
+					<!-- 다음 페이지로(>) -->
+					<c:if test="${pInfom.currentPage < pInfom.maxPage }">
+						<li><a class="page-link text-success"
+							href=" 
+		                    	<c:url value="list">
+		                    		<c:if test="${!empty param.searchKey }">
+						        		<c:param name="searchKey" value="${param.searchKey}"/>
+						        	</c:if>
+						        	
+						        	<c:if test="${!empty param.searchValue }">
+						        		<c:param name="searchValue" value="${param.searchValue}"/>
+						        	</c:if>
+		                    		<c:param name="currentPage" value="${pInfom.currentPage+1}"/>
+		                    	</c:url>
+	                    	">
+								&gt; </a></li>
 
-            <!-- 검색된 플래너 리스트 -->
-            <div class="planner-wrapper my-3">
+						<!-- 맨 끝으로(>>) -->
+						<li><a class="page-link text-success"
+							href=" 
+		                    	<c:url value="list">
+		                    		<c:if test="${!empty param.searchKey }">
+						        		<c:param name="searchKey" value="${param.searchKey}"/>
+						        	</c:if>
+						        	<c:if test="${!empty param.searchValue }">
+						        		<c:param name="searchValue" value="${param.searchValue}"/>
+						        	</c:if>
+		                    		<c:param name="currentPage" value="${pInfom.maxPage}"/>
+		                    	</c:url>
+	                    	">
+								&gt;&gt; </a></li>
 
-                <div class="planner">
-                    <div class="card">
-                        <img class="card-img-top" src="images/example1.jpg" alt="Card image">
-                        <div class="card-body">
-                            <h5 class="card-title">부천 맛집 투어</h5>
-                            <p class="card-text">
-                                <span>시작일 : 2020-02-01 7DAYS</span><br>
-                                <span>가족 여행</span><br>
-                                <span>경기도 부천시...</span>
-                            </p>
-                            <div class="d-flex justify-content-between">
-                                <div class="btn-wrapper">
-                                    <button type="button" class="btn btn-sm main-btn">바로가기</button>
-                                    <button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>
-                                </div>
-                                <div><i class="fas fa-eye"></i>&nbsp;15</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="planner">
-                    <div class="card">
-                        <img class="card-img-top" src="images/example2.jpg" alt="Card image">
-                        <div class="card-body">
-                            <h5 class="card-title">부천 맛집 투어</h5>
-                            <p class="card-text">
-                                <span>시작일 : 2020-02-01 7DAYS</span><br>
-                                <span>가족 여행</span><br>
-                                <span>경기도 부천시...</span>
-                            </p>
-                            <div class="d-flex justify-content-between">
-                                <div class="btn-wrapper">
-                                    <button type="button" class="btn btn-sm main-btn">바로가기</button>
-                                    <button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>
-                                </div>
-                                <div><i class="fas fa-eye"></i>&nbsp;15</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="planner">
-                    <div class="card">
-                        <img class="card-img-top" src="images/example3.jpg" alt="Card image">
-                        <div class="card-body">
-                            <h5 class="card-title">부천 맛집 투어</h5>
-                            <p class="card-text">
-                                <span>시작일 : 2020-02-01 7DAYS</span><br>
-                                <span>가족 여행</span><br>
-                                <span>경기도 부천시...</span>
-                            </p>
-                            <div class="d-flex justify-content-between">
-                                <div class="btn-wrapper">
-                                    <button type="button" class="btn btn-sm main-btn">바로가기</button>
-                                    <button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>
-                                </div>
-                                <div><i class="fas fa-eye"></i>&nbsp;15</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="planner">
-                    <div class="card">
-                        <img class="card-img-top" src="images/ourtrip_logo.png" alt="Card image">
-                        <div class="card-body">
-                            <h5 class="card-title">부천 맛집 투어</h5>
-                            <p class="card-text">
-                                <span>시작일 : 2020-02-01 7DAYS</span><br>
-                                <span>가족 여행</span><br>
-                                <span>경기도 부천시...</span>
-                            </p>
-                            <div class="d-flex justify-content-between">
-                                <div class="btn-wrapper">
-                                    <button type="button" class="btn btn-sm main-btn">바로가기</button>
-                                    <button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>
-                                </div>
-                                <div><i class="fas fa-eye"></i>&nbsp;15</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="planner">
-                    <div class="card">
-                        <img class="card-img-top" src="images/ourtrip_logo.png" alt="Card image">
-                        <div class="card-body">
-                            <h5 class="card-title">부천 맛집 투어</h5>
-                            <p class="card-text">
-                                <span>시작일 : 2020-02-01 7DAYS</span><br>
-                                <span>가족 여행</span><br>
-                                <span>경기도 부천시...</span>
-                            </p>
-                            <div class="d-flex justify-content-between">
-                                <div class="btn-wrapper">
-                                    <button type="button" class="btn btn-sm main-btn">바로가기</button>
-                                    <button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>
-                                </div>
-                                <div><i class="fas fa-eye"></i>&nbsp;15</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="planner">
-                    <div class="card">
-                        <img class="card-img-top" src="images/ourtrip_logo.png" alt="Card image">
-                        <div class="card-body">
-                            <h5 class="card-title">부천 맛집 투어</h5>
-                            <p class="card-text">
-                                <span>시작일 : 2020-02-01 7DAYS</span><br>
-                                <span>가족 여행</span><br>
-                                <span>경기도 부천시...</span>
-                            </p>
-                            <div class="d-flex justify-content-between">
-                                <div class="btn-wrapper">
-                                    <button type="button" class="btn btn-sm main-btn">바로가기</button>
-                                    <button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>
-                                </div>
-                                <div><i class="fas fa-eye"></i>&nbsp;15</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- 페이징바 -->
-            <div class="pagination-wrapper">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#">&lt;&lt;</a>
-                        </li>
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#">&lt;</a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">4</a></li>
-                        <li class="page-item"><a class="page-link" href="#">5</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">&gt;</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">&gt;&gt;</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+					</c:if>
+                </ul>
+            </nav>
         </div>
-
-        <!-- 플래너 컨테이너 -->
-        <div class="py-3">
-            <h4>추천 플래너</h4>
-
-            <!-- 추천 플래너 리스트 -->
-            <div class="planner-wrapper my-3">
-
-                <div class="planner">
-                    <div class="card">
-                        <img class="card-img-top" src="images/ourtrip_logo.png" alt="Card image">
-                        <div class="card-body">
-                            <h5 class="card-title">부천 맛집 투어</h5>
-                            <p class="card-text">
-                                <span>시작일 : 2020-02-01 7DAYS</span><br>
-                                <span>가족 여행</span><br>
-                                <span>경기도 부천시...</span>
-                            </p>
-                            <div class="d-flex justify-content-between">
-                                <div class="btn-wrapper">
-                                    <button type="button" class="btn btn-sm main-btn">바로가기</button>
-                                    <button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>
-                                </div>
-                                <div><i class="fas fa-eye"></i>&nbsp;15</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="planner">
-                    <div class="card">
-                        <img class="card-img-top" src="images/ourtrip_logo.png" alt="Card image">
-                        <div class="card-body">
-                            <h5 class="card-title">부천 맛집 투어</h5>
-                            <p class="card-text">
-                                <span>시작일 : 2020-02-01 7DAYS</span><br>
-                                <span>가족 여행</span><br>
-                                <span>경기도 부천시...</span>
-                            </p>
-                            <div class="d-flex justify-content-between">
-                                <div class="btn-wrapper">
-                                    <button type="button" class="btn btn-sm main-btn">바로가기</button>
-                                    <button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>
-                                </div>
-                                <div><i class="fas fa-eye"></i>&nbsp;15</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="planner">
-                    <div class="card">
-                        <img class="card-img-top" src="images/ourtrip_logo.png" alt="Card image">
-                        <div class="card-body">
-                            <h5 class="card-title">부천 맛집 투어</h5>
-                            <p class="card-text">
-                                <span>시작일 : 2020-02-01 7DAYS</span><br>
-                                <span>가족 여행</span><br>
-                                <span>경기도 부천시...</span>
-                            </p>
-                            <div class="d-flex justify-content-between">
-                                <div class="btn-wrapper">
-                                    <button type="button" class="btn btn-sm main-btn">바로가기</button>
-                                    <button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>
-                                </div>
-                                <div><i class="fas fa-eye"></i>&nbsp;15</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="planner">
-                    <div class="card">
-                        <img class="card-img-top" src="images/ourtrip_logo.png" alt="Card image">
-                        <div class="card-body">
-                            <h5 class="card-title">부천 맛집 투어</h5>
-                            <p class="card-text">
-                                <span>시작일 : 2020-02-01 7DAYS</span><br>
-                                <span>가족 여행</span><br>
-                                <span>경기도 부천시...</span>
-                            </p>
-                            <div class="d-flex justify-content-between">
-                                <div class="btn-wrapper">
-                                    <button type="button" class="btn btn-sm main-btn">바로가기</button>
-                                    <button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>
-                                </div>
-                                <div><i class="fas fa-eye"></i>&nbsp;15</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- 페이징바 -->
-            <div class="pagination-wrapper">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#">&lt;&lt;</a>
-                        </li>
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#">&lt;</a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">4</a></li>
-                        <li class="page-item"><a class="page-link" href="#">5</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">&gt;</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">&gt;&gt;</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-
     </div>
-    <!-- 탐색 컨텐츠 끝나는 부분 -->
-
+    <!-- 회원 목록 끝 -->
+    
     <script>
-        $(function () {
-            $("#wide-area").on("change", function () {
-                var wideVal = $(this).val();
-                var html = "";
-                html += "<option value='전체' selected>전체</option>";
+        // 검색창 내용 유무 확인
+        function checkValue(){
+            if ($("#searchValue").val().trim().length == 0) {
+                alert("검색내용을 입력해주세요");
+                return false;
+            } else {
+                return true;
+            }
+        }
 
-                if (wideVal == "경기도") {
-                    html += "<option value='부천시'>부천시</option>";
-                    html += "<option value='고양시'>고양시</option>";
-                    html += "<option value='구리시'>구리시</option>";
-                    html += "<option value='수원시'>수원시</option>";
-                    html += "<option value='남양주시'>남양주시</option>";
-
-                } else if (wideVal == "서울특별시") {
-                    html += "<option value='강남구'>강남구</option>";
-                    html += "<option value='종로구'>종로구</option>";
-                    html += "<option value='강서구'>강서구</option>";
-                    html += "<option value='이태원'>이태원</option>";
-                    html += "<option value='여의도'>여의도</option>";
-
-                } else if (wideVal == "강원도") {
-                    html += "<option value='강릉시'>강릉시</option>";
-                    html += "<option value='속초시'>속초시</option>";
-
-                }
-
-                $("#local-area").html(html);
-            });
-        });
     </script>
 </body>
 

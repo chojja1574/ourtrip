@@ -91,7 +91,7 @@ body {
 <body>
 
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
-	<jsp:include page="/WEB-INF/views/common/nav.jsp" />
+	<jsp:include page="/WEB-INF/views/admin/nav.jsp" />
 
 	<div class="container">
 
@@ -149,8 +149,28 @@ body {
 			</div>
 			<div class="col-md-4">
 				<h4>프로필 사진</h4>
-				<img src="../4_jQuery/image/cacao1.png" alt="이미지테스트"
-					style="width: 100%; height: auto;">
+				<c:if test="${!empty pi}">
+					
+						<!-- 카카오에서 가져온 이미지 경로일 경우 -->
+						<c:if test="${fn:contains(profileImage.imagePath, 'http://')}">
+							<c:set var="filePath" value="${pi.imagePath}"/>
+						</c:if>
+					
+						<!-- ourtrip서버에 있는 경로일 경우 -->
+						<c:if test="${!fn:contains(profileImage.imagePath, 'http://')}">
+							<c:set var="fileName" value="${fn:split(pi.imagePath, '/')}"/>
+							<c:set var="filePath" value="${contextPath}/resources/profileImages/${fileName[fn:length(fileName) - 1]}"/>
+						</c:if>
+					</c:if>
+					
+					<img id="ot_profile_image" alt="your image" class="rounded mx-auto"
+						width="200" height="200"
+						src=<c:if test="${!empty pi}">
+								"${filePath}"
+							</c:if>
+								<c:if test="${empty pi}">
+								"../resources/images/default-profile.png"
+							</c:if>>
 			</div>
 		</div>
 		<hr>
@@ -174,29 +194,17 @@ body {
 									<p class="card-text">
 										<span>시작일 :${plannerInfo.plannerStartDT}</span><br> <span>${plannerInfo.groupName}
 										</span><br>
-										
-										<c:if test="${recommendCard.areaNames.size()>1 }">
-		                                	<span>${recommendCard.areaNames[0].largeAreaName}
-		                                		  ${recommendCard.areaNames[0].smallAreaName} ...</span>
+											<c:if test="${plannerInfo.areaNames.size()>1 }">
+		                                	<span>${plannerInfo.areaNames[0].largeAreaName}
+		                                		  ${plannerInfo.areaNames[0].smallAreaName} ...</span>
 		                                </c:if>
-		                                <c:if test="${recommendCard.areaNames.size()==1 }">
-		                                	<span>${recommendCard.areaNames[0].largeAreaName}
-		                                		  ${recommendCard.areaNames[0].smallAreaName} </span>
+		                                <c:if test="${plannerInfo.areaNames.size()==1 }">
+		                                	<span>${plannerInfo.areaNames[0].largeAreaName}
+		                                		  ${plannerInfo.areaNames[0].smallAreaName} </span>
 		                                </c:if>
-		                                <c:if test="${recommendCard.areaNames.size()<1 }">
-		                                	<span>없음 </span>
+		                                <c:if test="${plannerInfo.areaNames.size()<1 }">
+		                                <span></span>
 		                                </c:if>
-										<c:forEach var="plannerArea" items="${plannerArea}" varStatus="vs2">
-											<span> 
-											<c:if test="${plannerInfo.plannerNo == plannerArea.plannerNo and vs2.first}">
-											${plannerArea.largeAreaName}-${plannerArea.smallAreaName}
-											${plannerArea}
-											</c:if>
-											</span>
-										</c:forEach>
-										
-										
-										
 									</p>
 									<div class="d-flex justify-content-between">
 										<div class="btn-wrapper">

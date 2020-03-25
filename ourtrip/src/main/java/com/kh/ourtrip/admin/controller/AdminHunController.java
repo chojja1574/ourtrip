@@ -1,6 +1,9 @@
 package com.kh.ourtrip.admin.controller;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +20,10 @@ import com.kh.ourtrip.admin.model.service.AdminHunService;
 import com.kh.ourtrip.common.Pagination;
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
-import com.kh.ourtrip.planner.model.vo.Planner;
-import com.kh.ourtrip.planner.model.vo.PlannerCard;
+import com.kh.ourtrip.member.model.vo.ProfileImage;
+import com.kh.ourtrip.planner.model.vo.AreaName;
+import com.kh.ourtrip.planner.model.vo.Day;
+import com.kh.ourtrip.planner.model.vo.PlannerInfo;
 
 @SessionAttributes({ "memberList", "msg" })
 @Controller
@@ -104,6 +109,7 @@ public class AdminHunController {
 
 		try {
 			Member detailMem = adminHunService.detail(no);
+			ProfileImage pi = adminHunService.selectProfileImage(no);
 			
 			List<Integer> plannerList = adminHunService.plannerList(no);
 
@@ -112,13 +118,22 @@ public class AdminHunController {
 			}
 			PageInfo pInf = Pagination.getPageInfo(8, 10, currentPage, plannerList.size());
 
-			List<Planner> plannerInfo = new ArrayList<Planner>();
-			List<PlannerCard> plannerArea = new ArrayList<PlannerCard>();
 			
+			List<PlannerInfo> plannerInfo = new ArrayList<PlannerInfo>();
+			List<AreaName> plannerArea = new ArrayList<AreaName>();
+			List<AreaName> areaNames = new ArrayList<AreaName>();
 			if(!plannerList.isEmpty()) {
-				
 				 plannerInfo = adminHunService.plannerInfo(plannerList, pInf);
 				 plannerArea = adminHunService.plannerArea(plannerList);
+				 
+				 for(PlannerInfo infList : plannerInfo) {
+					 for(AreaName areaList : plannerArea) {
+						 if(infList.getPlannerNo() == areaList.getPlannerNo()) {
+							 areaNames.add(areaList);
+						 }
+					 }
+					 infList.setAreaNames(areaNames);
+				 }
 			}
 
 			if (detailMem != null && plannerInfo != null) {
@@ -126,7 +141,7 @@ public class AdminHunController {
 				model.addAttribute("detailMember", detailMem);
 				model.addAttribute("pInfom", pInf);
 				model.addAttribute("plannerInfo", plannerInfo);
-				model.addAttribute("plannerArea", plannerArea);
+				model.addAttribute("pi", pi);
 				return "admin/memberDetail";
 			}else {
 				model.addAttribute("msg", "회원정보 상세조회 실패 .");
@@ -140,5 +155,64 @@ public class AdminHunController {
 		}
 
 	}
+	
+	@RequestMapping("plannerList")
+	public String plannerList(Model model, HttpServletRequest request, Integer currentPage) {
+		String beforUrl = request.getHeader("referer");
+		
+		try {
+			int plannerCount = adminHunService.plannerCount();
+			
+			if (currentPage == null) {
+				currentPage = 1;
+			}
+			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, plannerCount);
+			
+			List<PlannerInfo> totalList = adminHunService.plannerTotal(pInf);
+			List<AreaName> areaList = adminHunService.areaList();
+			List<AreaName> areaNames = new ArrayList<AreaName>();
+			List<Day> dayList = adminHunService.dayList();
+			 Date countDay = null;
+				 for(PlannerInfo infList : totalList) {
+					 for(AreaName infoarea : areaList) {
+						 if(infList.getPlannerNo() == infoarea.getPlannerNo()) {
+							 areaNames.add(infoarea);
+						 }
+					 }
+					 infList.setAreaNames(areaNames);
+				 }
+				 
+				 for(PlannerInfo infList : totalList) {
+					 for(Day infodays : dayList) {
+						 if(infList.getPlannerNo() == infodays.getPlannerNo()) {
+							 countDay = new Date(infList.getPlannerStartDT().getTime() + infodays.getTripDate()*(24*60*60*1000));
+						 }
+					 }
+					 infList.setPlannerEndDate(countDay);
+				 }
+				 
+				
+				
+				 
+				 
+				 
+		
+			model.addAttribute("plannerList" ,totalList);
+			model.addAttribute("pInfom", pInf);
+			return "admin/adminplannerList";
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("msg", "플래너정보 조회 실패 .");
+			return "redirect:" + beforUrl;
+		}
+		
+		
+	}
+	
+	
+	
+
+	
 
 }

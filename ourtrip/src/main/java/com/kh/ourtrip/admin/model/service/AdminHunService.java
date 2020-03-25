@@ -5,12 +5,13 @@ import java.util.Map;
 
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
+import com.kh.ourtrip.member.model.vo.ProfileImage;
+import com.kh.ourtrip.planner.model.vo.AreaName;
+import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.Planner;
-import com.kh.ourtrip.planner.model.vo.PlannerCard;
+import com.kh.ourtrip.planner.model.vo.PlannerInfo;
 
 public interface AdminHunService {
-
-	
 	
 	
 	/** 회원수 전체조회용 service
@@ -64,14 +65,47 @@ public interface AdminHunService {
 	 * @return plannerInfo
 	 * @throws Exception
 	 */
-	public abstract List<Planner> plannerInfo(List<Integer> plannerList, PageInfo pInf)throws Exception;
+	public abstract List<PlannerInfo> plannerInfo(List<Integer> plannerList, PageInfo pInf)throws Exception;
 
 	/** 지역조회용 service
 	 * @param plannerList
 	 * @return plannerArea
 	 * @throws Exception
 	 */
-	public abstract List<PlannerCard> plannerArea(List<Integer> plannerList) throws Exception;
+	public abstract List<AreaName> plannerArea(List<Integer> plannerList) throws Exception;
+
+	/**프로필 이미지 조회용 service
+	 * @param no
+	 * @return pi
+	 * @throws Exception
+	 */
+	public abstract ProfileImage selectProfileImage(int no)throws Exception;
+
+	/**플래너 목록조회용 service
+	 * @param pInf 
+	 * @return totalList
+	 * @throws Exception
+	 */
+	public abstract List<PlannerInfo> plannerTotal(PageInfo pInf)throws Exception;
+
+	/**플래너 개수 조회용 service
+	 * @return int 
+	 * @throws Exception
+	 */
+	public abstract int plannerCount()throws Exception;
+
+	/**플래너 위치조회용 service
+	 * @return list<areaName>
+	 * @throws Exception
+	 */
+	public abstract List<AreaName> areaList()throws Exception;
+
+	
+	/**여행일자 조회용 service
+	 * @return list<day>
+	 * @throws Exception
+	 */
+	public abstract List<Day> dayList()throws Exception;
 
 	
 

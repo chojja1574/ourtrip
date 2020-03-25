@@ -9,8 +9,11 @@ import org.springframework.stereotype.Service;
 import com.kh.ourtrip.admin.model.dao.AdminHunDAO;
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
+import com.kh.ourtrip.member.model.vo.ProfileImage;
+import com.kh.ourtrip.planner.model.vo.AreaName;
+import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.Planner;
-import com.kh.ourtrip.planner.model.vo.PlannerCard;
+import com.kh.ourtrip.planner.model.vo.PlannerInfo;
 
 @Service
 public class AdminHunServiceimpl implements AdminHunService {
@@ -92,7 +95,7 @@ public class AdminHunServiceimpl implements AdminHunService {
 	 * @throws Exception
 	 */
 	@Override
-	public List<Planner> plannerInfo(List<Integer> plannerList, PageInfo pInf) throws Exception {
+	public List<PlannerInfo> plannerInfo(List<Integer> plannerList, PageInfo pInf) throws Exception {
 		
 		return adminHunDAO.plannerInfo(plannerList,pInf);
 	}
@@ -103,8 +106,55 @@ public class AdminHunServiceimpl implements AdminHunService {
 	 * @throws Exception
 	 */
 	@Override
-	public List<PlannerCard> plannerArea(List<Integer> plannerList) throws Exception {
+	public List<AreaName> plannerArea(List<Integer> plannerList) throws Exception {
 		return adminHunDAO.plannerArea(plannerList);
+	}
+
+	/**프로필 이미지 조회용 service
+	 * @param no
+	 * @return pi
+	 * @throws Exception
+	 */
+	@Override
+	public ProfileImage selectProfileImage(int no) throws Exception {
+		return adminHunDAO.selectProfileImage(no);
+	}
+
+	/**플래너 목록조회용 DAO
+	 * @return totalList
+	 * @throws Exception
+	 */
+	@Override
+	public List<PlannerInfo> plannerTotal(PageInfo pInf) throws Exception {
+		return adminHunDAO.plannerTotal(pInf);
+	}
+
+	/**플래너 개수 조회용 service
+	 * @return int 
+	 * @throws Exception
+	 */
+	@Override
+	public int plannerCount() throws Exception {
+		return adminHunDAO.plannerCount();
+	}
+
+	/**플래너 위치조회용 DAO
+	 * @return list<areaName>
+	 * @throws Exception
+	 */
+	@Override
+	public List<AreaName> areaList() throws Exception {
+		return adminHunDAO.areaList();
+	}
+
+	/**여행일자 조회용 service
+	 * @return list<day>
+	 * @throws Exception
+	 */
+	@Override
+	public List<Day> dayList() throws Exception {
+		
+		return adminHunDAO.dayList();
 	}
 
 

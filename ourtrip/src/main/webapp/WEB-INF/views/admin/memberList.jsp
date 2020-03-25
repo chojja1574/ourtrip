@@ -26,7 +26,7 @@
 <body>
 
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
-	<jsp:include page="/WEB-INF/views/common/nav.jsp" />
+	<jsp:include page="/WEB-INF/views/admin/nav.jsp" />
 
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
 		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="

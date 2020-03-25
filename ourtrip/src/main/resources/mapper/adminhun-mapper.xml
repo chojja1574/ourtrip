@@ -36,16 +36,19 @@
 
 	<resultMap type="PlannerInfo" id="plannerInfoResultSet">
 		<id property="memberNo" column="MEMBER_No" />
-		<result property="plannerNo" column="PLANNER_NO" />
+		<result property="plannerNo" column="PLANNER_NO"/>
 		<result property="plannerTitle" column="PLANNER_TITLE" />
+		<result property="plannerPwd" column="PLANNER_PWD" />
+		<result property="plannerCost" column="PLANNER_COST" />
 		<result property="plannerCreateDT" column="PLANNER_CREATE_DT" />
+		<result property="plannerModifyDT" column="PLANNER_MODIFT_DT" />
 		<result property="plannerStartDT" column="PLANNER_START_DT" />
+		<result property="plannerPublicYN" column="PLANNER_PUBLIC_YN" />
 		<result property="plannerDeleteYN" column="PLANNER_DELETE_YN" />
+		<result property="plannerExpiry" column="PLANNER_EXPIRY" />
 		<result property="plannerCount" column="PLANNER_COUNT" />
 		<result property="plannerUrl" column="PLANNER_URL" />
 		<result property="groupName" column="GROUP_NAME" />
-		<result property="largeAreaName" column="LARGE_AREA_NAME" />
-		<result property="smallAreaName" column="SMALL_AREA_NAME" />
 	</resultMap>
 	
 	
@@ -55,6 +58,20 @@
 		<result property="largeAreaName" column="LARGE_AREA_NAME"/>
 		<result property="smallAreaCode" column="SMALL_AREA_CODE"/>
 		<result property="smallAreaName" column="SMALL_AREA_NAME"/>
+	</resultMap>
+	
+	<resultMap type="ProfileImage" id="piResultSet">
+		<id property="imageNo" column="IMAGE_NO" />
+		<result property="imagePath" column="IMAGE_PATH" />
+		<result property="imageUploadDate" column="IMAGE_UPLOAD_DT" />
+		<result property="imageStatus" column="IMAGE_DELETE_YN" />
+		<result property="memberNo" column="MEMBER_NO" />
+	</resultMap>
+	
+	<resultMap type="Day" id="dayResultSet">
+		<id property="dateNo" column="DATE_NO"/>
+		<result property="tripDate" column="TRIP_DATE"/>
+		<result property="plannerNo" column="PLANNER_NO"/>
 	</resultMap>
 
 	<select id="listFullCount" resultType="_int">
@@ -142,11 +159,30 @@
 	</select>
 
 	<select id="plannerArea" parameterType="list" resultMap="AreaNameResultSet">
-		SELECT * FROM V_AREA_NAME
-		WHERE PLANNER_NO IN 
+		SELECT * FROM V_AREA_NAME WHERE PLANNER_NO IN 
 		<foreach index="index" item="planner" collection="list" open="(" separator="," close=")">
 			#{planner.plannerNo}
 		</foreach>
+	</select>
+	
+	<select id="selectProfileImage" parameterType="_int" resultMap="piResultSet">
+		SELECT * FROM PROFILE_IMAGE WHERE MEMBER_NO = #{memberNo}
+	</select>
+	
+	<select id="plannerCount" resultType="_int">
+		SELECT COUNT(*) FROM V_PLANNER_INFO
+	</select>
+	
+	<select id="plannerTotal" resultMap="plannerInfoResultSet">
+		SELECT * FROM V_PLANNER_INFO
+	</select>
+	
+	<select id="areaList" resultMap="AreaNameResultSet">
+		SELECT * FROM V_AREA_NAME 
+	</select>
+	
+	<select id="dayList" resultMap="dayResultSet">
+		SELECT PLANNER_NO,COUNT(*) FROM PLANNER_DATE GROUP BY PLANNER_NO
 	</select>
 
 </mapper>
