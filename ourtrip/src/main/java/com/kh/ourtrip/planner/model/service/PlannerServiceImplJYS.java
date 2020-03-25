@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.ourtrip.planner.model.dao.PlannerDAOJYS;
 import com.kh.ourtrip.planner.model.vo.AreaName;
@@ -65,21 +66,25 @@ public class PlannerServiceImplJYS implements PlannerServiceJYS{
 	public List<AreaName> selectAreaNames(List<Integer> noList) throws Exception {
 		return plannerDAO.selectAreaNames(noList);
 	}
-	
-	
-	
-//	/** 플래너 목록 지역이름 조회용 Service
-//	 * @param noList
-//	 * @return areaNames
-//	 * @throws Exception
-//	 */
-//	@Override
-//	public List<AreaName> selectAreaNames(List<Integer> noList) throws Exception {
-//		return plannerDAO.selectAreaNames(noList);
-//	}
 
-	
-	
-	
+	/** 플래너 삭제용 Service
+	 * @param delPlanner
+	 * @return result
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int delPlanner(PlannerMember delPlanner) throws Exception {
+		// 회원이 삭제하려는 플래너에 맞는 권한인지 확인
+		String permission = plannerDAO.selectPlannerPerm(delPlanner);
+		
+		int result = 0;
+		if(permission.equals("3")) {
+			delPlanner.setPlannerPermission(Integer.parseInt(permission));
+			result = plannerDAO.delPlanner(delPlanner);
+		}
+		
+		return result;
+	}
 	
 }
