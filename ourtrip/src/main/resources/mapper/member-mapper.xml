@@ -16,7 +16,6 @@
 	
 	<resultMap type="ProfileImage" id="piResultSet">
 		<id property="imageNo" column="IMAGE_NO" />
-
 		<result property="imagePath" column="IMAGE_PATH" />
 		<result property="imageUploadDate" column="IMAGE_UPLOAD_DT" />
 		<result property="imageStatus" column="IMAGE_DELETE_YN" />
