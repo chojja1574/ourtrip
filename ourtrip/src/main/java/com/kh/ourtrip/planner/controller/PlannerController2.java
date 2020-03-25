@@ -15,16 +15,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.ourtrip.planner.model.service.PlannerService2;
-import com.kh.ourtrip.planner.model.vo.ChattingLog;
+import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.Planner;
 import com.kh.ourtrip.planner.model.vo.PlannerView;
 import com.kh.ourtrip.planner.model.vo.Schedule;
 
 @Controller
+@SessionAttributes({"loginMember","msg"})
 @RequestMapping("/planner1/*")
 public class PlannerController2 {
 	
@@ -122,15 +124,15 @@ public class PlannerController2 {
 					plannerCreateDT, plannerModifyDT, plannerStartDT, plannerPublicYN, plannerDeleteYN, 
 					plannerExpiry, plannerCount, plannerUrl, groupCode, dayList);
 			System.out.println(selectedPlanner.toString());
-			jsonObj = (JSONObject) jsonParser.parse(selectedPlanner.toString());
+			jsonObj = (JSONObject) jsonParser.parse(selectedPlanner.toJsonString());
 			System.out.println("json : " + selectedPlanner.toString());
 			
 			// 채팅내역 얻어와서 jsonString으로 변환
-			List<ChattingLog> chatList = null;
+			List<ChattingLogView> chatList = null;
 			chatList = plannerService.selectChatList(no);
 			System.out.println("chatList");
 			System.out.println(chatList);
-			for(ChattingLog cl : chatList) {
+			for(ChattingLogView cl : chatList) {
 				jsonObj = (JSONObject) jsonParser.parse(cl.toJsonString());
 				chatArray.add(jsonObj);
 			}

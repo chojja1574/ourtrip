@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -331,18 +332,20 @@ var days = new Array();
 var loadingInfo = 0;
 var loadingAddr = 0;
 var dayIndex = -1;
-var userId = null;
+var memberNo = null;
 
 $(function() {
-	var userId = '${loginMember.getMemberEmail()}'
+	var memberNo = '${loginMember.memberNo}'
 	var plannerInfo = '${plannerInfo}';
 	var chatList = '${chatList}';
 	var plannerJson = JSON.parse(plannerInfo);
+	var chatListJson = JSON.parse(chatList);
 	console.log("chatList : " + chatList);
 	
 	$('#startrip').val(plannerJson.plannerStartDT);
 	$("#join").click(function(){
-		sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'JOIN', writer: "${userId}", content: ""}));
+		sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'JOIN', writer: "${loginMember.memberNo}", content: ""}));
+		initChatting(chatListJson);
 		initPlanner(plannerJson);
 	})
     // 페이지 입장 시 참여버튼 모달 출력
@@ -427,7 +430,22 @@ function initPlanner(pj){
 	console.log(scheduleMarkers);
 	
 }
-
+function initChatting(chatList){
+	console.log("memberNo : ${loginMember.memberNo}")
+	for(var i in chatList){
+		if(chatList[i].memberNo == '${loginMember.memberNo}'){
+		     	// inputChat = 채팅 내역에 채팅창 올리는 함수
+		        // mkMyChatMsg = 내가 보낸 메세지로 채팅창 만드는 함수
+		        // mkMyChatMsg 매개변수 = (msgContent,msgTime)
+		        inputChat(mkMyChatMsg(chatList[i].chatContent,chatList[i].chatTime));
+		}else {
+				// inputChat = 채팅 내역에 채팅창 올리는 함수
+		        // mkChatMsg = 다른사람이 보낸 메세지로 채팅창 만드는 함수
+		        // mkChatMsg 매개변수 = (profileImg,memberNo,msgContent,msgTime)
+		        inputChat(mkChatMsg(chatList[i].imagePath,chatList[i].memberNickName,chatList[i].chatContent,chatList[i].chatTime));
+		}
+	}
+}
 //=======================================================================================//
 //====================================== 변환 관련 함수  ======================================//
 //=======================================================================================//
@@ -743,7 +761,7 @@ $('#addSchedule').click(function(){
     }
 });
 
-function addSchedule(dno,sno,title,time,location,cost,memo,llat,llng,liwContent,luserId){
+function addSchedule(dno,sno,title,time,location,cost,memo,llat,llng,liwContent,lmemberNo){
 
     // 새로운 일정을 만드는 것이니 시퀀스 NEXTVAL 얻어와서 넣어야함
     // 테스트때 임시로 createNo 변수 사용
@@ -762,7 +780,7 @@ function addSchedule(dno,sno,title,time,location,cost,memo,llat,llng,liwContent,
 	
 	if($('#selectedDay').data('dateno') == dno){
 		createSchedule(sno,title,time,cost,memo,location);
-		if(userId == luserId)
+		if(memberNo == lmemberNo)
 			selectSchedule(sno);
 	}
 }
@@ -889,7 +907,7 @@ $('#scheduleUpdate').click(function(){
     }else if(location == ''){
     	alert('장소를 입력해주세요');
     }else{
-    	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'updateSchedule', id: "${userId}",
+    	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'updateSchedule', id: "${loginMember.memberNo}",
     		sno: sno, title: title, time: time, location: location, cost: cost, memo: memo, lat: lat, lng: lng, iwContent: iwContent}));
     }
 });
@@ -936,7 +954,7 @@ $('#removeSchedule').click(function(){
     	var sno = $('#scheduleInfo').data('scheduleno');
     	var dno = $('#selectedDay').data('dateno');
     	
-    	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'removeSchedule', id: "${userId}",
+    	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'removeSchedule', id: "${loginMember.memberNo}",
     		dno: dno, sno: sno}));
     	
     	$('#inputScheduleTitle').val('');
@@ -964,7 +982,7 @@ function onMessage(msg) {
 	var data = JSON.parse(jsonData)
 	switch(data['type']){
 	case 'msg':
-		if(data['userId'] == '${userId}'){
+		if(data['memberNo'] == '${loginMember.memberNo}'){
 	     	// inputChat = 채팅 내역에 채팅창 올리는 함수
 	        // mkMyChatMsg = 내가 보낸 메세지로 채팅창 만드는 함수
 	        // mkMyChatMsg 매개변수 = (msgContent,msgTime)
@@ -972,8 +990,8 @@ function onMessage(msg) {
 		}else {
 			// inputChat = 채팅 내역에 채팅창 올리는 함수
 	        // mkChatMsg = 다른사람이 보낸 메세지로 채팅창 만드는 함수
-	        // mkChatMsg 매개변수 = (profileImg,userId,msgContent,msgTime)
-	        inputChat(mkChatMsg('',data['userId'],data['content'],data['time']));
+	        // mkChatMsg 매개변수 = (profileImg,memberNo,msgContent,msgTime)
+	        inputChat(mkChatMsg('',data['memberNo'],data['content'],data['time']));
 		}
 		break;
 	case 'addDate': 
@@ -981,7 +999,7 @@ function onMessage(msg) {
 		scheduleMarkers.push(
 				{dno:data['dno'],scheduleMarker:new Array({sno:data['sno'],LatLng:new kakao.maps.LatLng(0,0),unselect:true,infoWindow:null})});
 		createDate(data['dno']);
-		addSchedule(data['dno'],data['sno'],'제목 없음','','',0,'',0,0,null,userId);
+		addSchedule(data['dno'],data['sno'],'제목 없음','','',0,'',0,0,null,memberNo);
 		break;
 	case 'deleteDate': 
 		deleteDate(data['dno']);
@@ -990,7 +1008,7 @@ function onMessage(msg) {
 		updateSchedule(data['sno'],data['title'],data['time'],data['location'],data['cost'],data['memo'],data['lat'],data['lng'],data['iwContent'])
 		break;
 	case 'addSchedule': 
-		addSchedule(data['dno'],data['sno'],data['title'],data['time'],data['location'],data['cost'],data['memo'],data['lat'],data['lng'],data['iwContent'],userId)
+		addSchedule(data['dno'],data['sno'],data['title'],data['time'],data['location'],data['cost'],data['memo'],data['lat'],data['lng'],data['iwContent'],memberNo)
 		sortSchedule(data['sno']);
 	    for(var i in days){
 	    	if(days[i].no == data['dno']){
@@ -1024,7 +1042,7 @@ function mkChatMsg(profileImg,userId,msgContent,msgTime){
     var chatMsg =
     '<div class="chatbox overhidden">' +
     '<div>' +
-    '<img src = "' + profileImg + '" class="profileImg">' +
+    '<img src = "${contextPath}/resources' + profileImg + '" class="profileImg">' +
     '<span class="userId">' + userId + '</span>' +
     '</div>' +
     '<div>' +
@@ -1088,7 +1106,7 @@ $(function () {
         
         // 채팅 입력창 비어있지 않으면 실행
         if(msg != '' && msg != '<br/>'){
-            sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'msg', userId: "${userId}", content: msg}));
+            sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'msg', memberNo: "${loginMember.memberNo}", content: msg}));
         }
 
         // 메세지 전송 후 채팅 입력창 비워줌

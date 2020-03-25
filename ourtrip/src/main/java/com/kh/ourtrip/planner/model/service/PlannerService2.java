@@ -2,7 +2,7 @@ package com.kh.ourtrip.planner.model.service;
 
 import java.util.List;
 
-import com.kh.ourtrip.planner.model.vo.ChattingLog;
+import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.PlannerView;
 import com.kh.ourtrip.planner.model.vo.Schedule;
@@ -28,7 +28,7 @@ public interface PlannerService2 {
 
 	public abstract int deleteSchedule(int sno) throws Exception;
 
-	public abstract int insertChattingLog(ChattingLog chatLog) throws Exception;
+	public abstract int insertChattingLog(ChattingLogView chatLog) throws Exception;
 
-	public abstract List<ChattingLog> selectChatList(int no) throws Exception;
+	public abstract List<ChattingLogView> selectChatList(int no) throws Exception;
 }

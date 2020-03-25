@@ -4,22 +4,27 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class ChattingLog {
+public class ChattingLogView {
 	private int chatNo;
 	private String chatContent;
 	private Timestamp chatTime;
 	private int plannerNo;
 	private int memberNo;
+	private String memberNickName;
+	private String imagePath;
 	
-	public ChattingLog() {}
+	public ChattingLogView() {}
 
-	public ChattingLog(int chatNo, String chatContent, Timestamp chatTime, int plannerNo, int memberNo) {
+	public ChattingLogView(int chatNo, String chatContent, Timestamp chatTime, int plannerNo, int memberNo,
+			String memberNickName, String imagePath) {
 		super();
 		this.chatNo = chatNo;
 		this.chatContent = chatContent;
 		this.chatTime = chatTime;
 		this.plannerNo = plannerNo;
 		this.memberNo = memberNo;
+		this.memberNickName = memberNickName;
+		this.imagePath = imagePath;
 	}
 
 	public int getChatNo() {
@@ -62,21 +67,38 @@ public class ChattingLog {
 		this.memberNo = memberNo;
 	}
 
+	public String getMemberNickName() {
+		return memberNickName;
+	}
+
+	public void setMemberNickName(String memberNickName) {
+		this.memberNickName = memberNickName;
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+
 	public String toJsonString() {
 		
 		String str = null;
 		String time = chatTime.toString().substring(11, 16);
+		String convertImagePath = imagePath.substring(imagePath.indexOf('/'));
 		
-		str = "{\"chatNo\":\"" + chatNo + "\",\"chatContent\":\"" + chatContent + "\",\"chatTime\":\"" + time +
-				"\",\"plannerNo\":\"" + plannerNo + "\",\"memberNo\":\"" + memberNo +"\"}";
-		
+		str = "{\"chatNo\":\"" + chatNo + "\",\"chatContent\":\"" + chatContent + "\",\"chatTime\":\"" + time + "\",\"imagePath\":\"" + convertImagePath + 
+				"\",\"plannerNo\":\"" + plannerNo + "\",\"memberNo\":\"" + memberNo + "\",\"memberNickName\":\"" + memberNickName +"\"}";
 		return str;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "ChattingLog [chatNo=" + chatNo + ", chatContent=" + chatContent + ", chatTime=" + chatTime
-				+ ", plannerNo=" + plannerNo + ", memberNo=" + memberNo + "]";
+		return "ChattingLogView [chatNo=" + chatNo + ", chatContent=" + chatContent + ", chatTime=" + chatTime
+				+ ", plannerNo=" + plannerNo + ", memberNo=" + memberNo + ", memberNickName=" + memberNickName
+				+ ", imagePath=" + imagePath + "]";
 	}
 	
 }
