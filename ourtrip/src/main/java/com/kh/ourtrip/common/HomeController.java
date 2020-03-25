@@ -20,6 +20,8 @@ public class HomeController {
 	@RequestMapping("/")
 	public String intro(Model model) {
 		try {
+			
+			// 추천플래너 카드 조회
 			List<PlannerCard> recommendPCList = plannerServiceSDS.selectRecommendPCList();
 			//System.out.println(recommendPCList);
 			if(!recommendPCList.isEmpty()) {
@@ -27,10 +29,13 @@ public class HomeController {
 			} else {
 				model.addAttribute("msg", "조회내용이 없습니다");
 			}
+			System.out.println("홈 이동 정상 동작");
+			return "index";
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			model.addAttribute("errorMsg", "메인페이지 이동과정중 오류");
+			return "common/errorPage";
 		}
-		System.out.println("홈 이동 정상 동작");
-		return "index";
 	}
 }

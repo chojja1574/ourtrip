@@ -137,7 +137,7 @@ h5 {
 				</div>
 			</c:if>
 			<c:if test="${!empty recommendPCList}">
-				<c:forEach var="recommendCard" items="${recommendPCList}" varStatus="vs">
+				<c:forEach var="recommendCard" items="${recommendPCList}" varStatus="vs" begin="1" end="2">
 					<div class="col-xl-3">
 						<div class="planner">
 		                    <div class="card">

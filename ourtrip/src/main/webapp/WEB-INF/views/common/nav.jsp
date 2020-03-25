@@ -50,7 +50,7 @@
                 </a>
             </div>
             <div class="col-sm-3 nav-item">
-                <a href="${contextPath}/planner/searchPlanner" class="nav-text">
+                <a href="${contextPath}/planner/search" class="nav-text">
                     <h5>탐색</h5>
                 </a>
             </div>
