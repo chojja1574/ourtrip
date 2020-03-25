@@ -103,5 +103,12 @@ public interface MemberService {
 	 */
 	public abstract int findPwd(String memberEmail) throws Exception;
 
+	/** 프로필 사진 경로 조회용 Service
+	 * @param memberNo
+	 * @return profileImagePath
+	 * @throws Exception
+	 */
+	public abstract String getProfileImagePath(int memberNo) throws Exception;
+
 
 }

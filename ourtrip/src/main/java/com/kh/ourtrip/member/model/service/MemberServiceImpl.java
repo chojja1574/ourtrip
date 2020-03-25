@@ -390,6 +390,16 @@ public class MemberServiceImpl implements MemberService{
 		return result;
 	}
 	
+	/** 프로필 사진 경로 조회용 Service
+	 * @param memberNo
+	 * @return profileImagePath
+	 * @throws Exception
+	 */
+	@Override
+	public String getProfileImagePath(int memberNo) throws Exception {
+		return memberDAO.getProfileImagePath(memberNo);
+	}
+	
 	
 
 

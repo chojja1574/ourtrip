@@ -87,8 +87,8 @@ public class ChattingLogView {
 		
 		String str = null;
 		String time = chatTime.toString().substring(11, 16);
-		String convertImagePath = imagePath.substring(imagePath.indexOf('/'));
-		
+		String convertImagePath = imagePath.replaceAll("\\",".");
+		System.out.println("convertImagePath : " + convertImagePath);
 		str = "{\"chatNo\":\"" + chatNo + "\",\"chatContent\":\"" + chatContent + "\",\"chatTime\":\"" + time + "\",\"imagePath\":\"" + convertImagePath + 
 				"\",\"plannerNo\":\"" + plannerNo + "\",\"memberNo\":\"" + memberNo + "\",\"memberNickName\":\"" + memberNickName +"\"}";
 		return str;
