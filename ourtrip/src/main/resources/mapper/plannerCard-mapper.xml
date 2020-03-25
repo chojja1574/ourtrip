@@ -21,6 +21,7 @@
 		
 	</resultMap>
 	
+	<!-- 추천플래너 검색 -->
 	<select id="selectRecommendPCList" resultMap="PlannerCardResultSet">
 		SELECT ROWNUM, PLANNER_NO, PLANNER_TITLE, PLANNER_START_DT, 
 				TRIP_DATE, GROUP_NAME, PLANNER_COUNT, PLANNER_URL
@@ -28,9 +29,10 @@
 			WHERE PLANNER_DELETE_YN = 'N'
 			AND PLANNER_PUBLIC_YN = 'Y'
 			ORDER BY PLANNER_COUNT DESC)
-		WHERE ROWNUM BETWEEN 1 AND 2
+		WHERE ROWNUM BETWEEN 1 AND 4
 	</select>
 	
+	<!-- 포함된 지역 검색 -->
 	<select id="selectAreaNames" parameterType="list" 
 	resultMap="AreaNameResultSet">
 		SELECT * FROM V_AREA_NAME
@@ -42,7 +44,39 @@
 		
 	</select>
 	
-	<select id="updatePlannerCount" parameterType="_int" resultType="_int">
+	<!-- 전체플래너번호 리스트 + 검색(제목, 그룹명) -->
+	<select id="getPListNo" parameterType="map" 
+	resultType="_int">
+		SELECT PLANNER_NO FROM V_PLANNER_CARD
+		<where>
+			<if test="searchTitle != null">
+				<bind name="st" value="'%' + _parameter.searchTitle + '%'"/>
+				AND PLANNER_TITLE LIKE #{st}
+			</if>
+			<if test="groupName != ''">
+				AND GROUP_NAME = #{groupName}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 지역명이 같은 리스트 + 조회 -->
+	<select id="getAList" parameterType="map"
+	resultMap="AreaNameResultSet">
+		SELECT * FROM V_AREA_NAME
+		<where>
+			AND PLANNER_NO IN
+			<foreach item="item" index="index" collection="pListNo"
+			open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			
+			<if test="largeArea != ''">
+				AND LARGE_AREA_NAME = #{largeArea}
+			</if>
+			<if test="smallArea != ''">
+				AND SMALL_AREA_NAME = #{smallArea}
+			</if>
+		</where>
 	</select>
 	
 	
