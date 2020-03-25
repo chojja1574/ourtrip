@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
+import com.kh.ourtrip.planner.model.vo.PlannerMember;
+import com.kh.ourtrip.planner.model.vo.PlannerMemberView;
 import com.kh.ourtrip.planner.model.vo.PlannerView;
 import com.kh.ourtrip.planner.model.vo.Schedule;
 
@@ -61,9 +63,19 @@ public class PlannerDAO2 {
 	}
 
 	public List<ChattingLogView> selectChatList(int no) throws Exception {
-		System.out.println("hihi");
-		System.out.println("hi" + sqlSessionTemplate.selectList("planner1Mapper.selectChatList", no));
 		return sqlSessionTemplate.selectList("planner1Mapper.selectChatList", no);
+	}
+
+	public List<PlannerMemberView> selectPlannerMemeberListUsePlannerNo(int pno) {
+		return sqlSessionTemplate.selectList("planner1Mapper.selectPlanerMemeberListUsePlannerNo", pno);
+	}
+	
+	public int selectPlannerMemeberExist(PlannerMemberView pm) {
+		return sqlSessionTemplate.selectOne("planner1Mapper.selectPlanerMemeberExist", pm);
+	}
+
+	public int insertPlannerMemeber(PlannerMember pm) {
+		return sqlSessionTemplate.insert("planner1Mapper.insertPlannerMember", pm);
 	}
 	
 }

@@ -23,7 +23,7 @@
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.Schedule" alias="Schedule"/>
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerMember" alias="PlannerMember"/>
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.ChattingLogView" alias="ChattingLogView"/>
-		
+		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerMemberView" alias="PlannerMemberView"/>
 		<!-- 신덕수 -->
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerCard" alias="PlannerCard"/>
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.AreaName" alias="AreaName"/>

@@ -22,6 +22,7 @@ import com.kh.ourtrip.planner.model.service.PlannerService2;
 import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.Planner;
+import com.kh.ourtrip.planner.model.vo.PlannerMemberView;
 import com.kh.ourtrip.planner.model.vo.PlannerView;
 import com.kh.ourtrip.planner.model.vo.Schedule;
 
@@ -44,6 +45,7 @@ public class PlannerController2 {
 		JSONObject jsonObj = null;
 		JSONParser jsonParser = new JSONParser();
 		JSONArray chatArray = new JSONArray();
+		JSONArray joinUserArray = new JSONArray();
 		Planner selectedPlanner = null;
 		System.out.println("editplanner");
 		try {
@@ -137,14 +139,25 @@ public class PlannerController2 {
 				chatArray.add(jsonObj);
 			}
 			
+			// 참여중인 유저 목록과 권한 전달
+			List<PlannerMemberView> pmList = plannerService.selectPlannerMemeberListUsePlannerNo(no);
+			
+			for(PlannerMemberView tpm : pmList) {
+				jsonObj = (JSONObject) jsonParser.parse(tpm.toJsonString());
+				joinUserArray.add(jsonObj);
+			}
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		
 		model.addAttribute("userId", userId);
 		model.addAttribute("selectRoom", selectRoom);
 		model.addAttribute("plannerInfo", selectedPlanner.toJsonString());
 		model.addAttribute("plannerTitle", selectedPlanner.getPlannerTitle());
 		model.addAttribute("chatList", chatArray);
+		model.addAttribute("joinUserArray",joinUserArray);
+		System.out.println(joinUserArray);
 		System.out.println("chatList");
 		System.out.println(chatArray.toJSONString());
 		System.out.println(no);

@@ -6,17 +6,17 @@ public class UserInfo {
 	
 	private WebSocketSession session;
 	private String id;
-	private String chatRoom;
+	private int plannerNo;
 	
 	public UserInfo() {
 		super();
 	}
 
-	public UserInfo(WebSocketSession session, String id, String chatRoom) {
+	public UserInfo(WebSocketSession session, String id, int plannerNo) {
 		super();
 		this.session = session;
 		this.id = id;
-		this.chatRoom = chatRoom;
+		this.plannerNo = plannerNo;
 	}
 
 	public WebSocketSession getSession() {
@@ -35,12 +35,17 @@ public class UserInfo {
 		this.id = id;
 	}
 
-	public String getChatRoom() {
-		return chatRoom;
+	public int getPlannerNo() {
+		return plannerNo;
 	}
 
-	public void setChatRoom(String chatRoom) {
-		this.chatRoom = chatRoom;
+	public void setPlannerNo(int plannerNo) {
+		this.plannerNo = plannerNo;
 	}
 
+	@Override
+	public String toString() {
+		return "UserInfo [session=" + session + ", id=" + id + ", plannerNo=" + plannerNo + "]";
+	}
+	
 }

@@ -117,7 +117,7 @@
 						style="text-align: center;">
 						<div class="col-md-9 pl-2 pr-0">
 							<input type="text" id="url" class="pl-2" readonly
-								value="https//:ourtrip.com/1234567">
+								value="">
 						</div>
 						<div class="col-md-3">
 							<button type="button" id="copy"
@@ -140,20 +140,16 @@
 				<div class="col-md-3 pl-0">
 					<div class="main-back plannerHeader row ml-0">
 						<div class="col-md-6 pl-2">
-							<select name="permissionUser" id="permissionUser">
-								<option value="1">신덕수</option>
-								<option value="2">이훈</option>
-								<option value="3">박지현</option>
-								<option value="4">조유상</option>
+							<select name="userPermission" id="userPermission">
 							</select>
 						</div>
 						<div class="col-md-3 pl-0">
 							<button type="button" class="plannerHeaderBtn btnColor3"
-								id="gradebt">권한 삭제</button>
+								id="stealBtn">권한 삭제</button>
 						</div>
 						<div class="col-md-3 pl-0">
 							<button type="button" class="plannerHeaderBtn btnColor1"
-								id="gradebt">권한 부여</button>
+								id="grantBtn">권한 부여</button>
 						</div>
 					</div>
 				</div>
@@ -345,25 +341,47 @@ var loadingInfo = 0;
 var loadingAddr = 0;
 var dayIndex = -1;
 var memberNo = null;
+var memberNickName = null;
+var permission = null;
+var joinMember = new Array();
 
 $(function() {
-
-	profilePath
-	var memberNo = '${loginMember.memberNo}'
+	console.log('${contextPath}');
+	memberNo = '${loginMember.memberNo}';
+	if(memberNo == ''){
+		memberNo = '-1';
+	}
+	memberNickName = '${loginMember.memberNickName}';
+	if(memberNickName == ''){
+		memberNickName = '비회원';
+	}
 	var plannerInfo = '${plannerInfo}';
 	var chatList = '${chatList}';
+	var joinUserArray = '${joinUserArray}';
+	var joinUserJson = JSON.parse(joinUserArray);
 	var plannerJson = JSON.parse(plannerInfo);
 	var chatListJson = JSON.parse(chatList);
 	var profilePath = '${filePath}';
-	console.log("chatList : " + chatList);
-	console.log('${filePath}');
+
 	
+	$('#url').val(window.location.href);
 	$('#startrip').val(plannerJson.plannerStartDT);
 	$("#join").click(function(){
-		sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'JOIN', writer: "${loginMember.memberNo}", content: ""}));
 		initChatting(chatListJson);
 		initPlanner(plannerJson);
+		initJoinMember(joinUserJson);
+		sock.send(JSON.stringify({pno:planner.no, type: 'JOIN', memberNo: memberNo, memberNickName: memberNickName}));
+		console.log("permission : " + permission);
+		for(var i in joinMember){
+			console.log(joinMember[i].memberNo);
+			console.log(memberNo);
+			if(joinMember[i].memberNo == memberNo){
+				permission = joinMember[i].plannerPermission;
+			}
+		}
+		console.log("permission : " + permission);
 	})
+	
     // 페이지 입장 시 참여버튼 모달 출력
     $("#modalBtn").click();
     
@@ -447,18 +465,19 @@ function initPlanner(pj){
 	
 }
 function initChatting(chatList){
-	console.log("memberNo : ${loginMember.memberNo}")
 	for(var i in chatList){
-		if(chatList[i].memberNo == '${loginMember.memberNo}'){
-		     	// inputChat = 채팅 내역에 채팅창 올리는 함수
-		        // mkMyChatMsg = 내가 보낸 메세지로 채팅창 만드는 함수
-		        // mkMyChatMsg 매개변수 = (msgContent,msgTime)
-		        inputChat(mkMyChatMsg(chatList[i].chatContent,chatList[i].chatTime));
+		if(chatList[i].memberNo == '-1'){
+			inputChat(mkChatMsg('null','비회원',chatList[i].chatContent,chatList[i].chatTime));
+		}else if(chatList[i].memberNo == memberNo) {
+	     	// inputChat = 채팅 내역에 채팅창 올리는 함수
+	        // mkMyChatMsg = 내가 보낸 메세지로 채팅창 만드는 함수
+	        // mkMyChatMsg 매개변수 = (msgContent,msgTime)
+	        inputChat(mkMyChatMsg(chatList[i].chatContent,chatList[i].chatTime));
 		}else {
-				// inputChat = 채팅 내역에 채팅창 올리는 함수
-		        // mkChatMsg = 다른사람이 보낸 메세지로 채팅창 만드는 함수
-		        // mkChatMsg 매개변수 = (profileImg,memberNo,msgContent,msgTime)
-		        inputChat(mkChatMsg(chatList[i].imagePath,chatList[i].memberNickName,chatList[i].chatContent,chatList[i].chatTime));
+			// inputChat = 채팅 내역에 채팅창 올리는 함수
+	        // mkChatMsg = 다른사람이 보낸 메세지로 채팅창 만드는 함수
+	        // mkChatMsg 매개변수 = (profileImg,memberNo,msgContent,msgTime)
+	        inputChat(mkChatMsg(chatList[i].imagePath,chatList[i].memberNickName,chatList[i].chatContent,chatList[i].chatTime));
 		}
 	}
 }
@@ -481,17 +500,21 @@ function sortSchedules(schedules){
 		if(scheduleMarkers[i].dno == dno)
 			dayIdx = i;
 	}
-	for(var i = schedules.length-1; i > 0; i--){
-        for(var j = 0; j < i; j++){
-        	if(schedules[j+1].time < schedules[j].time){
-                var temp = schedules[j];
-                var mTemp = scheduleMarkers[dayIdx].scheduleMarker[j];
-                schedules[j] = schedules[j+1];
-                scheduleMarkers[dayIdx].scheduleMarker[j]=scheduleMarkers[dayIdx].scheduleMarker[j+1]
-                schedules[j+1] = temp;
-                scheduleMarkers[dayIdx].scheduleMarker[j+1] = mTemp;
-            }   
-	    }
+	try{
+		for(var i = schedules.length-1; i > 0; i--){
+	        for(var j = 0; j < i; j++){
+	        	if(schedules[j+1].time < schedules[j].time){
+	                var temp = schedules[j];
+	                var mTemp = scheduleMarkers[dayIdx].scheduleMarker[j];
+	                schedules[j] = schedules[j+1];
+	                scheduleMarkers[dayIdx].scheduleMarker[j]=scheduleMarkers[dayIdx].scheduleMarker[j+1]
+	                schedules[j+1] = temp;
+	                scheduleMarkers[dayIdx].scheduleMarker[j+1] = mTemp;
+	            }   
+		    }
+		}
+	}catch(e){
+		console.log('정렬오류 발생');
 	}
 }
 
@@ -547,7 +570,7 @@ function reorder() {
         dateInfo.push({order:i,dno:$(box).data('dateno')});
     });
     //sock.send로 afterDayOrder 보내줌
-    sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'orderDate', id: "${loginMember.getMemberEmail()}", dateInfo:dateInfo}));
+    sock.send(JSON.stringify({pno:planner.no, type: 'orderDate', id: "${loginMember.getMemberEmail()}", dateInfo:dateInfo}));
 }
 
 //=======================================================================================//
@@ -622,7 +645,7 @@ var tempDayno = 100;
 
 function addDate(){
 	// date_no는 DB 에서 가져옴
-	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'addDate', id: "${loginMember.getMemberEmail()}"}));
+	sock.send(JSON.stringify({pno:planner.no, type: 'addDate', id: "${loginMember.getMemberEmail()}"}));
 	// trip_date 값은  reorder에서 수정
 	
 	
@@ -708,7 +731,7 @@ function selectDay(no){
 
 //일차 제거하는 함수
 function deleteDay(ind){
-	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'deleteDate', id: "${loginMember.getMemberEmail()}", dno:ind}));
+	sock.send(JSON.stringify({pno:planner.no, type: 'deleteDate', id: "${loginMember.getMemberEmail()}", dno:ind}));
 }
 function deleteDate(ind){
 	dayIndex--;
@@ -772,7 +795,7 @@ $('#addSchedule').click(function(){
     }else if(location == ''){
         alert('장소 이름을 입력해주세요');
     }else{
-    	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'addSchedule', id: "${loginMember.getMemberEmail()}",
+    	sock.send(JSON.stringify({pno:planner.no, type: 'addSchedule', id: memberNo,
     		dno: dno, title: title, time: time, location: location, cost: cost, memo: memo, lat: lat, lng: lng, iwContent: iwContent}));
     }
 });
@@ -923,7 +946,7 @@ $('#scheduleUpdate').click(function(){
     }else if(location == ''){
     	alert('장소를 입력해주세요');
     }else{
-    	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'updateSchedule', id: "${loginMember.memberNo}",
+    	sock.send(JSON.stringify({pno:planner.no, type: 'updateSchedule', id: memberNo,
     		sno: sno, title: title, time: time, location: location, cost: cost, memo: memo, lat: lat, lng: lng, iwContent: iwContent}));
     }
 });
@@ -970,7 +993,7 @@ $('#removeSchedule').click(function(){
     	var sno = $('#scheduleInfo').data('scheduleno');
     	var dno = $('#selectedDay').data('dateno');
     	
-    	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'removeSchedule', id: "${loginMember.memberNo}",
+    	sock.send(JSON.stringify({pno:planner.no, type: 'removeSchedule', id: memberNo,
     		dno: dno, sno: sno}));
     	
     	$('#inputScheduleTitle').val('');
@@ -998,7 +1021,9 @@ function onMessage(msg) {
 	var data = JSON.parse(jsonData)
 	switch(data['type']){
 	case 'msg':
-		if(data['memberNo'] == '${loginMember.memberNo}'){
+		if(data['memberNo'] == '-1'){
+			inputChat(mkChatMsg('null','비회원',data['content'],data['time']));
+		}else if(data['memberNo'] == memberNo){
 	     	// inputChat = 채팅 내역에 채팅창 올리는 함수
 	        // mkMyChatMsg = 내가 보낸 메세지로 채팅창 만드는 함수
 	        // mkMyChatMsg 매개변수 = (msgContent,msgTime)
@@ -1041,6 +1066,14 @@ function onMessage(msg) {
 	    	}
 	    }
 		break;
+	case 'JOIN':
+		console.log('join');
+		joinMember.push(data['newJoinUser']);
+		try{
+			var userOption = 
+				'<option value="' + data['newJoinUser'].memberNo + '">' + data['newJoinUser'].memberNickName + '</option>'
+			$('#userPermission').append(userOption);
+		}catch(e){}
 	}
 }
 
@@ -1056,9 +1089,15 @@ function onClose(evt) {
 // 다른사람이 보낸 채팅 메세지 만들어서 리턴하는 함수
 function mkChatMsg(profileImg,userId,msgContent,msgTime){
 	
-	if(profileImg)
-	
 	var imagePath = null;
+	
+	if(profileImg.includes('http')){
+		imagePath = profileImg;
+	}else if(profileImg == 'null'){
+		imagePath = '${contextPath}/resources/images/default-profile.png'
+	}else {
+		imagePath = '${contextPath}/resources' + profileImg.substring(profileImg.indexOf('/'));
+	}
 	
     var chatMsg =
     '<div class="chatbox overhidden">' +
@@ -1106,6 +1145,69 @@ function inputChat(msg){
 }
 
 //=======================================================================================//
+//======================================== 권한 함수 ========================================//
+//=======================================================================================//
+
+function initJoinMember(joinUserArray){
+	$('#userPermission').html('');
+	var color = null;
+	for(var i = 0; i < joinUserArray.length; i++){
+		console.log('i : ' + i);
+		console.log("memberNo : " + joinUserArray[i].memberNo);
+		
+		joinMember.push(joinUserArray[i]);
+		console.log('push');
+		switch(joinUserArray[i].plannerPermission){
+			case '1':	color = '#C8FFFF';	break;
+			case '2':	color = '#32F1FF';	break;
+			case '3':	color = '#0AC9FF';	break;
+		}
+		console.log(joinMember);
+		if(joinUserArray[i].memberNo != -1){
+		var userOption = 
+			'<option style="background:' + color + '" value="' + joinMember[i].memberNo + '">' + joinMember[i].memberNickName + '</option>'
+		$('#userPermission').append(userOption);
+		}
+	}
+	// <option value="memberNo">닉네임 <option>
+	console.log(joinMember);
+}
+
+$('#grantBtn').click(function(){
+	changePermissionColor(3);
+});
+
+$('#stealBtn').click(function(){
+
+});
+
+function grantPermission(grantMemberNo,permission){
+	for(var i in joinMember){
+		if(joinMember[i].memberNo == grantMemberNo){
+			joinMember[i].plannerPermission = permission;
+			changePermissionColor(i);
+		}
+	}
+}
+
+
+function changePermissionColor(i){
+	joinMember[i].memberNo;
+	console.log(i + ", " + joinMember[i].memberNo);
+	var color = '#C8FFFF';
+	switch(joinMember[i].plannerPermission){
+		case '1':	color = '#C8FFFF';	break;
+		case '2':	color = '#32F1FF';	break;
+		case '3':	color = '#0AC9FF';	break;
+	}
+	$('option').each(function(j,item){
+		if(joinMember[i].memberNo == $(item).attr('value')){
+			$(item).attr('style')
+		}
+	});
+}
+
+//=======================================================================================//
 //======================================== 기타 함수 ========================================//
 //=======================================================================================//
 
@@ -1127,7 +1229,7 @@ $(function () {
         
         // 채팅 입력창 비어있지 않으면 실행
         if(msg != '' && msg != '<br/>'){
-            sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'msg', memberNo: "${loginMember.memberNo}", content: msg, imagePath:'${filePath}'}));
+            sock.send(JSON.stringify({pno:planner.no, type: 'msg', memberNo: memberNo, content: msg, imagePath:'${filePath}'}));
         }
 
         // 메세지 전송 후 채팅 입력창 비워줌
