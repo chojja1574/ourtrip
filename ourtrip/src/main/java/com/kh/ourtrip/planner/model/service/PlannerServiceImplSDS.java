@@ -134,7 +134,7 @@ public class PlannerServiceImplSDS implements PlannerServiceSDS{
 			} else { ////// 경유 할경우 viaCheck == on;
 				System.out.println("경유 할경우 들어온거 확인");
 				// 대지역명으로만 검색했을 경우
-				
+				// 다시올린다
 			}
 		}
 		return 0;
