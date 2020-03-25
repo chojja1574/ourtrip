@@ -20,7 +20,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.kh.ourtrip.planner.model.service.PlannerService2;
-import com.kh.ourtrip.planner.model.vo.ChattingLog;
+import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.Schedule;
 import com.kh.ourtrip.planner.model.vo.UserInfo;
@@ -297,9 +297,9 @@ public class EchoHandler extends TextWebSocketHandler {
 		int result = 0;
 		System.out.println("chattingMessage");
 		
-		ChattingLog chatLog = new ChattingLog();
-		
-		chatLog.setMemberNo(Integer.parseInt(msgJson.get("userId").toString()));
+		ChattingLogView chatLog = new ChattingLogView();
+		System.out.println(msgJson.toString());
+		chatLog.setMemberNo(Integer.parseInt(msgJson.get("memberNo").toString()));
 		chatLog.setPlannerNo(Integer.parseInt(msgJson.get("pno").toString()));
 		chatLog.setChatContent(msgJson.get("content").toString());
 		SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
