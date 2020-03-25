@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -317,7 +317,19 @@
 	</div>
 	<jsp:include page="../common/footer.jsp" />
 </body>
+<c:if test="${!empty profilePath}">
+	
+	<!-- 카카오에서 가져온 이미지 경로일 경우 -->
+	<c:if test="${fn:contains(profilePath, 'http://')}">
+		<c:set var="filePath" value="${profilePath}"/>
+	</c:if>
 
+	<!-- ourtrip서버에 있는 경로일 경우 -->
+	<c:if test="${!fn:contains(profilePath, 'http://')}">
+		<c:set var="fileName" value="${fn:split(profilePath, '/')}"/>
+		<c:set var="filePath" value="${contextPath}/resources/profileImages/${fileName[fn:length(fileName) - 1]}"/>
+	</c:if>
+</c:if>
 <script type="text/javascript" src="${contextPath}/resources/js/map.js"></script>
 <script>
 
@@ -335,12 +347,16 @@ var dayIndex = -1;
 var memberNo = null;
 
 $(function() {
+
+	profilePath
 	var memberNo = '${loginMember.memberNo}'
 	var plannerInfo = '${plannerInfo}';
 	var chatList = '${chatList}';
 	var plannerJson = JSON.parse(plannerInfo);
 	var chatListJson = JSON.parse(chatList);
+	var profilePath = '${filePath}';
 	console.log("chatList : " + chatList);
+	console.log('${filePath}');
 	
 	$('#startrip').val(plannerJson.plannerStartDT);
 	$("#join").click(function(){
@@ -991,7 +1007,7 @@ function onMessage(msg) {
 			// inputChat = 채팅 내역에 채팅창 올리는 함수
 	        // mkChatMsg = 다른사람이 보낸 메세지로 채팅창 만드는 함수
 	        // mkChatMsg 매개변수 = (profileImg,memberNo,msgContent,msgTime)
-	        inputChat(mkChatMsg('',data['memberNo'],data['content'],data['time']));
+	        inputChat(mkChatMsg(data['imagePath'],data['memberNo'],data['content'],data['time']));
 		}
 		break;
 	case 'addDate': 
@@ -1039,10 +1055,15 @@ function onClose(evt) {
 
 // 다른사람이 보낸 채팅 메세지 만들어서 리턴하는 함수
 function mkChatMsg(profileImg,userId,msgContent,msgTime){
+	
+	if(profileImg)
+	
+	var imagePath = null;
+	
     var chatMsg =
     '<div class="chatbox overhidden">' +
     '<div>' +
-    '<img src = "${contextPath}/resources' + profileImg + '" class="profileImg">' +
+    '<img src = "' + imagePath + '" class="profileImg">' +
     '<span class="userId">' + userId + '</span>' +
     '</div>' +
     '<div>' +
@@ -1106,7 +1127,7 @@ $(function () {
         
         // 채팅 입력창 비어있지 않으면 실행
         if(msg != '' && msg != '<br/>'){
-            sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'msg', memberNo: "${loginMember.memberNo}", content: msg}));
+            sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'msg', memberNo: "${loginMember.memberNo}", content: msg, imagePath:'${filePath}'}));
         }
 
         // 메세지 전송 후 채팅 입력창 비워줌
