@@ -142,7 +142,8 @@
 	</select>
 
 	<select id="plannerArea" parameterType="list" resultMap="AreaNameResultSet">
-		SELECT PLANNER_NO, LARGE_AREA_NAME , SMALL_AREA_NAME FROM V_PLANNER_INFO WHERE PLANNER_NO IN
+		SELECT * FROM V_AREA_NAME
+		WHERE PLANNER_NO IN 
 		<foreach index="index" item="planner" collection="list" open="(" separator="," close=")">
 			#{planner.plannerNo}
 		</foreach>

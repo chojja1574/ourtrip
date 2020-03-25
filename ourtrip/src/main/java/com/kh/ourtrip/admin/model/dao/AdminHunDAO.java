@@ -1,6 +1,5 @@
 package com.kh.ourtrip.admin.model.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,8 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
-import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.Planner;
+import com.kh.ourtrip.planner.model.vo.PlannerCard;
 
 @Repository
 public class AdminHunDAO {
@@ -102,7 +101,7 @@ public class AdminHunDAO {
 	 * @return list PlannerCard
 	 * @throws Exception
 	 */
-	public List<AreaName> plannerArea(List<Integer> plannerList) throws Exception{
+	public List<PlannerCard> plannerArea(List<Integer> plannerList) throws Exception{
 		
 		return sqlSession.selectList("adminhunMapper.plannerArea" , plannerList);
 	}

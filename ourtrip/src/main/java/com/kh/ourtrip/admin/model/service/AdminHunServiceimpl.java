@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import com.kh.ourtrip.admin.model.dao.AdminHunDAO;
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
-import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.Planner;
+import com.kh.ourtrip.planner.model.vo.PlannerCard;
 
 @Service
 public class AdminHunServiceimpl implements AdminHunService {
@@ -103,7 +103,7 @@ public class AdminHunServiceimpl implements AdminHunService {
 	 * @throws Exception
 	 */
 	@Override
-	public List<AreaName> plannerArea(List<Integer> plannerList) throws Exception {
+	public List<PlannerCard> plannerArea(List<Integer> plannerList) throws Exception {
 		return adminHunDAO.plannerArea(plannerList);
 	}
 

@@ -17,8 +17,8 @@ import com.kh.ourtrip.admin.model.service.AdminHunService;
 import com.kh.ourtrip.common.Pagination;
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
-import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.Planner;
+import com.kh.ourtrip.planner.model.vo.PlannerCard;
 
 @SessionAttributes({ "memberList", "msg" })
 @Controller
@@ -110,16 +110,15 @@ public class AdminHunController {
 			if (currentPage == null) {
 				currentPage = 1;
 			}
-			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, plannerList.size());
+			PageInfo pInf = Pagination.getPageInfo(8, 10, currentPage, plannerList.size());
 
 			List<Planner> plannerInfo = new ArrayList<Planner>();
-			List<AreaName> plannerArea = new ArrayList<AreaName>();
-			
-			plannerArea = adminHunService.plannerArea(plannerList);
+			List<PlannerCard> plannerArea = new ArrayList<PlannerCard>();
 			
 			if(!plannerList.isEmpty()) {
 				
 				 plannerInfo = adminHunService.plannerInfo(plannerList, pInf);
+				 plannerArea = adminHunService.plannerArea(plannerList);
 			}
 
 			if (detailMem != null && plannerInfo != null) {

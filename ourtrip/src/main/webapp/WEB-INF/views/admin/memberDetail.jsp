@@ -161,9 +161,9 @@ body {
 			<div class="planner-wrapper my-3">
 				<c:if test="${empty plannerInfo }">
 						존재하는 플래너가 없습니다.
-						</c:if>
+				</c:if>
 				<c:if test="${!empty plannerInfo }">
-					<c:forEach var="plannerInfo" items="${plannerInfo}" varStatus="vs">
+					<c:forEach var="plannerInfo" items="${plannerInfo}" varStatus="vs1">
 						<div class="planner">
 							<div class="card">
 								<img class="card-img-top" src="images/ourtrip_logo.png"
@@ -172,17 +172,31 @@ body {
 									<div id="plannerNo" style="display: none;">${plannerInfo.plannerNo}</div>
 									<h5 class="card-title">${plannerInfo.plannerTitle}</h5>
 									<p class="card-text">
-										<span>시작일 :${plannerInfo.plannerStartDT}</span><br> 
-										<span>${plannerInfo.groupName} </span><br> 
-										<span> <c:forEach var="plannerArea" items="${plannerArea}" varStatus="vs">
-												<c:if test="${plannerInfo.plannerNo} == ${plannerArea.plannerNo}">
-												${plannerArea.largeAreaName} - ${plannerArea.smallAreaName}
+										<span>시작일 :${plannerInfo.plannerStartDT}</span><br> <span>${plannerInfo.groupName}
+										</span><br>
+										
+										<c:if test="${recommendCard.areaNames.size()>1 }">
+		                                	<span>${recommendCard.areaNames[0].largeAreaName}
+		                                		  ${recommendCard.areaNames[0].smallAreaName} ...</span>
+		                                </c:if>
+		                                <c:if test="${recommendCard.areaNames.size()==1 }">
+		                                	<span>${recommendCard.areaNames[0].largeAreaName}
+		                                		  ${recommendCard.areaNames[0].smallAreaName} </span>
+		                                </c:if>
+		                                <c:if test="${recommendCard.areaNames.size()<1 }">
+		                                	<span>없음 </span>
+		                                </c:if>
+										<c:forEach var="plannerArea" items="${plannerArea}" varStatus="vs2">
+											<span> 
+											<c:if test="${plannerInfo.plannerNo == plannerArea.plannerNo and vs2.first}">
+											${plannerArea.largeAreaName}-${plannerArea.smallAreaName}
+											${plannerArea}
 											</c:if>
-												<c:if test="${fn:length(boardList)} > 1">
-											${plannerArea.largeAreaName} - ${plannerArea.smallAreaName} 
-											</c:if>
-											</c:forEach>
-										</span>
+											</span>
+										</c:forEach>
+										
+										
+										
 									</p>
 									<div class="d-flex justify-content-between">
 										<div class="btn-wrapper">

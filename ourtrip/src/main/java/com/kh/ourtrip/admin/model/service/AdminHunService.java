@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
-import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.Planner;
+import com.kh.ourtrip.planner.model.vo.PlannerCard;
 
 public interface AdminHunService {
 
@@ -71,7 +71,7 @@ public interface AdminHunService {
 	 * @return plannerArea
 	 * @throws Exception
 	 */
-	public abstract List<AreaName> plannerArea(List<Integer> plannerList) throws Exception;
+	public abstract List<PlannerCard> plannerArea(List<Integer> plannerList) throws Exception;
 
 	
 
