@@ -85,6 +85,7 @@
     right:0;
     top:0;
     bottom:0;
+    z-index: 10;
     /* not in ie */
     background:  rgba(0,0,0,0.2); 
     /* ie */
@@ -216,30 +217,6 @@
 	            }
 	        });
 	    };
-	    //]]>
-	
-/* 	    var idCheck = false;
-	    var pwdCheck = false;
-	    $(function(){
-	    	
-	        $("#pwd").on("input", function(){
-	            if($("#pwd").val() != ""){
-	                pwdCheck = true;
-	            }
-	        });
-	        $("#email").on("input", function(){
-	            if($("#email").val() != ""){
-	                idCheck = true;
-	            }
-	        });
-	    })
-	
-	    function validate(){
-	        if(!(idCheck&&pwdCheck)){
-	            alert("일부 입력값이 잘못되었습니다.");
-	            return false;
-	        }
-	    } */
 	</script>
 </body>
 </html>
