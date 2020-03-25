@@ -2,6 +2,7 @@ package com.kh.ourtrip.planner.model.service;
 
 import java.util.List;
 
+import com.kh.ourtrip.planner.model.vo.ChattingLog;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.PlannerView;
 import com.kh.ourtrip.planner.model.vo.Schedule;
@@ -18,4 +19,16 @@ public interface PlannerService2 {
 	public abstract int updateTripDate(List<Day> dayList) throws Exception;
 
 	public abstract int insertDefaultSchedule(Schedule schedule) throws Exception;
+
+	public abstract int deleteDate(int dateNo) throws Exception;
+
+	public abstract int updateSchedule(Schedule sche) throws Exception;
+
+	public abstract int insertSchedule(Schedule sche) throws Exception;
+
+	public abstract int deleteSchedule(int sno) throws Exception;
+
+	public abstract int insertChattingLog(ChattingLog chatLog) throws Exception;
+
+	public abstract List<ChattingLog> selectChatList(int no) throws Exception;
 }
