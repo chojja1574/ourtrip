@@ -47,8 +47,11 @@ public class PlannerControllerJYS {
 			for(PlannerCard p : uPlannerList) noList.add(p.getPlannerNo());
 			for(PlannerCard p : cPlannerList) noList.add(p.getPlannerNo());
 			
-			// 플래너별 지역이름들 조회
-			List<AreaName> areaNames = plannerService.selectAreaNames(noList);
+			List<AreaName> areaNames = new ArrayList<AreaName>();
+			if(!noList.isEmpty()) {
+				// 플래너별 지역이름들 조회
+				areaNames = plannerService.selectAreaNames(noList);
+			}
 			
 			// 지역이름이 있을 경우
 			if(!areaNames.isEmpty()) {
@@ -89,18 +92,8 @@ public class PlannerControllerJYS {
 				}
 			}
 			
-//			System.out.println(uPlannerList);
-//			System.out.println(cPlannerList);
-//			System.out.println(areaNames);
-			
 			model.addAttribute("uPlannerList", uPlannerList);
 			model.addAttribute("cPlannerList", cPlannerList);
-			
-			
-			// 수정 플래너 수 조회
-//			int updatePlannerCount = plannerService.updatePlannerCount(memberNo);
-			
-			// 완료 플래너 수 조회
 			
 		}catch(Exception e) {
 			e.printStackTrace();

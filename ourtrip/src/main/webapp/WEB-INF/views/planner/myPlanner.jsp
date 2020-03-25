@@ -117,7 +117,7 @@
 			<!-- 수정중인 플래너 리스트 -->
 			<div class="planner-wrapper my-3">
 				<c:if test="${empty uPlannerList}">
-					<div>
+					<div class="planner" style="height: 250px;">
 						수정중인 플래너가 없습니다.
 					</div>
 				</c:if>
@@ -168,37 +168,13 @@
 				var pagingBarSize = 5;
 				
 				var uPlannerSize = ${uPlannerList.size()};
-				var uMaxPage = (uPlannerSize + (limit - (uPlannerSize % limit)) % limit) / limit;
-				
-				var uStartPage = 1;
-				var uEndPage = uStartPage + pagingBarSize - 1;
-				if(uMaxPage < pagingBarSize){
-					uEndPage = uMaxPage;
-				}
-				
 				var uCurrentPage = 1;
 			</script>
 
 			<!-- 페이징바 -->
 			<div class="pagination-wrapper" id="uPlannerPaging">
 				<nav aria-label="Page navigation">
-					<ul class="pagination justify-content-center">
-<!-- 						<li class="page-item disabled"><span class="page-link page-num">1</span></li>
-						<li class="page-item disabled"><span class="page-link page-num">1</span></li>
-						<li class="page-item disabled"><span class="page-link page-num">1</span></li>
-						<li class="page-item disabled"><span class="page-link page-num">1</span></li>
-						<li class="page-item disabled"><span class="page-link page-num">1</span></li>
-						<li class="page-item disabled"><a class="page-link" href="#">&lt;&lt;</a>
-						<li class="page-item"><a class="page-link" href="#">1</a></li>
-						<li class="page-item"><a class="page-link" href="#">2</a></li>
-						<li class="page-item"><a class="page-link" href="#">3</a></li>
-						<li class="page-item"><a class="page-link" href="#">4</a></li>
-						<li class="page-item"><a class="page-link" href="#">5</a></li>
-						<li class="page-item"><a class="page-link" href="#">&gt;</a>
-						</li>
-						<li class="page-item"><a class="page-link" href="#">&gt;&gt;</a>
-						</li> -->
-					</ul>
+					<ul class="pagination justify-content-center"></ul>
 				</nav>
 			</div>
 		</div>
@@ -211,7 +187,7 @@
 			<div class="planner-wrapper my-3">
 
 				<c:if test="${empty cPlannerList}">
-					<div>
+					<div class="planner" style="height: 250px;">
 						완료된 플래너가 없습니다.
 					</div>
 				</c:if>
@@ -260,34 +236,12 @@
 			<!-- 페이징바 -->
 			<div class="pagination-wrapper" id="cPlannerPaging">
 				<nav aria-label="Page navigation">
-					<ul class="pagination justify-content-center">
-<!-- 						<li class="page-item disabled"><a class="page-link" href="#">&lt;&lt;</a>
-						</li>
-						<li class="page-item disabled"><a class="page-link" href="#">&lt;</a>
-						</li>
-						<li class="page-item disabled"><a class="page-link">1</a></li>
-						<li class="page-item"><span class="page-link page-num">2</span></li>
-						<li class="page-item"><a class="page-link" href="#">3</a></li>
-						<li class="page-item"><a class="page-link" href="#">4</a></li>
-						<li class="page-item"><a class="page-link" href="#">5</a></li>
-						<li class="page-item"><a class="page-link" href="#">&gt;</a>
-						</li>
-						<li class="page-item"><a class="page-link" href="#">&gt;&gt;</a>
-						</li> -->
-					</ul>
+					<ul class="pagination justify-content-center"></ul>
 				</nav>
 			</div>
 			
 			<script>
 				var cPlannerSize = ${cPlannerList.size()};
-				var cMaxPage = (cPlannerSize + (limit - (cPlannerSize % limit)) % limit) / limit;
-				
-				var cStartPage = 1;
-				var cEndPage = cStartPage + pagingBarSize - 1;
-				if(cMaxPage < pagingBarSize){
-					cEndPage = cMaxPage;
-				}
-				
 				var cCurrentPage = 1;
 			</script>
 		</div>
@@ -310,72 +264,14 @@
 	<script>
         $(function () {
         	// 수정중인 플래너 페이징바 초기화
-        	var $uPlannerChild = $("#uPlannerPaging").children().children();
-        	tempHtml = pagingHtml(uPlannerSize, uMaxPage, uStartPage, uEndPage, uCurrentPage, 'u');
-        	$uPlannerChild.html(tempHtml);
-        	disCurrent($uPlannerChild.children(), uCurrentPage);
-        	
-        	
+        	pagingHtmlFn(uPlannerSize, uCurrentPage, 'u');
+        	disCurrent($("#uPlannerPaging").children().children().children(), uCurrentPage);
+        		
         	// 완료된 플래너 페이징바 초기화
-        	var $cPlannerChild = $("#cPlannerPaging").children().children();
-        	tempHtml = pagingHtml(cPlannerSize, cMaxPage, cStartPage, cEndPage, cCurrentPage, 'c');
-        	$cPlannerChild.html(tempHtml);
-        	disCurrent($cPlannerChild.children(), cCurrentPage);
+        	pagingHtmlFn(cPlannerSize, cCurrentPage, 'c');
+        	disCurrent($("#cPlannerPaging").children().children().children(), uCurrentPage);
         	
-        	
-        	
-        	$(".uPaging").on("click", function(){
-        		var $clickPage = $(this);
-        		
-        		// '>' 클릭 시
-        		if($clickPage.text() == ">"){
-        			var clickPageNum = uCurrentPage + 1;
-        			var startIndex = (clickPageNum - 1) * limit + 1;
-	        		var endIndex = startIndex + limit - 1;
-	        		if(endIndex > uPlannerSize){
-	        			endIndex = uPlannerSize;
-	        		}
-        			
-        			// 플래너 display:none으로 초기화
-        			for(var i=1; i<=uPlannerSize; i++){
-        				$("#uPlanner" + i).addClass("displayNone");
-        			}
-        			
-        			// 해당되는 플래너들만 보여줌
-        			for(var i=startIndex; i<=endIndex; i++){
-        				console.log("for : " + i);
-        				$("#uPlanner" + i).removeClass("displayNone");
-        			}
-        			
-        		// 현재 페이지 외의 다른 숫자일 경우
-        		}else if(uCurrentPage != $clickPage.text()){
-	        		var clickPageNum = Number($clickPage.text());
-	        		var startIndex = (clickPageNum - 1) * limit + 1;
-	        		var endIndex = startIndex + limit - 1;
-	        		if(endIndex > uPlannerSize){
-	        			endIndex = uPlannerSize;
-	        		}
-	        		
-        			// 플래너 display:none으로 초기화
-        			for(var i=1; i<=uPlannerSize; i++){
-        				$("#uPlanner" + i).addClass("displayNone");
-        			}
-        			
-        			// 해당되는 플래너들만 보여줌
-        			for(var i=startIndex; i<=endIndex; i++){
-        				console.log(i);
-        				$("#uPlanner" + i).removeClass("displayNone");
-        			}
-        			
-        		}
-        		
-         		uCurrentPage = clickPageNum;
-            	tempHtml = pagingHtml(uPlannerSize, uMaxPage, uStartPage, uEndPage, uCurrentPage, 'u');
-            	$uPlannerChild.html(tempHtml); // 이거 하고나면 이벤트가 안됨
-            	$uPlannerChild = $("#uPlannerPaging").children().children();
-            	disCurrent($uPlannerChild.children(), uCurrentPage);
-        	});
-        	
+
             $(".planner-delete").on("click", function () {
                 var plannerNo = $(this).parent().children("input").val();
                 console.log(plannerNo);
@@ -384,30 +280,37 @@
                     alert("삭제되었습니다.");
                 }
             });
-            
-            $(".page-num").on("click", function(){
-            	var num = $(this).text();
-            	console.log(num);
-            });
         });
 		
 		// 페이징 번호 작성 함수
-        function pagingHtml(plannerSize, maxPage, startPage, endPage, currentPage, ch){
+        function pagingHtmlFn(plannerSize, currentPage, ch){
+			
+			var maxPage = (plannerSize + (limit - (plannerSize % limit)) % limit) / limit;
+            
+            var totalPage = Math.ceil(plannerSize/limit);    // 총 페이지 수
+            var pageGroup = Math.ceil(currentPage/pagingBarSize);    // 페이지 그룹
+            
+            var last = pageGroup * pagingBarSize;    // 화면에 보여질 마지막 페이지 번호
+            if(last > totalPage){
+            	last = totalPage;
+            }
+            
+            if(last > totalPage)
+                last = totalPage;
+            var first = pageGroup;    // 화면에 보여질 첫번째 페이지 번호
+            var next = last+1;
+            var prev = first-1;
+            
+        	var $plannerChild = $("#" + ch + "PlannerPaging").children().children();
+			
         	var pagingHtml = "";
         	if(currentPage > 1){
         		pagingHtml += "<li class='page-item'><span class='page-link page-num " + ch + "Paging'><<</span></li>";
         		pagingHtml += "<li class='page-item'><span class='page-link page-num " + ch + "Paging'><</span></li>";
         	}
         	
-        	if(maxPage > pagingBarSize){
-	        	for(var i=1; i<=pagingBarSize; i++){
-	        		pagingHtml += "<li class='page-item'><span class='page-link page-num " + ch + "Paging'>" + i + "</span></li>";
-	        	}
-	        	
-        	}else{
-        		for(var i=1; i<=endPage; i++){
-	        		pagingHtml += "<li class='page-item'><span class='page-link page-num " + ch + "Paging'>" + i + "</span></li>";
-	        	}    
+        	for(var i=first; i<=last; i++){
+        		pagingHtml += "<li class='page-item'><span class='page-link page-num " + ch + "Paging'>" + i + "</span></li>";
         	}
         	
         	if(currentPage < maxPage){
@@ -415,7 +318,45 @@
         		pagingHtml += "<li class='page-item'><span class='page-link page-num " + ch + "Paging'>>></span></li>";
         	}
         	
-        	return pagingHtml;
+        	// 플래너 display:none으로 초기화
+			for(var i=1; i<=plannerSize; i++){
+				$("#" + ch + "Planner" + i).addClass("displayNone");
+			}
+			
+			var startIndex = (currentPage - 1) * limit + 1;
+    		var endIndex = startIndex + limit - 1;
+    		if(endIndex > plannerSize){
+    			endIndex = plannerSize;
+    		}
+			// 해당되는 플래너들만 보여줌
+			for(var i=startIndex; i<=endIndex; i++){
+				console.log("for : " + i);
+				$("#" + ch + "Planner" + i).removeClass("displayNone");
+			}
+        	
+        	$plannerChild.html(pagingHtml);
+        	
+        	$("." + ch + "Paging").on("click", function(){
+        		var $click = $(this);
+        		
+        		console.log($click.text());
+        		if($click.text() == "<<"){
+        			window[ch + "CurrentPage"] = 1;
+        		}else if($click.text() == "<"){
+        			window[ch + "CurrentPage"] = window[ch + "CurrentPage"] - 1;
+        		}else if($click.text() == ">"){
+        			window[ch + "CurrentPage"] = window[ch + "CurrentPage"] + 1;
+        		}else if($click.text() == ">>"){
+        			window[ch + "CurrentPage"] = totalPage;
+        		}else if($click.text() != window[ch + "CurrentPage"]){
+       				window[ch + "CurrentPage"] = $click.text();
+        		}
+        		
+        		$click = $click.parent().parent();
+       			pagingHtmlFn(plannerSize, window[ch + "CurrentPage"], ch);
+       			disCurrent($click.children(), window[ch + "CurrentPage"]);
+        	});
+        	
         }
         
         // 현재 페이지번호와 같을 시 disabled시키는 함수
