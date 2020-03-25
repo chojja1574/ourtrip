@@ -26,7 +26,7 @@ import com.kh.ourtrip.planner.model.vo.PlannerView;
 import com.kh.ourtrip.planner.model.vo.Schedule;
 
 @Controller
-@SessionAttributes({"loginMember","msg"})
+@SessionAttributes({"loginMember","msg","profilePath"})
 @RequestMapping("/planner1/*")
 public class PlannerController2 {
 	

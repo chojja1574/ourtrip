@@ -132,7 +132,7 @@
 							<div class="col-6">
 								<label>지역</label> <select name="largeArea" id="wide-area"
 									class="custom-select">
-									<option value="" selected>전체</option>
+									<option value="전체" selected>전체</option>
 									<option value="경기">경기</option>
 									<option value="서울특별시">서울특별시</option>
 									<option value="강원도">강원도</option>
@@ -140,7 +140,7 @@
 							</div>
 							<div class="col-6">
 								<select name="smallArea" id="local-area" class="custom-select">
-									<option value="" selected>전체</option>
+									<option value="전체" selected>전체</option>
 								</select>
 							</div>
 						</div>
@@ -151,7 +151,7 @@
 							<div class="col-6">
 								<label>그룹</label> <select name="groupName" id="groupName"
 									class="custom-select">
-									<option value="" selected>전체</option>
+									<option value="전체" selected>전체</option>
 									<option value="혼자">혼자</option>
 									<option value="커플">커플</option>
 									<option value="친구">친구</option>

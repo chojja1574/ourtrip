@@ -24,7 +24,7 @@ import com.kh.ourtrip.member.model.service.MemberService;
 import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.member.model.vo.ProfileImage;
 
-@SessionAttributes({"loginMember", "msg", "detailUrl"})
+@SessionAttributes({"loginMember", "msg", "detailUrl", "profilePath"})
 @Controller
 @RequestMapping(value="/member/*")
 public class MemberController {
@@ -61,11 +61,14 @@ public class MemberController {
 		
 		try {
 			Member loginMember = memberService.login(member);
-			
+			String profileImagePath = null;
 			String path = null;
 			if(loginMember != null) {
 				// 세션 만료시간 1시간
 				session.setMaxInactiveInterval(60 * 60);
+				
+				// profileImagePath에 프로필사진 경로 저장
+				profileImagePath = memberService.getProfileImagePath(loginMember.getMemberNo());
 				
 				// 로그인 성공 시 아이디를 쿠키에 저장
 				// 관리자는 저장하지 않음
@@ -84,6 +87,7 @@ public class MemberController {
 					else path = "/";
 				}
 				
+				model.addAttribute("profilePath", profileImagePath);
 				model.addAttribute("loginMember", loginMember);
 			}else {
 				rdAttr.addFlashAttribute("msg", "이메일, 비밀번호를 확인해주세요");

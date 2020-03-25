@@ -156,5 +156,9 @@ public class MemberDAO {
 		return sqlSession.selectOne("memberMapper.selectMember", memberEmail);
 	}
 
+	public String getProfileImagePath(int memberNo) {
+		return sqlSession.selectOne("memberMapper.getProfileImagePath", memberNo);
+	}
+
 
 }
