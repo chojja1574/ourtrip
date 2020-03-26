@@ -132,12 +132,11 @@
 					<div class="col-md-6" id="location-wrapper">
 						<div class="row">
 							<div class="col-6">
-								<label>지역</label> <select name="largeArea" id="wide-area"
-									class="custom-select">
-									<option value="0" selected>전체</option>
-									<option value="1">경기</option>
-									<option value="2">서울특별시</option>
-									<option value="4">강원도</option>
+								<label>지역</label> 
+								<select name="largeArea" id="wide-area"	class="custom-select">
+									<c:forEach var="largeArea" items="${largeNmList}" varStatus="vs">
+										<option value="${largeArea.largeAreaCode}">${largeArea.largeAreaName}</option>
+									</c:forEach>
 								</select>
 							</div>
 							<div class="col-6">
@@ -244,8 +243,8 @@
 				<c:forEach var="recommendCard" items="${recommendPCList}" varStatus="vs">
 					<div class="planner">
 						<div class="card">
-							<img class="card-img-top" src="images/ourtrip_logo.png"
-								alt="Card image">
+							<img class="card-img-top" src="${contextPath}/resources/areaImages/${recommendCard.areaNames[0].largeAreaCode}.jpg"
+                           alt="Card image">
 							<div class="card-body">
 								<h5 class="card-title">${recommendCard.plannerTitle}</h5>
 								<p class="card-text">
@@ -307,6 +306,28 @@
 		
 		
         $(function () {
+        	// 지역 선택
+        	$("#wide-area").on("change", function () {
+                var wideVal = Number($(this).val());
+                console.log(wideVal);
+                var html = "";
+
+                switch(wideVal){
+				<c:forEach var="largeArea" items="${largeNmList}" varStatus="vs">
+				case ${largeArea.largeAreaCode} : 
+					<c:forEach var="smallArea" items="${smallNmList}" varStatus="vs">
+						<c:if test="${smallArea.largeAreaCode eq largeArea.largeAreaCode}">
+		        			html += "<option value='${smallArea.smallAreaCode}'>${smallArea.smallAreaName}</option>";
+		        		</c:if>
+		        	</c:forEach>break;
+				</c:forEach>
+                }
+
+                $("#local-area").html(html);
+            });
+        	
+        	
+        	// 플래너 조회 ajax 처리
         	$pWrapper = $("#planner-wrapper");
         	$pContainer = $("#planner-container");
         	$pContainer.hide();
@@ -314,10 +335,15 @@
         	
         	$("#searchBtn").on("click", function(){
         		var searchTitle = $("#searchTitle").val();
-        		var groupName = $("#groupName").val()
-        		var largeArea = $("#wide-area").val()
-        		var smallArea = $("#local-area").val()
-        		var viaCheck = $("#viaCheck").val()
+        		var groupName = $("#groupName").val();
+        		var largeArea = $("#wide-area").val();
+        		var smallArea = $("#local-area").val();
+        		var viaCheck = $("#viaCheck").prop("checked");
+        		if(viaCheck){
+        			viaCheck = "on";
+        		}else{
+        			viaCheck = null;
+        		}
         		
         		$.ajax({
         			url : "searchPlanner",
@@ -332,7 +358,7 @@
         			success : function(result){
         				console.log(result)
        					$pContainer.show();
-        				if(result == null){
+        				if(result == null || result == ''){
         					console.log("조건문들어옴");
         					console.log($pWrapper);
         					$pWrapper.html("<div style='height:250px'>조회결과가 없습니다.<div>");
@@ -343,7 +369,7 @@
 	        					pHtml += 
 	        					'<div class="planner">' + 
 	        					'<div class="card">' +
-        						'<img class="card-img-top" src="images/example1.jpg" alt="Card image">' +
+        						'<img class="card-img-top" src="${contextPath}/resources/areaImages/' + result[i].areaNames[0].largeAreaCode + '.jpg" alt="Card image">' +
         						'<div class="card-body">' +
        							'<h5 class="card-title">' + result[i].plannerTitle + '</h5>' +
    								'<p class="card-text">' +
@@ -381,32 +407,7 @@
         			
         		});
         	});
-        	
-            $("#wide-area").on("change", function () {
-                var wideVal = $(this).val();
-                var html = "";
-                html += "<option value='0' selected>전체</option>";
-
-                if (wideVal == "1") {
-                    html += "<option value='14'>부천시</option>";
-                    html += "<option value='3'>고양시</option>";
-                    html += "<option value='1'>구리시</option>";
-                    html += "<option value='4'>수원시</option>";
-                    html += "<option value='2'>남양주시</option>";
-
-                } else if (wideVal == "2") {
-                    html += "<option value='8'>강남구</option>";
-                    html += "<option value='17'>종로구</option>";
-                    html += "<option value='25'>강서구</option>";
-                    
-                } else if (wideVal == "4") {
-                    html += "<option value='13'>강릉시</option>";
-                    html += "<option value='6'>속초시</option>";
-
-                }
-
-                $("#local-area").html(html);
-            });
+            
         });
     </script>
 

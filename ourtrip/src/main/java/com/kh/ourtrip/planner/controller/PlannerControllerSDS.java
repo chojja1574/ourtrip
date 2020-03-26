@@ -17,11 +17,13 @@ import com.google.gson.GsonBuilder;
 import com.kh.ourtrip.common.Pagination;
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.planner.model.service.PlannerServiceSDS;
+import com.kh.ourtrip.planner.model.vo.LargeArea;
 import com.kh.ourtrip.planner.model.vo.PlannerCard;
+import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 
 @Controller
-@RequestMapping("/planner2/*") // 테스트를 위한 임시 변경
+@RequestMapping("/planner/*") // 테스트를 위한 임시 변경
 public class PlannerControllerSDS {
 	
 	@Autowired
@@ -33,13 +35,19 @@ public class PlannerControllerSDS {
 			// 추천리스트 조회
 			List<PlannerCard> recommendPCList = plannerServiceSDS.selectRecommendPCList();
 			
+			// 화면에 보여줄 대지역, 중소지역 리스트 조회
+			List<LargeArea> largeNmList = plannerServiceSDS.selectLargeNmList();
+			List<SmallArea> smallNmList = plannerServiceSDS.selectsmallNmList();
+			
 			if(!recommendPCList.isEmpty()) {
 				model.addAttribute("recommendPCList", recommendPCList);
 			} else {
 				model.addAttribute("msg", "추천리스트가 비어있습니다");
 			}
+			model.addAttribute("largeNmList", largeNmList);
+			model.addAttribute("smallNmList", smallNmList);
 			
-			return "planner/searchPlanner2";
+			return "planner/searchPlanner";
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("errorMsg", "탐색화면이동중에러");
@@ -77,6 +85,7 @@ public class PlannerControllerSDS {
 		map.put("groupName" , groupName);			
 		map.put("largeArea", largeArea);
 		map.put("smallArea", smallArea);
+		if(viaCheck.equals("")) viaCheck = null;
 		map.put("viaCheck", viaCheck);
 		map.put("currentPage", currentPage);
 		
@@ -93,6 +102,10 @@ public class PlannerControllerSDS {
 			
 			// 플래너 목록 조회
 			List<PlannerCard> pList = plannerServiceSDS.selectPList(map, pInf);
+			
+			if(pList==null) {
+				return null;
+			}
 //			System.out.println("Controller pList 목록 : " + pList);
 			for(PlannerCard item : pList) {
 				System.out.println(item);

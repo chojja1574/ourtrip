@@ -20,7 +20,7 @@ import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Controller
 @SessionAttributes({"loginMember", "msg"})
-@RequestMapping("/planner/*")
+@RequestMapping("/planner2/*")
 public class PlannerControllerJYS {
 	
 	@Autowired

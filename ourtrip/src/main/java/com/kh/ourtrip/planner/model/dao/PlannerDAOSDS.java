@@ -11,7 +11,9 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.planner.model.vo.AreaName;
+import com.kh.ourtrip.planner.model.vo.LargeArea;
 import com.kh.ourtrip.planner.model.vo.PlannerCard;
+import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Repository
 public class PlannerDAOSDS {
@@ -75,6 +77,22 @@ public class PlannerDAOSDS {
 		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
 		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
 		return sqlSession.selectList("plannerCardMapper.selectPList", map, rowBounds);
+	}
+	
+	/** 대지역 목록 조회용 DAO
+	 * @return largeNmList
+	 * @throws Exception
+	 */
+	public List<LargeArea> selectLargeNmList() throws Exception{
+		return sqlSession.selectList("plannerCardMapper.selectLargeNmList");
+	}
+
+	/** 소지역 목록 조회용 DAO
+	 * @return smallNmList
+	 * @throws Exception
+	 */
+	public List<SmallArea> selectSmallNmList() throws Exception{
+		return sqlSession.selectList("plannerCardMapper.selectSmallNmList");
 	}
 
 }

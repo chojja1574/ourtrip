@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.planner.model.dao.PlannerDAOSDS;
 import com.kh.ourtrip.planner.model.vo.AreaName;
+import com.kh.ourtrip.planner.model.vo.LargeArea;
 import com.kh.ourtrip.planner.model.vo.PlannerCard;
+import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Service
 public class PlannerServiceImplSDS implements PlannerServiceSDS{
@@ -247,9 +249,16 @@ public class PlannerServiceImplSDS implements PlannerServiceSDS{
 			}
 		}
 		
+		// 검색지역이 일치하는게 없을경우
+		if(pListNo.isEmpty()) {
+			return null;
+		}
 		// searchListNo(검색된 플래너 번호)
+		
+		System.out.println("");
 		map.put("searchListNo", pListNo);
 		System.out.println("dao전달되는map : " + map);
+		
 		
 		// 최종 목록 가져오기
 		List<PlannerCard> pList = plannerDAOSDS.selectPList(map, pInf);
@@ -268,8 +277,27 @@ public class PlannerServiceImplSDS implements PlannerServiceSDS{
 			card.setareaNames(areaNames);
 			//System.out.println("잘들어갔남? : " + card.getareaNames());
 		}
-		
+		System.out.println("------------------------플래너 조회 서비스단 정보----------------------------");
 		return pList;
+	}
+	
+	/** 대지역 목록 조회용 Service
+	 * @return largeNmList
+	 * @throws Exception
+	 */
+
+	@Override
+	public List<LargeArea> selectLargeNmList() throws Exception {
+		return plannerDAOSDS.selectLargeNmList();
+	}
+
+	/** 소지역 목록 조회용 Service
+	 * @return smallNmList
+	 * @throws Exception
+	 */
+	@Override
+	public List<SmallArea> selectsmallNmList() throws Exception {
+		return plannerDAOSDS.selectSmallNmList();
 	}
 
 	
