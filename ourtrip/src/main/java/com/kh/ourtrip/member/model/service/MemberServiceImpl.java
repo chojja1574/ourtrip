@@ -68,7 +68,8 @@ public class MemberServiceImpl implements MemberService{
 			
 			if(result > 0) {
 				result = memberDAO.selectMemberNo(member);
-				result = memberDAO.insertProfileImage(new ProfileImage(imagePath, result));
+				if(imagePath != null)
+					result = memberDAO.insertProfileImage(new ProfileImage(imagePath, result));
 			}
 		}
 		

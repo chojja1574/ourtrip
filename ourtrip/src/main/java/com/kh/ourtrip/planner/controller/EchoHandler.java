@@ -22,6 +22,8 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.kh.ourtrip.planner.model.service.PlannerService2;
 import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
+import com.kh.ourtrip.planner.model.vo.PlannerMember;
+import com.kh.ourtrip.planner.model.vo.PlannerMemberView;
 import com.kh.ourtrip.planner.model.vo.Schedule;
 import com.kh.ourtrip.planner.model.vo.UserInfo;
 
@@ -77,6 +79,8 @@ public class EchoHandler extends TextWebSocketHandler {
             	removeSchedule(session, jsonObj);
             }else if(jsonObj.get("type").equals("msg")) {
             	chattingMessage(session, jsonObj);
+            }else if(jsonObj.get("type").equals("permission")) {
+            	updatePermission(session, jsonObj);
             }else {
             	sendChatroom(session, jsonObj);
             }
@@ -109,16 +113,16 @@ public class EchoHandler extends TextWebSocketHandler {
 	}
 	
 	// 클라이언트가 입장버튼 클릭 시 채팅방 없을 시 맵에 추가, 채팅방 있을 시 채팅방 세션리스트에 세션 추가
-	private void joinChattingRoom(WebSocketSession session, JSONObject joinJson) {
-		
+	private void joinChattingRoom(WebSocketSession session, JSONObject joinJson) throws Exception {
 		
 		UserInfo uInf = findUserInfo(session);
-		
+		System.out.println("pno : " + Integer.parseInt((String)joinJson.get("pno")));
 		if(uInf == null) {
-			uInf = new UserInfo(session,(String)joinJson.get("writer"),(String)joinJson.get("chatRoomId"));
+			uInf = new UserInfo(session,(String)joinJson.get("writer"),Integer.parseInt((String)joinJson.get("pno")));
 			userList.add(uInf);
+			System.out.println("uInf 추가" + uInf);
 		}
-		String rId = (String) joinJson.get("chatRoomId");
+		String rId = (String)joinJson.get("pno");
 		
 		int existUser = -1;
 		
@@ -138,25 +142,58 @@ public class EchoHandler extends TextWebSocketHandler {
 			chatroomMap.get(rId).add(uInf);
 			System.out.println(uInf.getId() + "가 " + rId + "에 최초 입장");
 		}
+		
+		//{pno:planner.no, chatRoomId: "${selectRoom}", type: 'JOIN', writer: "${loginMember.memberNo}", content: ""}
+		PlannerMemberView pmv = 
+				new PlannerMemberView(Integer.parseInt((String)joinJson.get("pno")),
+						Integer.parseInt(joinJson.get("memberNo").toString()),1,joinJson.get("memberNickName").toString());
+		List<PlannerMemberView> pmList = plannerService.selectPlannerMemeberListUsePlannerNo(Integer.parseInt((String)joinJson.get("pno")));
+		System.out.println("pmList : " + pmList);
+		boolean exist = false;
+		for(PlannerMemberView tpm : pmList) {
+			if(tpm.getMemberNo() == Integer.parseInt((String)joinJson.get("memberNo"))){
+				if(tpm.getPlannerNo() == Integer.parseInt((String)joinJson.get("pno"))) {
+					exist = true;
+				}
+			}
+		}
+		
+		JSONObject jsonObj = null;
+		JSONParser jsonParser = new JSONParser();
+		jsonObj = (JSONObject) jsonParser.parse(pmv.toJsonString());
+		
+		int result = -1;
+		PlannerMember pm = new PlannerMember(pmv.getPlannerNo(),pmv.getMemberNo(),1);
+		if(!exist) {
+			result = plannerService.insertPlannerMember(pm);
+			if(result > 0) {
+				joinJson.put("newJoinUser", jsonObj);
+			}
+		}
+
+		
+		
+		sendChatroom(session, joinJson);
 	}
 	
 	// 클라이언트 연결 해제시 연결해제된 session을 map에서 찾아 삭제
 	private void exitChattingRoom(WebSocketSession session) {
 		UserInfo uInf = findUserInfo(session);
-		chatroomMap.get(uInf.getChatRoom()).remove(uInf);
+		chatroomMap.get(uInf.getPlannerNo()+"").remove(uInf);
 		System.out.println(session + "퇴장");
 	}
 	
 	// 서버가 메세지 수신 시 같은 채팅방의 session에게만 메세지 전송
 	private void sendChatroom(WebSocketSession session, JSONObject msgJson){
-		System.out.println(userList);
+		
 		UserInfo sendUInf = findUserInfo(session);
-		List<UserInfo> uInfList = chatroomMap.get(sendUInf.getChatRoom());
+		List<UserInfo> uInfList = chatroomMap.get(sendUInf.getPlannerNo()+"");
 		try {
 			for(UserInfo uInf : uInfList ) {
 				uInf.getSession().sendMessage(new TextMessage(msgJson.toJSONString()));
 			}
 		}catch(Exception e) {
+			e.printStackTrace();
 			System.out.println("메세지 전송 실패");
 		}
 	}
@@ -216,8 +253,6 @@ public class EchoHandler extends TextWebSocketHandler {
 		}
 		
 		result = plannerService.updateTripDate(dayList);
-		
-		System.out.println("orderDate result : " + result);
 		
 		return result;
 	}
@@ -293,6 +328,7 @@ public class EchoHandler extends TextWebSocketHandler {
 		return result;
 	}
 	
+	// 채팅 메세지 DB에 저장
 	private int chattingMessage(WebSocketSession session, JSONObject msgJson) throws Exception {
 		int result = 0;
 		System.out.println("chattingMessage");
@@ -314,6 +350,22 @@ public class EchoHandler extends TextWebSocketHandler {
 		result = plannerService.insertChattingLog(chatLog);
 		//{"pno":"1","chatRoomId":"","type":"msg","id":"2","content":"asdf","time":"18:15"}
 		sendChatroom(session, msgJson);
+		return result;
+	}
+	
+	// 권한 저장
+	// {pno:planner.no, type: 'permission', memberNo: memberNo, permission: '2', grantMemberNo:grantMemberNo}
+	private int updatePermission(WebSocketSession session, JSONObject msgJson) throws Exception{
+		int result = 0;
+		System.out.println("updatePermission");
+		
+		PlannerMember pm = new PlannerMember(Integer.parseInt(msgJson.get("pno").toString()),
+				Integer.parseInt(msgJson.get("grantMemberNo").toString()),Integer.parseInt(msgJson.get("permission").toString()));
+		
+		result = plannerService.updatePermission(pm);
+		
+		sendChatroom(session, msgJson);
+		
 		return result;
 	}
 }

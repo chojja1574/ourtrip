@@ -118,7 +118,6 @@ public class MemberController {
 		member.setSignUpRoute("2");
 		
 		String result = "fail";
-		
 		try {
 			Member loginMember = memberService.kakaoLogin(member, imagePath);
 			

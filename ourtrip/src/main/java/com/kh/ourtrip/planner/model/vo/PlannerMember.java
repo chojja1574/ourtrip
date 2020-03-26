@@ -41,13 +41,16 @@ public class PlannerMember {
 		this.plannerPermission = plannerPermission;
 	}
 
+	public String toJsonString() {
+		String str = null;
+		str = "{\"plannerNo\":\"" + plannerNo + "\",\"memberNo\":\"" + memberNo + "\",\"plannerPermission\":\"" + plannerPermission + "\"}";
+		return str;
+	}
+	
 	@Override
 	public String toString() {
 		return "plannerMember [plannerNo=" + plannerNo + ", memberNo=" + memberNo + ", plannerPermission="
 				+ plannerPermission + "]";
 	}
-	
-	
-	
 
 }

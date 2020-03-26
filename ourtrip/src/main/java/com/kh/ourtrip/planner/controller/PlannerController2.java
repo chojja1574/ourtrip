@@ -22,6 +22,7 @@ import com.kh.ourtrip.planner.model.service.PlannerService2;
 import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.Planner;
+import com.kh.ourtrip.planner.model.vo.PlannerMemberView;
 import com.kh.ourtrip.planner.model.vo.PlannerView;
 import com.kh.ourtrip.planner.model.vo.Schedule;
 
@@ -44,6 +45,7 @@ public class PlannerController2 {
 		JSONObject jsonObj = null;
 		JSONParser jsonParser = new JSONParser();
 		JSONArray chatArray = new JSONArray();
+		JSONArray joinUserArray = new JSONArray();
 		Planner selectedPlanner = null;
 		System.out.println("editplanner");
 		try {
@@ -65,7 +67,7 @@ public class PlannerController2 {
 			int groupCode = -1;
 			
 			List<PlannerView> selectPlannerView = plannerService.selectPlannerView(no);
-			
+			System.out.println(selectPlannerView);
 			Map<Integer,List<PlannerView>> dateMap = new HashMap<Integer,List<PlannerView>>();
 			for(PlannerView pv : selectPlannerView) {
 				if(inputPvVal) {
@@ -114,40 +116,41 @@ public class PlannerController2 {
 			    			pv.getScheduleLat(),pv.getScheduleLng(),pv.getDateNo());
 			    	scheduleList.add(schedule);
 			    }
-			   
 			    Day oneDay = new Day(dateNo,tripDate,no,scheduleList);
 			    dayList.add(oneDay);
-			    System.out.println("key : " + entry.getKey() + " / value : " + entry.getValue());
 			    
 			}
 			selectedPlanner = new Planner(no, plannerTitle, plannerPwd, plannerCost, 
 					plannerCreateDT, plannerModifyDT, plannerStartDT, plannerPublicYN, plannerDeleteYN, 
 					plannerExpiry, plannerCount, plannerUrl, groupCode, dayList);
-			System.out.println(selectedPlanner.toString());
 			jsonObj = (JSONObject) jsonParser.parse(selectedPlanner.toJsonString());
-			System.out.println("json : " + selectedPlanner.toString());
 			
 			// 채팅내역 얻어와서 jsonString으로 변환
 			List<ChattingLogView> chatList = null;
 			chatList = plannerService.selectChatList(no);
-			System.out.println("chatList");
-			System.out.println(chatList);
 			for(ChattingLogView cl : chatList) {
 				jsonObj = (JSONObject) jsonParser.parse(cl.toJsonString());
 				chatArray.add(jsonObj);
 			}
 			
+			// 참여중인 유저 목록과 권한 전달
+			List<PlannerMemberView> pmList = plannerService.selectPlannerMemeberListUsePlannerNo(no);
+			
+			for(PlannerMemberView tpm : pmList) {
+				jsonObj = (JSONObject) jsonParser.parse(tpm.toJsonString());
+				joinUserArray.add(jsonObj);
+			}
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		
 		model.addAttribute("userId", userId);
 		model.addAttribute("selectRoom", selectRoom);
 		model.addAttribute("plannerInfo", selectedPlanner.toJsonString());
 		model.addAttribute("plannerTitle", selectedPlanner.getPlannerTitle());
 		model.addAttribute("chatList", chatArray);
-		System.out.println("chatList");
-		System.out.println(chatArray.toJSONString());
-		System.out.println(no);
+		model.addAttribute("joinUserArray",joinUserArray);
 		System.out.println("editplannerend");
 		
 		return "planner/editPlanner";
