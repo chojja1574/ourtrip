@@ -108,6 +108,38 @@ public interface AdminHunService {
 	public abstract List<Day> dayList()throws Exception;
 
 	
+	/** 검색후 플래너 count용 service
+	 * @param keyword
+	 * @return searchResultcount
+	 * @throws Exception
+	 */
+	public abstract List<Integer> resultCount(Map<String, Object> keyword)throws Exception;
+
+	/** 검색결과 조회 service
+	 * @param pInf
+	 * @param keyword
+	 * @return List searchResult
+	 * @throws Exception
+	 */
+	public abstract List<PlannerInfo> searchResult(PageInfo pInf, Map<String, Object> keyword)throws Exception;
+
+	/** planner별 검색 지역명 조회용 service
+	 * @param searchResultcount
+	 * @param keyword
+	 * @return AreaList
+	 * @throws Exception
+	 */
+	public abstract List<AreaName> resultArea(List<Integer> searchResultcount) throws Exception;
+
+	/** planner별 검색 날짜 조회용 service
+	 * @param searchResultcount
+	 * @return List<Day> dayList
+	 * @throws Exception
+	 */
+	public abstract List<Day> resultDay(List<Integer> searchResultcount)throws Exception;
+
+	
+	
 
 
 

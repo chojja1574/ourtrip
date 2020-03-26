@@ -157,6 +157,59 @@ public class AdminHunServiceimpl implements AdminHunService {
 		return adminHunDAO.dayList();
 	}
 
+	/** 검색후 플래너 count용 service
+	 * @param keyword
+	 * @return searchResultcount
+	 * @throws Exception
+	 */
+	@Override
+	public List<Integer> resultCount(Map<String, Object> keyword) throws Exception {
+		if(keyword.get("startTrip")=="") {
+			keyword.put("startTrip", null);
+		}if(keyword.get("endTrip") == "") {
+			keyword.put("endTrip", null);
+		}
+			
+		return adminHunDAO.resultCount(keyword);
+	}
+
+	/** 검색결과 조회 service
+	 * @param pInf
+	 * @param keyword
+	 * @return List searchResult
+	 * @throws Exception
+	 */
+	@Override
+	public List<PlannerInfo> searchResult(PageInfo pInf, Map<String, Object> keyword) throws Exception {
+		if(keyword.get("startTrip") == "" && keyword.get("endTrip") == "") {
+			keyword.put("startTrip", null);
+			keyword.put("endTrip", null);
+		}
+		
+		return adminHunDAO.searchResult(pInf, keyword);
+	}
+
+	@Override
+	public List<AreaName> resultArea(List<Integer> searchResultcount) throws Exception {
+		if(searchResultcount.isEmpty()) {
+			searchResultcount = null;
+		}
+		return adminHunDAO.resultArea(searchResultcount);
+	}
+
+	/** planner별 검색 날짜 조회용 service
+	 * @param searchResultcount
+	 * @return List<Day> dayList
+	 * @throws Exception
+	 */
+	@Override
+	public List<Day> resultDay(List<Integer> searchResultcount) throws Exception {
+		if(searchResultcount.isEmpty()) {
+			searchResultcount = null;
+		}
+		return adminHunDAO.resultDay(searchResultcount);
+	}
+
 
 
 }

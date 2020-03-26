@@ -193,6 +193,7 @@
 			</nav>
 		</div>
 	</div>
+		<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 	<!-- 회원 목록 끝 -->
 
 	<script>

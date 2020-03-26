@@ -153,6 +153,33 @@ public class AdminHunDAO {
 		return sqlSession.selectList("adminhunMapper.dayList");
 	}
 
+	/** 검색 플래너수 조회용 DAO
+	 * @param keyword
+	 * @return List resultCount
+	 */
+	public List<Integer> resultCount(Map<String, Object> keyword) {
+		for(String st : keyword.keySet()) {
+			System.out.println(st + " / " + keyword.get(st));
+			
+		}
+		
+		return sqlSession.selectList("adminhunMapper.resultCount" , keyword);
+	}
+
+	public List<PlannerInfo> searchResult(PageInfo pInf, Map<String, Object> keyword) {
+		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
+		return sqlSession.selectList("adminhunMapper.searchResult",keyword,rowBounds);
+	}
+
+	public List<AreaName> resultArea(List<Integer> searchResultcount) {
+		return sqlSession.selectList("adminhunMapper.resultArea", searchResultcount);
+	}
+
+	public List<Day> resultDay(List<Integer> searchResultcount) {
+		return sqlSession.selectList("adminhunMapper.resultDay", searchResultcount);
+	}
+
 
 
 }

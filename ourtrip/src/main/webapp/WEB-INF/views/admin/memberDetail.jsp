@@ -150,25 +150,26 @@ body {
 			<div class="col-md-4">
 				<h4>프로필 사진</h4>
 				<c:if test="${!empty pi}">
-					
-						<!-- 카카오에서 가져온 이미지 경로일 경우 -->
-						<c:if test="${fn:contains(profileImage.imagePath, 'http://')}">
-							<c:set var="filePath" value="${pi.imagePath}"/>
-						</c:if>
-					
-						<!-- ourtrip서버에 있는 경로일 경우 -->
-						<c:if test="${!fn:contains(profileImage.imagePath, 'http://')}">
-							<c:set var="fileName" value="${fn:split(pi.imagePath, '/')}"/>
-							<c:set var="filePath" value="${contextPath}/resources/profileImages/${fileName[fn:length(fileName) - 1]}"/>
-						</c:if>
+
+					<!-- 카카오에서 가져온 이미지 경로일 경우 -->
+					<c:if test="${fn:contains(profileImage.imagePath, 'http://')}">
+						<c:set var="filePath" value="${pi.imagePath}" />
 					</c:if>
-					
-					<img id="ot_profile_image" alt="your image" class="rounded mx-auto"
-						width="200" height="200"
-						src=<c:if test="${!empty pi}">
+
+					<!-- ourtrip서버에 있는 경로일 경우 -->
+					<c:if test="${!fn:contains(profileImage.imagePath, 'http://')}">
+						<c:set var="fileName" value="${fn:split(pi.imagePath, '/')}" />
+						<c:set var="filePath"
+							value="${contextPath}/resources/profileImages/${fileName[fn:length(fileName) - 1]}" />
+					</c:if>
+				</c:if>
+
+				<img id="ot_profile_image" alt="your image" class="rounded mx-auto"
+					width="200" height="200"
+					src=<c:if test="${!empty pi}">
 								"${filePath}"
 							</c:if>
-								<c:if test="${empty pi}">
+					<c:if test="${empty pi}">
 								"../resources/images/default-profile.png"
 							</c:if>>
 			</div>
@@ -194,17 +195,17 @@ body {
 									<p class="card-text">
 										<span>시작일 :${plannerInfo.plannerStartDT}</span><br> <span>${plannerInfo.groupName}
 										</span><br>
-											<c:if test="${plannerInfo.areaNames.size()>1 }">
-		                                	<span>${plannerInfo.areaNames[0].largeAreaName}
-		                                		  ${plannerInfo.areaNames[0].smallAreaName} ...</span>
-		                                </c:if>
-		                                <c:if test="${plannerInfo.areaNames.size()==1 }">
-		                                	<span>${plannerInfo.areaNames[0].largeAreaName}
-		                                		  ${plannerInfo.areaNames[0].smallAreaName} </span>
-		                                </c:if>
-		                                <c:if test="${plannerInfo.areaNames.size()<1 }">
-		                                <span></span>
-		                                </c:if>
+										<c:if test="${plannerInfo.areaNames.size()>1 }">
+											<span>${plannerInfo.areaNames[0].largeAreaName}
+												${plannerInfo.areaNames[0].smallAreaName} ...</span>
+										</c:if>
+										<c:if test="${plannerInfo.areaNames.size()==1 }">
+											<span>${plannerInfo.areaNames[0].largeAreaName}
+												${plannerInfo.areaNames[0].smallAreaName} </span>
+										</c:if>
+										<c:if test="${plannerInfo.areaNames.size()<1 }">
+											<span></span>
+										</c:if>
 									</p>
 									<div class="d-flex justify-content-between">
 										<div class="btn-wrapper">
@@ -291,6 +292,7 @@ body {
 			</nav>
 		</div>
 
+
 		<!-- 하단버튼 -->
 		<div class="d-flex">
 			<a href="${contextPath}/admin/List" class="btn main-btn mr-auto">목록으로</a>
@@ -347,6 +349,7 @@ body {
 				}
 			})
 		</script>
+	</div>
+	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 </body>
-
 </html>

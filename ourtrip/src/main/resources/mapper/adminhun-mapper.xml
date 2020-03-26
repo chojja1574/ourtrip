@@ -18,25 +18,10 @@
 		<id property="plannerNo" column="PLANNER_NO" />
 	</resultMap>
 
-	<resultMap type="Planner" id="plannerResultSet">
-		<id property="plannerNo" column="PLANNER_NO" />
-		<result property="plannerTitle" column="PLANNER_TITLE" />
-		<result property="plannerPwd" column="PLANNER_PWD" />
-		<result property="plannerCost" column="PLANNER_COST" />
-		<result property="plannerCreateDT" column="PLANNER_CREATE_DT" />
-		<result property="plannerModifyDT" column="PLANNER_MODIFT_DT" />
-		<result property="plannerStartDT" column="PLANNER_START_DT" />
-		<result property="plannerPublicYN" column="PLANNER_PUBLIC_YN" />
-		<result property="plannerDeleteYN" column="PLANNER_DELETE_YN" />
-		<result property="plannerExpiry" column="PLANNER_EXPIRY" />
-		<result property="plannerCount" column="PLANNER_COUNT" />
-		<result property="plannerUrl" column="PLANNER_URL" />
-		<result property="groupCode" column="GROUP_CODE" />
-	</resultMap>
-
 	<resultMap type="PlannerInfo" id="plannerInfoResultSet">
-		<id property="memberNo" column="MEMBER_No" />
-		<result property="plannerNo" column="PLANNER_NO"/>
+		<id property="memberNo" column="MEMBER_NO" />
+		<result property="memberNickName" column="MEMBER_NICK_NAME" />
+		<result property="plannerNo" column="PLANNER_NO" />
 		<result property="plannerTitle" column="PLANNER_TITLE" />
 		<result property="plannerPwd" column="PLANNER_PWD" />
 		<result property="plannerCost" column="PLANNER_COST" />
@@ -49,17 +34,20 @@
 		<result property="plannerCount" column="PLANNER_COUNT" />
 		<result property="plannerUrl" column="PLANNER_URL" />
 		<result property="groupName" column="GROUP_NAME" />
+		<result property="groupCode" column="GROUP_CODE" />
+		<result property="tripDate" column="TRIP_DATE" />
+		<result property="largeAreaCode" column="LARGE_AREA_CODE" />
+		<result property="smallAreaCode" column="SMALL_AREA_CODE" />
 	</resultMap>
-	
-	
+
 	<resultMap type="AreaName" id="AreaNameResultSet">
-		<result property="plannerNo" column="PLANNER_NO"/>
-		<result property="largeAreaCode" column="LARGE_AREA_CODE"/>
-		<result property="largeAreaName" column="LARGE_AREA_NAME"/>
-		<result property="smallAreaCode" column="SMALL_AREA_CODE"/>
-		<result property="smallAreaName" column="SMALL_AREA_NAME"/>
+		<result property="plannerNo" column="PLANNER_NO" />
+		<result property="largeAreaCode" column="LARGE_AREA_CODE" />
+		<result property="largeAreaName" column="LARGE_AREA_NAME" />
+		<result property="smallAreaCode" column="SMALL_AREA_CODE" />
+		<result property="smallAreaName" column="SMALL_AREA_NAME" />
 	</resultMap>
-	
+
 	<resultMap type="ProfileImage" id="piResultSet">
 		<id property="imageNo" column="IMAGE_NO" />
 		<result property="imagePath" column="IMAGE_PATH" />
@@ -67,11 +55,11 @@
 		<result property="imageStatus" column="IMAGE_DELETE_YN" />
 		<result property="memberNo" column="MEMBER_NO" />
 	</resultMap>
-	
+
 	<resultMap type="Day" id="dayResultSet">
-		<id property="dateNo" column="DATE_NO"/>
-		<result property="tripDate" column="TRIP_DATE"/>
-		<result property="plannerNo" column="PLANNER_NO"/>
+		<id property="dateNo" column="DATE_NO" />
+		<result property="tripDate" column="TRIP_DATE" />
+		<result property="plannerNo" column="PLANNER_NO" />
 	</resultMap>
 
 	<select id="listFullCount" resultType="_int">
@@ -148,41 +136,169 @@
 	<select id="plannerList" parameterType="_int"
 		resultMap="PlannerMemberResultSet">
 		SELECT PLANNER_NO FROM
-		MEMBER_PLANNER WHERE MEMBER_NO = #{memberNo}
+		MEMBER_PLANNER WHERE MEMBER_NO =
+		#{memberNo}
 	</select>
 
-	<select id="plannerInfo" parameterType="list" resultMap="plannerInfoResultSet">
+	<select id="plannerInfo" parameterType="list"
+		resultMap="plannerInfoResultSet">
 		SELECT * FROM V_PLANNER_INFO WHERE PLANNER_NO IN
-		<foreach index="index" item="planner" collection="list" open="(" separator="," close=")">
+		<foreach index="index" item="planner" collection="list"
+			open="(" separator="," close=")">
 			#{planner.plannerNo}
 		</foreach>
 	</select>
 
-	<select id="plannerArea" parameterType="list" resultMap="AreaNameResultSet">
-		SELECT * FROM V_AREA_NAME WHERE PLANNER_NO IN 
-		<foreach index="index" item="planner" collection="list" open="(" separator="," close=")">
+	<select id="plannerArea" parameterType="list"
+		resultMap="AreaNameResultSet">
+		SELECT * FROM V_AREA_NAME WHERE PLANNER_NO IN
+		<foreach index="index" item="planner" collection="list"
+			open="(" separator="," close=")">
 			#{planner.plannerNo}
 		</foreach>
 	</select>
-	
-	<select id="selectProfileImage" parameterType="_int" resultMap="piResultSet">
+
+	<select id="selectProfileImage" parameterType="_int"
+		resultMap="piResultSet">
 		SELECT * FROM PROFILE_IMAGE WHERE MEMBER_NO = #{memberNo}
 	</select>
-	
+
 	<select id="plannerCount" resultType="_int">
-		SELECT COUNT(*) FROM V_PLANNER_INFO
+		SELECT COUNT(*) FROM
+		V_PLANNER_INFO
 	</select>
-	
+
 	<select id="plannerTotal" resultMap="plannerInfoResultSet">
 		SELECT * FROM V_PLANNER_INFO
 	</select>
-	
+
 	<select id="areaList" resultMap="AreaNameResultSet">
-		SELECT * FROM V_AREA_NAME 
+		SELECT * FROM V_AREA_NAME
 	</select>
-	
+
 	<select id="dayList" resultMap="dayResultSet">
-		SELECT PLANNER_NO,COUNT(*) FROM PLANNER_DATE GROUP BY PLANNER_NO
+		SELECT PLANNER_NO,COUNT(*) FROM
+		PLANNER_DATE GROUP BY PLANNER_NO
+	</select>
+
+	<select id="resultCount" parameterType="map"
+		resultMap="plannerInfoResultSet">
+		SELECT PlANNER_NO FROM V_PLANNER_INFO
+		<where>
+			<if test="searchKey != null">
+				<bind name="sv" value="'%' + _parameter.searchValue + '%'" />
+				<choose>
+					<when test="searchKey == 'title' and searchValue != null">
+						AND PLANNER_TITLE LIKE #{sv}
+					</when>
+
+					<when test="searchKey == 'nickName' and searchValue != null">
+						AND MEMBER_NICK_NAME LIKE #{sv}
+					</when>
+				</choose>
+			</if>
+			<if test="searchGroup != null">
+				AND GROUP_CODE IN
+				<foreach index="index" item="group" collection="searchGroup"
+					open="(" separator="," close=")">
+					#{group}
+				</foreach>
+			</if>
+
+			<if test="searchArea != 0">
+				AND LARGE_AREA_CODE IN #{searchArea}
+			</if>
+
+			<if test="searchArea != 0 and searchLocal != 0">
+				AND SMALL_AREA_CODE IN #{searchLocal}
+			</if>
+
+			<if test="deleted != 0">
+				AND PLANNER_DELETE_YN = #{deleted}
+			</if>
+
+			<if test="startTrip != null and endTrip != null">
+					<![CDATA[AND PLANNER_START_DT >= #{startTrip}
+					AND PLANNER_START_DT + TRIP_DATE <= #{endTrip}
+					]]>
+			</if>
+		</where>
+		ORDER BY PLANNER_NO DESC
+	</select>
+
+	<select id="searchResult" parameterType="map"
+		resultMap="plannerInfoResultSet">
+		SELECT * FROM V_PLANNER_INFO
+		<where>
+			<if test="searchKey != null">
+				<bind name="sv" value="'%' + _parameter.searchValue + '%'" />
+				<choose>
+
+					<when test="searchKey == 'title'">
+						AND PLANNER_TITLE LIKE #{sv}
+					</when>
+
+					<when test="searchKey == 'nickName'">	
+						AND MEMBER_NICK_NAME LIKE #{sv}
+					</when>
+				</choose>
+			</if>
+			<if test="searchGroup != null">
+				AND GROUP_CODE IN
+				<foreach index="index" item="group" collection="searchGroup"
+					open="(" separator="," close=")">
+					#{group}
+				</foreach>
+			</if>
+
+			<if test="searchArea != 0">
+				AND LARGE_AREA_CODE IN #{searchArea}
+			</if>
+
+			<if test="searchArea != 0 and searchLocal != 0">
+				AND SMALL_AREA_CODE IN #{searchLocal}
+			</if>
+
+			<if test="deleted != 0">
+				AND PLANNER_DELETE_YN = #{deleted}
+			</if>
+
+			<if test="startTrip != null and endTrip != null">
+					<![CDATA[AND PLANNER_START_DT >= #{startTrip}
+					AND PLANNER_START_DT + TRIP_DATE <= #{endTrip}
+					]]>
+			</if>
+		</where>
+		ORDER BY PLANNER_NO DESC
+	</select>
+
+	<select id="resultArea" parameterType="list"
+		resultMap="AreaNameResultSet">
+		SELECT * FROM V_AREA_NAME
+		<if test="list != null">
+			<where>
+				AND PLANNER_NO IN
+				<foreach index="index" item="planner" collection="list"
+					open="(" separator="," close=")">
+					#{planner.plannerNo}
+				</foreach>
+			</where>
+		</if>
+	</select>
+
+	<select id="resultDay" parameterType="list"
+		resultMap="dayResultSet">
+		SELECT * FROM
+		PLANNER_DATE
+		<if test="list != null">
+			<where>
+				AND PLANNER_NO IN
+				<foreach index="index" item="planner" collection="list"
+					open="(" separator="," close=")">
+					#{planner.plannerNo}
+				</foreach>
+			</where>
+		</if>
 	</select>
 
 </mapper>
