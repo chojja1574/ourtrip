@@ -14,6 +14,11 @@
 	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
 	crossorigin="anonymous">
 
+<!-- 폰트 -->
+<link
+	href="https://fonts.googleapis.com/css?family=Stylish&display=swap"
+	rel="stylesheet">
+
 <!-- 아이콘 -->
 <script src="https://kit.fontawesome.com/76b49c6d9b.js"
 	crossorigin="anonymous"></script>
@@ -141,7 +146,8 @@ h5 {
 					<div class="col-xl-3">
 						<div class="planner">
 		                    <div class="card">
-		                        <img class="card-img-top" src="images/example1.jpg" alt="Card image">
+		                        <img class="card-img-top" src="${contextPath}/resources/areaImages/${recommendCard.areaNames[0].largeAreaCode}.jpg"
+									alt="Card image">
 		                        <div class="card-body">
 		                            <h5 class="card-title">${recommendCard.plannerTitle}</h5>
 		                            <p class="card-text">
@@ -180,9 +186,6 @@ h5 {
 					플래너가 처음이신가요? <br> ourTrip 플래너는 여러분의 여행을 보다 즐겁게 만들어드립니다.<br>
 					지금 바로 여러분의 여행파트너와 플래너를 작성해 보세요 <br> 단 몇분이면 여러분만의 여행플래너가 완성됩니다.
 				</p>
-				<!-- <p>
-					<a class="btn" href="#">자세히 보기.. »</a>
-				</p> -->
 				<c:if test="${!empty loginMember }">
 					<a href= '${contextPath}/planner/create'
 						id="createButton" class="btn btn-lg btn-primary" type="button" style="color:white;">플래너
