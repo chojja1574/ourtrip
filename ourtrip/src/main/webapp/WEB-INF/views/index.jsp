@@ -141,7 +141,8 @@ h5 {
 					<div class="col-xl-3">
 						<div class="planner">
 		                    <div class="card">
-		                        <img class="card-img-top" src="images/example1.jpg" alt="Card image">
+		                        <img class="card-img-top" src="${contextPath}/resources/areaImages/${recommendCard.areaNames[0].largeAreaCode}.jpg"
+                           		alt="Card image">
 		                        <div class="card-body">
 		                            <h5 class="card-title">${recommendCard.plannerTitle}</h5>
 		                            <p class="card-text">

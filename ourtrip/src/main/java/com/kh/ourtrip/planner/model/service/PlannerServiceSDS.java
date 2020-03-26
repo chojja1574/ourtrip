@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.ourtrip.common.vo.PageInfo;
+import com.kh.ourtrip.planner.model.vo.LargeArea;
 import com.kh.ourtrip.planner.model.vo.PlannerCard;
+import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 public interface PlannerServiceSDS {
 
@@ -28,5 +30,17 @@ public interface PlannerServiceSDS {
 	 * @throws Exception
 	 */
 	public abstract List<PlannerCard> selectPList(Map<String, Object> map, PageInfo pInf) throws Exception;
+
+	/** 대지역 목록 조회용 Service
+	 * @return largeNmList
+	 * @throws Exception
+	 */
+	public abstract List<LargeArea> selectLargeNmList() throws Exception;
+
+	/** 소지역 목록 조회용 Service
+	 * @return smallNmList
+	 * @throws Exception
+	 */
+	public abstract List<SmallArea> selectsmallNmList() throws Exception;
 
 }
