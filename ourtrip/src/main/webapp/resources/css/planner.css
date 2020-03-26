@@ -407,18 +407,7 @@ body {
     left:40%;
     transform: translate(-40%);
 }
-.plannerDay{
-    height: 30px;
-    width:80%; 
-    border: 1px solid #0474ac;
-    border-radius: 3px;
-    background: #0894da; 
-    vertical-align: middle; 
-    color: white;
-    position: relative;
-    top: 20px;
-    outline: none;
-}
+
 #scheduleList input{
     background: white;
 }
@@ -443,4 +432,26 @@ body {
 	border : none;
 	border-radius : 3px;
 	font-weight:bold;
+}
+
+#startDateUpdateBtn{
+	height:30px;
+	line-height:0px;
+	position: absolute;
+	top: 50px;
+	right: 20px;
+}
+
+.plannerDay{
+    height: 30px;
+    width:80%; 
+    border: 1px solid #0474ac;
+    border-radius: 3px;
+    background: #0894da; 
+    vertical-align: middle; 
+    color: white;
+    position: absolute;
+    bottom: 45px;
+    right: 15px;
+    outline: none;
 }

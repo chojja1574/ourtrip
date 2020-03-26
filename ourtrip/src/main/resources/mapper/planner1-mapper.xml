@@ -157,4 +157,12 @@
 	<update id="updatePermission" parameterType="PlannerMember">
 		UPDATE PLANNER_MEMBER SET PLANNER_PERMISSION = #{plannerPermission} WHERE PLANNER_NO = #{plannerNo} AND MEMBER_NO = #{memberNo}
 	</update>
+	
+	<update id="updateSumCost" parameterType="Planner">
+		UPDATE PLANNER SET PLANNER_COST = #{plannerCost} WHERE PLANNER_NO = #{plannerNo}
+	</update>
+	
+	<update id="updateStartDate">
+		UPDATE PLANNER SET PLANNER_START_DT = #{plannerStartDT} WHERE PLANNER_NO = #{plannerNo}
+	</update>
 </mapper>

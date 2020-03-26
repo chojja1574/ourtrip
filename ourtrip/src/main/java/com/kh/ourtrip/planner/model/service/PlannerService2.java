@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
+import com.kh.ourtrip.planner.model.vo.Planner;
 import com.kh.ourtrip.planner.model.vo.PlannerMember;
 import com.kh.ourtrip.planner.model.vo.PlannerMemberView;
 import com.kh.ourtrip.planner.model.vo.PlannerView;
@@ -119,4 +120,17 @@ public interface PlannerService2 {
 	 * @throws Exception
 	 */
 	public abstract int updatePermission(PlannerMember pm) throws Exception;
+
+	/** 총 경비 수정용 Service
+	 * @param sumCost
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract int updateSumCost(Planner p) throws Exception;
+
+	/** 출발일 수정용 Service
+	 * @param parseInt
+	 * @return
+	 */
+	public abstract int updateStartDate(Planner p) throws Exception;
 }

@@ -62,6 +62,7 @@ kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
             lat = mouseEvent.latLng.getLat();
             lng = mouseEvent.latLng.getLng();
             console.log("위도(Lat) 경도(Lng) : " + lat + ", " + lng);
+            console.log(iwContent);
         }
     });
 });
@@ -170,6 +171,7 @@ function addMarker(place) {
             }
 
             // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+            iwContent = content;
             infowindow.setContent(content);
             infowindow.open(map, searchMarker);
             
@@ -178,6 +180,7 @@ function addMarker(place) {
             lng = place.x;
 
             console.log("위도(Lat) 경도(Lng) : " + lat + ", " + lng);
+            console.log(iwContent);
         });
     });
 

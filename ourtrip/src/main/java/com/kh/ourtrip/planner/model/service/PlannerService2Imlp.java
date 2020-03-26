@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.ourtrip.planner.model.dao.PlannerDAO2;
 import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
+import com.kh.ourtrip.planner.model.vo.Planner;
 import com.kh.ourtrip.planner.model.vo.PlannerMember;
 import com.kh.ourtrip.planner.model.vo.PlannerMemberView;
 import com.kh.ourtrip.planner.model.vo.PlannerView;
@@ -185,6 +186,18 @@ public class PlannerService2Imlp implements PlannerService2 {
 	@Override
 	public int updatePermission(PlannerMember pm) throws Exception{
 		return plannerDAO2.updatePermission(pm);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int updateSumCost(Planner p) throws Exception {
+		return plannerDAO2.updateSumCost(p);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int updateStartDate(Planner p) throws Exception {
+		return plannerDAO2.updateStartDate(p);
 	}
 	
 	
