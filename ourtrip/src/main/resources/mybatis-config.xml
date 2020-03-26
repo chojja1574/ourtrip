@@ -27,6 +27,10 @@
 		<!-- 신덕수 -->
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerCard" alias="PlannerCard"/>
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.AreaName" alias="AreaName"/>
+		
+		<!-- 조유상 -->
+		<typeAlias type="com.kh.ourtrip.planner.model.vo.LargeArea" alias="LargeArea"/>
+		<typeAlias type="com.kh.ourtrip.planner.model.vo.SmallArea" alias="SmallArea"/>
 
 	</typeAliases>
 	

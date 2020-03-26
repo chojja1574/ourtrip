@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.ourtrip.planner.model.vo.AreaName;
+import com.kh.ourtrip.planner.model.vo.LargeArea;
 import com.kh.ourtrip.planner.model.vo.PlannerCard;
 import com.kh.ourtrip.planner.model.vo.PlannerMember;
+import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Repository
 public class PlannerDAOJYS {
@@ -77,6 +79,22 @@ public class PlannerDAOJYS {
 	 */
 	public int delPlanner(PlannerMember delPlanner) throws Exception{
 		return sqlSession.update("plannerCardMapper2.delPlanner", delPlanner);
+	}
+
+	/** 대지역 목록 조회용 DAO
+	 * @return largeNmList
+	 * @throws Exception
+	 */
+	public List<LargeArea> selectLargeNmList() throws Exception{
+		return sqlSession.selectList("plannerCardMapper2.selectLargeNmList");
+	}
+
+	/** 소지역 목록 조회용 DAO
+	 * @return smallNmList
+	 * @throws Exception
+	 */
+	public List<SmallArea> selectSmallNmList() throws Exception{
+		return sqlSession.selectList("plannerCardMapper2.selectSmallNmList");
 	}
 
 }

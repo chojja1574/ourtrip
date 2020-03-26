@@ -25,6 +25,17 @@
 		<result property="plannerPermission" column="PLANNER_PERMISSION"/>
 	</resultMap>
 	
+	<resultMap type="LargeArea" id="LargeAreaResultSet">
+		<id property="largeAreaCode" column="LARGE_AREA_CODE"/>
+		<result property="largeAreaName" column="LARGE_AREA_NAME"/>
+	</resultMap>
+	
+	<resultMap type="SmallArea" id="SmallAreaResultSet">
+		<result property="smallAreaCode" column="SMALL_AREA_CODE"/>
+		<result property="largeAreaCode" column="LARGE_AREA_CODE"/>
+		<result property="smallAreaName" column="SMALL_AREA_NAME"/>
+	</resultMap>
+	
 	<select id="selectRecommendPCList" resultMap="PlannerCardResultSet">
 		SELECT ROWNUM, PLANNER_NO, PLANNER_TITLE, PLANNER_START_DT, 
 				TRIP_DATE, GROUP_NAME, PLANNER_COUNT, PLANNER_URL
@@ -77,5 +88,17 @@
 		PLANNER_DELETE_YN = 'Y'
 		WHERE PLANNER_NO= #{plannerNo}
 	</update>
+	
+	<!-- 대지역 목록 조회 -->
+	<select id="selectLargeNmList" resultMap="LargeAreaResultSet">
+		SELECT * FROM LARGE_AREA
+		ORDER BY LARGE_AREA_CODE
+	</select>
+	
+	<!-- 소지역 목록 조회 -->
+	<select id="selectSmallNmList" resultMap="SmallAreaResultSet">
+		SELECT * FROM SMALL_AREA
+		ORDER BY LARGE_AREA_CODE, SMALL_AREA_CODE
+	</select>
 	
 </mapper>

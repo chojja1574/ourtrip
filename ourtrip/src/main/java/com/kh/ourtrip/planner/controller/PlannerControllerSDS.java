@@ -16,7 +16,7 @@ import com.kh.ourtrip.planner.model.vo.PlannerCard;
 
 
 @Controller
-@RequestMapping("/planner/*")
+@RequestMapping("/planner2/*") // 테스트를 위한 임시 변경
 public class PlannerControllerSDS {
 	
 	@Autowired
@@ -27,14 +27,14 @@ public class PlannerControllerSDS {
 		try {
 			// 추천리스트 조회
 			List<PlannerCard> recommendPCList = plannerServiceSDS.selectRecommendPCList();
-			// System.out.println("탐색화면 추천리스트 : " + recommendPCList);
+			
 			if(!recommendPCList.isEmpty()) {
 				model.addAttribute("recommendPCList", recommendPCList);
 			} else {
 				model.addAttribute("msg", "추천리스트가 비어있습니다");
 			}
 			
-			return "planner/searchPlanner";
+			return "planner/searchPlanner2";
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("errorMsg", "탐색화면이동중에러");

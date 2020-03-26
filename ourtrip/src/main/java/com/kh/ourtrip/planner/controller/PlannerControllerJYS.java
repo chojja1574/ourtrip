@@ -13,8 +13,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.planner.model.service.PlannerServiceJYS;
 import com.kh.ourtrip.planner.model.vo.AreaName;
+import com.kh.ourtrip.planner.model.vo.LargeArea;
 import com.kh.ourtrip.planner.model.vo.PlannerCard;
 import com.kh.ourtrip.planner.model.vo.PlannerMember;
+import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Controller
 @SessionAttributes({"loginMember", "msg"})
@@ -127,6 +129,33 @@ public class PlannerControllerJYS {
 		}
 		
 		return "redirect:myPlanner";
+	}
+	
+	@RequestMapping("search")
+	public String searchForm(Model model) {
+		try {
+			// 추천리스트 조회
+//			List<PlannerCard> recommendPCList = plannerService.selectRecommendPCList();
+			
+			// 화면에 보여줄 대지역, 중소지역 리스트 조회
+			List<LargeArea> largeNmList = plannerService.selectLargeNmList();
+			List<SmallArea> smallNmList = plannerService.selectsmallNmList();
+//			if(!recommendPCList.isEmpty()) {
+//				model.addAttribute("recommendPCList", recommendPCList);
+//			} else {
+//				model.addAttribute("msg", "추천리스트가 비어있습니다");
+//			}
+			
+			model.addAttribute("largeNmList", largeNmList);
+			model.addAttribute("smallNmList", smallNmList);
+			
+			return "planner/searchPlanner2";
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMsg", "탐색화면이동중에러");
+			return "common/error";
+		}
+		
 	}
 
 }
