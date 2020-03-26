@@ -274,10 +274,9 @@
 
             $(".planner-delete").on("click", function () {
                 var plannerNo = $(this).parent().children("input").val();
-                console.log(plannerNo);
 
                 if (confirm("플래너를 삭제하시겠습니까?")) {
-                    alert("삭제되었습니다.");
+                    location.href="delPlanner?plannerNo=" + plannerNo;
                 }
             });
         });
@@ -295,9 +294,10 @@
             	last = totalPage;
             }
             
-            if(last > totalPage)
+            if(last > totalPage){
                 last = totalPage;
-            var first = pageGroup;    // 화면에 보여질 첫번째 페이지 번호
+            }
+            var first = ((pageGroup - 1) * pageGroup) + 1;    // 화면에 보여질 첫번째 페이지 번호
             var next = last+1;
             var prev = first-1;
             
@@ -330,7 +330,6 @@
     		}
 			// 해당되는 플래너들만 보여줌
 			for(var i=startIndex; i<=endIndex; i++){
-				console.log("for : " + i);
 				$("#" + ch + "Planner" + i).removeClass("displayNone");
 			}
         	
@@ -339,13 +338,12 @@
         	$("." + ch + "Paging").on("click", function(){
         		var $click = $(this);
         		
-        		console.log($click.text());
         		if($click.text() == "<<"){
         			window[ch + "CurrentPage"] = 1;
         		}else if($click.text() == "<"){
-        			window[ch + "CurrentPage"] = window[ch + "CurrentPage"] - 1;
+        			window[ch + "CurrentPage"] = Number(window[ch + "CurrentPage"]) - 1;
         		}else if($click.text() == ">"){
-        			window[ch + "CurrentPage"] = window[ch + "CurrentPage"] + 1;
+        			window[ch + "CurrentPage"] = Number(window[ch + "CurrentPage"]) + 1;
         		}else if($click.text() == ">>"){
         			window[ch + "CurrentPage"] = totalPage;
         		}else if($click.text() != window[ch + "CurrentPage"]){

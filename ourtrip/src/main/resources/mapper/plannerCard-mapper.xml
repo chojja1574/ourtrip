@@ -49,34 +49,27 @@
 	resultType="_int">
 		SELECT PLANNER_NO FROM V_PLANNER_CARD
 		<where>
+			AND PLANNER_DELETE_YN = 'N'
+			AND PLANNER_PUBLIC_YN = 'Y'
 			<if test="searchTitle != null">
 				<bind name="st" value="'%' + _parameter.searchTitle + '%'"/>
 				AND PLANNER_TITLE LIKE #{st}
 			</if>
-			<if test="groupName != ''">
+			<if test="groupName != '전체'">
 				AND GROUP_NAME = #{groupName}
 			</if>
 		</where>
 	</select>
 	
-	<!-- 지역명이 같은 리스트 + 조회 -->
+	<!-- 검색된 플래너번호에 맞는 지역명 가져오기 -->
 	<select id="getAList" parameterType="map"
 	resultMap="AreaNameResultSet">
 		SELECT * FROM V_AREA_NAME
-		<where>
-			AND PLANNER_NO IN
-			<foreach item="item" index="index" collection="pListNo"
-			open="(" separator="," close=")">
-				#{item}
-			</foreach>
-			
-			<if test="largeArea != ''">
-				AND LARGE_AREA_NAME = #{largeArea}
-			</if>
-			<if test="smallArea != ''">
-				AND SMALL_AREA_NAME = #{smallArea}
-			</if>
-		</where>
+		WHERE PLANNER_NO IN
+		<foreach item="item" index="index" collection="pListNo"
+		open="(" separator="," close=")">
+			#{item}
+		</foreach>
 	</select>
 	
 	
