@@ -125,7 +125,7 @@
 					<c:forEach var="planner" items="${uPlannerList}" varStatus="vs">
 						<div class="planner<c:if test='${vs.count > 4}'> displayNone</c:if>" id="uPlanner${vs.count}">
 							<div class="card">
-								<img class="card-img-top" src="${contextPath}/resources/images/example1.jpg"
+								<img class="card-img-top" src="${contextPath}/resources/areaImages/${planner.areaNames[0].largeAreaCode}.jpg"
 									alt="Card image">
 								<div class="card-body">
 									<h5 class="card-title">${planner.plannerTitle}</h5>
@@ -195,7 +195,7 @@
 					<c:forEach var="planner" items="${cPlannerList}" varStatus="vs">
 						<div class="planner<c:if test='${vs.count > 4}'> displayNone</c:if>" id="cPlanner${vs.count}">
 							<div class="card">
-								<img class="card-img-top" src="${contextPath}/resources/images/example2.jpg"
+								<img class="card-img-top" src="${contextPath}/resources/areaImages/${planner.areaNames[0].largeAreaCode}.jpg"
 									alt="Card image">
 								<div class="card-body">
 									<h5 class="card-title">${planner.plannerTitle}</h5>

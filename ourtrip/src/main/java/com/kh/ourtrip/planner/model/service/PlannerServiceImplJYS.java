@@ -8,8 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.ourtrip.planner.model.dao.PlannerDAOJYS;
 import com.kh.ourtrip.planner.model.vo.AreaName;
+import com.kh.ourtrip.planner.model.vo.LargeArea;
 import com.kh.ourtrip.planner.model.vo.PlannerCard;
 import com.kh.ourtrip.planner.model.vo.PlannerMember;
+import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Service
 public class PlannerServiceImplJYS implements PlannerServiceJYS{
@@ -86,5 +88,25 @@ public class PlannerServiceImplJYS implements PlannerServiceJYS{
 		
 		return result;
 	}
+	/** 대지역 목록 조회용 Service
+	 * @return largeNmList
+	 * @throws Exception
+	 */
+
+	@Override
+	public List<LargeArea> selectLargeNmList() throws Exception {
+		return plannerDAO.selectLargeNmList();
+	}
+
+	/** 소지역 목록 조회용 Service
+	 * @return smallNmList
+	 * @throws Exception
+	 */
+	@Override
+	public List<SmallArea> selectsmallNmList() throws Exception {
+		return plannerDAO.selectSmallNmList();
+	}
+	
+	
 	
 }
