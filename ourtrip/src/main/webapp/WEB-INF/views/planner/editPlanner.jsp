@@ -425,9 +425,12 @@ function initPlanner(pj){
 			getScheduleAddr(scheduleLatLng,schedule.locationNM,schedule.no).then(function(args){
 				for(var i in scheduleMarkers){
 					for(var j in scheduleMarkers[i].scheduleMarker){
+						console.log(scheduleMarkers[i].scheduleMarker[j].sno + ' =sno= ' +  args[0]);
 						if(scheduleMarkers[i].scheduleMarker[j].sno == args[0]){
 							scheduleMarkers[i].scheduleMarker[j].infoWindow = args[1];
 							loadingAddr += 1;
+							console.log()
+							console.log(loadingAddr + ' == ' + loadingInfo);
 							if(loadingInfo == loadingAddr){
 								for(var k = 0; k < days.length; k++){
 									createDate(days[k].no,false);
@@ -622,10 +625,22 @@ function getScheduleAddr(templocation,locationName,scheduleNo){
 			                        '</div>';
 				      	contentArr.push(content);
 				        resolve(contentArr);
+				    }else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+				        // 검색결과가 없는경우 해야할 처리가 있다면 이곳에 작성해 주세요
+					    content = 
+					    	'<div class="bAddr">' +
+		                        '<span class="title">' + locationName + '</span>' + 
+		                    '</div>';
+					    contentArr.push(content);
+				        resolve(contentArr);
+				    } else if (status === kakao.maps.services.Status.ERROR) {
+				        // 에러로 인해 검색결과가 나오지 않은 경우 해야할 처리가 있다면 이곳에 작성해 주세요
+				    	console.log("에러로 인해 검색결과가 나오지 않은 경우");
 				    }
 				});
 				
 			} catch(error){
+				console.log(error.stack);
 				reject(error)
 			}
 		});
@@ -637,6 +652,7 @@ function getScheduleAddr(templocation,locationName,scheduleNo){
 				contentArr.push(null);
 				resolve(contentArr);
 			}catch(error){
+				console.log(error.stack);
 				reject(error);
 			}
 		});
@@ -930,11 +946,14 @@ function selectSchedule(no){
         map.panTo(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng);
     }
     
-    lat = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLat();
-    lng = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLng();
     // marker.setPosition(mouseEvent.latLng);
     // marker.setMap(map);
     initMarker(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng,scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].infoWindow);
+    
+    lat = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLat();
+    lng = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLng();
+    console.log('lat : ' + lat);
+    console.log('lat : ' + lng);
 };
 
 function updateSchedule(sno,title,time,location,cost,memo,llat,llng,liwContent){
@@ -1092,7 +1111,7 @@ function onMessage(msg) {
 		scheduleMarkers.push(
 				{dno:data['dno'],scheduleMarker:new Array({sno:data['sno'],LatLng:new kakao.maps.LatLng(0,0),unselect:true,infoWindow:null})});
 		createDate(data['dno'],true);
-		addSchedule(data['dno'],data['sno'],'제목 없음','','',0,'',0,0,null,memberNo);
+		addSchedule(data['dno'],data['sno'],'제목 없음','','미정',0,'',0,0,null,memberNo);
 		break;
 	case 'deleteDate': 
 		deleteDate(data['dno']);
@@ -1171,8 +1190,6 @@ function onClose(evt) {
 
 // 다른사람이 보낸 채팅 메세지 만들어서 리턴하는 함수
 function mkChatMsg(profileImg,userId,msgContent,msgTime){
-	
-	console.log(profileImg);
 	
 	var imagePath = null;
 	
@@ -1255,7 +1272,6 @@ function initJoinMember(joinUserArray){
 			case '2':	color = '#32F1FF';	icon = '☆';	break;
 			case '3':	color = '#0AC9FF';	icon = '★';	break;
 		}		
-		console.log(joinMember[i].memberNickName + icon);
 		var userOption = 
 			'<option style="background:' + color + '" value="' + joinMember[i].memberNo + '">' + joinMember[i].memberNickName + icon + '</option>'
 		$('#userPermission').append(userOption);
@@ -1379,6 +1395,34 @@ $(function () {
 	    	sock.send(JSON.stringify({pno:planner.no, type: 'startDate', memberNo: memberNo, content: $('#startrip').val()}));
     	else
     		alert('권한이 없습니다');
+    });
+    
+    $('#inputScheduleTitle').keyup(function(){
+    	if($('#inputScheduleTitle').val().length > 20){
+    		alert('20글자를 초과하여 입력할 수 없습니다');
+    		$('#inputScheduleTitle').val($('#inputScheduleTitle').val().substring(0,20));
+    	}
+    });
+    
+    $('#inputScheduleCost').keyup(function(){
+    	if($('#inputScheduleCost').val().length > 9){
+    		alert('돈을 너무 막씁니다');
+    		$('#inputScheduleCost').val($('#inputScheduleCost').val().substring(0,9));
+    	}
+    });
+    
+    $('#inputScheduleMemo').keyup(function(){
+    	if($('#inputScheduleCost').val().length > 200){
+    		alert('200글자를 초과하여 입력할 수 없습니다');
+    		$('#inputScheduleCost').val($('#inputScheduleCost').val().substring(0,200));
+    	}
+    });
+    
+    $('#inputScheduleLocationName').keyup(function(){
+    	if($('#inputScheduleLocationName').val().length > 20){
+    		alert('20글자를 초과하여 입력할 수 없습니다');
+    		$('#inputScheduleLocationName').val($('#inputScheduleLocationName').val().substring(0,20));
+    	}
     });
 });
 
