@@ -43,6 +43,13 @@ public interface PlannerServiceJYS {
 	 */
 	public abstract List<AreaName> selectAreaNames(List<Integer> noList) throws Exception;
 
+	/** 플래너 삭제용 Service
+	 * @param delPlanner
+	 * @return result
+	 * @throws Exception
+	 */
+	public abstract int delPlanner(PlannerMember delPlanner) throws Exception;
+
 
 
 }

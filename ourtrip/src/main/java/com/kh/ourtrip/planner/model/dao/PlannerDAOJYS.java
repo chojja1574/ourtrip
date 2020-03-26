@@ -61,4 +61,22 @@ public class PlannerDAOJYS {
 		return sqlSession.selectList("plannerCardMapper2.completePlannerList", memberNo);
 	}
 
+	/** 플래너 권한 조회용 DAO
+	 * @param delPlanner
+	 * @return memberPermission
+	 * @throws Exception
+	 */
+	public String selectPlannerPerm(PlannerMember delPlanner) throws Exception{
+		return sqlSession.selectOne("plannerCardMapper2.selectPlannerPerm", delPlanner);
+	}
+	
+	/** 플래너 삭제용 DAO
+	 * @param delPlanner
+	 * @return result
+	 * @throws Exception
+	 */
+	public int delPlanner(PlannerMember delPlanner) throws Exception{
+		return sqlSession.update("plannerCardMapper2.delPlanner", delPlanner);
+	}
+
 }

@@ -51,6 +51,7 @@
 		SELECT * FROM PLANNER_MEMBER
 		OUTER JOIN V_PLANNER_CARD USING(PLANNER_NO)
 		WHERE MEMBER_NO= #{memberNo}
+		AND PLANNER_DELETE_YN = 'N'
 		AND PLANNER_START_DT > SYSDATE
 	</select>
 	
@@ -59,7 +60,22 @@
 		SELECT * FROM PLANNER_MEMBER
 		OUTER JOIN V_PLANNER_CARD USING(PLANNER_NO)
 		WHERE MEMBER_NO= #{memberNo}
+		AND PLANNER_DELETE_YN = 'N'
 		AND PLANNER_START_DT &lt;= SYSDATE
 	</select>
+	
+	<!-- 플래너 권한 조회 -->
+	<select id="selectPlannerPerm" parameterType="PlannerMember" resultType="string">
+		SELECT PLANNER_PERMISSION FROM PLANNER_MEMBER
+		WHERE PLANNER_NO= #{plannerNo}
+		AND MEMBER_NO= #{memberNo}
+	</select>
+	
+	<!-- 플래너 삭제상태로 변경 -->
+	<update id="delPlanner" parameterType="PlannerMember">
+		UPDATE PLANNER SET
+		PLANNER_DELETE_YN = 'Y'
+		WHERE PLANNER_NO= #{plannerNo}
+	</update>
 	
 </mapper>
