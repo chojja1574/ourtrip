@@ -76,6 +76,7 @@
 	height: 50%;
 }
 
+
 #footer {
 	clear:both;
 }
@@ -110,15 +111,16 @@
 		<h2 class="font-weight-bold">플래너 검색</h2>
 		<hr>
 
-		<form id="search-form" method="GET" action="searchPlanner" onsubmit="false">
+		<div>
 
 			<!-- 검색창 -->
 			<div class="col-md-6 mx-auto" id="search-wrapper">
 				<div class="input-group mb-3">
 					<input type="text" id="searchTitle" name="searchTitle"
-						class="form-control" placeholder="플래너 제목을 입력하세요">
+						class="form-control" placeholder="플래너 제목을 입력하세요" onkeypress="enterSearch(this);">
 					<div class="input-group-append">
-						<button class="btn main-btn" type="submit">검색</button>
+						
+						<button class="btn main-btn" id="searchBtn" type="button">검색</button>
 					</div>
 				</div>
 			</div>
@@ -132,15 +134,15 @@
 							<div class="col-6">
 								<label>지역</label> <select name="largeArea" id="wide-area"
 									class="custom-select">
-									<option value="전체" selected>전체</option>
-									<option value="경기">경기</option>
-									<option value="서울특별시">서울특별시</option>
-									<option value="강원도">강원도</option>
+									<option value="0" selected>전체</option>
+									<option value="1">경기</option>
+									<option value="2">서울특별시</option>
+									<option value="4">강원도</option>
 								</select>
 							</div>
 							<div class="col-6">
 								<select name="smallArea" id="local-area" class="custom-select">
-									<option value="전체" selected>전체</option>
+									<option value="0" selected>전체</option>
 								</select>
 							</div>
 						</div>
@@ -171,14 +173,14 @@
 
 			</div>
 
-		</form>
+		</div>
 
 		<!-- 플래너 컨테이너 -->
-		<div class="py-3">
+		<div class="py-3" id="planner-container">
 			<h4>검색된 플래너</h4>
 
 			<!-- 검색된 플래너 리스트 -->
-			<div class="planner-wrapper my-3">
+			<div class="planner-wrapper my-3" id="planner-wrapper">
 				<!-- 플래너 -->
 				<div class="planner">
 					<div class="card">
@@ -287,29 +289,119 @@
 	<!-- 탐색 컨텐츠 끝나는 부분 -->
 
 	<script>
+		// 엔터시 검색버튼 누르는 함수
+		function enterSearch(){
+		    var keyCode = event.keyCode;
+	
+		    if(keyCode == 13){
+		        $("#searchBtn").click();
+		    }
+		}
+		
+		var searchTitle;
+		var groupName;
+		var largeArea;
+		var smallArea;
+		var viaCheck;
+		var currentPage = 1;
+		
+		
         $(function () {
+        	$pWrapper = $("#planner-wrapper");
+        	$pContainer = $("#planner-container");
+        	$pContainer.hide();
+        	
+        	
+        	$("#searchBtn").on("click", function(){
+        		var searchTitle = $("#searchTitle").val();
+        		var groupName = $("#groupName").val()
+        		var largeArea = $("#wide-area").val()
+        		var smallArea = $("#local-area").val()
+        		var viaCheck = $("#viaCheck").val()
+        		
+        		$.ajax({
+        			url : "searchPlanner",
+        			type : "POST",
+        			data : {searchTitle: searchTitle,
+        					groupName: groupName,
+        					largeArea: largeArea,
+        					smallArea: smallArea,
+        					viaCheck: viaCheck,
+        					currentPage: currentPage},
+        				
+        			success : function(result){
+        				console.log(result)
+       					$pContainer.show();
+        				if(result == null){
+        					console.log("조건문들어옴");
+        					console.log($pWrapper);
+        					$pWrapper.html("<div style='height:250px'>조회결과가 없습니다.<div>");
+        				} else {
+        					console.log(result.length);
+        					var pHtml = "";
+        					for(var i=0; i<result.length; i++) {
+	        					pHtml += 
+	        					'<div class="planner">' + 
+	        					'<div class="card">' +
+        						'<img class="card-img-top" src="images/example1.jpg" alt="Card image">' +
+        						'<div class="card-body">' +
+       							'<h5 class="card-title">' + result[i].plannerTitle + '</h5>' +
+   								'<p class="card-text">' +
+   								'<span>시작일 : ' + result[i].plannerStartDT + ' ' +result[i].tripDate + 'DAYS</span><br> <span>' + result[i].groupName + ' 여행</span><br>';
+   								if(result[i].areaNames.length > 1) { 
+   									pHtml += '<span>' + result[i].areaNames[0].largeAreaName + ' ' + 
+   									result[i].areaNames[0].smallAreaName + '...</span>'; 
+   								} else {
+   									pHtml += '<span>' + result[i].areaNames[0].largeAreaName + ' ' + 
+   									result[i].areaNames[0].smallAreaName + '</span>'; 
+   								}
+   								var now = new Date(result[i].plannerStartDT);
+   								console.log(now);
+   								pHtml +=  
+   								'</p>' + 
+	        					'<div class="d-flex justify-content-between">' +
+	        					'<div class="btn-wrapper">' +
+	        					'<button type="button" class="btn btn-sm main-btn">바로가기</button>' +
+	        					'<button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>' +
+	        					'</div>' +
+	        					'<div>' +
+	        					'<i class="fas fa-eye"></i>&nbsp;'+ result[i].plannerCount +
+	        					'</div>' +
+	        					'</div>' +
+	        					'</div>' +
+	        					'</div>' +
+	        					'</div>';
+        					}
+        					$pWrapper.html(pHtml);
+        				}
+        			},
+        			error : function(e){
+        				alert(e);
+        			}
+        			
+        		});
+        	});
+        	
             $("#wide-area").on("change", function () {
                 var wideVal = $(this).val();
                 var html = "";
-                html += "<option value='전체' selected>전체</option>";
+                html += "<option value='0' selected>전체</option>";
 
-                if (wideVal == "경기") {
-                    html += "<option value='부천시'>부천시</option>";
-                    html += "<option value='고양시'>고양시</option>";
-                    html += "<option value='구리시'>구리시</option>";
-                    html += "<option value='수원시'>수원시</option>";
-                    html += "<option value='남양주시'>남양주시</option>";
+                if (wideVal == "1") {
+                    html += "<option value='14'>부천시</option>";
+                    html += "<option value='3'>고양시</option>";
+                    html += "<option value='1'>구리시</option>";
+                    html += "<option value='4'>수원시</option>";
+                    html += "<option value='2'>남양주시</option>";
 
-                } else if (wideVal == "서울특별시") {
-                    html += "<option value='강남구'>강남구</option>";
-                    html += "<option value='종로구'>종로구</option>";
-                    html += "<option value='강서구'>강서구</option>";
-                    html += "<option value='이태원'>이태원</option>";
-                    html += "<option value='여의도'>여의도</option>";
-
-                } else if (wideVal == "강원도") {
-                    html += "<option value='강릉시'>강릉시</option>";
-                    html += "<option value='속초시'>속초시</option>";
+                } else if (wideVal == "2") {
+                    html += "<option value='8'>강남구</option>";
+                    html += "<option value='17'>종로구</option>";
+                    html += "<option value='25'>강서구</option>";
+                    
+                } else if (wideVal == "4") {
+                    html += "<option value='13'>강릉시</option>";
+                    html += "<option value='6'>속초시</option>";
 
                 }
 

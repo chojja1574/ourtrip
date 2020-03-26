@@ -51,7 +51,7 @@
 		<where>
 			AND PLANNER_DELETE_YN = 'N'
 			AND PLANNER_PUBLIC_YN = 'Y'
-			<if test="searchTitle != null">
+			<if test="searchTitle != null or searchTitle != ''">
 				<bind name="st" value="'%' + _parameter.searchTitle + '%'"/>
 				AND PLANNER_TITLE LIKE #{st}
 			</if>
@@ -72,5 +72,38 @@
 		</foreach>
 	</select>
 	
+	<!-- 경유여부체크되어있을경우 지역필터링 -->
+	<select id="getRList" parameterType="map"
+	resultType="_int">
+		SELECT PLANNER_NO FROM V_AREA_NAME
+		<where>
+			AND PLANNER_NO IN
+			<foreach item="item" index="index" collection="pListNo"
+			open="(" separator="," close=")">
+			#{item}
+			</foreach>
+			<if test="largeArea != 0 and smallArea == 0">
+				AND LARGE_AREA_CODE = #{largeArea}
+			</if>
+			<if test="largeArea != 0 and smallArea != 0">
+				AND LARGE_AREA_CODE = #{largeArea}
+				AND SMALL_AREA_CODE = #{smallArea}
+			</if>
+		</where>
+	</select>
 	
+	<!-- 검색된 플래너 목록 조회 -->
+	<select id="selectPList" parameterType="map"
+	resultMap="PlannerCardResultSet">
+		SELECT * FROM V_PLANNER_CARD
+		<where>
+			AND PLANNER_NO IN
+			<foreach item="item" index="index" collection="searchListNo"
+			open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND PLANNER_DELETE_YN = 'N'
+			AND PLANNER_PUBLIC_YN = 'Y'
+		</where>
+	</select>
 </mapper>

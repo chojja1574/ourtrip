@@ -10,7 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.kh.ourtrip.common.Pagination;
+import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.planner.model.service.PlannerServiceSDS;
 import com.kh.ourtrip.planner.model.vo.PlannerCard;
 
@@ -43,20 +48,22 @@ public class PlannerControllerSDS {
 		
 	}
 	
-	@RequestMapping("searchPlanner")
+	@ResponseBody
+	@RequestMapping(value="searchPlanner",
+					produces= "application/json; charset=utf-8")
 	public String searchPlanner(Model model,
 			@RequestParam(value="searchTitle", required=false)
 			String searchTitle,
 			@RequestParam(value="groupName", required=false)
 			String groupName,
 			@RequestParam(value="largeArea", required=false)
-			String largeArea,
+			Integer largeArea,
 			@RequestParam(value="smallArea", required=false)
-			String smallArea,
+			Integer smallArea,
 			@RequestParam(value="viaCheck", required=false)
 			String viaCheck, 
 			@RequestParam(value="currentPage", required=false)
-			String currentPage ){
+			Integer currentPage ){
 		
 		System.out.println("searchTitle : " + searchTitle);
 		System.out.println("groupName : " + groupName);
@@ -71,19 +78,38 @@ public class PlannerControllerSDS {
 		map.put("largeArea", largeArea);
 		map.put("smallArea", smallArea);
 		map.put("viaCheck", viaCheck);
+		map.put("currentPage", currentPage);
 		
 		try {
 			// 전체 플래너 수 조회
 			int listCount = plannerServiceSDS.getListCount(map);
-			//List<PlannerCard> pList = 
-					//plannerServiceSDS.selectSearchPList();
+			//System.out.println("컨트롤러 listCount : " + listCount);
+			// 현재 페이지 확인
+			if(currentPage == null) currentPage = 1;
+			
+			// 페이지 정보 저장
+			PageInfo pInf = Pagination.
+					getPageInfo(4, 5, currentPage, listCount);
+			
+			// 플래너 목록 조회
+			List<PlannerCard> pList = plannerServiceSDS.selectPList(map, pInf);
+//			System.out.println("Controller pList 목록 : " + pList);
+			for(PlannerCard item : pList) {
+				System.out.println(item);
+			}
+			
+			Gson gson = new GsonBuilder().setDateFormat(
+					"yyyy-MM-dd").create();
+			
+			return gson.toJson(pList);
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("errorMsg", "검색과정중에러");
 			return "common/errorPage";
 		}
-		return null;
+		
 	}
 	
 }
