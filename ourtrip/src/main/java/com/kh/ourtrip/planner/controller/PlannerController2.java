@@ -67,7 +67,7 @@ public class PlannerController2 {
 			int groupCode = -1;
 			
 			List<PlannerView> selectPlannerView = plannerService.selectPlannerView(no);
-			
+			System.out.println(selectPlannerView);
 			Map<Integer,List<PlannerView>> dateMap = new HashMap<Integer,List<PlannerView>>();
 			for(PlannerView pv : selectPlannerView) {
 				if(inputPvVal) {
@@ -116,24 +116,18 @@ public class PlannerController2 {
 			    			pv.getScheduleLat(),pv.getScheduleLng(),pv.getDateNo());
 			    	scheduleList.add(schedule);
 			    }
-			   
 			    Day oneDay = new Day(dateNo,tripDate,no,scheduleList);
 			    dayList.add(oneDay);
-			    System.out.println("key : " + entry.getKey() + " / value : " + entry.getValue());
 			    
 			}
 			selectedPlanner = new Planner(no, plannerTitle, plannerPwd, plannerCost, 
 					plannerCreateDT, plannerModifyDT, plannerStartDT, plannerPublicYN, plannerDeleteYN, 
 					plannerExpiry, plannerCount, plannerUrl, groupCode, dayList);
-			System.out.println(selectedPlanner.toString());
 			jsonObj = (JSONObject) jsonParser.parse(selectedPlanner.toJsonString());
-			System.out.println("json : " + selectedPlanner.toString());
 			
 			// 채팅내역 얻어와서 jsonString으로 변환
 			List<ChattingLogView> chatList = null;
 			chatList = plannerService.selectChatList(no);
-			System.out.println("chatList");
-			System.out.println(chatList);
 			for(ChattingLogView cl : chatList) {
 				jsonObj = (JSONObject) jsonParser.parse(cl.toJsonString());
 				chatArray.add(jsonObj);
@@ -157,10 +151,6 @@ public class PlannerController2 {
 		model.addAttribute("plannerTitle", selectedPlanner.getPlannerTitle());
 		model.addAttribute("chatList", chatArray);
 		model.addAttribute("joinUserArray",joinUserArray);
-		System.out.println(joinUserArray);
-		System.out.println("chatList");
-		System.out.println(chatArray.toJSONString());
-		System.out.println(no);
 		System.out.println("editplannerend");
 		
 		return "planner/editPlanner";

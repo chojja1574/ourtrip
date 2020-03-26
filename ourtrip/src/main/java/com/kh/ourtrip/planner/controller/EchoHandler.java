@@ -79,6 +79,8 @@ public class EchoHandler extends TextWebSocketHandler {
             	removeSchedule(session, jsonObj);
             }else if(jsonObj.get("type").equals("msg")) {
             	chattingMessage(session, jsonObj);
+            }else if(jsonObj.get("type").equals("permission")) {
+            	updatePermission(session, jsonObj);
             }else {
             	sendChatroom(session, jsonObj);
             }
@@ -348,6 +350,22 @@ public class EchoHandler extends TextWebSocketHandler {
 		result = plannerService.insertChattingLog(chatLog);
 		//{"pno":"1","chatRoomId":"","type":"msg","id":"2","content":"asdf","time":"18:15"}
 		sendChatroom(session, msgJson);
+		return result;
+	}
+	
+	// 권한 저장
+	// {pno:planner.no, type: 'permission', memberNo: memberNo, permission: '2', grantMemberNo:grantMemberNo}
+	private int updatePermission(WebSocketSession session, JSONObject msgJson) throws Exception{
+		int result = 0;
+		System.out.println("updatePermission");
+		
+		PlannerMember pm = new PlannerMember(Integer.parseInt(msgJson.get("pno").toString()),
+				Integer.parseInt(msgJson.get("grantMemberNo").toString()),Integer.parseInt(msgJson.get("permission").toString()));
+		
+		result = plannerService.updatePermission(pm);
+		
+		sendChatroom(session, msgJson);
+		
 		return result;
 	}
 }

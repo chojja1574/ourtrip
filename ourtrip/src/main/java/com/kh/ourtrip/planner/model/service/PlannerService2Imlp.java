@@ -166,9 +166,25 @@ public class PlannerService2Imlp implements PlannerService2 {
 		return plannerDAO2.selectPlannerMemeberExist(pm);
 	}
 
+	/** PLANNER_MEMBER 테이블에 새로운 값 추가 Service
+	 * @param pm
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public int insertPlannerMember(PlannerMember pm) throws Exception {
 		return plannerDAO2.insertPlannerMemeber(pm);
+	}
+	
+	/** PLANNER_MEMBER 테이블의 permission값 수정 Service
+	 * @param pm
+	 * @return result
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int updatePermission(PlannerMember pm) throws Exception{
+		return plannerDAO2.updatePermission(pm);
 	}
 	
 	

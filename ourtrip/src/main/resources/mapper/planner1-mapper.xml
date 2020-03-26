@@ -153,4 +153,8 @@
 	<insert id="insertPlannerMember" parameterType="PlannerMember">
 		INSERT INTO PLANNER_MEMBER VALUES(#{plannerNo},#{memberNo},#{plannerPermission})
 	</insert>
+	
+	<update id="updatePermission" parameterType="PlannerMember">
+		UPDATE PLANNER_MEMBER SET PLANNER_PERMISSION = #{plannerPermission} WHERE PLANNER_NO = #{plannerNo} AND MEMBER_NO = #{memberNo}
+	</update>
 </mapper>

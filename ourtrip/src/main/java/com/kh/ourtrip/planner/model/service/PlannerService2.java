@@ -107,9 +107,16 @@ public interface PlannerService2 {
 	 */
 	public abstract int selectPlannerMemeberExist(PlannerMemberView pm) throws Exception;
 
-	/** PLANNER_MEMBER 테이블에 새로운 값 추가
+	/** PLANNER_MEMBER 테이블에 새로운 값 추가 Service
 	 * @param pm
 	 * @throws Exception
 	 */
 	public abstract int insertPlannerMember(PlannerMember pm) throws Exception;
+
+	/** PLANNER_MEMBER 테이블의 permission값 수정 Service
+	 * @param pm
+	 * @return result
+	 * @throws Exception
+	 */
+	public abstract int updatePermission(PlannerMember pm) throws Exception;
 }

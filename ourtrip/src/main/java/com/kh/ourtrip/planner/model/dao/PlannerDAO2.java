@@ -77,5 +77,9 @@ public class PlannerDAO2 {
 	public int insertPlannerMemeber(PlannerMember pm) {
 		return sqlSessionTemplate.insert("planner1Mapper.insertPlannerMember", pm);
 	}
+
+	public int updatePermission(PlannerMember pm) {
+		return sqlSessionTemplate.update("planner1Mapper.updatePermission", pm);
+	}
 	
 }
