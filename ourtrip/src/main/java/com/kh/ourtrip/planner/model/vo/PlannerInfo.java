@@ -7,6 +7,7 @@ public class PlannerInfo {
 	
 	private int memberNo;
 	private String memberNickName;
+	private String memberEmail;
 	private int plannerNo;
 	private String plannerTitle;
 	private String plannerPwd;
@@ -24,7 +25,7 @@ public class PlannerInfo {
 	private List<Day> days;
 	private List<AreaName> areaNames;
 	private Date plannerEndDate;
-	private Date tripDate;
+	private int TripDate;
 	private int largeAreaCode;
 	private int smallAreaCode;
 	
@@ -34,14 +35,15 @@ public class PlannerInfo {
 	}
 
 
-	public PlannerInfo(int memberNo, String memberNickName, int plannerNo, String plannerTitle, String plannerPwd,
-			int plannerCost, Date plannerCreateDT, Date plannerModifyDT, Date plannerStartDT, String plannerPublicYN,
-			String plannerDeleteYN, String plannerExpiry, int plannerCount, String plannerUrl, String groupName,
-			int groupCode, List<Day> days, List<AreaName> areaNames, Date plannerEndDate, Date tripDate,
-			int largeAreaCode, int smallAreaCode) {
+	public PlannerInfo(int memberNo, String memberNickName, String memberEmail, int plannerNo, String plannerTitle,
+			String plannerPwd, int plannerCost, Date plannerCreateDT, Date plannerModifyDT, Date plannerStartDT,
+			String plannerPublicYN, String plannerDeleteYN, String plannerExpiry, int plannerCount, String plannerUrl,
+			String groupName, int groupCode, List<Day> days, List<AreaName> areaNames, Date plannerEndDate,
+			Date addDate, int tripDate, int largeAreaCode, int smallAreaCode) {
 		super();
 		this.memberNo = memberNo;
 		this.memberNickName = memberNickName;
+		this.memberEmail = memberEmail;
 		this.plannerNo = plannerNo;
 		this.plannerTitle = plannerTitle;
 		this.plannerPwd = plannerPwd;
@@ -59,7 +61,7 @@ public class PlannerInfo {
 		this.days = days;
 		this.areaNames = areaNames;
 		this.plannerEndDate = plannerEndDate;
-		this.tripDate = tripDate;
+		TripDate = tripDate;
 		this.largeAreaCode = largeAreaCode;
 		this.smallAreaCode = smallAreaCode;
 	}
@@ -82,6 +84,16 @@ public class PlannerInfo {
 
 	public void setMemberNickName(String memberNickName) {
 		this.memberNickName = memberNickName;
+	}
+
+
+	public String getMemberEmail() {
+		return memberEmail;
+	}
+
+
+	public void setMemberEmail(String memberEmail) {
+		this.memberEmail = memberEmail;
 	}
 
 
@@ -235,6 +247,16 @@ public class PlannerInfo {
 	}
 
 
+	public List<AreaName> getAreaNames() {
+		return areaNames;
+	}
+
+
+	public void setAreaNames(List<AreaName> areaNames) {
+		this.areaNames = areaNames;
+	}
+
+
 	public Date getPlannerEndDate() {
 		return plannerEndDate;
 	}
@@ -245,13 +267,13 @@ public class PlannerInfo {
 	}
 
 
-	public Date getTripDate() {
-		return tripDate;
+	public int getTripDate() {
+		return TripDate;
 	}
 
 
-	public void setTripDate(Date tripDate) {
-		this.tripDate = tripDate;
+	public void setTripDate(int tripDate) {
+		TripDate = tripDate;
 	}
 
 
@@ -275,30 +297,20 @@ public class PlannerInfo {
 	}
 
 
-	public List<AreaName> getAreaNames() {
-		return areaNames;
-	}
-
-
-	public void setAreaNames(List<AreaName> areaNames) {
-		this.areaNames = areaNames;
-	}
-
-
 	@Override
 	public String toString() {
-		return "PlannerInfo [memberNo=" + memberNo + ", memberNickName=" + memberNickName + ", plannerNo=" + plannerNo
-				+ ", plannerTitle=" + plannerTitle + ", plannerPwd=" + plannerPwd + ", plannerCost=" + plannerCost
-				+ ", plannerCreateDT=" + plannerCreateDT + ", plannerModifyDT=" + plannerModifyDT + ", plannerStartDT="
-				+ plannerStartDT + ", plannerPublicYN=" + plannerPublicYN + ", plannerDeleteYN=" + plannerDeleteYN
-				+ ", plannerExpiry=" + plannerExpiry + ", plannerCount=" + plannerCount + ", plannerUrl=" + plannerUrl
-				+ ", groupName=" + groupName + ", groupCode=" + groupCode + ", days=" + days + ", areaNames="
-				+ areaNames + ", plannerEndDate=" + plannerEndDate + ", tripDate=" + tripDate + ", largeAreaCode="
+		return "PlannerInfo [memberNo=" + memberNo + ", memberNickName=" + memberNickName + ", memberEmail="
+				+ memberEmail + ", plannerNo=" + plannerNo + ", plannerTitle=" + plannerTitle + ", plannerPwd="
+				+ plannerPwd + ", plannerCost=" + plannerCost + ", plannerCreateDT=" + plannerCreateDT
+				+ ", plannerModifyDT=" + plannerModifyDT + ", plannerStartDT=" + plannerStartDT + ", plannerPublicYN="
+				+ plannerPublicYN + ", plannerDeleteYN=" + plannerDeleteYN + ", plannerExpiry=" + plannerExpiry
+				+ ", plannerCount=" + plannerCount + ", plannerUrl=" + plannerUrl + ", groupName=" + groupName
+				+ ", groupCode=" + groupCode + ", days=" + days + ", areaNames=" + areaNames + ", plannerEndDate="
+				+ plannerEndDate + ", TripDate=" + TripDate + ", largeAreaCode="
 				+ largeAreaCode + ", smallAreaCode=" + smallAreaCode + "]";
 	}
 
 
-	
 	
 	
 

@@ -213,7 +213,7 @@ body {
 											<button type="button" class="btn  btn-sm main-btn copy-btn">복사</button>
 										</div>
 										<div>
-											<i class="fas fa-eye"></i>&nbsp;조회수
+											<i class="fas fa-eye">${plannerInfo.plannerCount}</i>&nbsp;조회수
 										</div>
 									</div>
 								</div>
@@ -314,7 +314,7 @@ body {
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
-						<form action="#" method="POST">
+						<form action="${contextPath}/admin/memberDelete" method="POST">
 							<div class="modal-body text-center">
 								<textarea id="delBecause" name="delBecause"
 									style="width: 400px; height: 200px;" placeholder="삭제사유를 입력해주세요"></textarea>
@@ -323,6 +323,7 @@ body {
 									전송됩니다.<br> 삭제된 회원은 로그인을 할 수 없습니다.<br> 삭제된 회원은 같은 이메일,
 									가입경로로 회원가입을 할 수 없습니다.<br> 삭제된 회원은 복구시킬 수 있습니다.
 								</p>
+								<input type="text" value="${detailMember.memberEmail}" style="display: none">
 							</div>
 							<div class="custom-control custom-checkbox text-right">
 								<input type="checkbox" class="custom-control-input"
@@ -341,13 +342,26 @@ body {
 				</div>
 			</div>
 		</div>
+		
 		<!-- 복구질문 -->
 		<script>
-			$("#restore").on("click", function() {
-				if (confirm("복구하시겠습니까?")) {
-					location.href = "#";
+		$(function(){
+			
+			var MemberNo = ${detailMember.memberNo};
+			var N = "N";
+			var Y = "Y";
+			
+			$("#restore").on("click",function() {
+				if(${MemberNo.memberStatus} == N){
+					alert("삭제 되지 않은 플래너 입니다.")
 				}
-			})
+				if(${MemberNo.memberStatus} == Y){
+				 (confirm("복구하시겠습니까?")) 
+					location.href = "${contextPath}/admin/plannerRecovery?memberNo="+ MemberNo
+				}
+			});
+			
+		});
 		</script>
 	</div>
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />

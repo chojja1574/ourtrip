@@ -58,7 +58,7 @@
 						<option value="nickName">닉네임</option>
 					</select> <input type="text" name="searchValue" id="searchValue"
 						class="form-control" style="width: 25%; display: inline-block;">
-					<button class="form-control btn main-btn"
+					<button class="form-control btn main-btn" type="submit"
 						style="width: 100px; display: inline-block; margin-bottom: 5px;">검색</button>
 				</div>
 			</div>
@@ -128,9 +128,9 @@
 							<label class="col-3 ml-2" style="margin-top: 7px;">삭제여부</label>
 							<div class="col-4">
 								<select name="deleted" id="wide-area" class="custom-select">
-									<option value="0" selected>전체</option>
-									<option value="Y">존제</option>
-									<option value="N">삭제</option>
+									<option value="all" selected>전체</option>
+									<option value="N">존제</option>
+									<option value="Y">삭제</option>
 								</select>
 							</div>
 						</div>
@@ -141,7 +141,7 @@
 		<hr>
 
 		<h2>플래너 목록</h2>
-		<table class="table table-hover" style="text-align: center;">
+		<table id="plannerTable" class="table table-hover" style="text-align: center;">
 			<thead class="thead-dark">
 				<tr>
 					<th>플래너번호</th>
@@ -329,9 +329,19 @@
 					}
 				});
 			}
-			
-
 		});
+		
+		$(function() {
+			$("#plannerTable td").click(function() {
+					var plannerNo = $(this).parent().children().eq(0).text();
+						location.href = "${contextPath}/admin/plannerDetail?no="
+							+ plannerNo + "&currentPageNum=" + ${pInfom.currentPage};
+							}).mouseenter(function() {
+						$(this).parent().css("cursor", "pointer");
+					});
+		});
+		
+		
 	</script>
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />

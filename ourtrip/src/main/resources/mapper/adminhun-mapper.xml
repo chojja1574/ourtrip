@@ -20,6 +20,7 @@
 
 	<resultMap type="PlannerInfo" id="plannerInfoResultSet">
 		<id property="memberNo" column="MEMBER_NO" />
+		<result property="memberEmail" column="MEMBER_EMAIL" />
 		<result property="memberNickName" column="MEMBER_NICK_NAME" />
 		<result property="plannerNo" column="PLANNER_NO" />
 		<result property="plannerTitle" column="PLANNER_TITLE" />
@@ -64,15 +65,13 @@
 
 	<select id="listFullCount" resultType="_int">
 		SELECT COUNT(*) FROM
-		MEMBER WHERE
-		MEMBER_DELETE_YN = 'N'
+		MEMBER 
 		ORDER BY MEMBER_NO DESC
 	</select>
 
 	<select id="selectFullList" resultMap="memberResultSet">
 		SELECT *
-		FROM MEMBER WHERE
-		MEMBER_DELETE_YN = 'N'
+		FROM MEMBER 
 		ORDER BY MEMBER_NO DESC
 	</select>
 
@@ -95,7 +94,6 @@
 					</otherwise>
 				</choose>
 			</if>
-			AND MEMBER_DELETE_YN = 'N'
 		</where>
 		ORDER BY MEMBER_NO DESC
 	</select>
@@ -122,7 +120,6 @@
 					</otherwise>
 				</choose>
 			</if>
-			AND MEMBER_DELETE_YN = 'N'
 		</where>
 		ORDER BY MEMBER_NO DESC
 	</select>
@@ -184,15 +181,15 @@
 	<select id="resultCount" parameterType="map"
 		resultMap="plannerInfoResultSet">
 		SELECT PlANNER_NO FROM V_PLANNER_INFO
-		<where>
-			<if test="searchKey != null">
+		 <where>
+			<if test="searchKey != null and searchValue != ''">
 				<bind name="sv" value="'%' + _parameter.searchValue + '%'" />
 				<choose>
-					<when test="searchKey == 'title' and searchValue != null">
+					<when test="searchKey == 'title' ">
 						AND PLANNER_TITLE LIKE #{sv}
 					</when>
 
-					<when test="searchKey == 'nickName' and searchValue != null">
+					<when test="searchKey == 'nickName' ">
 						AND MEMBER_NICK_NAME LIKE #{sv}
 					</when>
 				</choose>
@@ -205,7 +202,7 @@
 				</foreach>
 			</if>
 
-			<if test="searchArea != 0">
+			 <if test="searchArea != 0">
 				AND LARGE_AREA_CODE IN #{searchArea}
 			</if>
 
@@ -213,7 +210,7 @@
 				AND SMALL_AREA_CODE IN #{searchLocal}
 			</if>
 
-			<if test="deleted != 0">
+			<if test="deleted != 'all'">
 				AND PLANNER_DELETE_YN = #{deleted}
 			</if>
 
@@ -222,15 +219,15 @@
 					AND PLANNER_START_DT + TRIP_DATE <= #{endTrip}
 					]]>
 			</if>
-		</where>
-		ORDER BY PLANNER_NO DESC
+		</where>  
+	 ORDER BY PLANNER_NO DESC 
 	</select>
 
 	<select id="searchResult" parameterType="map"
 		resultMap="plannerInfoResultSet">
 		SELECT * FROM V_PLANNER_INFO
 		<where>
-			<if test="searchKey != null">
+			<if test="searchKey != null and searchValue != ''">
 				<bind name="sv" value="'%' + _parameter.searchValue + '%'" />
 				<choose>
 
@@ -242,7 +239,7 @@
 						AND MEMBER_NICK_NAME LIKE #{sv}
 					</when>
 				</choose>
-			</if>
+			</if> 
 			<if test="searchGroup != null">
 				AND GROUP_CODE IN
 				<foreach index="index" item="group" collection="searchGroup"
@@ -251,15 +248,15 @@
 				</foreach>
 			</if>
 
-			<if test="searchArea != 0">
+			 <if test="searchArea != 0">
 				AND LARGE_AREA_CODE IN #{searchArea}
 			</if>
 
 			<if test="searchArea != 0 and searchLocal != 0">
 				AND SMALL_AREA_CODE IN #{searchLocal}
-			</if>
+			</if> 
 
-			<if test="deleted != 0">
+			<if test="deleted != 'all'">
 				AND PLANNER_DELETE_YN = #{deleted}
 			</if>
 
@@ -268,7 +265,7 @@
 					AND PLANNER_START_DT + TRIP_DATE <= #{endTrip}
 					]]>
 			</if>
-		</where>
+		</where> 
 		ORDER BY PLANNER_NO DESC
 	</select>
 
@@ -300,5 +297,34 @@
 			</where>
 		</if>
 	</select>
+	
+	<select id="plannerDetail" parameterType="_int"  resultMap="plannerInfoResultSet">
+		SELECT * FROM V_PLANNER_INFO WHERE PLANNER_NO = #{no}
+	</select>
+	
+	<select id="areaDetail" parameterType="_int" resultMap="AreaNameResultSet">
+		SELECT * FROM V_AREA_NAME WHERE PLANNER_NO = #{no}
+	</select>
+	
+	<update id="deletePlanner" parameterType="_int">
+		UPDATE PLANNER SET
+		PLANNER_DELETE_YN = 'Y' WHERE PLANNER_NO = #{plannerNo}
+	</update>
+	
+	<insert id="reason" parameterType="PlannerDeleteReason">
+		INSERT INTO PLANNER_DELETE_REASON VALUES(
+			SEQ_PLANNER_D_R_DNO.NEXTVAL , #{deleteReason} , #{plannerNo}
+		)
+	</insert>
+	
+	<update id="recovery" parameterType="_int">
+		UPDATE PLANNER SET
+		PLANNER_DELETE_YN = 'N' WHERE PLANNER_NO = #{plannerNo}
+	</update>
+	
+	<update id="memberDelete" parameterType="_int">
+		UPDATE MEMBER SET
+		MEMBER_DELETE_YN = "Y" WHERE MEMBER_NO = #{memberNo}	
+	</update>
 
 </mapper>

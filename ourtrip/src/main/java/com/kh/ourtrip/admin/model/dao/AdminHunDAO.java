@@ -3,11 +3,13 @@ package com.kh.ourtrip.admin.model.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.ourtrip.admin.model.vo.PlannerDeleteReason;
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.member.model.vo.ProfileImage;
@@ -157,27 +159,50 @@ public class AdminHunDAO {
 	 * @param keyword
 	 * @return List resultCount
 	 */
-	public List<Integer> resultCount(Map<String, Object> keyword) {
+	public List<Integer> resultCount(Map<String, Object> keyword)throws Exception{
 		for(String st : keyword.keySet()) {
 			System.out.println(st + " / " + keyword.get(st));
-			
 		}
 		
 		return sqlSession.selectList("adminhunMapper.resultCount" , keyword);
 	}
 
-	public List<PlannerInfo> searchResult(PageInfo pInf, Map<String, Object> keyword) {
+	public List<PlannerInfo> searchResult(PageInfo pInf, Map<String, Object> keyword) throws Exception{
 		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
 		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
 		return sqlSession.selectList("adminhunMapper.searchResult",keyword,rowBounds);
 	}
 
-	public List<AreaName> resultArea(List<Integer> searchResultcount) {
+	public List<AreaName> resultArea(List<Integer> searchResultcount) throws Exception{
 		return sqlSession.selectList("adminhunMapper.resultArea", searchResultcount);
 	}
 
-	public List<Day> resultDay(List<Integer> searchResultcount) {
+	public List<Day> resultDay(List<Integer> searchResultcount) throws Exception{
 		return sqlSession.selectList("adminhunMapper.resultDay", searchResultcount);
+	}
+
+	public PlannerInfo plannerDetail(int no)throws Exception {
+		return sqlSession.selectOne("adminhunMapper.plannerDetail" ,no);
+	}
+
+	public List<AreaName> areaDetail(int no) throws Exception{
+		return sqlSession.selectList("adminhunMapper.areaDetail" , no);
+	}
+
+	public int deletePlanner(int plannerNo) throws Exception{
+		return sqlSession.update("adminhunMapper.deletePlanner", plannerNo);
+	}
+
+	public  int reason(PlannerDeleteReason pdr)throws Exception {
+		return sqlSession.insert("adminhunMapper.reason" , pdr);
+	}
+
+	public int recoveryPlanner(int plannerNo) {
+		return sqlSession.update("adminhunMapper.recovery", plannerNo);
+	}
+
+	public int memberDelete(int memberNo) {
+		return sqlSession.update("adminhunMapper.memberDelete" , memberNo);
 	}
 
 

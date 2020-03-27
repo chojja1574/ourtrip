@@ -214,7 +214,7 @@
 								var memberNo = $(this).parent().children()
 										.eq(0).text();
 								location.href = "${contextPath}/admin/detail?no="
-										+ memberNo + "&currentPageNum=" + ${pInfom.currentPage};
+										+ memberNo ;
 							}).mouseenter(function() {
 						$(this).parent().css("cursor", "pointer");
 

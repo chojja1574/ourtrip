@@ -3,6 +3,7 @@ package com.kh.ourtrip.admin.model.service;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.ourtrip.admin.model.vo.PlannerDeleteReason;
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.member.model.vo.ProfileImage;
@@ -137,6 +138,59 @@ public interface AdminHunService {
 	 * @throws Exception
 	 */
 	public abstract List<Day> resultDay(List<Integer> searchResultcount)throws Exception;
+
+	/** 플래너 상세보기 용 service
+	 * @param no
+	 * @return plannerInfo
+	 * @throws Exception
+	 */
+	public abstract PlannerInfo plannerDetail(int no)throws Exception;
+
+	/** 지역 조회용 service
+	 * @param no
+	 * @return areaName
+	 * @throws Exception
+	 */
+	public abstract List<AreaName> areaDetail(int no)throws Exception;
+
+	
+	/** 플래너 삭제용 service
+	 * @param plannerNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public abstract int deletePlanner(int plannerNo)throws Exception;
+
+	/** 삭제 목록등록 service
+	 * @param pdr
+	 * @return reason
+	 * @throws Exception
+	 */
+	public abstract int reason(PlannerDeleteReason pdr)throws Exception;
+
+	/**  삭제메일 전송용 service
+	 * @param email
+	 * @param pdr 
+	 * @return sendEmail
+	 * @throws Exception
+	 */
+	public abstract void sendEmail(String email, PlannerDeleteReason pdr)throws Exception;
+
+	/** 플래너 복구용 service
+	 * @param plannerNo
+	 * @return result 
+	 * @throws Exception
+	 */
+	public abstract int recoveryPlanner(int plannerNo) throws Exception;
+
+	/** 회원 강퇴용 service
+	 * @param memberNo
+	 * @param email
+	 * @param delBecause
+	 * @return result
+	 * @throws Exception
+	 */
+	public abstract int memberDelete(int memberNo, String email, String delBecause)throws Exception;
 
 	
 	

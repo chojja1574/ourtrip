@@ -30,6 +30,7 @@
 		
 		<!--이훈-->
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerInfo" alias="PlannerInfo"/>
+		<typeAlias type="com.kh.ourtrip.admin.model.vo.PlannerDeleteReason" alias="PlannerDeleteReason"/>
 	</typeAliases>
 	
 	<!-- mapper 파일 등록 부분 -->
