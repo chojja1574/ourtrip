@@ -74,7 +74,7 @@ public class MemberServiceImpl implements MemberService{
 		}
 		
 		// 3) 회원 객체 반환
-		return memberDAO.kakaoLogin(member);
+		return memberDAO.socialLogin(member);
 	}
 
 	/** 이메일 확인용 Service
@@ -406,8 +406,31 @@ public class MemberServiceImpl implements MemberService{
 	public String getProfileImagePath(int memberNo) throws Exception {
 		return memberDAO.getProfileImagePath(memberNo);
 	}
-	
-	
 
+	/** 네이버 로그인용 Service
+	 * @param member
+	 * @param imagePath
+	 * @return loginMember
+	 * @throws Exception
+	 */
+	@Override
+	public Member naverLogin(Member member, String imagePath) throws Exception{
+		// 1) ourtrip DB에 회원으로 등록되어있는지 확인
+		int result = memberDAO.isMember(member);
+				
+		// 2) 안되있을 시 회원가입
+		if(result == 0) {
+			result = memberDAO.signUp(member);
+			
+			if(result > 0) {
+				result = memberDAO.selectMemberNo(member);
+				if(imagePath != null)
+					result = memberDAO.insertProfileImage(new ProfileImage(imagePath, result));
+			}
+		}
+		
+		// 3) 회원 객체 반환
+		return memberDAO.socialLogin(member);
+	}
 
 }

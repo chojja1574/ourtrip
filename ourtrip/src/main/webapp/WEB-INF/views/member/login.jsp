@@ -17,8 +17,11 @@
 
 <link rel="stylesheet" href="../resources/css/common.css">
 
-<!-- kakao api -->
+<!-- kakao sdk -->
 <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+
+<!-- naver sdk -->
+<script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
 
 <title>login</title>
 
@@ -111,6 +114,10 @@
 #find-pwd:hover{
 	color: blue;
 }
+
+#naverIdLogin img{
+	width: 100%;
+}
 </style>
 
 </head>
@@ -133,9 +140,15 @@
 				<a class="float-right" href="findPwdForm" id="find-pwd">비밀번호 찾기</a>
 			</div>
 			<button class="btn btn-lg main-btn btn-block mb-2" onclick="return validate();">로그인</button>
-			<a id="custom-login-btn" href="javascript:loginWithKakao()">
+			<a class="mb-2" id="custom-login-btn" href="javascript:loginWithKakao()">
 				<img style="width: 300px; height: 55px;"src="${contextPath}/resources/images/login-kakao.png">
 			</a>
+			<div id="naverIdLogin" class="mt-2">
+				<img style="width: 300px; height: 55px;"src="${contextPath}/resources/images/login-naver.PNG">
+			</div>
+			<%-- <a id="naver_id_login" href="${url}">
+				<img style="width: 300px; height: 55px;"src="${contextPath}/resources/images/login-naver.PNG">
+			</a> --%>
 			<!-- class="btn btn-lg kakao-btn btn-block"  -->
 		</form>
 	</div>
@@ -196,7 +209,7 @@
 	                        	},
 	                        	success : function(result){
 	                        		if(result == "success"){
-	                        			location.href = "${contextPath}";
+	                        			location.href = "${detailUrl}";
 	                        		}else{
 	                        			location.href = "loginForm";
 	                        		}
@@ -220,6 +233,17 @@
 	            }
 	        });
 	    };
+	    var naverLogin = new naver.LoginWithNaverId(
+    		{
+    			clientId: "cajbBEXn_EXigNoRN2Oc",
+    			callbackUrl: "http://localhost:8080/ourtrip/member/naverCallBack",
+    			isPopup: false, /* 팝업을 통한 연동처리 여부 */
+    			loginButton: {color: "green", type: 3, height: 60} /* 로그인 버튼의 타입을 지정 */
+    		}
+    	);
+    	
+    	/* 설정정보를 초기화하고 연동을 준비 */
+    	naverLogin.init();
 	</script>
 </body>
 </html>

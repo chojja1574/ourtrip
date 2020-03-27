@@ -24,7 +24,7 @@ import com.kh.ourtrip.member.model.service.MemberService;
 import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.member.model.vo.ProfileImage;
 
-@SessionAttributes({"loginMember", "msg", "detailUrl", "profilePath"})
+@SessionAttributes({"loginMember", "msg", "detailUrl", "profilePath", "state"})
 @Controller
 @RequestMapping(value="/member/*")
 public class MemberController {
@@ -32,9 +32,13 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
+//	private final String client_id = "cajbBEXn_EXigNoRN2Oc";
+//	private final String client_secret = "0ePrMUlYzw";
+//	private final String naver_redirect_uri = "http://localhost:8080/ourtrip/member/naverCallBack";
+	
 	// 로그인 화면 이동
 	@RequestMapping(value="loginForm")
-	public String loginForm(Model model, HttpServletRequest request,
+	public String loginForm(Model model, HttpServletRequest request, HttpSession session,
 			@CookieValue(value = "saveEmail", required = false) String saveEmail) {
 		
 		if((Member)model.getAttribute("loginMember") != null) return "redirect:/";
@@ -45,10 +49,7 @@ public class MemberController {
 		if(model.getAttribute("detailUrl") == null) model.addAttribute("detailUrl", beforeUrl);
 		else if(!model.getAttribute("detailUrl").equals(beforeUrl)) model.addAttribute("detailUrl", beforeUrl);
 		
-		
-		if(saveEmail != null) {
-			model.addAttribute("saveEmail", saveEmail);
-		}
+		if(saveEmail != null) model.addAttribute("saveEmail", saveEmail);
 		
 		return "member/login";
 	}
@@ -112,6 +113,7 @@ public class MemberController {
 		return "redirect:/";
 	}
 	
+	// 카카오 로그인
 	@RequestMapping(value="kakaoLogin")
 	@ResponseBody
 	public String kakaoLogin(Member member, String imagePath,
@@ -124,6 +126,41 @@ public class MemberController {
 			Member loginMember = memberService.kakaoLogin(member, imagePath);
 			
 			if(loginMember != null){
+				model.addAttribute("loginMember", loginMember);
+				model.addAttribute("profilePath", imagePath);
+				result = "success";
+			}else {
+				model.addAttribute("msg", "카카오 로그인 과정 중 오류 발생");
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	// 네이버 로그인 성공시 callBack 주소
+	@RequestMapping("naverCallBack")
+	public String naverCallBack() {
+
+		return "member/naverCallBack";
+	}
+	
+	// 네이버 로그인
+	@RequestMapping("naverLogin")
+	@ResponseBody
+	public String naverLogin(Member member, String imagePath,
+				Model model) {
+		
+		member.setSignUpRoute("3");
+		
+		String result = "fail";
+		try {
+			
+			Member loginMember = memberService.naverLogin(member, imagePath);
+			
+			if(loginMember != null) {
 				model.addAttribute("loginMember", loginMember);
 				model.addAttribute("profilePath", imagePath);
 				result = "success";

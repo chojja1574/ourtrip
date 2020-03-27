@@ -289,12 +289,14 @@
             var totalPage = Math.ceil(plannerSize/limit);    // 총 페이지 수
             var pageGroup = Math.ceil(currentPage/pagingBarSize);    // 페이지 그룹
             
+            console.log(pageGroup);
+            
             var last = pageGroup * pagingBarSize;    // 화면에 보여질 마지막 페이지 번호
             
             if(last > totalPage){
                 last = totalPage;
             }
-            var first = ((pageGroup - 1) * pageGroup) + 1;    // 화면에 보여질 첫번째 페이지 번호
+            var first = ((pageGroup - 1) * pagingBarSize) + 1;    // 화면에 보여질 첫번째 페이지 번호
             /* var next = last+1;
             var prev = first-1; */
             
