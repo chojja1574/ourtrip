@@ -1,5 +1,6 @@
 package com.kh.ourtrip.planner.controller;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.kh.ourtrip.planner.model.service.PlannerService2;
 import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
+import com.kh.ourtrip.planner.model.vo.Planner;
 import com.kh.ourtrip.planner.model.vo.PlannerMember;
 import com.kh.ourtrip.planner.model.vo.PlannerMemberView;
 import com.kh.ourtrip.planner.model.vo.Schedule;
@@ -81,6 +83,10 @@ public class EchoHandler extends TextWebSocketHandler {
             	chattingMessage(session, jsonObj);
             }else if(jsonObj.get("type").equals("permission")) {
             	updatePermission(session, jsonObj);
+            }else if(jsonObj.get("type").equals("sumCost")) {
+            	updateSumCost(session, jsonObj);
+            }else if(jsonObj.get("type").equals("startDate")) {
+            	updateStartDate(session, jsonObj);
             }else {
             	sendChatroom(session, jsonObj);
             }
@@ -254,6 +260,8 @@ public class EchoHandler extends TextWebSocketHandler {
 		
 		result = plannerService.updateTripDate(dayList);
 		
+		sendChatroom(session, msgJson);
+		
 		return result;
 	}
 	
@@ -368,4 +376,37 @@ public class EchoHandler extends TextWebSocketHandler {
 		
 		return result;
 	}
+
+	private int updateSumCost(WebSocketSession session, JSONObject msgJson) throws Exception {
+		int result = 0;
+		System.out.println("updateSumCost");
+		
+		Planner p = new Planner();
+		p.setPlannerCost(Integer.parseInt(msgJson.get("content").toString()));
+		p.setPlannerNo(Integer.parseInt(msgJson.get("pno").toString()));
+		
+		result = plannerService.updateSumCost(p);
+		
+		sendChatroom(session, msgJson);
+		
+		return result;
+	}
+	
+	private int updateStartDate(WebSocketSession session, JSONObject msgJson) throws Exception {
+		int result = 0;
+		System.out.println("updateStartDate");
+		
+		Planner p = new Planner();
+		Date startDate = Date.valueOf(msgJson.get("content").toString());
+		
+		p.setPlannerStartDT(startDate);
+		p.setPlannerNo(Integer.parseInt(msgJson.get("pno").toString()));
+		
+		result = plannerService.updateStartDate(p);
+		
+		sendChatroom(session, msgJson);
+		
+		return result;
+	}
+
 }

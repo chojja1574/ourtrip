@@ -1,5 +1,6 @@
 package com.kh.ourtrip.planner.model.dao;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
+import com.kh.ourtrip.planner.model.vo.Planner;
 import com.kh.ourtrip.planner.model.vo.PlannerMember;
 import com.kh.ourtrip.planner.model.vo.PlannerMemberView;
 import com.kh.ourtrip.planner.model.vo.PlannerView;
@@ -80,6 +82,14 @@ public class PlannerDAO2 {
 
 	public int updatePermission(PlannerMember pm) {
 		return sqlSessionTemplate.update("planner1Mapper.updatePermission", pm);
+	}
+
+	public int updateSumCost(Planner p) {
+		return sqlSessionTemplate.update("planner1Mapper.updateSumCost", p);
+	}
+
+	public int updateStartDate(Planner p) {
+		return sqlSessionTemplate.update("planner1Mapper.updateStartDate", p);
 	}
 	
 }

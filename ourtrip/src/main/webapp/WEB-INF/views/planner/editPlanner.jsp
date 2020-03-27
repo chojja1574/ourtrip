@@ -45,6 +45,8 @@
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.js"></script>
 
+<!-- 아이콘 -->
+<script src="https://kit.fontawesome.com/76b49c6d9b.js" crossorigin="anonymous"></script>
 <!-- 호환성 -->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
@@ -55,10 +57,8 @@
 
 <!-- 공용 css -->
 <!-- <link rel="stylesheet" href="${contextPath}/resources/css/common.css"> -->
-<link rel="stylesheet" type="text/css"
-	href="${contextPath}/resources/css/common.css" />
-<link rel="stylesheet" type="text/css"
-	href="${contextPath}/resources/css/planner.css" />
+<link rel="stylesheet" type="text/css" href="${contextPath}/resources/css/common.css" />
+<link rel="stylesheet" type="text/css" href="${contextPath}/resources/css/planner.css" />
 
 
 <!-- Web socket CDN -->
@@ -166,8 +166,8 @@
 
 						<!-- 출발일 설정 -->
 						<div class="card-header main-back plannerDivHeader dayHeader">
-							<span>출발일 입력</span> <input class="plannerDay" id="startrip"
-								type="date" max="9999-12-31">
+							<input class="plannerDay" id="startrip"	type="date" max="9999-12-31">
+							<button type="button" class="btnColor1" id="startDateUpdateBtn">출발일 수정</button> 
 						</div>
 						<!-- 일자 카드 -->
 						<div id="sortable" class="divContent"></div>
@@ -316,19 +316,7 @@
 	</div>
 	<jsp:include page="../common/footer.jsp" />
 </body>
-<c:if test="${!empty profilePath}">
-	
-	<!-- 카카오에서 가져온 이미지 경로일 경우 -->
-	<c:if test="${fn:contains(profilePath, 'http://')}">
-		<c:set var="filePath" value="${profilePath}"/>
-	</c:if>
 
-	<!-- ourtrip서버에 있는 경로일 경우 -->
-	<c:if test="${!fn:contains(profilePath, 'http://')}">
-		<c:set var="fileName" value="${fn:split(profilePath, '/')}"/>
-		<c:set var="filePath" value="${contextPath}/resources/profileImages/${fileName[fn:length(fileName) - 1]}"/>
-	</c:if>
-</c:if>
 <script type="text/javascript" src="${contextPath}/resources/js/map.js"></script>
 <script>
 
@@ -337,6 +325,7 @@
 // 1 = 카카오 위치 객체
 // 2 = lat + lng
 // 3 = 인포 윈도우
+
 var scheduleMarkers = new Array();
 var planner = new Object();
 var days = new Array();
@@ -363,7 +352,7 @@ $(function() {
 	var joinUserJson = JSON.parse(joinUserArray);
 	var plannerJson = JSON.parse(plannerInfo);
 	var chatListJson = JSON.parse(chatList);
-	var profilePath = '${filePath}';
+	var profilePath = '${profilePath}';
 
 	
 	$('#url').val(window.location.href);
@@ -408,7 +397,6 @@ function initPlanner(pj){
 		day.schedules = new Array();
 		var scheduleMarker = new Array();
 		for(var s in pj.days[d].schedules){
-			console.log(pj.days[d].schedules[s].scheduleNo);
 			var schedule = new Object();
 			schedule.no = pj.days[d].schedules[s].scheduleNo;
 			schedule.title = pj.days[d].schedules[s].scheduleTitle;
@@ -435,13 +423,17 @@ function initPlanner(pj){
 			getScheduleAddr(scheduleLatLng,schedule.locationNM,schedule.no).then(function(args){
 				for(var i in scheduleMarkers){
 					for(var j in scheduleMarkers[i].scheduleMarker){
+						console.log(scheduleMarkers[i].scheduleMarker[j].sno + ' =sno= ' +  args[0]);
 						if(scheduleMarkers[i].scheduleMarker[j].sno == args[0]){
 							scheduleMarkers[i].scheduleMarker[j].infoWindow = args[1];
 							loadingAddr += 1;
+							console.log()
+							console.log(loadingAddr + ' == ' + loadingInfo);
 							if(loadingInfo == loadingAddr){
 								for(var k = 0; k < days.length; k++){
-									createDate(days[k].no);
+									createDate(days[k].no,false);
 								}
+								reorder();
 							}
 						}
 					}
@@ -454,14 +446,16 @@ function initPlanner(pj){
 	console.log("planner");
 	console.log(planner);
 	console.log("days");
-	sortDays(days);
-	for(var i = 0; i < days.length; i++){
-		sortSchedules(days[i].schedules);
-	}
+	console.log(days);
+	sortDaysUserTripdate(days);
 	console.log(days);
 	console.log("scheduleMarkers");
 	console.log(scheduleMarkers);
-	
+	//setTimeout(function(){
+	for(var i = 0; i < days.length; i++){
+		sortSchedules(days[i].schedules);
+	}
+	//}, 1000);
 }
 function initChatting(chatList){
 	for(var i in chatList){
@@ -495,13 +489,15 @@ function timeToTime(time){
 function sortSchedules(schedules){
 	var dno = schedules.dateNo;
 	var dayIdx = -1;
-	for(var i in scheduleMarkers){
+	var i = null;
+	var j = null;
+	for(i in scheduleMarkers){
 		if(scheduleMarkers[i].dno == dno)
 			dayIdx = i;
 	}
 	try{
-		for(var i = schedules.length-1; i > 0; i--){
-	        for(var j = 0; j < i; j++){
+		for(i = schedules.length-1; i > 0; i--){
+	        for(j = 0; j < i; j++){
 	        	if(schedules[j+1].time < schedules[j].time){
 	                var temp = schedules[j];
 	                var mTemp = scheduleMarkers[dayIdx].scheduleMarker[j];
@@ -513,7 +509,9 @@ function sortSchedules(schedules){
 		    }
 		}
 	}catch(e){
-		console.log('정렬오류 발생');
+		console.log('정렬오류 발생' + e.stack);
+		console.log('error : i = ' + i + ', j = ' + j + ', idx : ' + dayIdx);
+		console.log(scheduleMarkers[dayIdx]);
 	}
 }
 
@@ -543,7 +541,7 @@ function sortSchedule(){
     });
     var locationArr = new Array();
     var infoWindowArr = new Array()
-    displayAllPlaces(daySchedule);
+    displayAllPlaces(daySchedule,allMap,allMarkers);
 }
 
 function sortDays(days){
@@ -556,6 +554,37 @@ function sortDays(days){
             }   
         }
     }
+}
+
+function sortDaysUserTripdate(){
+	var tempDays = new Array();
+	for(var i in days){
+		for(var j in days){
+			if(parseInt(days[j].tripDate,10) == i){
+				tempDays.push(days[j]);
+			}
+		}
+	}
+	days = tempDays;
+}
+
+function sortDaysUseDateNo(orderDate){
+	console.log(orderDate);
+	var tempDays = new Array();
+	for(var i in orderDate){
+		for(var j in orderDate){
+			try{
+				if(orderDate[i].dno == days[j].no){
+					days[j].tripDate = orderDate[i].order;
+					tempDays.push(days[j]);
+				}
+			}catch(e){
+				console.log(e.stack);
+				console.log('i : ' + i + ', j : ' + j);
+			}
+		}
+	}
+	days = tempDays;
 }
 
 //일차 정렬하여 몇일차인지 텍스트 바꿔줌
@@ -594,10 +623,22 @@ function getScheduleAddr(templocation,locationName,scheduleNo){
 			                        '</div>';
 				      	contentArr.push(content);
 				        resolve(contentArr);
+				    }else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+				        // 검색결과가 없는경우 해야할 처리가 있다면 이곳에 작성해 주세요
+					    content = 
+					    	'<div class="bAddr">' +
+		                        '<span class="title">' + locationName + '</span>' + 
+		                    '</div>';
+					    contentArr.push(content);
+				        resolve(contentArr);
+				    } else if (status === kakao.maps.services.Status.ERROR) {
+				        // 에러로 인해 검색결과가 나오지 않은 경우 해야할 처리가 있다면 이곳에 작성해 주세요
+				    	console.log("에러로 인해 검색결과가 나오지 않은 경우");
 				    }
 				});
 				
 			} catch(error){
+				console.log(error.stack);
 				reject(error)
 			}
 		});
@@ -609,6 +650,7 @@ function getScheduleAddr(templocation,locationName,scheduleNo){
 				contentArr.push(null);
 				resolve(contentArr);
 			}catch(error){
+				console.log(error.stack);
 				reject(error);
 			}
 		});
@@ -654,14 +696,19 @@ function addDate(){
 	
 }
 
-function createDate(dateNo){
+function createDate(dateNo,reorderBoolean){
 
-	dayIndex = dayIndex + 1;
+	var dayIndex = -1;
 	
+	for(var i in days){
+		if (days[i].no == dateNo)
+			dayIndex = days[i].tripDate;
+	}
+	console.log(dayIndex+"일차");
     // 일차 만드는 HTML코드, dayInd는 테스트용이고 dateNo로 바꿔줘야함
     var dayForm = 
     '<div data-dateorder="' + dayIndex + '" data-dateno="' + dateNo + '" id="days" class="daystyle" onclick="selectDay(' + dateNo + ');">' +
-    '<span class="dayCount pl-2">1일차</span>' +
+    '<span class="dayCount pl-2">' + (parseInt(dayIndex,10) + 1) + '일차</span>' +
     '<button type="button" class="dayDeleteBtn btnColor3" onclick="deleteDay(' + dateNo + ');">-</button>' +
     '</div>';
 
@@ -669,7 +716,9 @@ function createDate(dateNo){
     $("#sortable").append(dayForm)
 	
     // 추가하고 정렬(몇일차인지 계산해서 텍스트 바꿔줌)
-    reorder();
+    if(reorderBoolean)
+   		reorder();
+    
 }
 
 //일차 선택하는 함수
@@ -723,7 +772,7 @@ function selectDay(no){
 			existMarker = true;
 	}
 	if(existMarker){
-		displayAllPlaces(extractDayMarker(no));
+		displayAllPlaces(extractDayMarker(no),allMap,allMarkers);
 	}else{
 		initMapBtn();
 		removeAllMarker();
@@ -895,11 +944,14 @@ function selectSchedule(no){
         map.panTo(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng);
     }
     
-    lat = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLat();
-    lng = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLng();
     // marker.setPosition(mouseEvent.latLng);
     // marker.setMap(map);
     initMarker(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng,scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].infoWindow);
+    
+    lat = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLat();
+    lng = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLng();
+    console.log('lat : ' + lat);
+    console.log('lat : ' + lng);
 };
 
 function updateSchedule(sno,title,time,location,cost,memo,llat,llng,liwContent){
@@ -1035,7 +1087,7 @@ sock.onclose = onClose;
 // 서버로부터 메시지를 받았을 때
 function onMessage(msg) {
 	var jsonData = msg.data;
-	var data = JSON.parse(jsonData)
+	var data = JSON.parse(jsonData);
 	switch(data['type']){
 	case 'msg':
 		if(data['memberNo'] == '-1'){
@@ -1049,15 +1101,15 @@ function onMessage(msg) {
 			// inputChat = 채팅 내역에 채팅창 올리는 함수
 	        // mkChatMsg = 다른사람이 보낸 메세지로 채팅창 만드는 함수
 	        // mkChatMsg 매개변수 = (profileImg,memberNo,msgContent,msgTime)
-	        inputChat(mkChatMsg(data['imagePath'],data['memberNo'],data['content'],data['time']));
+	        inputChat(mkChatMsg(data['imagePath'],data['memberNickName'],data['content'],data['time']));
 		}
 		break;
 	case 'addDate': 
 		days.push({no:data['dno'],tripDate:-1,plannerNo:planner.no,schedules:new Array()});
 		scheduleMarkers.push(
 				{dno:data['dno'],scheduleMarker:new Array({sno:data['sno'],LatLng:new kakao.maps.LatLng(0,0),unselect:true,infoWindow:null})});
-		createDate(data['dno']);
-		addSchedule(data['dno'],data['sno'],'제목 없음','','',0,'',0,0,null,memberNo);
+		createDate(data['dno'],true);
+		addSchedule(data['dno'],data['sno'],'제목 없음','','미정',0,'',0,0,null,memberNo);
 		break;
 	case 'deleteDate': 
 		deleteDate(data['dno']);
@@ -1097,10 +1149,32 @@ function onMessage(msg) {
 		if(data['grantMemberNo'] == memberNo){
 			permission = data['permission'];
 		}
+		break;
 	case 'sumCost':
-		console.log(data['content']);
 		$('#totalcost').html(data['content'] + '원');
+		break;
+	case 'orderDate':
+		console.log(days);
+		sortDaysUseDateNo(data['dateInfo']);
+		console.log(days);
+		$('#sortable').html('');
+		for(var i in days){
+			createDate(days[i].no,false);
+		}
+		for(var i in days){
+			console.log(days[i].no + ", " + $('#selectedDay').data('dateno'));
+			if(days[i].no == $('#selectedDay').data('dateno')){
+				$('#selectedDay').html((parseInt(days[i].tripDate,10) + 1 )+'일차');
+			}
+		}
+		break;
+	case 'startDate':
+		$('#startrip').val(data['content']);
+		break;
 	}
+		
+	
+
 }
 
 // 서버와 연결을 끊었을 때
@@ -1120,6 +1194,8 @@ function mkChatMsg(profileImg,userId,msgContent,msgTime){
 	if(profileImg.includes('http')){
 		imagePath = profileImg;
 	}else if(profileImg == 'null'){
+		imagePath = '${contextPath}/resources/images/default-profile.png'
+	}else if(profileImg == ''){
 		imagePath = '${contextPath}/resources/images/default-profile.png'
 	}else {
 		imagePath = '${contextPath}/resources' + profileImg.substring(profileImg.indexOf('/'));
@@ -1177,24 +1253,25 @@ function inputChat(msg){
 function initJoinMember(joinUserArray){
 	$('#userPermission').html('');
 	var color = null;
+	var icon = '';
 	var i = 0;
 	var j = 0;
 	while(i < joinUserArray.length){
 		if(joinUserArray[i].memberNo != -1){
 			joinMember.push(joinUserArray[i]);
-			console.log('push');
 			j++;
 		}
 		i++;
 	}
 	for(var i = 0; i < joinMember.length; i++){
+		icon = '';
 		switch(joinMember[i].plannerPermission){
 			case '1':	color = '#C8FFFF';	break;
-			case '2':	color = '#32F1FF';	break;
-			case '3':	color = '#0AC9FF';	break;
+			case '2':	color = '#32F1FF';	icon = '☆';	break;
+			case '3':	color = '#0AC9FF';	icon = '★';	break;
 		}		
 		var userOption = 
-			'<option style="background:' + color + '" value="' + joinMember[i].memberNo + '">' + joinMember[i].memberNickName + '</option>'
+			'<option style="background:' + color + '" value="' + joinMember[i].memberNo + '">' + joinMember[i].memberNickName + icon + '</option>'
 		$('#userPermission').append(userOption);
 	}
 	// <option value="memberNo">닉네임 <option>
@@ -1230,14 +1307,16 @@ function grantPermission(grantMemberNo,permission){
 function changePermissionColor(i){
 	joinMember[i].memberNo;
 	var color = '#C8FFFF';
+	var icon = '';
 	switch(joinMember[i].plannerPermission){
 		case '1':	color = '#C8FFFF';	break;
-		case '2':	color = '#32F1FF';	break;
-		case '3':	color = '#0AC9FF';	break;
-	}
+		case '2':	color = '#32F1FF';	icon = '☆';	break;
+		case '3':	color = '#0AC9FF';	icon = '★';	break;
+	}		
 	$('option').each(function(j,item){
 		if(joinMember[i].memberNo == $(item).attr('value')){
 			$(item).attr('style','background:' + color + ';');
+			$(item).html(joinMember[i].memberNickName+icon);
 		}
 	});
 }
@@ -1264,7 +1343,7 @@ $(function () {
         
         // 채팅 입력창 비어있지 않으면 실행
         if(msg != '' && msg != '<br/>'){
-            sock.send(JSON.stringify({pno:planner.no, type: 'msg', memberNo: memberNo, content: msg, imagePath:'${filePath}'}));
+            sock.send(JSON.stringify({pno:planner.no, type: 'msg', memberNo: memberNo, memberNickName: memberNickName, content: msg, imagePath:'${profilePath}'}));
         }
 
         // 메세지 전송 후 채팅 입력창 비워줌
@@ -1277,7 +1356,10 @@ $(function () {
         placeholder:".daystyleHighlight",
         // 드래그 시작했을 때 작동
         start: function(event, ui) {
-            ui.item.data('start_pos', ui.item.index());
+        	if(permission < 2)
+        		alert('권한이 없습니다');
+        	else
+            	ui.item.data('start_pos', ui.item.index());
         },
         // 드래그 끝났을 때 작동
         stop: function(event, ui) {
@@ -1300,8 +1382,46 @@ $(function () {
     	}
     });
     $('#calc').click(function(){
-    	sock.send(JSON.stringify({pno:planner.no, type: 'sumCost', memberNo: memberNo, content: calculator()}));
+    	if(permission > 1)
+    		sock.send(JSON.stringify({pno:planner.no, type: 'sumCost', memberNo: memberNo, content: calculator()}));
+    	else
+    		alert('권한이 없습니다');
     })
+    
+    $('#startDateUpdateBtn').click(function(){
+    	if(permission > 1)
+	    	sock.send(JSON.stringify({pno:planner.no, type: 'startDate', memberNo: memberNo, content: $('#startrip').val()}));
+    	else
+    		alert('권한이 없습니다');
+    });
+    
+    $('#inputScheduleTitle').keyup(function(){
+    	if($('#inputScheduleTitle').val().length > 20){
+    		alert('20글자를 초과하여 입력할 수 없습니다');
+    		$('#inputScheduleTitle').val($('#inputScheduleTitle').val().substring(0,20));
+    	}
+    });
+    
+    $('#inputScheduleCost').keyup(function(){
+    	if($('#inputScheduleCost').val().length > 9){
+    		alert('돈을 너무 막씁니다');
+    		$('#inputScheduleCost').val($('#inputScheduleCost').val().substring(0,9));
+    	}
+    });
+    
+    $('#inputScheduleMemo').keyup(function(){
+    	if($('#inputScheduleCost').val().length > 200){
+    		alert('200글자를 초과하여 입력할 수 없습니다');
+    		$('#inputScheduleCost').val($('#inputScheduleCost').val().substring(0,200));
+    	}
+    });
+    
+    $('#inputScheduleLocationName').keyup(function(){
+    	if($('#inputScheduleLocationName').val().length > 20){
+    		alert('20글자를 초과하여 입력할 수 없습니다');
+    		$('#inputScheduleLocationName').val($('#inputScheduleLocationName').val().substring(0,20));
+    	}
+    });
 });
 
 // 경비 총액 계산 후 리턴
