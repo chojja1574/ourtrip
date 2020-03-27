@@ -18,12 +18,35 @@
 <title>비밀번호 변경</title>
 
 <style>
+#changePwd-wrapper{
+	width: 100%;
+	height: 80%;
+	position: relative;
+	z-index:1;
+}
+
 #changePwd-container{
-	height: 70%;
+	height: 100%;
+}
+
+#changePwd-wrapper:after{
+	background-image: url(../resources/images/changepwd-background.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	opacity: 0.6!important;
+	top:0;
+	left:0;
+	position:absolute;
+	z-index:-1;
+	content:'';
+	width:100%;
+	height:100%;
 }
 
 #changePwd-form{
-    padding-top: 8%;
+	background-color: rgba(255,255,255,0.6);
+ 	border-radius: 10px;
+ 	padding: 15px;
 }
 </style>
 
@@ -32,50 +55,54 @@
 	<jsp:include page="../common/header.jsp" />
 	<jsp:include page="../common/nav.jsp" />
 	
-	<div class="container my-5" id="changePwd-container">
-		<form method="POST" action="changePwd" onsubmit="return validate();"
-				id="changePwd-form">
-			<h3 style="text-align: center;">비밀번호 수정</h3>
-			<hr>
-			<div class="mt-4 d-flex">
-				<div class="mx-auto col-md-7">
-					<div class="row mt-3">
-						<div class="col-md-3">
-							<label for="currPwd">현재 비밀번호</label>
-						</div>
-						<div class="col-md-9">
-							<input class="form-control" type="password" name="memberPwd" id="currPwd">
+	<div id="changePwd-wrapper">
+		<div class="container py-5 d-flex" id="changePwd-container">
+			<div class="col-md-10 m-auto">
+				<form method="POST" action="changePwd" onsubmit="return validate();"
+						id="changePwd-form">
+					<h3 style="text-align: center;">비밀번호 수정</h3>
+					<hr>
+					<div class="mt-4 d-flex">
+						<div class="mx-auto col-md-10">
+							<div class="row mt-3">
+								<div class="col-md-3">
+									<label for="currPwd">현재 비밀번호</label>
+								</div>
+								<div class="col-md-9">
+									<input class="form-control" type="password" name="memberPwd" id="currPwd">
+								</div>
+							</div>
+							<div class="row mt-3">
+								<div class="col-md-3">
+									<label>새 비밀번호</label>
+								</div>
+								<div class="col-md-9">
+									<input class="form-control" type="password" name="changePwd" id="pwd1">
+									<span id="checkPwd1"></span>
+								</div>
+							</div>
+							<div class="row mt-3">
+								<div class="col-md-3">
+									<label for="nickName">새 비밀번호 확인</label>
+								</div>
+								<div class="col-md-9">
+									<input class="form-control" type="password" id="pwd2">
+		                               <span id="checkPwd2"></span>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="row mt-3">
-						<div class="col-md-3">
-							<label>새 비밀번호</label>
+					<div class="row mt-5 mb-3">
+						<div class="col-md-6">
+							<a href="updateForm" class="btn gray-btn btn-block">이전으로</a>
 						</div>
-						<div class="col-md-9">
-							<input class="form-control" type="password" name="changePwd" id="pwd1">
-							<span id="checkPwd1"></span>
-						</div>
-					</div>
-					<div class="row mt-3">
-						<div class="col-md-3">
-							<label for="nickName">새 비밀번호 확인</label>
-						</div>
-						<div class="col-md-9">
-							<input class="form-control" type="password" id="pwd2">
-                               <span id="checkPwd2"></span>
+						<div class="col-md-6">
+							<button class="btn main-btn btn-block">수정 완료</button>
 						</div>
 					</div>
-				</div>
+				</form>
 			</div>
-			<div class="row mt-5 mb-3">
-				<div class="col-md-6">
-					<button class="btn gray-btn btn-block" type="button">이전으로</button>
-				</div>
-				<div class="col-md-6">
-					<button class="btn main-btn btn-block">수정 완료</button>
-				</div>
-			</div>
-		</form>
+		</div>
 	</div>
 
 	<jsp:include page="../common/footer.jsp" />

@@ -47,6 +47,7 @@
  	border-radius: 10px;
  	padding: 15px;
 }
+
 .wrap-loading{
     position: fixed;
     left:0;

@@ -132,8 +132,11 @@
 				<label for="saveEmail">&nbsp;아이디 저장</label>
 				<a class="float-right" href="findPwdForm" id="find-pwd">비밀번호 찾기</a>
 			</div>
-			<button class="btn btn-lg main-btn btn-block" onclick="return validate();">로그인</button>
-			<a id="custom-login-btn" class="btn btn-lg kakao-btn btn-block" href="javascript:loginWithKakao()">카카오 계정으로 로그인</a>
+			<button class="btn btn-lg main-btn btn-block mb-2" onclick="return validate();">로그인</button>
+			<a id="custom-login-btn" href="javascript:loginWithKakao()">
+				<img style="width: 300px; height: 55px;"src="${contextPath}/resources/images/login-kakao.png">
+			</a>
+			<!-- class="btn btn-lg kakao-btn btn-block"  -->
 		</form>
 	</div>
 
