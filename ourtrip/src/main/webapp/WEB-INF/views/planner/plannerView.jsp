@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html lang = "ko">
     <html lang = "ko">
@@ -13,25 +16,73 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" 
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
         <!-- style -->
-        <link rel="stylesheet" type="text/css" href="slick/slick.css"/>
+        <link rel="stylesheet" type="text/css" href="${contextPath}/resources/css/slick.css"/>
+        <link rel="stylesheet" type="text/css" href="${contextPath}/resources/css/planner.css"/>
         
         <!-- 호환성 -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
         <!-- javascript lib -->
-        <script type="text/javascript" src="slick/slick.min.js"></script>
+        <script type="text/javascript" src="${contextPath}/resources/js/slick.min.js"></script>
 
         <!-- 폰트 -->
         <link href="https://fonts.googleapis.com/css?family=Nanum+Pen+Script|Ubuntu&display=swap" rel="stylesheet">
 
         <!-- 공용 css -->
-        <link rel="stylesheet" href="css/common.css">
+        <link rel="stylesheet" href="${contextPath}/resources/css/common.css" />
 
-        <title> 배포 플래너 </title>
+		<!-- kakao map sdk -->
+		<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+		<script type="text/javascript"
+			src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3265d67cbccb2a931046b989ef45ad5f&libraries=services,clusterer,drawing"></script>
+		
+        <title> ${plannerInfo.plannerTitle} </title>
         <style>
             /* div{
                 border:1px dotted black;
             } */
+            
+            .dayMap{
+            	width:100%; 
+            	height: 350px; 
+            }
+            
+            .card-header{
+                border-top-right-radius: 5px;
+                border-top-left-radius: 5px;
+            }
+            
+            .scheduleInfo{
+            	border: 2px solid lightgray;
+                border-top: 2px solid #18a8f1;
+            	border-left: 0px;
+            }
+            
+            .card-body{
+                border: 2px solid lightgray;
+                border-top: 2px solid #18a8f1;
+
+            }
+            
+            .card-body::-webkit-scrollbar {
+			    width: 5px;
+			    background-color: none;
+			}
+			.card-body::-webkit-scrollbar-thumb {
+			    width: 5px;
+			    border-radius: 15px;
+			    background-color: rgba(0, 0, 0, 0.15);
+			}
+			.card-body::-webkit-scrollbar-track {
+			    width: 5px;
+			    background-color: none;
+			}
+            
+            .card-footer{
+                border: 2px solid lightgray;
+                border-top:none;
+            }
+
             div:focus {
                 outline: none;
             }
@@ -42,9 +93,9 @@
                 height:800px;
             }
             /* 넓이 설정 */
-            .slider-wrapper{
-                width:420px;
-            }
+            /* .slider-wrapper{
+                width:100%
+            } */
 
             /* 슬라이더 내용크기 */
             .slick-list{
@@ -62,6 +113,10 @@
             }
             
             @media screen and (max-width: 414px) {
+                /* .body div {
+                    border:none;
+                } */
+
                 .container{
                     padding:0px;
                 }
@@ -81,9 +136,9 @@
                     display: none;
                 }
                 /* 할거 아래 푸터지우기 */
-                .card-footer{
+                /* .card-footer{
                     display: none!important;
-                }
+                } */
             } 
 
             .p-cont{
@@ -100,170 +155,90 @@
         </style>
     </head>
     <body>
-        <div class="header">
-            <!--start header area-->
-            <div class="container-fluid px-0" style="background-color: white;">
-                <div class="container my-0 px-0">
-                    <div class="d-flex">
-                        <a href="main.html">
-                            <img class="logo" id="mainlogo" src="images/ourtrip_logo2.png" alt="이미지"
-                                style="width: 220px; height: auto;">
-                        </a>
-                        <div class="btn-wrapper ml-auto mt-4">
-                            <a href="#" class="btn admin-btn-rev" type="button">로그아웃</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--end header area-->
-            <!-- start nav area -->
-            <nav class="navbar navbar-expand-sm nabigater" style="background-color: white; text-align: center;">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <div class="container my-0 px-0">
-                        <div class="col-sm-3 nav-item">
-                            <a href="#" class="nav-text">
-                                <h5>대시보드</h5>
-                            </a>
-                        </div>
-                        <div class="col-sm-3 nav-item">
-                            <a href="#" class="nav-text">
-                                <h5>회원목록</h5>
-                            </a>
-                        </div>
-                        <div class="col-sm-3 nav-item">
-                            <a href="#" class="nav-text">
-                                <h5>플래너목록</h5>
-                            </a>
-                        </div>
-                        <div class="col-sm-3 nav-item">
-                            <a href="#" class="nav-text">
-                                <h5>공지</h5>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <!--end nav area-->
-        </div>
-        <div class="container d-flex">
-            <!-- 이미지 슬라이드 -->
-            <div class="slider-wrapper mx-auto">
-                <div class="slider">
-                    <!-- 1-day 시작 -->
-                    <div class="card">
-                        <h2 class="card-header main-back" style="height:8%;">떠나요 제주도(경비:10만원)</h2>
-                        <div class="card-body" style="overflow: auto; height: 84%;">
-                            <h1 style="color:#18a8f1;">Day-1</h1>
-                            <div class="btn p-cont" 
-                            data-toggle="modal" data-target="#myModal">
-                                <h1 class="font-weight-bold">08:00</h1>
-                                <h2>서울역</h2>
-                                <h3>경비 : 10,000원 </h3>
-                            </div>
-                            <div class="btn p-cont"
-                            data-toggle="modal" data-target="#myModal">
-                                <h1 class="font-weight-bold">10:00</h1>
-                                <h2>동대문</h2>
-                                <h3>경비 : 10,000원 </h3>
-                            </div>
-                            <div class="btn p-cont"
-                            data-toggle="modal" data-target="#myModal">
-                                <h1 class="font-weight-bold">14:00</h1>
-                                <h2>을지로</h2>
-                                <h3>경비 : 10,000원 </h3>
-                            </div>
-                            <div class="btn p-cont"
-                            data-toggle="modal" data-target="#myModal">
-                                <h1 class="font-weight-bold">16:00</h1>
-                                <h2>서울역</h2>
-                                <h3>경비 : 10,000원 </h3>
-                            </div>
-            
-                            <div class="btn p-cont"
-                            data-toggle="modal" data-target="#myModal">
-                                <h1 class="font-weight-bold">20:00</h1>
-                                <h2>술집</h2>
-                                <h3>경비 : 10,000원 </h3>
-                            </div>
-                            <div style="width:100%; height: 350px; background-color: yellow;"></div>
-                        </div>
-                        <div class="card-footer text-muted d-flex hideCon" style="height:8%;">
-                            <a href="#" class="btn main-btn mr-auto">복사</a>
-                            <a href="#" class="btn gray-btn ml-auto">목록으로</a>
-                        </div>
-                    </div>
-                    
-                    <!-- 2-day 시작 -->
-                    <div class="card">
-                        <h2 class="card-header main-back" style="height:8%;">떠나요 제주도(경비:40만원)</h2>
-                        <div class="card-body" style="overflow: auto; height: 84%;">
-                            <h1 style="color:#18a8f1;">Day-1</h1>
-                            <div class="btn p-cont" 
-                            data-toggle="modal" data-target="#myModal">
-                                <h1 class="font-weight-bold">08:00</h1>
-                                <h2>부산역</h2>
-                                <h3>경비 : 10,000원 </h3>
-                            </div>
-                            <div class="btn p-cont"
-                            data-toggle="modal" data-target="#myModal">
-                                <h1 class="font-weight-bold">10:00</h1>
-                                <h2>한국</h2>
-                                <h3>경비 : 10,000원 </h3>
-                            </div>
-                            <div class="btn p-cont"
-                            data-toggle="modal" data-target="#myModal">
-                                <h1 class="font-weight-bold">14:00</h1>
-                                <h2>중국</h2>
-                                <h3>경비 : 10,000원 </h3>
-                            </div>
-                            <div class="btn p-cont"
-                            data-toggle="modal" data-target="#myModal">
-                                <h1 class="font-weight-bold">16:00</h1>
-                                <h2>상하이</h2>
-                                <h3>경비 : 10,000원 </h3>
-                            </div>
-                            <div style="width:100%; height: 350px; background-color: yellow;"></div>
-                        </div>
-                        <div class="card-footer text-muted d-flex hideCon" style="height:8%;">
-                            <a href="#" class="btn main-btn mr-auto">복사</a>
-                            <a href="#" class="btn gray-btn ml-auto">목록으로</a>
-                        </div>
-                    </div>
-                    <!-- 2틀끝 -->
-                    </div>
-                </div>
-            </div>
-            <!-- slider wrapper 끝 -->
-        </div>
+       	<jsp:include page="../common/header.jsp" />
+		<jsp:include page="../common/nav.jsp" />
+        <div class="container-fluid">
+			<div class="row">
+				<div class="col-md-2"></div>
+		        <h2 class="card-header main-back col-md-8" style="height:70px;">${plannerInfo.plannerTitle}</h2>
+	        </div>
+	        <div class="row">
+	        	<div class="col-md-2"></div>
+	            <!-- 이미지 슬라이드 -->
+	            <div class="col-md-3">
+	            	<div class="row">
+			            <div class="slider-wrapper col-md-12 pl-0 pr-0">
+			                <div class="slider">
+			                <c:forEach items="${plannerInfo.days}" var="thisDay" varStatus="vs">
+			                    <!-- 1-day 시작 -->
+			                    <div class="card">
+			                        <div class="card-body" style="overflow: auto; height:800px;">
+			                            <h1 style="color:#18a8f1;">Day-${thisDay.tripDate+1}</h1>
+			                            <hr>
+			                            <c:forEach items="${thisDay.schedules}" var="thisSchedule" varStatus="vs2">
+				                            <div data-sno="${thisSchedule.scheduleNo}" class="btn p-cont schedule" data-toggle="modal" data-target="#myModal">
+				                                <h1 class="font-weight-bold">${thisSchedule.scheduleTitle}</h1>
+				                                <c:set var="time" value="${thisSchedule.scheduleTime}"/>
+				                                <h3>시간 : ${fn:substring(time,0,2)}:${fn:substring(time,2,4)}</h3>
+				                                <h2>장소 : ${thisSchedule.scheduleLocationNM}</h2>
+				                            </div>
+			                            	<hr>
+			                            </c:forEach>
+			                           
+						            	<div class="dayMap" id="${thisDay.dateNo}">
+						            	</div>
+			                        </div>
+			                    </div>
+			                    <!-- 1-day 끝 -->
+			                </c:forEach>
+			                </div>
+			            </div>
+		            </div>
+	            </div>
+	            <div class="col-md-3 p-4 scheduleInfo PCOnly" style="overflow:auto; height:800px">
+                    <h1 class="mb-4 selectTitle">제목</h1>
+                    <h2 class="mb-3 selectTime">시간 : </h2>
+                    <h3 class="mb-3 selectLocation">장소 : 서울역</h3>
+                    <h3 class="mb-3 selectCost">경비 : 10,000원 </h3>
+                    <h3 class="mb-3">메모</h3>
+                    <textarea class="selectMemo" readonly style="height:200px; width: 400px; resize: none; padding: 20px;" >
 
+                    </textarea>
+                    <h3>위치</h3>
+                    
+                    <div class="dayMap" id="PCMap">
+                    </div>
+                </div>
+                <div class="col-md-2 p-5 scheduleInfo PCOnly">
+	            </div>
+	        </div> 
+	        <!-- slider wrapper 끝 -->
+	        <div class="row">
+	        	<div class="col-md-2"></div>
+	        	<div class="card-footer text-muted d-flex hideCon col-md-8" style="height:70px;">
+		            <button type="button" href="#" class="btn main-btn mr-auto PCOnly">복사</button>
+		            <button type="button" href="#" class="btn gray-btn ml-auto PCOnly">목록으로</button>
+			    </div>
+	        </div>
+		</div>
         <!-- 모달창 -->
-        <div class="modal" id="myModal">
+        <div class="modal mobileOnly" id="myModal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header main-back">
-                        <h5 class="modal-title font-weight-bold">DAY - 1</h5>
+                        <h1 class="modal-title font-weight-bold selectTitle">DAY - 1</h1>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <h4>08:00</h4>
-                        <h5>서울역</h5>
-                        <h6>경비 : 10,000원 </h6>
-                        <p>메모</p>
-                        <textarea readonly style="height:200px; width: 100%; resize: none; padding: 20px;" >서울역에서 3번출구에 8시까지 모인다
-빨리안오면 벌금20000만원을 내야한다
-아침은해결하고오기바란다
-                        </textarea>
-                        <p>위치</p>
-                            <img style="height: 200px; width: 100%; display: block;
-                                        padding:20px;"
-                                src="images/ourtrip_logo.png"
-                                alt="sub-map">    
-                        
+	                    <h2 class="mb-3 selectTime">시간 : </h2>
+	                    <h3 class="mb-3 selectLocation">장소 : 서울역</h3>
+	                    <h3 class="mb-3 selectCost">경비 : 10,000원 </h3>
+	                    <h3 class="mb-3">메모</h3>
+	                    <textarea class="selectMemo" readonly style="height:200px; width: 400px; resize: none; padding: 20px;" >
+	
+	                    </textarea>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" 
@@ -273,25 +248,262 @@
             </div>
         </div>
     </body>
-
+    
+	<script type="text/javascript" src="${contextPath}/resources/js/map.js"></script>
     <script>
-        // 슬라이더
-        $(".slider").slick({
-            // 아래 누르는 버튼
-            dots: false,
-            autoplay : false,
-            autoplaySpeed: 3000,
-            arrows: false,
-            responsive : [
-                {
-                    breakpoint: 768,
-                    settings : {
-                        arrows: false,
-                        dots : false
-                    }
-                }
-            ]
-        });
+    var planner = new Object();
+    var days = new Array();
+    var mapId = null;
+    var scheduleMarkers = new Array();
+    var locationJson = null;
+    var locationArray = new Array();
+    var scheduleMarkers = new Array();
+    var mapArray = new Array();
+    var selectMap = null;
+    var marker = new kakao.maps.Marker();
+	var infowindow = new kakao.maps.InfoWindow({zIndex:1});
+    
+    $(function(){
+    	var plannerInfo = '${plannerInfoJson}';
+    	var plannerJson = JSON.parse(plannerInfo);
+    	locationJson = ${locationArray};
+    	console.log(locationJson);
+    	initPlanner(plannerJson);
+    	initMap();
+    });
+    
+    function initMap(){
+    	
+    	var loadingInfo = 0;
+    	var loadingAddr = 0;
+    	
+    	for(var i in locationJson){
+    		var scheduleMarker = new Array();
+    		var dayMarker = new Object();
+    		dayMarker.dno = locationJson[i].dno;
+    		dayMarker.markers = [];
+    		for(var j in locationJson[i].schedules){
+    			var sm = new Object();
+    			sm.sno = locationJson[i].schedules[j].sno;
+    			sm.LatLng = new kakao.maps.LatLng(locationJson[i].schedules[j].lat, locationJson[i].schedules[j].lng);
+    			sm.unselect = (locationJson[i].schedules[j].lat + locationJson[i].schedules[j].lng) == 0 ? true:false;
+    			sm.location = locationJson[i].schedules[j].location;
+    			sm.infoWindow = null;
+    			scheduleMarker.push(sm);
+    			loadingInfo++;
+    		}
+    		dayMarker.scheduleMarker = scheduleMarker;
+    		scheduleMarkers.push(dayMarker);
+    	}
+    	
+    	for(var d in scheduleMarkers){
+    		for(var s in scheduleMarkers[d].scheduleMarker){
+		    	getScheduleAddr(scheduleMarkers[d].scheduleMarker[s].LatLng,scheduleMarkers[d].scheduleMarker[s].location,scheduleMarkers[d].scheduleMarker[s].sno).then(function(args){
+					for(var i in scheduleMarkers){
+						for(var j in scheduleMarkers[i].scheduleMarker){
+							console.log(scheduleMarkers[i].scheduleMarker[j].sno + ' =sno= ' +  args[0]);
+							if(scheduleMarkers[i].scheduleMarker[j].sno == args[0]){
+								scheduleMarkers[i].scheduleMarker[j].infoWindow = args[1];
+								loadingAddr += 1;
+								console.log(args[1]);
+								console.log(loadingAddr + ' == ' + loadingInfo);
+								if(loadingInfo == loadingAddr){
+									for(var i in scheduleMarkers){
+										var mapDiv = document.getElementById(locationJson[i].dno+''); 
+										scheduleMarkers[i].map = new kakao.maps.Map(mapDiv, mapOption);
+									}
+									for(var i in scheduleMarkers){
+							    		displayAllPlaces(scheduleMarkers[i],scheduleMarkers[i].map,scheduleMarkers[i].markers);
+							    	}
+								}
+							}
+						}
+					}
+				});
+    		}
+    	}
+    }
+    
+    function initPlanner(pj){
+    	planner.no = pj.plannerNo;
+    	planner.title = pj.plannerTitle;
+    	planner.pwd = pj.plannerPwd;
+    	planner.cost = pj.plannerCost;
+    	planner.createDT = pj.plannerCreateDT;
+    	planner.modifyDT = pj.plannerModifyDT;
+    	planner.startDT = pj.plannerStartDT;
+    	planner.publicYN = pj.plannerPublicYN;
+    	planner.deleteYN = pj.plannerDeleteYN;
+    	planner.expiry = pj.plannerExpiry;
+    	planner.count = pj.plannerCount;
+    	planner.url = pj.plannerUrl;
+    	planner.groupCode = pj.groupCode;
+    	for(var d in pj.days){
+    		var day = new Object();
+    		day.no = pj.days[d].dateNo;
+    		day.tripDate = pj.days[d].tripDate;
+    		day.plannerNo = planner.no;
+    		day.schedules = new Array();
+    		for(var s in pj.days[d].schedules){
+    			var schedule = new Object();
+    			schedule.no = pj.days[d].schedules[s].scheduleNo;
+    			schedule.title = pj.days[d].schedules[s].scheduleTitle;
+    			schedule.cost = pj.days[d].schedules[s].scheduleCost;
+    			schedule.time = pj.days[d].schedules[s].scheduleTime;
+    			schedule.memo = pj.days[d].schedules[s].scheduleMemo;
+    			schedule.locationNM = pj.days[d].schedules[s].scheduleLocationNM;
+    			schedule.lat = pj.days[d].schedules[s].scheduleLat;
+    			schedule.lng = pj.days[d].schedules[s].scheduleLng;
+    			schedule.infoWindow = pj.days[d].schedules[s].infoWindow;
+    			schedule.dateNo = pj.days[d].dateNo;
+    			day.schedules.push(schedule);
+    		}
+    		days.push(day);
+    	}
+    	console.log("planner");
+    	console.log(planner);
+    	console.log("days");
+    	console.log(days);
+    	console.log(days);
+    	console.log("scheduleMarkers");
+    	console.log(scheduleMarkers);
+    	
+    	selectMapContainer = document.getElementById("PCMap");
+    	selectMap = new kakao.maps.Map(selectMapContainer, mapOption);
+    }
+    
+    function getScheduleAddr(templocation,locationName,scheduleNo){
+    	if(templocation.getLng() + templocation.getLat() != 0){
+    		return new Promise(function(resolve, reject){
+    			try{
+    				var contentArr= new Array();
+    				contentArr.push(scheduleNo);
+    				console.log(templocation);
+    				searchDetailAddrFromCoords(templocation, function(result, status) {
+    				    if (status === kakao.maps.services.Status.OK) {
+    				        var detailAddr = !!result[0].road_address ? '<div style="font-size: 14px;">도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
+    				        detailAddr += '<div style="font-size: 14px;">지번 주소 : ' + result[0].address.address_name + '</div>';
+    				        
+    			        	content = 	'<div class="bAddr">' +
+    				                        '<span class="title">' + locationName + '</span>' + 
+    				                        detailAddr + 
+    			                        '</div>';
+    				      	contentArr.push(content);
+    				        resolve(contentArr);
+    				    }else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+    				        // 검색결과가 없는경우 해야할 처리가 있다면 이곳에 작성해 주세요
+    					    content = 
+    					    	'<div class="bAddr">' +
+    		                        '<span class="title">' + locationName + '</span>' + 
+    		                    '</div>';
+    					    contentArr.push(content);
+    				        resolve(contentArr);
+    				    } else if (status === kakao.maps.services.Status.ERROR) {
+    				        // 에러로 인해 검색결과가 나오지 않은 경우 해야할 처리가 있다면 이곳에 작성해 주세요
+    				    	console.log("에러로 인해 검색결과가 나오지 않은 경우");
+    				    }
+    				});
+    				
+    			} catch(error){
+    				reject(error)
+    			}
+    		});
+    	}else{
+    		return new Promise(function(resolve, reject){
+    			try{
+    				var contentArr= new Array();
+    				contentArr.push(scheduleNo);
+    				contentArr.push(null);
+    				resolve(contentArr);
+    			}catch(error){
+    				console.log(error.stack);
+    				reject(error);
+    			}
+    		});
+    	}
+    } 
+    
+	// 슬라이더
+	$(".slider").slick({
+	    // 아래 누르는 버튼
+	    dots: false,
+	    autoplay : false,
+	    autoplaySpeed: 3000,
+	    arrows: false,
+	    responsive : [
+	        {
+	            breakpoint: 768,
+	            settings : {
+	                arrows: false,
+	                dots : false
+	            }
+	        }
+	    ]
+	});
+	
+	function isMobile() {
+	    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+	}
+	
+	if (isMobile()) {
+	    // 모바일이면 실행될 코드 들어가는 곳
+	    $('.PCOnly').css('display','none');
+	} else {
+	    // 모바일이 아니면 실행될 코드 들어가는 곳
+	    $('#myModal').attr('id','ModalNone');
+	    $('.mobileOnly').css('display','none');
+	}
+	
+	$('.schedule').click(function(){
+		console.log($(this).data('sno'));
+		for(var i in days){
+			for(var j in days[i].schedules){
+				if(days[i].schedules[j].no == $(this).data('sno')){
+					for(var k = 0; k < $('.selectTitle').length; k++){
+						console.log($($('.selectTitle')[k]));
+						$($('.selectTitle')[k]).html('제목 : ' + days[i].schedules[j].title);
+						$($('.selectTime')[k]).html('시간 : ' + timeToTime(days[i].schedules[j].time));
+						$($('.selectLocation')[k]).html('장소 : ' + days[i].schedules[j].locationNM);
+						$($('.selectCost')[k]).html('비용 : ' + days[i].schedules[j].cost);
+						$($('.selectMemo')[k]).val(days[i].schedules[j].memo);
+					}
+				}
+				if(scheduleMarkers[i].scheduleMarker[j].sno == $(this).data('sno')){
+					console.log('map');
+					var scheduleLocation = scheduleMarkers[i].scheduleMarker[j].LatLng;
+					var locationContent = scheduleMarkers[i].scheduleMarker[j].infoWindow;
+					if(scheduleLocation.getLat()+scheduleLocation.getLng() == 0){
+				        marker.setMap(null);
+				        infowindow.setMap(null);
+				    }else{
+				    	console.log(selectMap);
+				    	console.log(marker);
+				    	
+				        marker.setMap(selectMap);
+				        
+				        console.log("locationContent : " + locationContent);
+				        // 마커를 클릭한 위치에 표시합니다 
+				        console.log(scheduleLocation);
+
+				        marker.setPosition(scheduleLocation);
+				        marker.setMap(selectMap);
+				        var allBounds = new kakao.maps.LatLngBounds();
+				        allBounds.extend(scheduleLocation);
+				     	
+				        // 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
+				        infowindow.setContent(locationContent);
+				        infowindow.open(selectMap, marker);
+				        // selectMap.setBounds(allBounds);
+				        selectMap.setCenter(scheduleLocation);
+				    }
+				}
+			}
+		}
+	});
+	function timeToTime(time){
+		var str = time.replace(/(.{2})/g,"$1:").slice(0,-1);
+		return str;
+	} 
     </script>
     
 </html>

@@ -33,7 +33,6 @@ var infowindowAll = new kakao.maps.InfoWindow({
 // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
 kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
     searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
-    	console.log(mouseEvent.latLng);
         if (status === kakao.maps.services.Status.OK) {
             var detailAddr = !!result[0].road_address ? '<div style="font-size: 14px;">도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
             detailAddr += '<div style="font-size: 14px;">지번 주소 : ' + result[0].address.address_name + '</div>';
@@ -46,14 +45,13 @@ kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
             // 마커를 클릭한 위치에 표시합니다 
             marker.setPosition(mouseEvent.latLng);
             marker.setMap(map);
-            console.log(mouseEvent.latLng);
+
             // 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
             infowindow.setContent(content);
             infowindow.open(map, marker);
 
             // 인포윈도우 내용 저장
             iwContent = content;
-            console.log(iwContent + ", " + content);
 
             // 마지막 검색 키워드 저장
             lastKeyword = result[0].address.address_name;
@@ -61,15 +59,14 @@ kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
             // 마지막 클릭 위치 저장
             lat = mouseEvent.latLng.getLat();
             lng = mouseEvent.latLng.getLng();
-            console.log("위도(Lat) 경도(Lng) : " + lat + ", " + lng);
-            console.log(iwContent);
         }
     });
 });
 
 function searchDetailAddrFromCoords(coords, callback) {
     // 좌표로 법정동 상세 주소 정보를 요청합니다
-    geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+	new kakao.maps.services.Geocoder().coord2Address(coords.getLng(), coords.getLat(), callback);
+	//geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
 }
 
 // 검색어를 통한 지도 변경
@@ -179,8 +176,6 @@ function addMarker(place) {
             lat = place.y;
             lng = place.x;
 
-            console.log("위도(Lat) 경도(Lng) : " + lat + ", " + lng);
-            console.log(iwContent);
         });
     });
 
@@ -192,15 +187,18 @@ function addMarker(place) {
 
 
 
-function displayInfowindow(marker, i) {
+function displayInfowindow(marker, i, map) {
+	console.log(i);
     var content = '<div style="padding:5px;z-index:1;">' + i + '</div>';
-
+    infowindowAll = new kakao.maps.InfoWindow({
+        removable : true
+    });
     infowindowAll.setContent(content);
-    infowindowAll.open(allMap, marker);
+    infowindowAll.open(map, marker);
 }
 
 // 검색 결과 목록과 마커를 표출하는 함수입니다
-function displayAllPlaces(pointsArr) {
+function displayAllPlaces(pointsArr,mymap,mymarkers) {
 
 	// 버튼을 클릭하면 아래 배열의 좌표들이 모두 보이게 지도 범위를 재설정합니다
     var allBounds = new kakao.maps.LatLngBounds();
@@ -235,22 +233,23 @@ function displayAllPlaces(pointsArr) {
         (function(allMarker, i){
             kakao.maps.event.addListener(allMarker, 'click', function() {
                 // 마커 위에 인포윈도우를 표시합니다
-                displayInfowindow(allMarker, pointsArr.scheduleMarker[i].infoWindow);
+            	console.log("set infoWindow")
+            	console.log(pointsArr.scheduleMarker[i].infoWindow);
+                displayInfowindow(allMarker, pointsArr.scheduleMarker[i].infoWindow, mymap);
             });
         })(allMarker, i);
 
        // 배열의 좌표들이 잘 보이게 마커를 지도에 추가합니다
-       allMarker.setMap(allMap);
-       allMarkers.push(allMarker);
+       allMarker.setMap(mymap);
+       mymarkers.push(allMarker);
        
        // LatLngBounds 객체에 좌표를 추가합니다
        allBounds.extend(pointsArr.scheduleMarker[i].LatLng);
    }
 
     // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-    allMap.setBounds(allBounds);
+    mymap.setBounds(allBounds);
 }
-
 
 // 카카오 외의 함수들
 function enterSearch(){
@@ -319,5 +318,5 @@ function removeAllMarker(){
     for(var i in allMarkers){
     	allMarkers[i].setMap(null);
     }
-    infowindowAll.setMap(null);
+    //infowindowAll.setMap(null);
 }

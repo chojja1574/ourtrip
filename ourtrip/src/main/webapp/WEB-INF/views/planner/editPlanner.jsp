@@ -57,10 +57,8 @@
 
 <!-- 공용 css -->
 <!-- <link rel="stylesheet" href="${contextPath}/resources/css/common.css"> -->
-<link rel="stylesheet" type="text/css"
-	href="${contextPath}/resources/css/common.css" />
-<link rel="stylesheet" type="text/css"
-	href="${contextPath}/resources/css/planner.css" />
+<link rel="stylesheet" type="text/css" href="${contextPath}/resources/css/common.css" />
+<link rel="stylesheet" type="text/css" href="${contextPath}/resources/css/planner.css" />
 
 
 <!-- Web socket CDN -->
@@ -543,7 +541,7 @@ function sortSchedule(){
     });
     var locationArr = new Array();
     var infoWindowArr = new Array()
-    displayAllPlaces(daySchedule);
+    displayAllPlaces(daySchedule,allMap,allMarkers);
 }
 
 function sortDays(days){
@@ -774,7 +772,7 @@ function selectDay(no){
 			existMarker = true;
 	}
 	if(existMarker){
-		displayAllPlaces(extractDayMarker(no));
+		displayAllPlaces(extractDayMarker(no),allMap,allMarkers);
 	}else{
 		initMapBtn();
 		removeAllMarker();
