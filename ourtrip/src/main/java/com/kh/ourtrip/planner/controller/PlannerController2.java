@@ -154,7 +154,7 @@ public class PlannerController2 {
 		return "planner/editPlanner";
 	}
 	
-	@RequestMapping("mobileView")
+	@RequestMapping("plannerDetail")
 	public String mobileView(Model model, Integer no, RedirectAttributes rdAttr, String userId) {
 		
 		JSONObject jsonObj = null;
@@ -263,6 +263,6 @@ public class PlannerController2 {
 		model.addAttribute("locationArray", locationArray);
 		System.out.println("mobileViewEnd");
 		
-		return "planner/plannerView";
+		return "planner/plannerDetail";
 	}
 }
