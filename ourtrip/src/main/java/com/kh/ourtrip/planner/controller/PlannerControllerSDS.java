@@ -111,10 +111,18 @@ public class PlannerControllerSDS {
 				System.out.println(item);
 			}
 			
+			Map<String, Object> result = new HashMap<String, Object>();
+			
+			result.put("pList", pList);
+			result.put("currentPage", currentPage);
+			
+			
 			Gson gson = new GsonBuilder().setDateFormat(
 					"yyyy-MM-dd").create();
 			
-			return gson.toJson(pList);
+			// Gson gson = new Gson();
+			// return gson.toJson(pList);
+			return gson.toJson(result);
 			
 			
 		} catch (Exception e) {

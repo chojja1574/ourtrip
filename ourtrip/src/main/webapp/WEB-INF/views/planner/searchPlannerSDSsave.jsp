@@ -302,13 +302,7 @@
 		var largeArea;
 		var smallArea;
 		var viaCheck;
-		var currentPage;
-		
-		function search() {
-			
-			console.log("버튼창 입력확인");
-		}
-		
+		var currentPage = 1;
 		
 		
         $(function () {
@@ -338,9 +332,8 @@
         	$pContainer = $("#planner-container");
         	$pContainer.hide();
         	
-        	// 검색 버튼을 눌렀을 경우 처리
+        	
         	$("#searchBtn").on("click", function(){
-       		//$("#searchBtn").on("click", function(){
         		var searchTitle = $("#searchTitle").val();
         		var groupName = $("#groupName").val();
         		var largeArea = $("#wide-area").val();
@@ -364,30 +357,30 @@
         			
         			success : function(result){
         				console.log(result);
-        				$pContainer.show();
-        				if(result.pList == null || result.pList == ''){
-        					console.log("비어있을경우 조건문 들어옴");
+        				console.log("result[0] : " + result[0].plannerTitle);
+       					$pContainer.show();
+        				if(result == null || result == ''){
+        					console.log("조건문들어옴");
         					console.log($pWrapper);
         					$pWrapper.html("<div style='height:250px'>조회결과가 없습니다.<div>");
         				} else {
         					//console.log(result.length);
-        					console.log("비어있지안을경우 조건문 들어옴");
         					var pHtml = "";
-        					for(var i=0; i<result.pList.length; i++) {
+        					for(var i=0; i<result.length; i++) {
 	        					pHtml += 
 	        					'<div class="planner">' + 
 	        					'<div class="card">' +
-        						'<img class="card-img-top" src="${contextPath}/resources/areaImages/' + result.pList[i].areaNames[0].largeAreaCode + '.jpg" alt="Card image">' +
+        						'<img class="card-img-top" src="${contextPath}/resources/areaImages/' + result[i].areaNames[0].largeAreaCode + '.jpg" alt="Card image">' +
         						'<div class="card-body">' +
-       							'<h5 class="card-title">' + result.pList[i].plannerTitle + '</h5>' +
+       							'<h5 class="card-title">' + result[i].plannerTitle + '</h5>' +
    								'<p class="card-text">' +
-   								'<span>시작일 : ' + result.pList[i].plannerStartDT + ' ' +result.pList[i].tripDate + 'DAYS</span><br> <span>' + result.pList[i].groupName + ' 여행</span><br>';
-   								if(result.pList[i].areaNames.length > 1) { 
-   									pHtml += '<span>' + result.pList[i].areaNames[0].largeAreaName + ' ' + 
-   									result.pList[i].areaNames[0].smallAreaName + '...</span>'; 
+   								'<span>시작일 : ' + result[i].plannerStartDT + ' ' +result[i].tripDate + 'DAYS</span><br> <span>' + result[i].groupName + ' 여행</span><br>';
+   								if(result[i].areaNames.length > 1) { 
+   									pHtml += '<span>' + result[i].areaNames[0].largeAreaName + ' ' + 
+   									result[i].areaNames[0].smallAreaName + '...</span>'; 
    								} else {
-   									pHtml += '<span>' + result.pList[i].areaNames[0].largeAreaName + ' ' + 
-   									result.pList[i].areaNames[0].smallAreaName + '</span>'; 
+   									pHtml += '<span>' + result[i].areaNames[0].largeAreaName + ' ' + 
+   									result[i].areaNames[0].smallAreaName + '</span>'; 
    								}
    								//var now = new Date(result[i].plannerStartDT);
    								//console.log(now);
@@ -399,7 +392,7 @@
 	        					'<button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>' +
 	        					'</div>' +
 	        					'<div>' +
-	        					'<i class="fas fa-eye"></i>&nbsp;'+ result.pList[i].plannerCount +
+	        					'<i class="fas fa-eye"></i>&nbsp;'+ result[i].plannerCount +
 	        					'</div>' +
 	        					'</div>' +
 	        					'</div>' +
@@ -415,84 +408,6 @@
         			
         		});
         	});
-       		
-       		// 페이징 바 눌렀을 경우 처리
-        	$("#searchBtn").on("click", function(){
-           		//$("#searchBtn").on("click", function(){
-            		var searchTitle = $("#searchTitle").val();
-            		var groupName = $("#groupName").val();
-            		var largeArea = $("#wide-area").val();
-            		var smallArea = $("#local-area").val();
-            		var viaCheck = $("#viaCheck").prop("checked");
-            		if(viaCheck){
-            			viaCheck = "on";
-            		}else{
-            			viaCheck = null;
-            		}
-            		
-            		$.ajax({
-            			url : "searchPlanner",
-            			type : "POST",
-            			data : {searchTitle: searchTitle,
-            					groupName: groupName,
-            					largeArea: largeArea,
-            					smallArea: smallArea,
-            					viaCheck: viaCheck,
-            					currentPage: currentPage},
-            			
-            			success : function(result){
-            				console.log(result);
-            				$pContainer.show();
-            				if(result.pList == null || result.pList == ''){
-            					console.log("비어있을경우 조건문 들어옴");
-            					console.log($pWrapper);
-            					$pWrapper.html("<div style='height:250px'>조회결과가 없습니다.<div>");
-            				} else {
-            					//console.log(result.length);
-            					console.log("비어있지안을경우 조건문 들어옴");
-            					var pHtml = "";
-            					for(var i=0; i<result.pList.length; i++) {
-    	        					pHtml += 
-    	        					'<div class="planner">' + 
-    	        					'<div class="card">' +
-            						'<img class="card-img-top" src="${contextPath}/resources/areaImages/' + result.pList[i].areaNames[0].largeAreaCode + '.jpg" alt="Card image">' +
-            						'<div class="card-body">' +
-           							'<h5 class="card-title">' + result.pList[i].plannerTitle + '</h5>' +
-       								'<p class="card-text">' +
-       								'<span>시작일 : ' + result.pList[i].plannerStartDT + ' ' +result.pList[i].tripDate + 'DAYS</span><br> <span>' + result.pList[i].groupName + ' 여행</span><br>';
-       								if(result.pList[i].areaNames.length > 1) { 
-       									pHtml += '<span>' + result.pList[i].areaNames[0].largeAreaName + ' ' + 
-       									result.pList[i].areaNames[0].smallAreaName + '...</span>'; 
-       								} else {
-       									pHtml += '<span>' + result.pList[i].areaNames[0].largeAreaName + ' ' + 
-       									result.pList[i].areaNames[0].smallAreaName + '</span>'; 
-       								}
-       								//var now = new Date(result[i].plannerStartDT);
-       								//console.log(now);
-       								pHtml +=  
-       								'</p>' + 
-    	        					'<div class="d-flex justify-content-between">' +
-    	        					'<div class="btn-wrapper">' +
-    	        					'<button type="button" class="btn btn-sm main-btn">바로가기</button>' +
-    	        					'<button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>' +
-    	        					'</div>' +
-    	        					'<div>' +
-    	        					'<i class="fas fa-eye"></i>&nbsp;'+ result.pList[i].plannerCount +
-    	        					'</div>' +
-    	        					'</div>' +
-    	        					'</div>' +
-    	        					'</div>' +
-    	        					'</div>';
-            					}
-            					$pWrapper.html(pHtml);
-            				}
-            			},
-            			error : function(e){
-            				alert(e);
-            			}
-            			
-            		});
-            	});
             
         });
     </script>
