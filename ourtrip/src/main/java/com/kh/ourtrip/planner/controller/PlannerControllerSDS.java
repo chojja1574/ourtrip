@@ -119,14 +119,14 @@ public class PlannerControllerSDS {
 			Map<String, Object> result = new HashMap<String, Object>();
 			
 			result.put("pList", pList);
-			result.put("currentPage", currentPage);
-			
+			result.put("pInf", pInf);
 			
 			Gson gson = new GsonBuilder().setDateFormat(
 					"yyyy-MM-dd").create();
 			
 			// Gson gson = new Gson();
 			// return gson.toJson(pList);
+			
 			return gson.toJson(result);
 			
 			
