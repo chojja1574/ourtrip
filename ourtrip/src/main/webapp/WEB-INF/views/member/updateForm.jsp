@@ -73,12 +73,12 @@
 					<c:if test="${!empty profileImage}">
 					
 						<!-- 카카오에서 가져온 이미지 경로일 경우 -->
-						<c:if test="${fn:contains(profileImage.imagePath, 'http://')}">
+						<c:if test="${fn:contains(profileImage.imagePath, 'http')}">
 							<c:set var="filePath" value="${profileImage.imagePath}"/>
 						</c:if>
 					
 						<!-- ourtrip서버에 있는 경로일 경우 -->
-						<c:if test="${!fn:contains(profileImage.imagePath, 'http://')}">
+						<c:if test="${!fn:contains(profileImage.imagePath, 'http')}">
 							<c:set var="fileName" value="${fn:split(profileImage.imagePath, '/')}"/>
 							<c:set var="filePath" value="${contextPath}/resources/profileImages/${fileName[fn:length(fileName) - 1]}"/>
 						</c:if>

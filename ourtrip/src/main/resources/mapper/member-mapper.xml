@@ -32,8 +32,8 @@
 		AND SIGNUP_ROUTE= '1'
 	</select>
 	
-	<!-- 카카오 로그인 -->
-	<select id="kakaoLogin" parameterType="Member"
+	<!-- 소셜 로그인 -->
+	<select id="socialLogin" parameterType="Member"
 		resultMap="memberResultSet">
 		SELECT * FROM MEMBER
 		WHERE MEMBER_EMAIL= #{memberEmail}

@@ -110,5 +110,13 @@ public interface MemberService {
 	 */
 	public abstract String getProfileImagePath(int memberNo) throws Exception;
 
+	/** 네이버 로그인용 Service
+	 * @param member
+	 * @param imagePath
+	 * @return loginMember
+	 * @throws Exception
+	 */
+	public abstract Member naverLogin(Member member, String imagePath) throws Exception;
+
 
 }
