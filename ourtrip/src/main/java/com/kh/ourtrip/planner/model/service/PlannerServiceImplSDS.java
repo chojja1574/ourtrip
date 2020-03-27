@@ -9,12 +9,14 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.planner.model.dao.PlannerDAOSDS;
 import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.LargeArea;
 import com.kh.ourtrip.planner.model.vo.PlannerCard;
+import com.kh.ourtrip.planner.model.vo.PlannerMember;
 import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Service
@@ -300,6 +302,74 @@ public class PlannerServiceImplSDS implements PlannerServiceSDS{
 		return plannerDAOSDS.selectSmallNmList();
 	}
 
-	
+	/** 회원 수정중인 플래너 수 조회용 Service
+	 * @param memberNo
+	 * @return updatePlannerCount
+	 * @throws Exception
+	 */
+	@Override
+	public int updatePlannerCount(int memberNo) throws Exception {
+		return plannerDAOSDS.updatePlannerCount(memberNo);
+	}
+
+	/** 회원이 참여하고있는 플래너 번호 목록 조회용 Service
+	 * @param memberNo
+	 * @return plannerNoList
+	 * @throws Exception
+	 */
+	@Override
+	public List<PlannerMember> selectPlannerMember(int memberNo) throws Exception {
+		return plannerDAOSDS.selectPlannerMember(memberNo);
+	}
+
+	/** 수정중인 플래너 목록 조회용 Service
+	 * @param memberNo
+	 * @return uPlannerList
+	 * @throws Exception
+	 */
+	@Override
+	public List<PlannerCard> updatePlannerList(int memberNo) throws Exception {
+		return plannerDAOSDS.updatePlannerList(memberNo);
+	}
+
+	/** 완료된 플래너 목록 조회용 Service
+	 * @param memberNo
+	 * @return cPlannerList
+	 * @throws Exception
+	 */
+	@Override
+	public List<PlannerCard> completePlannerList(int memberNo) throws Exception {
+		return plannerDAOSDS.completePlannerList(memberNo);
+	}
+
+	/** 플래너 지역이름 조회용 Service
+	 * @param noList
+	 * @return areaNames
+	 * @throws Exception
+	 */
+	@Override
+	public List<AreaName> selectAreaNames(List<Integer> noList) throws Exception {
+		return plannerDAOSDS.selectAreaNames(noList);
+	}
+
+	/** 플래너 삭제용 Service
+	 * @param delPlanner
+	 * @return result
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int delPlanner(PlannerMember delPlanner) throws Exception {
+		// 회원이 삭제하려는 플래너에 맞는 권한인지 확인
+		String permission = plannerDAOSDS.selectPlannerPerm(delPlanner);
+		
+		int result = 0;
+		if(permission.equals("3")) {
+			delPlanner.setPlannerPermission(Integer.parseInt(permission));
+			result = plannerDAOSDS.delPlanner(delPlanner);
+		}
+		
+		return result;
+	}
 	
 }
