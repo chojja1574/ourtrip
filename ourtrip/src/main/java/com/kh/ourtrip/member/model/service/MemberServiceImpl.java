@@ -207,8 +207,12 @@ public class MemberServiceImpl implements MemberService{
 		// 회원의 기존 프로필 사진이 존재하는 경우
 		if(pi != null) {
 			
+			// 사진을 변경하지 않은 경우
+			if(profileImage.getOriginalFilename().equals("") && isDefault.equals("false")) {
+				result = 1;
+				
 			// 사진을 변경했는데 디폴트 이미지로 변경했을 경우
-			if(profileImage.getOriginalFilename().equals("") && isDefault.equals("true")) {
+			}else if(profileImage.getOriginalFilename().equals("") && isDefault.equals("true")) {
 				// DB에서 이미지 삭제
 				result = memberDAO.deleteProfileImage(memberNo);
 				
@@ -247,7 +251,9 @@ public class MemberServiceImpl implements MemberService{
 				result = memberDAO.insertProfileImage(pi);
 				
 				if(result > 0) profileImage.transferTo(new File(pi.getImagePath()));
-			}
+				
+			// 변경하지 않은 경우
+			}else result = 1;
 		}
 
 		return result;
