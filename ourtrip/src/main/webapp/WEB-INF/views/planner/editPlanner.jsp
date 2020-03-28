@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -44,6 +45,8 @@
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.js"></script>
 
+<!-- 아이콘 -->
+<script src="https://kit.fontawesome.com/76b49c6d9b.js" crossorigin="anonymous"></script>
 <!-- 호환성 -->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
@@ -54,10 +57,8 @@
 
 <!-- 공용 css -->
 <!-- <link rel="stylesheet" href="${contextPath}/resources/css/common.css"> -->
-<link rel="stylesheet" type="text/css"
-	href="${contextPath}/resources/css/common.css" />
-<link rel="stylesheet" type="text/css"
-	href="${contextPath}/resources/css/planner.css" />
+<link rel="stylesheet" type="text/css" href="${contextPath}/resources/css/common.css" />
+<link rel="stylesheet" type="text/css" href="${contextPath}/resources/css/planner.css" />
 
 
 <!-- Web socket CDN -->
@@ -116,7 +117,7 @@
 						style="text-align: center;">
 						<div class="col-md-9 pl-2 pr-0">
 							<input type="text" id="url" class="pl-2" readonly
-								value="https//:ourtrip.com/1234567">
+								value="">
 						</div>
 						<div class="col-md-3">
 							<button type="button" id="copy"
@@ -127,32 +128,31 @@
 				<div class="col-md-3 pl-0">
 					<div class="main-back plannerHeader row ml-0 mr-0"
 						style="text-align: center;">
-						<div class="col-md-2"></div>
+						<div class="col-md-1"></div>
 						<div class="col-md-3">
-							<span>총 경비</span>
+							<span>총 경비 : </span>
 						</div>
-						<div class="col-md-5">
+						<div class="col-md-5 pl-0 pr-0">
 							<span id="totalcost">0 원</span>
+						</div>
+						<div class="col-md-3">
+							<button type="button" class="plannerHeaderBtn btnColor1" id="calc">계산</button>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-3 pl-0">
 					<div class="main-back plannerHeader row ml-0">
 						<div class="col-md-6 pl-2">
-							<select name="permissionUser" id="permissionUser">
-								<option value="1">신덕수</option>
-								<option value="2">이훈</option>
-								<option value="3">박지현</option>
-								<option value="4">조유상</option>
+							<select name="userPermission" id="userPermission">
 							</select>
 						</div>
 						<div class="col-md-3 pl-0">
 							<button type="button" class="plannerHeaderBtn btnColor3"
-								id="gradebt">권한 삭제</button>
+								id="stealBtn">권한 삭제</button>
 						</div>
 						<div class="col-md-3 pl-0">
 							<button type="button" class="plannerHeaderBtn btnColor1"
-								id="gradebt">권한 부여</button>
+								id="grantBtn">권한 부여</button>
 						</div>
 					</div>
 				</div>
@@ -166,8 +166,8 @@
 
 						<!-- 출발일 설정 -->
 						<div class="card-header main-back plannerDivHeader dayHeader">
-							<span>출발일 입력</span> <input class="plannerDay" id="startrip"
-								type="date" max="9999-12-31">
+							<input class="plannerDay" id="startrip"	type="date" max="9999-12-31">
+							<button type="button" class="btnColor1" id="startDateUpdateBtn">출발일 수정</button> 
 						</div>
 						<!-- 일자 카드 -->
 						<div id="sortable" class="divContent"></div>
@@ -325,26 +325,50 @@
 // 1 = 카카오 위치 객체
 // 2 = lat + lng
 // 3 = 인포 윈도우
+
 var scheduleMarkers = new Array();
 var planner = new Object();
 var days = new Array();
 var loadingInfo = 0;
 var loadingAddr = 0;
 var dayIndex = -1;
-var userId = null;
+var memberNo = null;
+var memberNickName = null;
+var permission = null;
+var joinMember = new Array();
 
 $(function() {
-	var userId = '${loginMember.getMemberEmail()}'
+	memberNo = '${loginMember.memberNo}';
+	if(memberNo == ''){
+		memberNo = '-1';
+	}
+	memberNickName = '${loginMember.memberNickName}';
+	if(memberNickName == ''){
+		memberNickName = '비회원';
+	}
 	var plannerInfo = '${plannerInfo}';
 	var chatList = '${chatList}';
+	var joinUserArray = '${joinUserArray}';
+	var joinUserJson = JSON.parse(joinUserArray);
 	var plannerJson = JSON.parse(plannerInfo);
-	console.log("chatList : " + chatList);
+	var chatListJson = JSON.parse(chatList);
+	var profilePath = '${profilePath}';
+
 	
+	$('#url').val(window.location.href);
 	$('#startrip').val(plannerJson.plannerStartDT);
 	$("#join").click(function(){
-		sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'JOIN', writer: "${userId}", content: ""}));
+		initChatting(chatListJson);
 		initPlanner(plannerJson);
+		initJoinMember(joinUserJson);
+		sock.send(JSON.stringify({pno:planner.no, type: 'JOIN', memberNo: memberNo, memberNickName: memberNickName}));
+		for(var i in joinMember){
+			if(joinMember[i].memberNo == memberNo){
+				permission = joinMember[i].plannerPermission;
+			}
+		}
 	})
+	
     // 페이지 입장 시 참여버튼 모달 출력
     $("#modalBtn").click();
     
@@ -399,13 +423,17 @@ function initPlanner(pj){
 			getScheduleAddr(scheduleLatLng,schedule.locationNM,schedule.no).then(function(args){
 				for(var i in scheduleMarkers){
 					for(var j in scheduleMarkers[i].scheduleMarker){
+						console.log(scheduleMarkers[i].scheduleMarker[j].sno + ' =sno= ' +  args[0]);
 						if(scheduleMarkers[i].scheduleMarker[j].sno == args[0]){
 							scheduleMarkers[i].scheduleMarker[j].infoWindow = args[1];
 							loadingAddr += 1;
+							console.log()
+							console.log(loadingAddr + ' == ' + loadingInfo);
 							if(loadingInfo == loadingAddr){
 								for(var k = 0; k < days.length; k++){
-									createDate(days[k].no);
+									createDate(days[k].no,false);
 								}
+								reorder();
 							}
 						}
 					}
@@ -418,16 +446,34 @@ function initPlanner(pj){
 	console.log("planner");
 	console.log(planner);
 	console.log("days");
-	sortDays(days);
-	for(var i = 0; i < days.length; i++){
-		sortSchedules(days[i].schedules);
-	}
+	console.log(days);
+	sortDaysUserTripdate(days);
 	console.log(days);
 	console.log("scheduleMarkers");
 	console.log(scheduleMarkers);
-	
+	//setTimeout(function(){
+	for(var i = 0; i < days.length; i++){
+		sortSchedules(days[i].schedules);
+	}
+	//}, 1000);
 }
-
+function initChatting(chatList){
+	for(var i in chatList){
+		if(chatList[i].memberNo == '-1'){
+			inputChat(mkChatMsg('null','비회원',chatList[i].chatContent,chatList[i].chatTime));
+		}else if(chatList[i].memberNo == memberNo) {
+	     	// inputChat = 채팅 내역에 채팅창 올리는 함수
+	        // mkMyChatMsg = 내가 보낸 메세지로 채팅창 만드는 함수
+	        // mkMyChatMsg 매개변수 = (msgContent,msgTime)
+	        inputChat(mkMyChatMsg(chatList[i].chatContent,chatList[i].chatTime));
+		}else {
+			// inputChat = 채팅 내역에 채팅창 올리는 함수
+	        // mkChatMsg = 다른사람이 보낸 메세지로 채팅창 만드는 함수
+	        // mkChatMsg 매개변수 = (profileImg,memberNo,msgContent,msgTime)
+	        inputChat(mkChatMsg(chatList[i].imagePath,chatList[i].memberNickName,chatList[i].chatContent,chatList[i].chatTime));
+		}
+	}
+}
 //=======================================================================================//
 //====================================== 변환 관련 함수  ======================================//
 //=======================================================================================//
@@ -443,21 +489,29 @@ function timeToTime(time){
 function sortSchedules(schedules){
 	var dno = schedules.dateNo;
 	var dayIdx = -1;
-	for(var i in scheduleMarkers){
+	var i = null;
+	var j = null;
+	for(i in scheduleMarkers){
 		if(scheduleMarkers[i].dno == dno)
 			dayIdx = i;
 	}
-	for(var i = schedules.length-1; i > 0; i--){
-        for(var j = 0; j < i; j++){
-        	if(schedules[j+1].time < schedules[j].time){
-                var temp = schedules[j];
-                var mTemp = scheduleMarkers[dayIdx].scheduleMarker[j];
-                schedules[j] = schedules[j+1];
-                scheduleMarkers[dayIdx].scheduleMarker[j]=scheduleMarkers[dayIdx].scheduleMarker[j+1]
-                schedules[j+1] = temp;
-                scheduleMarkers[dayIdx].scheduleMarker[j+1] = mTemp;
-            }   
-	    }
+	try{
+		for(i = schedules.length-1; i > 0; i--){
+	        for(j = 0; j < i; j++){
+	        	if(schedules[j+1].time < schedules[j].time){
+	                var temp = schedules[j];
+	                var mTemp = scheduleMarkers[dayIdx].scheduleMarker[j];
+	                schedules[j] = schedules[j+1];
+	                scheduleMarkers[dayIdx].scheduleMarker[j]=scheduleMarkers[dayIdx].scheduleMarker[j+1]
+	                schedules[j+1] = temp;
+	                scheduleMarkers[dayIdx].scheduleMarker[j+1] = mTemp;
+	            }   
+		    }
+		}
+	}catch(e){
+		console.log('정렬오류 발생' + e.stack);
+		console.log('error : i = ' + i + ', j = ' + j + ', idx : ' + dayIdx);
+		console.log(scheduleMarkers[dayIdx]);
 	}
 }
 
@@ -487,7 +541,7 @@ function sortSchedule(){
     });
     var locationArr = new Array();
     var infoWindowArr = new Array()
-    displayAllPlaces(daySchedule);
+    displayAllPlaces(daySchedule,allMap,allMarkers);
 }
 
 function sortDays(days){
@@ -502,6 +556,37 @@ function sortDays(days){
     }
 }
 
+function sortDaysUserTripdate(){
+	var tempDays = new Array();
+	for(var i in days){
+		for(var j in days){
+			if(parseInt(days[j].tripDate,10) == i){
+				tempDays.push(days[j]);
+			}
+		}
+	}
+	days = tempDays;
+}
+
+function sortDaysUseDateNo(orderDate){
+	console.log(orderDate);
+	var tempDays = new Array();
+	for(var i in orderDate){
+		for(var j in orderDate){
+			try{
+				if(orderDate[i].dno == days[j].no){
+					days[j].tripDate = orderDate[i].order;
+					tempDays.push(days[j]);
+				}
+			}catch(e){
+				console.log(e.stack);
+				console.log('i : ' + i + ', j : ' + j);
+			}
+		}
+	}
+	days = tempDays;
+}
+
 //일차 정렬하여 몇일차인지 텍스트 바꿔줌
 function reorder() {
 	var dateInfo = new Array();
@@ -513,7 +598,8 @@ function reorder() {
         dateInfo.push({order:i,dno:$(box).data('dateno')});
     });
     //sock.send로 afterDayOrder 보내줌
-    sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'orderDate', id: "${loginMember.getMemberEmail()}", dateInfo:dateInfo}));
+	sock.send(JSON.stringify({pno:planner.no, type: 'orderDate', id: "${loginMember.getMemberEmail()}", dateInfo:dateInfo}));
+
 }
 
 //=======================================================================================//
@@ -537,10 +623,22 @@ function getScheduleAddr(templocation,locationName,scheduleNo){
 			                        '</div>';
 				      	contentArr.push(content);
 				        resolve(contentArr);
+				    }else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+				        // 검색결과가 없는경우 해야할 처리가 있다면 이곳에 작성해 주세요
+					    content = 
+					    	'<div class="bAddr">' +
+		                        '<span class="title">' + locationName + '</span>' + 
+		                    '</div>';
+					    contentArr.push(content);
+				        resolve(contentArr);
+				    } else if (status === kakao.maps.services.Status.ERROR) {
+				        // 에러로 인해 검색결과가 나오지 않은 경우 해야할 처리가 있다면 이곳에 작성해 주세요
+				    	console.log("에러로 인해 검색결과가 나오지 않은 경우");
 				    }
 				});
 				
 			} catch(error){
+				console.log(error.stack);
 				reject(error)
 			}
 		});
@@ -552,6 +650,7 @@ function getScheduleAddr(templocation,locationName,scheduleNo){
 				contentArr.push(null);
 				resolve(contentArr);
 			}catch(error){
+				console.log(error.stack);
 				reject(error);
 			}
 		});
@@ -588,20 +687,28 @@ var tempDayno = 100;
 
 function addDate(){
 	// date_no는 DB 에서 가져옴
-	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'addDate', id: "${loginMember.getMemberEmail()}"}));
+	if(permission > 1)
+		sock.send(JSON.stringify({pno:planner.no, type: 'addDate', id: "${loginMember.getMemberEmail()}"}));
+	else
+		alert('권한이 없습니다.');
 	// trip_date 값은  reorder에서 수정
 	
 	
 }
 
-function createDate(dateNo){
+function createDate(dateNo,reorderBoolean){
 
-	dayIndex = dayIndex + 1;
+	var dayIndex = -1;
 	
+	for(var i in days){
+		if (days[i].no == dateNo)
+			dayIndex = days[i].tripDate;
+	}
+	console.log(dayIndex+"일차");
     // 일차 만드는 HTML코드, dayInd는 테스트용이고 dateNo로 바꿔줘야함
     var dayForm = 
     '<div data-dateorder="' + dayIndex + '" data-dateno="' + dateNo + '" id="days" class="daystyle" onclick="selectDay(' + dateNo + ');">' +
-    '<span class="dayCount pl-2">1일차</span>' +
+    '<span class="dayCount pl-2">' + (parseInt(dayIndex,10) + 1) + '일차</span>' +
     '<button type="button" class="dayDeleteBtn btnColor3" onclick="deleteDay(' + dateNo + ');">-</button>' +
     '</div>';
 
@@ -609,7 +716,9 @@ function createDate(dateNo){
     $("#sortable").append(dayForm)
 	
     // 추가하고 정렬(몇일차인지 계산해서 텍스트 바꿔줌)
-    reorder();
+    if(reorderBoolean)
+   		reorder();
+    
 }
 
 //일차 선택하는 함수
@@ -648,7 +757,6 @@ function selectDay(no){
     			var slocationName = days[i].schedules[j].locationNM;
    				createSchedule(sno,stitle,stime,scost,smemo,slocationName);
    				todayMarker = extractDayMarker(no);
-   				
     		}
     	}
     }
@@ -664,7 +772,7 @@ function selectDay(no){
 			existMarker = true;
 	}
 	if(existMarker){
-		displayAllPlaces(extractDayMarker(no));
+		displayAllPlaces(extractDayMarker(no),allMap,allMarkers);
 	}else{
 		initMapBtn();
 		removeAllMarker();
@@ -674,7 +782,10 @@ function selectDay(no){
 
 //일차 제거하는 함수
 function deleteDay(ind){
-	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'deleteDate', id: "${loginMember.getMemberEmail()}", dno:ind}));
+	if(permission > 1)
+		sock.send(JSON.stringify({pno:planner.no, type: 'deleteDate', id: "${loginMember.getMemberEmail()}", dno:ind}));
+	else
+		alert('권한이 없습니다.');
 }
 function deleteDate(ind){
 	dayIndex--;
@@ -738,12 +849,16 @@ $('#addSchedule').click(function(){
     }else if(location == ''){
         alert('장소 이름을 입력해주세요');
     }else{
-    	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${no}", type: 'addSchedule', id: "${loginMember.getMemberEmail()}",
-    		dno: dno, title: title, time: time, location: location, cost: cost, memo: memo, lat: lat, lng: lng, iwContent: iwContent}));
+    	if(permission > 1){
+	    	sock.send(JSON.stringify({pno:planner.no, type: 'addSchedule', id: memberNo,
+	    		dno: dno, title: title, time: time, location: location, cost: cost, memo: memo, lat: lat, lng: lng, iwContent: iwContent}));
+    	}
+   		else
+   			alert('권한이 없습니다.');
     }
 });
 
-function addSchedule(dno,sno,title,time,location,cost,memo,llat,llng,liwContent,luserId){
+function addSchedule(dno,sno,title,time,location,cost,memo,llat,llng,liwContent,lmemberNo){
 
     // 새로운 일정을 만드는 것이니 시퀀스 NEXTVAL 얻어와서 넣어야함
     // 테스트때 임시로 createNo 변수 사용
@@ -762,7 +877,7 @@ function addSchedule(dno,sno,title,time,location,cost,memo,llat,llng,liwContent,
 	
 	if($('#selectedDay').data('dateno') == dno){
 		createSchedule(sno,title,time,cost,memo,location);
-		if(userId == luserId)
+		if(memberNo == lmemberNo)
 			selectSchedule(sno);
 	}
 }
@@ -829,11 +944,14 @@ function selectSchedule(no){
         map.panTo(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng);
     }
     
-    lat = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLat();
-    lng = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLng();
     // marker.setPosition(mouseEvent.latLng);
     // marker.setMap(map);
     initMarker(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng,scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].infoWindow);
+    
+    lat = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLat();
+    lng = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLng();
+    console.log('lat : ' + lat);
+    console.log('lat : ' + lng);
 };
 
 function updateSchedule(sno,title,time,location,cost,memo,llat,llng,liwContent){
@@ -889,8 +1007,12 @@ $('#scheduleUpdate').click(function(){
     }else if(location == ''){
     	alert('장소를 입력해주세요');
     }else{
-    	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'updateSchedule', id: "${userId}",
-    		sno: sno, title: title, time: time, location: location, cost: cost, memo: memo, lat: lat, lng: lng, iwContent: iwContent}));
+    	if(permission > 1){
+	    	sock.send(JSON.stringify({pno:planner.no, type: 'updateSchedule', id: memberNo,
+	    		sno: sno, title: title, time: time, location: location, cost: cost, memo: memo, lat: lat, lng: lng, iwContent: iwContent}));
+    	}
+   		else
+   			alert('권한이 없습니다.');
     }
 });
 
@@ -936,8 +1058,12 @@ $('#removeSchedule').click(function(){
     	var sno = $('#scheduleInfo').data('scheduleno');
     	var dno = $('#selectedDay').data('dateno');
     	
-    	sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'removeSchedule', id: "${userId}",
-    		dno: dno, sno: sno}));
+    	if(permission > 1){
+	    	sock.send(JSON.stringify({pno:planner.no, type: 'removeSchedule', id: memberNo,
+	    		dno: dno, sno: sno}));
+    	}
+   		else
+   			alert('권한이 없습니다.');
     	
     	$('#inputScheduleTitle').val('');
         $('#inputScheduleTime').val('');
@@ -961,10 +1087,12 @@ sock.onclose = onClose;
 // 서버로부터 메시지를 받았을 때
 function onMessage(msg) {
 	var jsonData = msg.data;
-	var data = JSON.parse(jsonData)
+	var data = JSON.parse(jsonData);
 	switch(data['type']){
 	case 'msg':
-		if(data['userId'] == '${userId}'){
+		if(data['memberNo'] == '-1'){
+			inputChat(mkChatMsg('null','비회원',data['content'],data['time']));
+		}else if(data['memberNo'] == memberNo){
 	     	// inputChat = 채팅 내역에 채팅창 올리는 함수
 	        // mkMyChatMsg = 내가 보낸 메세지로 채팅창 만드는 함수
 	        // mkMyChatMsg 매개변수 = (msgContent,msgTime)
@@ -972,16 +1100,16 @@ function onMessage(msg) {
 		}else {
 			// inputChat = 채팅 내역에 채팅창 올리는 함수
 	        // mkChatMsg = 다른사람이 보낸 메세지로 채팅창 만드는 함수
-	        // mkChatMsg 매개변수 = (profileImg,userId,msgContent,msgTime)
-	        inputChat(mkChatMsg('',data['userId'],data['content'],data['time']));
+	        // mkChatMsg 매개변수 = (profileImg,memberNo,msgContent,msgTime)
+	        inputChat(mkChatMsg(data['imagePath'],data['memberNickName'],data['content'],data['time']));
 		}
 		break;
 	case 'addDate': 
 		days.push({no:data['dno'],tripDate:-1,plannerNo:planner.no,schedules:new Array()});
 		scheduleMarkers.push(
 				{dno:data['dno'],scheduleMarker:new Array({sno:data['sno'],LatLng:new kakao.maps.LatLng(0,0),unselect:true,infoWindow:null})});
-		createDate(data['dno']);
-		addSchedule(data['dno'],data['sno'],'제목 없음','','',0,'',0,0,null,userId);
+		createDate(data['dno'],true);
+		addSchedule(data['dno'],data['sno'],'제목 없음','','미정',0,'',0,0,null,memberNo);
 		break;
 	case 'deleteDate': 
 		deleteDate(data['dno']);
@@ -990,7 +1118,7 @@ function onMessage(msg) {
 		updateSchedule(data['sno'],data['title'],data['time'],data['location'],data['cost'],data['memo'],data['lat'],data['lng'],data['iwContent'])
 		break;
 	case 'addSchedule': 
-		addSchedule(data['dno'],data['sno'],data['title'],data['time'],data['location'],data['cost'],data['memo'],data['lat'],data['lng'],data['iwContent'],userId)
+		addSchedule(data['dno'],data['sno'],data['title'],data['time'],data['location'],data['cost'],data['memo'],data['lat'],data['lng'],data['iwContent'],memberNo)
 		sortSchedule(data['sno']);
 	    for(var i in days){
 	    	if(days[i].no == data['dno']){
@@ -1007,7 +1135,46 @@ function onMessage(msg) {
 	    	}
 	    }
 		break;
+	case 'JOIN':
+		if(data['newJoinUser'] != undefined)
+			joinMember.push(data['newJoinUser']);
+		try{
+			var userOption = 
+				'<option value="' + data['newJoinUser'].memberNo + '">' + data['newJoinUser'].memberNickName + '</option>'
+			$('#userPermission').append(userOption);
+		}catch(e){}
+		break;
+	case 'permission':
+		grantPermission(data['grantMemberNo'],data['permission']);
+		if(data['grantMemberNo'] == memberNo){
+			permission = data['permission'];
+		}
+		break;
+	case 'sumCost':
+		$('#totalcost').html(data['content'] + '원');
+		break;
+	case 'orderDate':
+		console.log(days);
+		sortDaysUseDateNo(data['dateInfo']);
+		console.log(days);
+		$('#sortable').html('');
+		for(var i in days){
+			createDate(days[i].no,false);
+		}
+		for(var i in days){
+			console.log(days[i].no + ", " + $('#selectedDay').data('dateno'));
+			if(days[i].no == $('#selectedDay').data('dateno')){
+				$('#selectedDay').html((parseInt(days[i].tripDate,10) + 1 )+'일차');
+			}
+		}
+		break;
+	case 'startDate':
+		$('#startrip').val(data['content']);
+		break;
 	}
+		
+	
+
 }
 
 // 서버와 연결을 끊었을 때
@@ -1021,10 +1188,23 @@ function onClose(evt) {
 
 // 다른사람이 보낸 채팅 메세지 만들어서 리턴하는 함수
 function mkChatMsg(profileImg,userId,msgContent,msgTime){
+	
+	var imagePath = null;
+	
+	if(profileImg.includes('http')){
+		imagePath = profileImg;
+	}else if(profileImg == 'null'){
+		imagePath = '${contextPath}/resources/images/default-profile.png'
+	}else if(profileImg == ''){
+		imagePath = '${contextPath}/resources/images/default-profile.png'
+	}else {
+		imagePath = '${contextPath}/resources' + profileImg.substring(profileImg.indexOf('/'));
+	}
+	
     var chatMsg =
     '<div class="chatbox overhidden">' +
     '<div>' +
-    '<img src = "' + profileImg + '" class="profileImg">' +
+    '<img src = "' + imagePath + '" class="profileImg">' +
     '<span class="userId">' + userId + '</span>' +
     '</div>' +
     '<div>' +
@@ -1067,6 +1247,81 @@ function inputChat(msg){
 }
 
 //=======================================================================================//
+//======================================== 권한 함수 ========================================//
+//=======================================================================================//
+
+function initJoinMember(joinUserArray){
+	$('#userPermission').html('');
+	var color = null;
+	var icon = '';
+	var i = 0;
+	var j = 0;
+	while(i < joinUserArray.length){
+		if(joinUserArray[i].memberNo != -1){
+			joinMember.push(joinUserArray[i]);
+			j++;
+		}
+		i++;
+	}
+	for(var i = 0; i < joinMember.length; i++){
+		icon = '';
+		switch(joinMember[i].plannerPermission){
+			case '1':	color = '#C8FFFF';	break;
+			case '2':	color = '#32F1FF';	icon = '☆';	break;
+			case '3':	color = '#0AC9FF';	icon = '★';	break;
+		}		
+		var userOption = 
+			'<option style="background:' + color + '" value="' + joinMember[i].memberNo + '">' + joinMember[i].memberNickName + icon + '</option>'
+		$('#userPermission').append(userOption);
+	}
+	// <option value="memberNo">닉네임 <option>
+}
+
+$('#grantBtn').click(function(){
+	var grantMemberNo = $('#userPermission').val();
+	if(permission > 2)
+		sock.send(JSON.stringify({pno:planner.no, type: 'permission', memberNo: memberNo, permission: '2', grantMemberNo:grantMemberNo}));
+	else
+		alert('권한이 없습니다.');
+});
+
+$('#stealBtn').click(function(){
+	var grantMemberNo = $('#userPermission').val();
+	if(permission > 2)
+		sock.send(JSON.stringify({pno:planner.no, type: 'permission', memberNo: memberNo, permission: '1', grantMemberNo:grantMemberNo}));
+	else
+		alert('권한이 없습니다.');
+});
+
+// 매개변수로 받은 멤버 넘버의 권한을 매개변수로 받은 permission으로 바꿈
+function grantPermission(grantMemberNo,permission){
+	for(var i in joinMember){
+		if(joinMember[i].memberNo == grantMemberNo){
+			joinMember[i].plannerPermission = permission;
+			changePermissionColor(i);
+		}
+	}
+}
+
+
+function changePermissionColor(i){
+	joinMember[i].memberNo;
+	var color = '#C8FFFF';
+	var icon = '';
+	switch(joinMember[i].plannerPermission){
+		case '1':	color = '#C8FFFF';	break;
+		case '2':	color = '#32F1FF';	icon = '☆';	break;
+		case '3':	color = '#0AC9FF';	icon = '★';	break;
+	}		
+	$('option').each(function(j,item){
+		if(joinMember[i].memberNo == $(item).attr('value')){
+			$(item).attr('style','background:' + color + ';');
+			$(item).html(joinMember[i].memberNickName+icon);
+		}
+	});
+}
+
+//=======================================================================================//
 //======================================== 기타 함수 ========================================//
 //=======================================================================================//
 
@@ -1088,7 +1343,7 @@ $(function () {
         
         // 채팅 입력창 비어있지 않으면 실행
         if(msg != '' && msg != '<br/>'){
-            sock.send(JSON.stringify({pno:planner.no, chatRoomId: "${selectRoom}", type: 'msg', userId: "${userId}", content: msg}));
+            sock.send(JSON.stringify({pno:planner.no, type: 'msg', memberNo: memberNo, memberNickName: memberNickName, content: msg, imagePath:'${profilePath}'}));
         }
 
         // 메세지 전송 후 채팅 입력창 비워줌
@@ -1101,7 +1356,10 @@ $(function () {
         placeholder:".daystyleHighlight",
         // 드래그 시작했을 때 작동
         start: function(event, ui) {
-            ui.item.data('start_pos', ui.item.index());
+        	if(permission < 2)
+        		alert('권한이 없습니다');
+        	else
+            	ui.item.data('start_pos', ui.item.index());
         },
         // 드래그 끝났을 때 작동
         stop: function(event, ui) {
@@ -1112,31 +1370,78 @@ $(function () {
         }
     });
     
-    // 페이지 로딩될 때 지도영역 감추는거 그냥 함수로 하는부분
-    //$("#inputScheduleLocationArea").toggle();
-
-    // 지도추가 버튼 클릭 시 보이고 안보이고 토글, 버튼 텍스트 변경
-    /* $("#toggleMap").click(function(){
-        $("#inputScheduleLocationArea").toggle(['slow']);
-        if($("#toggleMap").html() == '지도 추가')
-            $("#toggleMap").html('지도 삭제');
-        else
-        $("#toggleMap").html('지도 추가');
-        
-    }); */
     $('#mymsg').keyup(function (evt) {
     	if (evt.keyCode == 13 && !evt.shiftKey) {
     	    $('#send').click();
     	}else if(evt.keyCode == 13 && evt.shiftKey){
     		$('#send').val($('#send').val()+'<br>');
     	}
-    	console.log($('#mymsg').val().length);
     	if($('#mymsg').val().length > 100){
     		alert('100글자를 초과하여 입력할 수 없습니다');
     		$('#mymsg').val($('#mymsg').val().substring(0,100));
     	}
     });
+    $('#calc').click(function(){
+    	if(permission > 1)
+    		sock.send(JSON.stringify({pno:planner.no, type: 'sumCost', memberNo: memberNo, content: calculator()}));
+    	else
+    		alert('권한이 없습니다');
+    })
+    
+    $('#startDateUpdateBtn').click(function(){
+    	if(permission > 1)
+	    	sock.send(JSON.stringify({pno:planner.no, type: 'startDate', memberNo: memberNo, content: $('#startrip').val()}));
+    	else
+    		alert('권한이 없습니다');
+    });
+    
+    $('#inputScheduleTitle').keyup(function(){
+    	if($('#inputScheduleTitle').val().length > 20){
+    		alert('20글자를 초과하여 입력할 수 없습니다');
+    		$('#inputScheduleTitle').val($('#inputScheduleTitle').val().substring(0,20));
+    	}
+    });
+    
+    $('#inputScheduleCost').keyup(function(){
+    	if($('#inputScheduleCost').val().length > 9){
+    		alert('돈을 너무 막씁니다');
+    		$('#inputScheduleCost').val($('#inputScheduleCost').val().substring(0,9));
+    	}
+    });
+    
+    $('#inputScheduleMemo').keyup(function(){
+    	if($('#inputScheduleCost').val().length > 200){
+    		alert('200글자를 초과하여 입력할 수 없습니다');
+    		$('#inputScheduleCost').val($('#inputScheduleCost').val().substring(0,200));
+    	}
+    });
+    
+    $('#inputScheduleLocationName').keyup(function(){
+    	if($('#inputScheduleLocationName').val().length > 20){
+    		alert('20글자를 초과하여 입력할 수 없습니다');
+    		$('#inputScheduleLocationName').val($('#inputScheduleLocationName').val().substring(0,20));
+    	}
+    });
 });
+
+// 경비 총액 계산 후 리턴
+function calculator(){
+	var totalCost = 0;
+	var expensive = '';
+	for(var i in days){
+		for(var j in days[i].schedules){
+			totalCost += parseInt(days[i].schedules[j].cost,10);
+			if(parseInt(days[i].schedules[j].cost,10) > 100000000){
+				expensive += '\n' + days[i].schedules[j].title;
+			}
+		}
+	}
+	if(totalCost > 2000000000){
+		alert('과도한 지출은 통장건강에 해롭습니다\n\n통장건강에 해로운 일정 목록' + expensive);
+		totalCost = 0;
+	}
+	return totalCost;
+}
 
 // 뒤로가기 하는 함수(참여 모달창의 이전으로 버튼에 사용)
 function goBack(){
@@ -1163,5 +1468,6 @@ function toggleArrow(e){
         $(e).html("▼");
     }
 };
+
 </script>
 </html>

@@ -1,13 +1,17 @@
 package com.kh.ourtrip.planner.model.dao;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.kh.ourtrip.planner.model.vo.ChattingLog;
+import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
+import com.kh.ourtrip.planner.model.vo.Planner;
+import com.kh.ourtrip.planner.model.vo.PlannerMember;
+import com.kh.ourtrip.planner.model.vo.PlannerMemberView;
 import com.kh.ourtrip.planner.model.vo.PlannerView;
 import com.kh.ourtrip.planner.model.vo.Schedule;
 
@@ -56,14 +60,36 @@ public class PlannerDAO2 {
 		return sqlSessionTemplate.delete("planner1Mapper.deleteSchedule", sno);
 	}
 
-	public int insertChattingLog(ChattingLog chatLog) throws Exception {
+	public int insertChattingLog(ChattingLogView chatLog) throws Exception {
 		return sqlSessionTemplate.insert("planner1Mapper.insertChattingLog", chatLog);
 	}
 
-	public List<ChattingLog> selectChatList(int no) throws Exception {
-		System.out.println("hihi");
-		System.out.println("hi" + sqlSessionTemplate.selectList("planner1Mapper.selectChatList", no));
+	public List<ChattingLogView> selectChatList(int no) throws Exception {
 		return sqlSessionTemplate.selectList("planner1Mapper.selectChatList", no);
+	}
+
+	public List<PlannerMemberView> selectPlannerMemeberListUsePlannerNo(int pno) {
+		return sqlSessionTemplate.selectList("planner1Mapper.selectPlanerMemeberListUsePlannerNo", pno);
+	}
+	
+	public int selectPlannerMemeberExist(PlannerMemberView pm) {
+		return sqlSessionTemplate.selectOne("planner1Mapper.selectPlanerMemeberExist", pm);
+	}
+
+	public int insertPlannerMemeber(PlannerMember pm) {
+		return sqlSessionTemplate.insert("planner1Mapper.insertPlannerMember", pm);
+	}
+
+	public int updatePermission(PlannerMember pm) {
+		return sqlSessionTemplate.update("planner1Mapper.updatePermission", pm);
+	}
+
+	public int updateSumCost(Planner p) {
+		return sqlSessionTemplate.update("planner1Mapper.updateSumCost", p);
+	}
+
+	public int updateStartDate(Planner p) {
+		return sqlSessionTemplate.update("planner1Mapper.updateStartDate", p);
 	}
 	
 }

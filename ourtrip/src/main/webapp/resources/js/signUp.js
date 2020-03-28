@@ -40,7 +40,7 @@ $(document).ready(
 
 			// 비밀번호 일치 여부
 			$pwd2.on("input", function() {
-				if ($pwd1.val().trim() != $pwd2.val().trim()) {
+				if ($pwd1.val() != $pwd2.val()) {
 					$("#checkPwd2").text("비밀번호 불일치").css("color", "red");
 					signUpCheck.pwd2 = false;
 				} else {

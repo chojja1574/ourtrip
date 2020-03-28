@@ -68,12 +68,13 @@ public class MemberServiceImpl implements MemberService{
 			
 			if(result > 0) {
 				result = memberDAO.selectMemberNo(member);
-				result = memberDAO.insertProfileImage(new ProfileImage(imagePath, result));
+				if(imagePath != null)
+					result = memberDAO.insertProfileImage(new ProfileImage(imagePath, result));
 			}
 		}
 		
 		// 3) 회원 객체 반환
-		return memberDAO.kakaoLogin(member);
+		return memberDAO.socialLogin(member);
 	}
 
 	/** 이메일 확인용 Service
@@ -206,8 +207,12 @@ public class MemberServiceImpl implements MemberService{
 		// 회원의 기존 프로필 사진이 존재하는 경우
 		if(pi != null) {
 			
+			// 사진을 변경하지 않은 경우
+			if(profileImage.getOriginalFilename().equals("") && isDefault.equals("false")) {
+				result = 1;
+				
 			// 사진을 변경했는데 디폴트 이미지로 변경했을 경우
-			if(profileImage.getOriginalFilename().equals("") && isDefault.equals("true")) {
+			}else if(profileImage.getOriginalFilename().equals("") && isDefault.equals("true")) {
 				// DB에서 이미지 삭제
 				result = memberDAO.deleteProfileImage(memberNo);
 				
@@ -246,7 +251,9 @@ public class MemberServiceImpl implements MemberService{
 				result = memberDAO.insertProfileImage(pi);
 				
 				if(result > 0) profileImage.transferTo(new File(pi.getImagePath()));
-			}
+				
+			// 변경하지 않은 경우
+			}else result = 1;
 		}
 
 		return result;
@@ -390,7 +397,40 @@ public class MemberServiceImpl implements MemberService{
 		return result;
 	}
 	
-	
+	/** 프로필 사진 경로 조회용 Service
+	 * @param memberNo
+	 * @return profileImagePath
+	 * @throws Exception
+	 */
+	@Override
+	public String getProfileImagePath(int memberNo) throws Exception {
+		return memberDAO.getProfileImagePath(memberNo);
+	}
 
+	/** 네이버 로그인용 Service
+	 * @param member
+	 * @param imagePath
+	 * @return loginMember
+	 * @throws Exception
+	 */
+	@Override
+	public Member naverLogin(Member member, String imagePath) throws Exception{
+		// 1) ourtrip DB에 회원으로 등록되어있는지 확인
+		int result = memberDAO.isMember(member);
+				
+		// 2) 안되있을 시 회원가입
+		if(result == 0) {
+			result = memberDAO.signUp(member);
+			
+			if(result > 0) {
+				result = memberDAO.selectMemberNo(member);
+				if(imagePath != null)
+					result = memberDAO.insertProfileImage(new ProfileImage(imagePath, result));
+			}
+		}
+		
+		// 3) 회원 객체 반환
+		return memberDAO.socialLogin(member);
+	}
 
 }

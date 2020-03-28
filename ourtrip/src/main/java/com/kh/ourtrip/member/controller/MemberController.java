@@ -24,7 +24,7 @@ import com.kh.ourtrip.member.model.service.MemberService;
 import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.member.model.vo.ProfileImage;
 
-@SessionAttributes({"loginMember", "msg", "detailUrl"})
+@SessionAttributes({"loginMember", "msg", "detailUrl", "profilePath", "state"})
 @Controller
 @RequestMapping(value="/member/*")
 public class MemberController {
@@ -32,24 +32,24 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
+//	private final String client_id = "cajbBEXn_EXigNoRN2Oc";
+//	private final String client_secret = "0ePrMUlYzw";
+//	private final String naver_redirect_uri = "http://localhost:8080/ourtrip/member/naverCallBack";
+	
 	// 로그인 화면 이동
 	@RequestMapping(value="loginForm")
-	public String loginForm(Model model, HttpServletRequest request,
+	public String loginForm(Model model, HttpServletRequest request, HttpSession session,
 			@CookieValue(value = "saveEmail", required = false) String saveEmail) {
 		
-		if((Member)model.getAttribute("loginMember") != null) {
-			model.addAttribute("msg", "로그아웃 후 진입가능한 페이지입니다.");
-			return "redirect:/";
-		}
+		if((Member)model.getAttribute("loginMember") != null) return "redirect:/";
+		
+		String beforeUrl = request.getHeader("referer");
 		
 		// 이전 페이지의 URL 저장
-		if(model.getAttribute("detailUrl") != null && !model.getAttribute("detailUrl").equals(request.getHeader("referer"))) {
-			model.addAttribute("detailUrl", request.getHeader("referer"));
-		}
+		if(model.getAttribute("detailUrl") == null) model.addAttribute("detailUrl", beforeUrl);
+		else if(!model.getAttribute("detailUrl").equals(beforeUrl)) model.addAttribute("detailUrl", beforeUrl);
 		
-		if(saveEmail != null) {
-			model.addAttribute("saveEmail", saveEmail);
-		}
+		if(saveEmail != null) model.addAttribute("saveEmail", saveEmail);
 		
 		return "member/login";
 	}
@@ -62,11 +62,15 @@ public class MemberController {
 		
 		try {
 			Member loginMember = memberService.login(member);
-			
+			String profileImagePath = null;
 			String path = null;
+			
 			if(loginMember != null) {
 				// 세션 만료시간 1시간
 				session.setMaxInactiveInterval(60 * 60);
+				
+				// profileImagePath에 프로필사진 경로 저장
+				profileImagePath = memberService.getProfileImagePath(loginMember.getMemberNo());
 				
 				// 로그인 성공 시 아이디를 쿠키에 저장
 				// 관리자는 저장하지 않음
@@ -80,11 +84,13 @@ public class MemberController {
 					cookie.setPath("/"); // 쿠키 사용할 수 있는 도메인 설정
 					response.addCookie(cookie); // 쿠키를 브라우저에 전송
 					
+					System.out.println("url : " + (String)model.getAttribute("detailUrl"));
 					// 로그인 전 화면으로 이동
 					if(model.getAttribute("detailUrl") != null) path = (String)model.getAttribute("detailUrl");
 					else path = "/";
 				}
 				
+				model.addAttribute("profilePath", profileImagePath);
 				model.addAttribute("loginMember", loginMember);
 			}else {
 				rdAttr.addFlashAttribute("msg", "이메일, 비밀번호를 확인해주세요");
@@ -107,6 +113,7 @@ public class MemberController {
 		return "redirect:/";
 	}
 	
+	// 카카오 로그인
 	@RequestMapping(value="kakaoLogin")
 	@ResponseBody
 	public String kakaoLogin(Member member, String imagePath,
@@ -115,7 +122,6 @@ public class MemberController {
 		member.setSignUpRoute("2");
 		
 		String result = "fail";
-		
 		try {
 			Member loginMember = memberService.kakaoLogin(member, imagePath);
 			
@@ -134,17 +140,50 @@ public class MemberController {
 		return result;
 	}
 	
-	@RequestMapping("signUpForm")
-	public String signUpForm(String isAgree, Model model, HttpServletRequest request) {
-		if((Member)model.getAttribute("loginMember") != null) {
-			model.addAttribute("msg", "로그아웃 후 진입가능한 페이지입니다.");
-			return "redirect:/";
+	// 네이버 로그인 성공시 callBack 주소
+	@RequestMapping("naverCallBack")
+	public String naverCallBack() {
+
+		return "member/naverCallBack";
+	}
+	
+	// 네이버 로그인
+	@RequestMapping("naverLogin")
+	@ResponseBody
+	public String naverLogin(Member member, String imagePath,
+				Model model) {
+		
+		member.setSignUpRoute("3");
+		
+		String result = "fail";
+		try {
+			
+			Member loginMember = memberService.naverLogin(member, imagePath);
+			
+			if(loginMember != null) {
+				model.addAttribute("loginMember", loginMember);
+				model.addAttribute("profilePath", imagePath);
+				result = "success";
+			}else {
+				model.addAttribute("msg", "카카오 로그인 과정 중 오류 발생");
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 		
+		return result;
+	}
+	
+	@RequestMapping("signUpForm")
+	public String signUpForm(String isAgree, Model model, HttpServletRequest request) {
+		if((Member)model.getAttribute("loginMember") != null) return "redirect:/";
+		
+		String beforeUrl = request.getHeader("referer");
+		
 		// 이전 페이지의 URL 저장
-		if(model.getAttribute("detailUrl") != null && !model.getAttribute("detailUrl").equals(request.getHeader("referer"))) {
-			model.addAttribute("detailUrl", request.getHeader("referer"));
-		}
+		if(model.getAttribute("detailUrl") == null) model.addAttribute("detailUrl", beforeUrl);
+		else if(!model.getAttribute("detailUrl").equals(beforeUrl)) model.addAttribute("detailUrl", beforeUrl);
 		
 		if(isAgree != null && isAgree.equals("1")) {
 			return "member/signUpForm";
@@ -225,13 +264,25 @@ public class MemberController {
 		// 회원정보 수정 페이지 진입 시 DB에서 프로필사진 얻어옴
 		Member loginMember = (Member)model.getAttribute("loginMember");
 		
+		if(loginMember == null) return "redirect:/";
+		
 		try {
-			if(loginMember == null) {
-				model.addAttribute("msg", "로그인 후 진입가능한 페이지입니다.");
-				return "redirect:/";
-			}
+			String beforeUrl = request.getHeader("referer");
+			String[] arrUrl = beforeUrl.split("/");
+			String lastUrl = arrUrl[arrUrl.length - 1];
 			
-			model.addAttribute("detailUrl", request.getHeader("referer"));
+			System.out.println("detailURl : " + model.getAttribute("detailUrl"));
+			System.out.println("beforeUrl : " + beforeUrl);
+			System.out.println("lastUrl : " + lastUrl);
+			
+			// 회원정보 수정관련 주소와 같지 않으면 url저장
+			if(!model.getAttribute("detailUrl").equals(beforeUrl) ||
+				!lastUrl.equals("update") ||
+				!lastUrl.equals("updateForm") ||
+				!lastUrl.equals("changePwdForm") ||
+				!lastUrl.equals("changePwd") ||
+				!lastUrl.equals("secessionForm") ||
+				!lastUrl.equals("secession")) model.addAttribute("detailUrl", beforeUrl);
 			
 			ProfileImage pi = memberService.selectProfileImage(loginMember.getMemberNo());
 			model.addAttribute("profileImage", pi);
@@ -254,7 +305,6 @@ public class MemberController {
 		
 		try {
 			String msg = null;
-			String path = null;
 			int result = 1; // 닉네임을 변경안했을 경우 조건문을 통과하기 위해 초기값 1
 			
 			// 입력한 닉네임 값이 변경 되었을 때
@@ -290,6 +340,8 @@ public class MemberController {
 			if(result > 0) msg = "회원정보가 수정되었습니다";
 			else msg = "회원정보 수정에 실패하였습니다.";
 			
+			rdAttr.addFlashAttribute("msg", msg);
+			
 			return "redirect:updateForm";
 			
 		}catch(Exception e) {
@@ -302,10 +354,16 @@ public class MemberController {
 	
 	// 비밀번호 변경 폼
 	@RequestMapping("changePwdForm")
-	public String changePwdForm(Model model) {
-		if((Member)model.getAttribute("loginMember") == null) {
-			model.addAttribute("msg", "로그인 후 진입가능한 페이지입니다.");
-			return "redirect:/";
+	public String changePwdForm(Model model, RedirectAttributes rdAttr) {
+		Member loginMember = (Member)model.getAttribute("loginMember");
+		
+		// 비회원으로 접근 시 리다이렉트
+		if(loginMember == null) return "redirect:/";
+		
+		// 소셜 로그인 시 비밀번호 변경 불가
+		if(!loginMember.getSignUpRoute().equals("1")) {
+			rdAttr.addFlashAttribute("msg", "소셜 로그인 회원은 비밀번호 변경을 할 수 없습니다.");
+			return "redirect:updateForm";
 		}
 		
 		return "member/changePwdForm";
@@ -314,8 +372,10 @@ public class MemberController {
 	// 비밀번호 변경
 	@RequestMapping("changePwd")
 	public String changePwd(Member member, String changePwd, Model model, RedirectAttributes rdAttr) {
+		Member loginMember = (Member)model.getAttribute("loginMember");
+		
 		// 세션에 있는 회원번호 저장
-		member.setMemberNo(((Member)model.getAttribute("loginMember")).getMemberNo());
+		member.setMemberNo(loginMember.getMemberNo());
 		
 		try {
 			int result = memberService.changePwd(member, changePwd);
@@ -348,10 +408,7 @@ public class MemberController {
 	// 회원탈퇴 폼
 	@RequestMapping("secessionForm")
 	public String secessionForm(Model model) {
-		if((Member)model.getAttribute("loginMember") == null) {
-			model.addAttribute("msg", "로그인 후 진입가능한 페이지입니다.");
-			return "redirect:/";
-		}
+		if((Member)model.getAttribute("loginMember") == null) return "redirect:/";
 		
 		return "member/secession";
 	}
@@ -394,13 +451,8 @@ public class MemberController {
 	
 	// 비밀번호 찾기 폼
 	@RequestMapping("findPwdForm")
-	public String findPwdForm(Model model, HttpServletRequest request) {
-		if((Member)model.getAttribute("loginMember") != null) {
-			model.addAttribute("msg", "로그아웃 후 진입가능한 페이지입니다.");
-			return "redirect:/";
-		}
-		
-		model.addAttribute("detailUrl", request.getHeader("referer"));
+	public String findPwdForm(Model model) {
+		if((Member)model.getAttribute("loginMember") != null) return "redirect:/";
 		
 		return "member/findPwdForm";
 	}

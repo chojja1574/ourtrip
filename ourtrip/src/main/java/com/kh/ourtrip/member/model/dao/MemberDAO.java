@@ -50,13 +50,13 @@ public class MemberDAO {
 		return sqlSession.insert("memberMapper.insertProfileImage", profileImage);
 	}
 
-	/** 카카오 로그인용 DAO
+	/** 소셜 로그인용 DAO
 	 * @param member
 	 * @return loginMember
 	 * @throws Exception
 	 */
-	public Member kakaoLogin(Member member) throws Exception{
-		return sqlSession.selectOne("memberMapper.kakaoLogin", member);
+	public Member socialLogin(Member member) throws Exception{
+		return sqlSession.selectOne("memberMapper.socialLogin", member);
 	}
 
 	/** 메일 확인용 DAO
@@ -154,6 +154,10 @@ public class MemberDAO {
 	 */
 	public Member selectMember(String memberEmail) throws Exception{
 		return sqlSession.selectOne("memberMapper.selectMember", memberEmail);
+	}
+
+	public String getProfileImagePath(int memberNo) {
+		return sqlSession.selectOne("memberMapper.getProfileImagePath", memberNo);
 	}
 
 

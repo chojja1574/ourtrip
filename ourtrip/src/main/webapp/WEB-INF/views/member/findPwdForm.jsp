@@ -48,6 +48,27 @@
  	padding: 15px;
 }
 
+.wrap-loading{
+    position: fixed;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    z-index: 10;
+    /* not in ie */
+    background:  rgba(0,0,0,0.2); 
+    /* ie */
+    filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr='#20000000',endColorstr='#20000000');
+}
+
+.wrap-loading div{ /*로딩이미지*/
+    position: fixed;
+    top:50%;
+    left:50%;
+    margin-left: -21px;
+    margin-top: -21px;
+}
+
 .display-none{
     display:none;
 }

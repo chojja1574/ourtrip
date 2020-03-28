@@ -103,5 +103,20 @@ public interface MemberService {
 	 */
 	public abstract int findPwd(String memberEmail) throws Exception;
 
+	/** 프로필 사진 경로 조회용 Service
+	 * @param memberNo
+	 * @return profileImagePath
+	 * @throws Exception
+	 */
+	public abstract String getProfileImagePath(int memberNo) throws Exception;
+
+	/** 네이버 로그인용 Service
+	 * @param member
+	 * @param imagePath
+	 * @return loginMember
+	 * @throws Exception
+	 */
+	public abstract Member naverLogin(Member member, String imagePath) throws Exception;
+
 
 }

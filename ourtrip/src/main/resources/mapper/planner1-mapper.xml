@@ -63,14 +63,28 @@
 		<result property="scheduleLng" column="SCHEDULE_LNG"/>
 	</resultMap>
 	
-	<resultMap type="ChattingLog" id="ChattingLogResultSet">
+	<resultMap type="ChattingLogView" id="ChattingLogViewResultSet">
 		<id property="chatNo" column="CHAT_NO"/>
 		<result property="chatContent" column="CHAT_CONTENT"/>
 		<result property="chatTime" column="CHAT_TIME"/>
 		<result property="plannerNo" column="PLANNER_NO"/>
 		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="memberNickName" column="MEMBER_NICK_NAME"/>
+		<result property="imagePath" column="IMAGE_PATH"/>
 	</resultMap>
 	
+	<resultMap type="PlannerMember" id="PlannerMemberResultSet">
+		<id property="memberNo" column="MEMBER_NO"/>
+		<id property="plannerNo" column="PLANNER_NO"/>
+		<result property="plannerPermission" column="PLANNER_PERMISSION"/>
+	</resultMap>
+
+	<resultMap type="PlannerMemberView" id="PlannerMemberViewResultSet">
+		<id property="memberNo" column="MEMBER_NO"/>
+		<id property="plannerNo" column="PLANNER_NO"/>
+		<result property="plannerPermission" column="PLANNER_PERMISSION"/>
+		<result property="memberNickName" column="MEMBER_NICK_NAME"/>
+	</resultMap>
 
 	<select id="selectPlannerView" parameterType="_int" resultMap="plannerViewResultSet">
 		SELECT * FROM V_PLANNER WHERE PLANNER_NO = #{no}
@@ -124,7 +138,31 @@
 		INSERT INTO CHATTING_LOG VALUES(SEQ_CHAT_LOG_CNO.NEXTVAL,#{chatContent},#{chatTime},#{plannerNo},#{memberNo})
 	</insert>
 	
-	<select id="selectChatList" parameterType="_int" resultMap="ChattingLogResultSet">
-		SELECT * FROM CHATTING_LOG WHERE PLANNER_NO = #{no}
+	<select id="selectChatList" parameterType="_int" resultMap="ChattingLogViewResultSet">
+		SELECT CHAT_CONTENT, CHAT_TIME, MEMBER_NO, MEMBER_NICK_NAME, IMAGE_PATH FROM V_CHATTING_LOG WHERE PLANNER_NO = #{no} ORDER BY CHAT_NO
 	</select>
+	
+	<select id="selectPlanerMemeberListUsePlannerNo" parameterType="_int" resultMap="PlannerMemberViewResultSet">
+		SELECT * FROM V_PLANNER_MEMBER WHERE PLANNER_NO = #{plannerNo}
+	</select>
+	
+	<select id="selectPlanerMemeberExist" parameterType="PlannerMemberView" resultType="PlannerMemberView">
+		SELECT COUNT(*) FROM PLANNER_MEMBER WHERE PLANNER_NO = #{plannerNo} AND MEMBER_NO = #{memberNo}
+	</select>
+	
+	<insert id="insertPlannerMember" parameterType="PlannerMember">
+		INSERT INTO PLANNER_MEMBER VALUES(#{plannerNo},#{memberNo},#{plannerPermission})
+	</insert>
+	
+	<update id="updatePermission" parameterType="PlannerMember">
+		UPDATE PLANNER_MEMBER SET PLANNER_PERMISSION = #{plannerPermission} WHERE PLANNER_NO = #{plannerNo} AND MEMBER_NO = #{memberNo}
+	</update>
+	
+	<update id="updateSumCost" parameterType="Planner">
+		UPDATE PLANNER SET PLANNER_COST = #{plannerCost} WHERE PLANNER_NO = #{plannerNo}
+	</update>
+	
+	<update id="updateStartDate">
+		UPDATE PLANNER SET PLANNER_START_DT = #{plannerStartDT} WHERE PLANNER_NO = #{plannerNo}
+	</update>
 </mapper>
