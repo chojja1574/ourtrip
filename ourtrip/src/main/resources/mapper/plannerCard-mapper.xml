@@ -36,6 +36,8 @@
 		<result property="plannerPermission" column="PLANNER_PERMISSION"/>
 	</resultMap>
 	
+	
+	
 	<!-- 추천플래너 검색 -->
 	<select id="selectRecommendPCList" resultMap="PlannerCardResultSet">
 		SELECT ROWNUM, PLANNER_NO, PLANNER_TITLE, PLANNER_START_DT, 

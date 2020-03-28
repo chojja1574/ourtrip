@@ -4,7 +4,7 @@
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
-	
+
 	<!-- root-context.xml 파일은 서버 구동 시 web.xml을 거쳐 바로 로딩 되는 즉, pre-loading 되는 
 		설정 파일이다. 따라서 서버 구동 시 바로 셋팅 해야 되는 내용들을 작성하는 설정 파일로 보통 DB연결 설정, 트랜잭션 처리, AOP 
 		관련, 내 외부 모듈 연동 등등 스프링에서 제공하는 서비스들에 대한 설정을 관리한다. -->
@@ -14,7 +14,7 @@
 		제일 위쪽이 작성 -> 그래야지만 아래 작성되는 설정들에서 DataSource를 참조해서 사용 가능! -->
 
 	<!-- destroy-method="close" -> 주어진 세션을 자동으로 close 하라는 의미 -->
-	<bean id="dataSource"
+	<!-- <bean id="dataSource"
 		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 
 		<property name="driverClassName"
@@ -22,21 +22,36 @@
 
 		<property name="url" value="jdbc:oracle:thin:@115.90.212.22:9999:xe"/>
 		<!-- <property name="url"  value="jdbc:oracle:thin:@localhost:1521:xe"/> -->
-			
 		<property name="username" value="ourtrip" />
 		<property name="password" value="ourtrip" />
 		<property name="defaultAutoCommit" value="false" />
 	</bean>
+
+	<bean id="dataSource"
+		class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="realDataSource" />
+		<property name="logFormatter">
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="MULTI_LINE" />
+				<property name="sqlPrefix" value="[SQL] " />
+			</bean>
+		</property>
+	</bean>
+
+
+
+
 
 	<!-- 트랜잭션 처리를 위한 Transaction Manager 추가 -->
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-	
+
 	<!-- 초기 autowired를 통한 bean 등록 전에 사용하기 위해 bean 등록 -->
-	<bean id="visitCountDAO" class="com.kh.ourtrip.common.visitLog.model.DAO.VisitCountDAO"/>
-	
+	<bean id="visitCountDAO"
+		class="com.kh.ourtrip.common.visitLog.model.DAO.VisitCountDAO" />
+
 	<!-- @Transactional 어노테이션이 붙은 메소드를 찾아 트랜잭션 처리를 할 수 있도록 트랜잭션 어드바이스를 자동으로 
 		적용하는 <tx:annotation-driven/> 추가 -->
 
@@ -58,9 +73,10 @@
 		class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg ref="sqlSessionFactoryBean" />
 	</bean>
-	
+
 	<!-- google email -->
- 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	<bean id="mailSender"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="smtp.gmail.com" />
 		<property name="port" value="587" />
 		<property name="username" value="khourtrip@gmail.com" />
@@ -68,18 +84,19 @@
 		<property name="javaMailProperties">
 			<props>
 				<prop key="mail.transport.protocol">smtp</prop>
-	            <prop key="mail.smtp.auth">true</prop>
-	            <prop key="mail.smtp.starttls.enable">true</prop>
-	            <prop key="mail.debug">true</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.debug">true</prop>
 			</props>
 		</property>
 	</bean>
-	
-		<!-- 파일 업로드 관련 bean 등록 -->
+
+	<!-- 파일 업로드 관련 bean 등록 -->
 	<!-- MultipartResolver -->
-	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<property name="maxUploadSize" value="20000000"/>
-		<property name="maxInMemorySize" value="10000000"/>
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="20000000" />
+		<property name="maxInMemorySize" value="10000000" />
 	</bean>
-	
+
 </beans>

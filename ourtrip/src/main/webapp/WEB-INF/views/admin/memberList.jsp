@@ -24,6 +24,10 @@
 </style>
 </head>
 <body>
+
+	<jsp:include page="/WEB-INF/views/common/header.jsp" />
+	<jsp:include page="/WEB-INF/views/admin/nav.jsp" />
+
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
 		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
 		crossorigin="anonymous"></script>
@@ -35,6 +39,7 @@
 		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
 		integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
 		crossorigin="anonymous"></script>
+
 
 	<div class="container my-5">
 		<!-- 검색창 -->
@@ -54,7 +59,8 @@
 		</div>
 
 		<h2>회원목록</h2>
-		<table class="table table-hover" style="text-align: center;" id="memberTable">
+		<table class="table table-hover" style="text-align: center;"
+			id="memberTable">
 			<thead class="thead-dark">
 				<tr>
 					<th>회원번호</th>
@@ -86,7 +92,7 @@
 		<div class="pagination-wrapper mt-5" id="pagination-wrapper">
 			<nav aria-label="Page navigation" id="pagination">
 				<ul class="pagination justify-content-center">
-					<c:if test="${pInf.currentPage > 1}">
+					<c:if test="${pInfom.currentPage > 1}">
 						<li>
 							<!-- 맨 처음으로(<<) --> <!--c: url 태그에 var속성이 존재하지 않으면 변수처럼 사용되는 것이 아니라 작성된 자리에 바로 url형식으로 표기된다.  -->
 							<a class="page-link text-success"
@@ -116,7 +122,7 @@
 						        	<c:if test="${!empty param.searchValue }">
 						        		<c:param name="searchValue" value="${param.searchValue}"/>
 						        	</c:if>
-		                    		<c:param name="currentPage" value="${pInf.currentPage-1}"/>
+		                    		<c:param name="currentPage" value="${pInfom.currentPage-1}"/>
 		                    	</c:url>
 	                    	">
 								&lt; </a>
@@ -124,14 +130,14 @@
 					</c:if>
 
 					<!-- 10개의 페이지 목록 -->
-					<c:forEach var="p" begin="${pInf.startPage}" end="${pInf.endPage}">
+					<c:forEach var="p" begin="${pInfom.startPage}" end="${pInfom.endPage}">
 
 
-						<c:if test="${p == pInf.currentPage}">
+						<c:if test="${p == pInfom.currentPage}">
 							<li><a class="page-link">${p}</a></li>
 						</c:if>
 
-						<c:if test="${p != pInf.currentPage}">
+						<c:if test="${p != pInfom.currentPage}">
 							<li><a class="page-link text-success"
 								href=" 
 			                    	<c:url value="list">
@@ -151,7 +157,7 @@
 					</c:forEach>
 
 					<!-- 다음 페이지로(>) -->
-					<c:if test="${pInf.currentPage < pInf.maxPage }">
+					<c:if test="${pInfom.currentPage < pInfom.maxPage }">
 						<li><a class="page-link text-success"
 							href=" 
 		                    	<c:url value="list">
@@ -162,7 +168,7 @@
 						        	<c:if test="${!empty param.searchValue }">
 						        		<c:param name="searchValue" value="${param.searchValue}"/>
 						        	</c:if>
-		                    		<c:param name="currentPage" value="${pInf.currentPage+1}"/>
+		                    		<c:param name="currentPage" value="${pInfom.currentPage+1}"/>
 		                    	</c:url>
 	                    	">
 								&gt; </a></li>
@@ -177,7 +183,7 @@
 						        	<c:if test="${!empty param.searchValue }">
 						        		<c:param name="searchValue" value="${param.searchValue}"/>
 						        	</c:if>
-		                    		<c:param name="currentPage" value="${pInf.maxPage}"/>
+		                    		<c:param name="currentPage" value="${pInfom.maxPage}"/>
 		                    	</c:url>
 	                    	">
 								&gt;&gt; </a></li>
@@ -187,6 +193,7 @@
 			</nav>
 		</div>
 	</div>
+		<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 	<!-- 회원 목록 끝 -->
 
 	<script>
@@ -199,20 +206,21 @@
 				return true;
 			}
 		}
-		
-		
-		$(function(){
-			$("#memberTable td").click(function(){
-				var memberNo = $(this).parent().children().eq(0).text();
-				location.href="${contextPath}/admin/detail?no=" + memberNo +"&currentPage="+${pInf.currentPage};
-			
-			}).mouseenter(function(){
-				$(this).parent().css("cursor", "pointer");
-			
-			});
-			
+
+		$(function() {
+			$("#memberTable td")
+					.click(
+							function() {
+								var memberNo = $(this).parent().children()
+										.eq(0).text();
+								location.href = "${contextPath}/admin/detail?no="
+										+ memberNo ;
+							}).mouseenter(function() {
+						$(this).parent().css("cursor", "pointer");
+
+					});
+
 		});
-		
 	</script>
 
 </body>
