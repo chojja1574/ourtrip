@@ -14,31 +14,17 @@
 		제일 위쪽이 작성 -> 그래야지만 아래 작성되는 설정들에서 DataSource를 참조해서 사용 가능! -->
 
 	<!-- destroy-method="close" -> 주어진 세션을 자동으로 close 하라는 의미 -->
-	<!-- <bean id="dataSource"
+	<bean id="dataSource"
 		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-
 		<property name="driverClassName"
 			value="oracle.jdbc.driver.OracleDriver" />
-
 		<property name="url" value="jdbc:oracle:thin:@115.90.212.22:9999:xe"/>
-		<!-- <property name="url"  value="jdbc:oracle:thin:@localhost:1521:xe"/> -->
+		<!-- <property name="url"
+			value="jdbc:oracle:thin:@localhost:1521:xe" /> -->
 		<property name="username" value="ourtrip" />
 		<property name="password" value="ourtrip" />
 		<property name="defaultAutoCommit" value="false" />
 	</bean>
-
-	<bean id="dataSource"
-		class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
-		<constructor-arg ref="realDataSource" />
-		<property name="logFormatter">
-			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
-				<property name="loggingType" value="MULTI_LINE" />
-				<property name="sqlPrefix" value="[SQL] " />
-			</bean>
-		</property>
-	</bean>
-
-
 
 
 
@@ -47,7 +33,6 @@
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-
 	<!-- 초기 autowired를 통한 bean 등록 전에 사용하기 위해 bean 등록 -->
 	<bean id="visitCountDAO"
 		class="com.kh.ourtrip.common.visitLog.model.DAO.VisitCountDAO" />
@@ -73,6 +58,8 @@
 		class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg ref="sqlSessionFactoryBean" />
 	</bean>
+
+
 
 	<!-- google email -->
 	<bean id="mailSender"
