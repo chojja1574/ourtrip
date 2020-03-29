@@ -160,7 +160,7 @@ public class AdminHunController {
 		try {
 			int result = adminHunService.memberDelete(memberNo, email, delBecause);
 
-			/*Member detailMem = adminHunService.detail(memberNo);
+			Member detailMem = adminHunService.detail(memberNo);
 			ProfileImage pi = adminHunService.selectProfileImage(memberNo);
 
 			List<Integer> plannerList = adminHunService.plannerList(memberNo);
@@ -185,14 +185,14 @@ public class AdminHunController {
 					}
 					infList.setAreaNames(areaNames);
 				}
-				*/
-				if (result > 0) {
-					model.addAttribute("msg" ,"회원 삭제에 성공하셨습니다.");
-					return "admin/memberDetail";
-				}else {
-					return "admin/memberDetail";
-				}
-			
+
+			}
+			if (result > 0) {
+				model.addAttribute("msg", "회원 삭제에 성공하셨습니다.");
+				return "admin/memberDetail";
+			} else {
+				return "admin/memberDetail";
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("errorMsg", "회원 강퇴중 오류 발생");
