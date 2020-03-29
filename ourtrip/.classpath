@@ -40,9 +40,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/dev/JSTL/taglibs-standard-compat-1.2.5.jar"/>
-	<classpathentry kind="lib" path="C:/dev/JSTL/taglibs-standard-impl-1.2.5.jar"/>
-	<classpathentry kind="lib" path="C:/dev/JSTL/taglibs-standard-jstlel-1.2.5.jar"/>
-	<classpathentry kind="lib" path="C:/dev/JSTL/taglibs-standard-spec-1.2.5.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
