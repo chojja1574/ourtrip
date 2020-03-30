@@ -112,7 +112,7 @@ public class PlannerDAO2 {
 		return sqlSessionTemplate.update("planner1Mapper.updatePublic", planner);
 	}
 	
-	public int cleanUserList(int no) {
+	public int clearUserList(int no) {
 		return sqlSessionTemplate.delete("planner1Mapper.cleanUserList", no);
 	}
 }

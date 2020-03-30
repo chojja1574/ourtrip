@@ -230,8 +230,8 @@ public class PlannerService2Imlp implements PlannerService2 {
 
 	@Transactional(rollbackFor = Exception.class)
 	@Override
-	public int cleanUserList(int no) throws Exception {
-		return plannerDAO2.cleanUserList(no);
+	public int clearUserList(int no) throws Exception {
+		return plannerDAO2.clearUserList(no);
 	}
 
 }

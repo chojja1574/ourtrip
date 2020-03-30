@@ -147,5 +147,5 @@ public interface PlannerService2 {
 	
 	public abstract int updatePublic(Planner planner) throws Exception;
 	
-	public abstract int cleanUserList(int no) throws Exception;
+	public abstract int clearUserList(int no) throws Exception;
 }
