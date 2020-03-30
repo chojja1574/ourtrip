@@ -17,6 +17,7 @@ public class PlannerInfo {
 	private int plannerCount;
 	private String plannerUrl;
 	private String groupName;
+	private int groupCode;
 	private List<Day> days;
 	private List<AreaName> areaNames;
 	private Date plannerEndDate;
@@ -32,8 +33,8 @@ public class PlannerInfo {
 
 	public PlannerInfo(int memberNo, String memberNickName, String memberEmail, int plannerNo, String plannerTitle,
 			Date plannerCreateDT, Date plannerStartDT, String plannerPublicYN, String plannerDeleteYN, int plannerCount,
-			String plannerUrl, String groupName, List<Day> days, List<AreaName> areaNames, Date plannerEndDate,
-			int tripDate, int largeAreaCode, int smallAreaCode) {
+			String plannerUrl, String groupName, int groupCode, List<Day> days, List<AreaName> areaNames,
+			Date plannerEndDate, int tripDate, int largeAreaCode, int smallAreaCode) {
 		super();
 		this.memberNo = memberNo;
 		this.memberNickName = memberNickName;
@@ -47,6 +48,7 @@ public class PlannerInfo {
 		this.plannerCount = plannerCount;
 		this.plannerUrl = plannerUrl;
 		this.groupName = groupName;
+		this.groupCode = groupCode;
 		this.days = days;
 		this.areaNames = areaNames;
 		this.plannerEndDate = plannerEndDate;
@@ -176,6 +178,16 @@ public class PlannerInfo {
 	}
 
 
+	public int getGroupCode() {
+		return groupCode;
+	}
+
+
+	public void setGroupCode(int groupCode) {
+		this.groupCode = groupCode;
+	}
+
+
 	public List<Day> getDays() {
 		return days;
 	}
@@ -242,10 +254,11 @@ public class PlannerInfo {
 				+ memberEmail + ", plannerNo=" + plannerNo + ", plannerTitle=" + plannerTitle + ", plannerCreateDT="
 				+ plannerCreateDT + ", plannerStartDT=" + plannerStartDT + ", plannerPublicYN=" + plannerPublicYN
 				+ ", plannerDeleteYN=" + plannerDeleteYN + ", plannerCount=" + plannerCount + ", plannerUrl="
-				+ plannerUrl + ", groupName=" + groupName + ", days=" + days + ", areaNames=" + areaNames
-				+ ", plannerEndDate=" + plannerEndDate + ", TripDate=" + TripDate + ", largeAreaCode=" + largeAreaCode
-				+ ", smallAreaCode=" + smallAreaCode + "]";
+				+ plannerUrl + ", groupName=" + groupName + ", groupCode=" + groupCode + ", days=" + days
+				+ ", areaNames=" + areaNames + ", plannerEndDate=" + plannerEndDate + ", TripDate=" + TripDate
+				+ ", largeAreaCode=" + largeAreaCode + ", smallAreaCode=" + smallAreaCode + "]";
 	}
+
 
 
 	

@@ -73,7 +73,6 @@ public class AdminHunDAO {
 	 * @throws Exception
 	 */
 	public Member detail(int no) throws Exception{
-		
 		return sqlSession.selectOne("adminhunMapper.detail", no);
 	}
 
@@ -140,13 +139,6 @@ public class AdminHunDAO {
 		return sqlSession.selectOne("adminhunMapper.plannerCount");
 	}
 
-	/** 플래너 위치 조회용 DAO
-	 * @return List<AreaName>
-	 * @throws Exception
-	 */
-	public List<AreaName> areaList(Map<String, Object> keyword)throws Exception {
-		return sqlSession.selectList("adminhunMapper.areaList");
-	}
 
 	/** 플래너 날짜 조회용 DAO
 	 * @return List<Day>
@@ -154,24 +146,6 @@ public class AdminHunDAO {
 	 */
 	public List<Day> dayList()throws Exception{
 		return sqlSession.selectList("adminhunMapper.dayList");
-	}
-
-	/** 검색 플래너수 조회용 DAO
-	 * @param keyword
-	 * @return List resultCount
-	 */
-	public List<Integer> resultCount(Map<String, Object> keyword)throws Exception{
-		for(String st : keyword.keySet()) {
-			System.out.println(st + " / " + keyword.get(st));
-		}
-		
-		return sqlSession.selectList("adminhunMapper.resultCount" , keyword);
-	}
-
-	public List<Integer> searchResult(PageInfo pInf, Map<String, Object> keyword) throws Exception{
-		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
-		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
-		return sqlSession.selectList("adminhunMapper.searchResult",keyword,rowBounds);
 	}
 
 	public List<AreaName> resultArea(List<Integer> searchResultcount) throws Exception{
@@ -212,6 +186,30 @@ public class AdminHunDAO {
 
 	public List<SmallArea> selectsmallNmList() {
 		return sqlSession.selectList("adminhunMapper.SmallNmList");
+	}
+
+	/** 플래너 검색용 DAO
+	 * @param keyword
+	 * @return list
+	 * @throws Exception
+	 */
+	public List<Integer> searchPlanner(Map<String, Object> keyword)throws Exception {
+		return sqlSession.selectList("adminhunMapper.searchPlanner" , keyword);
+	}
+
+
+	public List<AreaName> areaResult(Map<String, Object> keyword) {
+		return sqlSession.selectList("adminhunMapper.areaResult" , keyword);
+	}
+
+	public List<AreaName> totalAList() {
+		return sqlSession.selectList("adminhunMapper.totalAList");
+	}
+
+	public List<PlannerInfo> searchResult(Map<String, Object> keyword, PageInfo pInf) {
+		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
+		return sqlSession.selectList("adminhunMapper.searchResult",keyword, rowBounds);
 	}
 
 

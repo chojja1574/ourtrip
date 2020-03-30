@@ -37,6 +37,7 @@ public class AdminHunController {
 
 	/**
 	 * 전체회원 조회용 Controller
+	 * 
 	 * @param model
 	 * @param currentPage
 	 * @return path
@@ -68,7 +69,9 @@ public class AdminHunController {
 
 	}
 
-	/** 회원 검색용 controller
+	/**
+	 * 회원 검색용 controller
+	 * 
 	 * @param model
 	 * @param searchKey
 	 * @param searchValue
@@ -110,7 +113,9 @@ public class AdminHunController {
 
 	}
 
-	/** 회원 상세조회용 controller
+	/**
+	 * 회원 상세조회용 controller
+	 * 
 	 * @param model
 	 * @param no
 	 * @param currentPage
@@ -168,7 +173,9 @@ public class AdminHunController {
 
 	}
 
-	/** 맴버 삭제용 controller
+	/**
+	 * 맴버 삭제용 controller
+	 * 
 	 * @param memberNo
 	 * @param email
 	 * @param delBecause
@@ -211,7 +218,7 @@ public class AdminHunController {
 
 			if (result > 0) {
 				model.addAttribute("msg", "회원 삭제에 성공하셨습니다.");
-				model.addAttribute("pInfom" , pInf);
+				model.addAttribute("pInfom", pInf);
 				return "admin/memberDetail";
 			} else {
 				return "admin/memberDetail";
@@ -224,7 +231,9 @@ public class AdminHunController {
 
 	}
 
-	/** 플래너 리스트 조회용 controller
+	/**
+	 * 플래너 전체 리스트 조회용 controller
+	 * 
 	 * @param model
 	 * @param request
 	 * @param currentPage
@@ -238,8 +247,8 @@ public class AdminHunController {
 			int plannerCount = adminHunService.plannerCount();
 			List<LargeArea> largeNmList = adminHunService.selectLargeNmList();
 			List<SmallArea> smallNmList = adminHunService.selectsmallNmList();
-			model.addAttribute("largeNmList" , largeNmList);
-			model.addAttribute("smallNmList" , smallNmList);
+			model.addAttribute("largeNmList", largeNmList);
+			model.addAttribute("smallNmList", smallNmList);
 
 			if (currentPage == null) {
 				currentPage = 1;
@@ -247,12 +256,12 @@ public class AdminHunController {
 			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, plannerCount);
 
 			List<PlannerInfo> totalList = adminHunService.plannerTotal(pInf);
-			List<AreaName> areaList = adminHunService.areaList();
+			List<AreaName> totalAList = adminHunService.totalAList();
 
 			for (PlannerInfo infList : totalList) {
-				for (AreaName infoarea : areaList) {
+				for (AreaName infoarea : totalAList) {
 					if (infList.getPlannerNo() == infoarea.getPlannerNo()) {
-						infList.setAreaNames(areaList);
+						infList.setAreaNames(totalAList);
 					}
 				}
 			}
@@ -281,7 +290,9 @@ public class AdminHunController {
 
 	}
 
-	/** 플래너 검색용 controller
+	/**
+	 * 플래너 검색용 controller
+	 * 
 	 * @param model
 	 * @param request
 	 * @param currentPage
@@ -318,32 +329,43 @@ public class AdminHunController {
 		keyword.put("endTrip", endTrip);
 
 		try {
-			
+			List<LargeArea> largeNmList = adminHunService.selectLargeNmList();
+			List<SmallArea> smallNmList = adminHunService.selectsmallNmList();
+			model.addAttribute("largeNmList", largeNmList);
+			model.addAttribute("smallNmList", smallNmList);
+
+			List<Integer> plannerList = adminHunService.searchPlanner(keyword);
+
+			keyword.put("pList", plannerList);
+			System.out.println(keyword);
 			if (currentPage == null) {
 				currentPage = 1;
 			}
-			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, searchResultcount.size());
+			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, plannerList.size());
 
-			
-			
-			
-			for (Integer infList : searchResult) {
-				for (AreaName infoarea : areaList) {
-					if (infList.get == infoarea.getPlannerNo()) {
-						areaNames.add(infoarea);
+			List<PlannerInfo> searchResult = adminHunService.searchResult(keyword , pInf);
+
+			List<AreaName> areaResult = adminHunService.areaResult(keyword);
+
+			List<Day> dayList = adminHunService.dayList();
+
+			for (PlannerInfo infList : searchResult) {
+				for (AreaName areaList : areaResult) {
+					if (infList.getPlannerNo() == areaList.getPlannerNo()) {
+						infList.setAreaNames(areaResult);
 					}
 				}
-				infList.setAreaNames(areaNames);
 			}
 
+			Date countDay = null;
 			for (PlannerInfo infList : searchResult) {
 				for (Day infodays : dayList) {
 					if (infList.getPlannerNo() == infodays.getPlannerNo()) {
 						countDay = new Date(infList.getPlannerStartDT().getTime()
 								+ (infodays.getTripDate() * (24 * 60 * 60 * 1000)));
+						infList.setPlannerEndDate(countDay);
 					}
 				}
-				infList.setPlannerEndDate(countDay);
 			}
 
 			model.addAttribute("plannerList", searchResult);
@@ -367,20 +389,17 @@ public class AdminHunController {
 			List<AreaName> plannerArea = adminHunService.areaDetail(no);
 
 			Date addDate = new Date(
-			plannerInfo.getPlannerStartDT().getTime() + plannerInfo.getTripDate() * (24 * 60 * 60 * 1000));
+					plannerInfo.getPlannerStartDT().getTime() + plannerInfo.getTripDate() * (24 * 60 * 60 * 1000));
 
 			plannerInfo.setPlannerEndDate(addDate);
 
 			model.addAttribute("plannerinfo", plannerInfo);
-			
-			System.out.println("plannerInfo" + plannerInfo);
 			model.addAttribute("plannerArea", plannerArea);
-			System.out.println("plannerArea" + plannerArea);
 			return "admin/adminplannerDetail";
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			model.addAttribute("msg", "플래너 조회 실패 .");
+			model.addAttribute("msg", "플래너 상세조회 실패 .");
 			return "redirect:" + beforUrl;
 		}
 
@@ -448,7 +467,7 @@ public class AdminHunController {
 			}
 
 		} catch (Exception e) {
-			model.addAttribute("msg", "플래너 삭제 중 오류발생 .");
+			model.addAttribute("msg", "플래너 복구 중 오류발생 .");
 			return "redirect:" + beforUrl;
 		}
 

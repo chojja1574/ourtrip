@@ -98,12 +98,6 @@ public interface AdminHunService {
 	 */
 	public abstract int plannerCount()throws Exception;
 
-	/**플래너 위치조회용 service
-	 * @return list<areaName>
-	 * @throws Exception
-	 */
-	public abstract List<AreaName> areaList()throws Exception;
-
 	
 	/**여행일자 조회용 service
 	 * @return list<day>
@@ -178,12 +172,35 @@ public interface AdminHunService {
 	 */
 	public abstract List<SmallArea> selectsmallNmList()throws Exception;
 
-	/** 검색결과 최종 출력용
+
+	/** 플래너 검색용 service
 	 * @param keyword
-	 * @return result
+	 * @return list
 	 * @throws Exception
 	 */
-	public abstract List<PlannerInfo> result(Map<String, Object> keyword)throws Exception;
+	public abstract List<Integer> searchPlanner(Map<String, Object> keyword)throws Exception;
+
+
+
+	/** 지역명 검색 조회용 service
+	 * @param keyword
+	 * @return List
+	 * @throws Exception
+	 */
+	public abstract List<AreaName> areaResult(Map<String, Object> keyword) throws Exception;
+
+	/** 전체 플래너 리스트 지역명 조회용 service
+	 * @return list
+	 * @throws Exception
+	 */
+	public abstract List<AreaName> totalAList()throws Exception;
+
+	/** 검색 결과 조회용 service
+	 * @param resultList
+	 * @return list
+	 * @throws Exception
+	 */
+	public abstract List<PlannerInfo> searchResult(Map<String, Object> keyword, PageInfo pInf)throws Exception;
 
 	
 	

@@ -36,7 +36,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 회원수 전체조회용 service
-	 * 
 	 * @return listFullCount
 	 * @throws Exception
 	 */
@@ -48,7 +47,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 회원 전체조회용 service
-	 * 
 	 * @param pInf
 	 * @return memberList
 	 * @throws Exception
@@ -61,7 +59,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 회원 목록 조회용 service
-	 * 
 	 * @param map
 	 * @return listCount
 	 * @throws Exception
@@ -74,7 +71,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 회원 목록조회용 service
-	 * 
 	 * @param map
 	 * @param pInf
 	 * @return memberList
@@ -88,7 +84,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 회원 상세조회용 service
-	 * 
 	 * @param no
 	 * @return Member
 	 * @throws Exception
@@ -101,7 +96,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 플래너 넘버 조회용 service
-	 * 
 	 * @param no
 	 * @return plannerList
 	 * @throws Exception
@@ -114,7 +108,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 플래너 카드 조회용 service
-	 * 
 	 * @param plannerList
 	 * @param pInf
 	 * @return plannerInfo
@@ -128,7 +121,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 지역조회용 service
-	 * 
 	 * @param plannerList
 	 * @return plannerArea
 	 * @throws Exception
@@ -140,7 +132,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 프로필 이미지 조회용 service
-	 * 
 	 * @param no
 	 * @return pi
 	 * @throws Exception
@@ -152,7 +143,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 플래너 목록조회용 DAO
-	 * 
 	 * @return totalList
 	 * @throws Exception
 	 */
@@ -163,7 +153,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 플래너 개수 조회용 service
-	 * 
 	 * @return int
 	 * @throws Exception
 	 */
@@ -182,13 +171,10 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 		return adminHunDAO.dayList();
 	}
-
 	
-
 
 	/**
 	 * 플래너 상세보기 용 service
-	 * 
 	 * @param no
 	 * @return plannerInfo
 	 * @throws Exception
@@ -200,7 +186,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 지역 조회용 service
-	 * 
 	 * @param no
 	 * @return areaName
 	 * @throws Exception
@@ -212,7 +197,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 플래너 삭제용 service
-	 * 
 	 * @param plannerNo
 	 * @return result
 	 * @throws Exception
@@ -225,7 +209,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 삭제 메일 발송용 service
-	 * 
 	 * @param pdr
 	 * @return reason
 	 * @throws Exception
@@ -238,7 +221,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 삭제메일 전송용 service
-	 * 
 	 * @param email
 	 * @return sendEmail
 	 * @throws Exception
@@ -308,7 +290,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 대지역명 조회용 service
-	 * 
 	 * @return list
 	 * @throws Exception
 	 */
@@ -319,7 +300,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 	/**
 	 * 소지역명 조회용 service
-	 * 
 	 * @return list
 	 * @throws Exception
 	 */
@@ -327,6 +307,54 @@ public class AdminHunServiceimpl implements AdminHunService {
 	public List<SmallArea> selectsmallNmList() throws Exception {
 		return adminHunDAO.selectsmallNmList();
 	}
+
+	/** 플래너 검색용 service
+	 * @param keyword
+	 * @return list
+	 * @throws Exception
+	 */
+	@Override
+	public List<Integer> searchPlanner(Map<String, Object> keyword) throws Exception {
+		if(keyword.get("startTrip") == "" ) keyword.replace("startTrip", null);
+		if(keyword.get("endTrip") == "" ) keyword.replace("endTrip", null);
+		
+		return adminHunDAO.searchPlanner(keyword);
+	}
+
+
+	
+	/** 지역명 검색 조회용 service
+	 * @param keyword
+	 * @return List
+	 * @throws Exception
+	 */
+	@Override
+	public List<AreaName> areaResult(Map<String, Object> keyword) throws Exception {
+		return adminHunDAO.areaResult(keyword);
+	}
+
+	/** 전체 플래너 리스트 지역명 조회용 service
+	 * @return list
+	 * @throws Exception
+	 */
+	@Override
+	public List<AreaName> totalAList() throws Exception {
+		return adminHunDAO.totalAList();
+	}
+
+	
+	/** 검색 결과 조회용 service
+	 * @param resultList
+	 * @return list
+	 * @throws Exception
+	 */
+	@Override
+	public List<PlannerInfo> searchResult(Map<String, Object> keyword, PageInfo pInf) throws Exception {
+		
+		return adminHunDAO.searchResult(keyword,pInf);
+	}
+
+	
 
 	
 }
