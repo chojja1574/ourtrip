@@ -171,7 +171,7 @@
 							<div class="col-6">
 								<div class="custom-control custom-checkbox" id="check-wrapper">
 									<input type="checkbox" class="custom-control-input" id="viaCheck"
-										name="viaCheck"> <label class="custom-control-label"
+										name="viaCheck" checked> <label class="custom-control-label"
 										for="viaCheck">경유 여부</label>
 								</div>
 							</div>
@@ -276,139 +276,8 @@
 		var viaCheck;
 		var currentPage;
 		
-		// 페이징 번호 작성 함수
-		function pagingHtmlFn(pageInfo){
-			console.log("페이징 시작확인");
-			
-			// 검색바 보여질 부분
-			$pagingArea = $("#paging-area");
-			
-			var maxPage = pageInfo.maxPage; // 전체 페이징 수 중 가장 마지막 페이지
-			var first = pageInfo.startPage; // 현재 페이지에서 보여질 페이징버튼 시작 페이지
-			var last = pageInfo.endPage; // 현재 페이지에서 보여질 페이징 버튼의 끝 페이지
-			var currentPage = pageInfo.currentPage;//현재 페이지
-			
-			
-			var pagingHtml = "";
-			if(currentPage > 1) {
-				pagingHtml += "<li class='page-item'><span class='page-link page-num paging'><<</span></li>";
-				pagingHtml += "<li class='page-item'><span class='page-link page-num paging'><</span></li>";
-			}
-			
-			for(var i=first; i<=last; i++) {
-				pagingHtml += "<li class='page-item'><span class='page-link page-num paging'>" + i + "</span></li>";
-			}
-			
-			if(currentPage < maxPage) {
-				console.log("실행되나 확인");
-				console.log("현재페이지 : " + currentPage);
-				console.log("마지막페이지 : " + maxPage);
-				
-				pagingHtml += "<li class='page-item'><span class='page-link page-num paging'>></span></li>";
-        		pagingHtml += "<li class='page-item'><span class='page-link page-num paging'>>></span></li>";
-			}
-			
-			
-			
-			$pagingArea.html(pagingHtml); 
-			
-			
-			// 페이징 버튼을 눌렀을 경우
-			$(".paging").on("click", function(){
-				var $click = $(this);
-				if($click.text() == "<<") {
-					console.log(currentPage = 1);
-					currentPage = 1;
-				} else if ($click.text() == "<") {
-					console.log(currentPage = Number(currentPage) -1);
-					currentPage = Number(currentPage) -1;
-				} else if($click.text() == ">>") {
-					console.log(currentPage = maxPage);
-					currentPage = maxPage;
-				} else if($click.text() == ">") {
-					console.log(currentPage = Number(currentPage) +1);
-				} else if($click.text() != currentPage) {
-					console.log(currentPage = $(this).text());
-					currentPage = $(this).text();
-				}
-				
-				
-				// 버튼 클릭시 페이징 처리 ajax
-				$.ajax({
-	    			url : "searchPlanner",
-	    			type : "POST",
-	    			data : {searchTitle: searchTitle,
-	    					groupName: groupName,
-	    					largeArea: largeArea,
-	    					smallArea: smallArea,
-	    					viaCheck: viaCheck,
-	    					currentPage: currentPage},
-	    			
-	    			success : function(result){
-	    				console.log(result);
-	    				$pContainer.show();
-	    				if(result.pList == null || result.pList == ''){
-	    					console.log("비어있을경우 조건문 들어옴");
-	    					console.log($pWrapper);
-	    					$pWrapper.html("<div style='height:250px'>조회결과가 없습니다.<div>");
-	    				} else {
-	    					//console.log(result.length);
-	    					console.log("비어있지안을경우 조건문 들어옴");
-	    					var pHtml = "";
-	    					for(var i=0; i<result.pList.length; i++) {
-	        					pHtml += 
-	        					'<div class="planner">' + 
-	        					'<div class="card">' +
-	    						'<img class="card-img-top" src="${contextPath}/resources/areaImages/' + result.pList[i].areaNames[0].largeAreaCode + '.jpg" alt="Card image">' +
-	    						'<div class="card-body">' +
-	   							'<h5 class="card-title">' + result.pList[i].plannerTitle + '</h5>' +
-									'<p class="card-text">' +
-									'<span>시작일 : ' + result.pList[i].plannerStartDT + ' ' +result.pList[i].tripDate + 'DAYS</span><br> <span>' + result.pList[i].groupName + ' 여행</span><br>';
-									if(result.pList[i].areaNames.length > 1) { 
-										pHtml += '<span>' + result.pList[i].areaNames[0].largeAreaName + ' ' + 
-										result.pList[i].areaNames[0].smallAreaName + '...</span>'; 
-									} else {
-										pHtml += '<span>' + result.pList[i].areaNames[0].largeAreaName + ' ' + 
-										result.pList[i].areaNames[0].smallAreaName + '</span>'; 
-									}
-									//var now = new Date(result[i].plannerStartDT);
-									//console.log(now);
-									pHtml +=  
-									'</p>' + 
-	        					'<div class="d-flex justify-content-between">' +
-	        					'<div class="btn-wrapper">' +
-	        					'<a href=${contextPath}/planner/plannerDetail?no=${recommendCard.plannerNo}" class="btn btn-sm main-btn">바로가기</a>' +
-								'<a href="${contextPath}/planner/plannerCopy?no=${recommendCard.plannerNo}" class="btn  btn-sm gray-btn copy-btn">복사</a>' +
-	        					'</div>' +
-	        					'<div>' +
-	        					'<i class="fas fa-eye"></i>&nbsp;'+ result.pList[i].plannerCount +
-	        					'</div>' +
-	        					'</div>' +
-	        					'</div>' +
-	        					'</div>' +
-	        					'</div>';
-	    					}
-	    					
-	    					$click = $click.parent().parent();
-	    					$pWrapper.html(pHtml);
-	    					pagingHtmlFn(result.pInf);
-	    					disCurrent($click.children(), currentPage);
-	    				}
-	    			},
-	    			error : function(e){
-	    				alert(e);
-	    			}
-	    			
-	    		});
-			});
-			
-			
-		}
-		
-		
-        $(function () {
+		$(function () {
         	
-        	        	
         	// 지역 선택
         	$("#wide-area").on("change", function () {
                 var wideVal = Number($(this).val());
@@ -468,6 +337,7 @@
         					console.log("비어있을경우 조건문 들어옴");
         					console.log($pWrapper);
         					$pWrapper.html("<div style='height:250px'>조회결과가 없습니다.<div>");
+        					$(".pagination-wrapper").html("");
         				} else {
         					//console.log(result.length);
         					console.log("비어있지안을경우 조건문 들어옴");
@@ -494,8 +364,8 @@
    								'</p>' + 
 	        					'<div class="d-flex justify-content-between">' +
 	        					'<div class="btn-wrapper">' +
-	        					'<button type="button" class="btn btn-sm main-btn">바로가기</button>' +
-	        					'<button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>' +
+	        					'<a href="${contextPath}/planner/plannerDetail?no=' + result.pList[i].plannerNo + '" class="btn btn-sm main-btn">바로가기</a> ' +
+								'<a href="${contextPath}/planner/plannerCopy?no=' + result.pList[i].plannerNo + '" class="btn  btn-sm gray-btn copy-btn">복사</a>' +
 	        					'</div>' +
 	        					'<div>' +
 	        					'<i class="fas fa-eye"></i>&nbsp;'+ result.pList[i].plannerCount +
@@ -505,8 +375,12 @@
 	        					'</div>' +
 	        					'</div>';
         					}
+        					
+        					// 검색리스트 넣기
         					$pWrapper.html(pHtml);
+        					
         					pagingHtmlFn(result.pInf);
+        					disCurrent($(".pagination-wrapper").children().children().children(), currentPage);
         				}
         			},
         			error : function(e){
@@ -516,7 +390,143 @@
         		});
         	});
        		
+        	// 페이징 번호 작성 함수
+    		function pagingHtmlFn(pageInfo){
+    			console.log("페이징 시작확인");
+    			
+    			// 검색바 보여질 부분
+    			$pagingArea = $("#paging-area");
+    			
+    			var maxPage = pageInfo.maxPage; // 전체 페이징 수 중 가장 마지막 페이지
+    			var first = pageInfo.startPage; // 현재 페이지에서 보여질 페이징버튼 시작 페이지
+    			var last = pageInfo.endPage; // 현재 페이지에서 보여질 페이징 버튼의 끝 페이지
+    			var currentPage = pageInfo.currentPage;//현재 페이지
+    			
+    			
+    			var pagingHtml = "";
+    			if(currentPage > 1) {
+    				pagingHtml += "<li class='page-item'><span class='page-link page-num paging'><<</span></li>";
+    				pagingHtml += "<li class='page-item'><span class='page-link page-num paging'><</span></li>";
+    			}
+    			
+    			for(var i=first; i<=last; i++) {
+    				pagingHtml += "<li class='page-item'><span class='page-link page-num paging'>" + i + "</span></li>";
+    			}
+    			
+    			if(currentPage < maxPage) {
+    				console.log("실행되나 확인");
+    				console.log("현재페이지 : " + currentPage);
+    				console.log("마지막페이지 : " + maxPage);
+    				
+    				pagingHtml += "<li class='page-item'><span class='page-link page-num paging'>></span></li>";
+            		pagingHtml += "<li class='page-item'><span class='page-link page-num paging'>>></span></li>";
+    			}
+    			
+    			
+    			
+    			$pagingArea.html(pagingHtml); 
+    			
+    			
+    			// 페이징 버튼을 눌렀을 경우
+    			$(".paging").on("click", function(){
+    				var $click = $(this);
+    				if($click.text() == "<<") {
+    					console.log(currentPage = 1);
+    					currentPage = 1;
+    				} else if ($click.text() == "<") {
+    					console.log(currentPage = Number(currentPage) -1);
+    					currentPage = Number(currentPage) -1;
+    				} else if($click.text() == ">>") {
+    					console.log(currentPage = maxPage);
+    					currentPage = maxPage;
+    				} else if($click.text() == ">") {
+    					console.log(currentPage = Number(currentPage) +1);
+    				} else if($click.text() != currentPage) {
+    					console.log(currentPage = $(this).text());
+    					currentPage = $(this).text();
+    				}
+    				
+    				
+    				// 버튼 클릭시 페이징 처리 ajax
+    				$.ajax({
+    	    			url : "searchPlanner",
+    	    			type : "POST",
+    	    			data : {searchTitle: searchTitle,
+    	    					groupName: groupName,
+    	    					largeArea: largeArea,
+    	    					smallArea: smallArea,
+    	    					viaCheck: viaCheck,
+    	    					currentPage: currentPage},
+    	    			
+    	    			success : function(result){
+    	    				console.log(result);
+    	    				$pContainer.show();
+    	    				if(result.pList == null || result.pList == ''){
+    	    					console.log("비어있을경우 조건문 들어옴");
+    	    					console.log($pWrapper);
+    	    					$pWrapper.html("<div style='height:250px'>조회결과가 없습니다.<div>");
+    	    				} else {
+    	    					//console.log(result.length);
+    	    					console.log("비어있지안을경우 조건문 들어옴");
+    	    					var pHtml = "";
+    	    					for(var i=0; i<result.pList.length; i++) {
+    	        					pHtml += 
+    	        					'<div class="planner">' + 
+    	        					'<div class="card">' +
+    	    						'<img class="card-img-top" src="${contextPath}/resources/areaImages/' + result.pList[i].areaNames[0].largeAreaCode + '.jpg" alt="Card image">' +
+    	    						'<div class="card-body">' +
+    	   							'<h5 class="card-title">' + result.pList[i].plannerTitle + '</h5>' +
+    									'<p class="card-text">' +
+    									'<span>시작일 : ' + result.pList[i].plannerStartDT + ' ' +result.pList[i].tripDate + 'DAYS</span><br> <span>' + result.pList[i].groupName + ' 여행</span><br>';
+    									if(result.pList[i].areaNames.length > 1) { 
+    										pHtml += '<span>' + result.pList[i].areaNames[0].largeAreaName + ' ' + 
+    										result.pList[i].areaNames[0].smallAreaName + '...</span>'; 
+    									} else {
+    										pHtml += '<span>' + result.pList[i].areaNames[0].largeAreaName + ' ' + 
+    										result.pList[i].areaNames[0].smallAreaName + '</span>'; 
+    									}
+    									//var now = new Date(result[i].plannerStartDT);
+    									//console.log(now);
+    									pHtml +=  
+    									'</p>' + 
+    	        					'<div class="d-flex justify-content-between">' +
+    	        					'<div class="btn-wrapper">' +
+    	        					'<a href="${contextPath}/planner/plannerDetail?no=' + result.pList[i].plannerNo + '" class="btn btn-sm main-btn">바로가기</a> ' +
+    								'<a href="${contextPath}/planner/plannerCopy?no=' + result.pList[i].plannerNo + '" class="btn  btn-sm gray-btn copy-btn">복사</a>' +
+    	        					'</div>' +
+    	        					'<div>' +
+    	        					'<i class="fas fa-eye"></i>&nbsp;'+ result.pList[i].plannerCount +
+    	        					'</div>' +
+    	        					'</div>' +
+    	        					'</div>' +
+    	        					'</div>' +
+    	        					'</div>';
+    	    					}
+    	    					
+    	    					$click = $click.parent().parent();
+    	    					$pWrapper.html(pHtml);
+    	    					pagingHtmlFn(result.pInf);
+    	    					disCurrent($click.children(), currentPage);
+    	    				}
+    	    			},
+    	    			error : function(e){
+    	    				alert(e);
+    	    			}
+    	    			
+    	    		});
+    			});
+    			
+    			// 복사버튼 조건
+    			$(".copy-btn").on("click", function(){
+    				if(${empty loginMember}) {
+    					alert("로그인후 이용해 주세요");
+    					location.href = "${contextPath}/member/loginForm";
+    				}
+    			});
+    		}
+       		
         });
+		
         	
         function disCurrent(list, currentPage){
         	$(list).each(function(index, item){

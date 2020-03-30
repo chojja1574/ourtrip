@@ -142,7 +142,7 @@ h5 {
 				</div>
 			</c:if>
 			<c:if test="${!empty recommendPCList}">
-				<c:forEach var="recommendCard" items="${recommendPCList}" varStatus="vs" begin="1" end="2">
+				<c:forEach var="recommendCard" items="${recommendPCList}" varStatus="vs" begin="0" end="1">
 					<div class="col-xl-3">
 						<div class="planner">
 		                    <div class="card">
@@ -168,8 +168,8 @@ h5 {
 		                            </p>
 		                            <div class="d-flex justify-content-between">
 		                                <div class="btn-wrapper">
-		                                    <button type="button" class="btn btn-sm main-btn">바로가기</button>
-		                                    <button type="button" class="btn  btn-sm gray-btn copy-btn">복사</button>
+		                                    <a href="#" class="btn btn-sm main-btn">바로가기</a>
+		                                    <a href="#" class="btn btn-sm gray-btn copy-btn">복사</a>
 		                                </div>
 		                                <div><i class="fas fa-eye"></i>&nbsp;${recommendCard.plannerCount}</div>
 		                            </div>
@@ -221,11 +221,23 @@ h5 {
 		
 	<script>
 		$(function() {
+			// 생성버튼 조건
 			$("#nologincreate").on("click", function() {
-				alert("로그인후 이용해 주세요")
+				alert("로그인후 이용해 주세요");
 				location.href = "${contextPath}/member/loginForm";
 			});
+			
+			// 복사버튼 조건
+			$(".copy-btn").on("click", function(){
+				if(${empty loginMember}) {
+					alert("로그인후 이용해 주세요");
+					location.href = "${contextPath}/member/loginForm";
+				}
+			});
+			
 		});
+		
+		
 	</script>
 </body>
 </html>

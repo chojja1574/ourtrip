@@ -17,10 +17,18 @@
 <div class="container-fluid px-0" style="background-color: white;">
     <div class="container my-0 px-0">
         <div class="d-flex">
-            <a href="${contextPath}">
-                <img class="logo" id="mainlogo" src="${contextPath}/resources/images/ourtrip_logo2.png" alt="이미지"
+        	<c:if test="${loginMember.memberGrade == 'A'}">
+        		<a href="${contextPath}/admin/main">
+        			<img class="logo" id="mainlogo" src="${contextPath}/resources/images/ourtrip_logo2.png" alt="이미지"
                     style="width: 220px; height: auto;">
-            </a>
+        		</a>
+        	</c:if>
+        	<c:if test="${loginMember.memberGrade != 'A'}">
+	            <a href="${contextPath}">
+	                <img class="logo" id="mainlogo" src="${contextPath}/resources/images/ourtrip_logo2.png" alt="이미지"
+	                    style="width: 220px; height: auto;">
+	            </a>
+	        </c:if>
             <div class="btn-wrapper ml-auto mt-3">
             	<c:if test="${!empty loginMember}">
 
