@@ -78,5 +78,12 @@
 	<insert id="insertNotice" parameterType="Notice">
 		INSERT INTO NOTICE VALUES(#{noticeNo},#{noticeTitle},#{noticeContent},DEFAULT,SYSDATE,SYSDATE,DEFAULT,#{memberNo})
 	</insert>
+	
+	<update id="updateNotice" parameterType="Notice">
+		UPDATE NOTICE SET NOTICE_TITLE = #{noticeTitle}, NOTICE_CONTENT = #{noticeContent}, NOTICE_MODIFY_DT = SYSDATE WHERE NOTICE_NO = #{noticeNo}
+	</update>
 
+	<delete id="deleteNotice" parameterType="_int">
+		DELETE FROM NOTICE WHERE NOTICE_NO = #{no}
+	</delete>
 </mapper>

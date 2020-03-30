@@ -41,9 +41,7 @@
                 <div class="form-inline mb-3">
                     <label for="inputTitle" class="mr-3">제목</label>
                     <input class="form-control" type="text" size="70" id="inputTitle" name="noticeTitle"
-                        placeholder="공지사항 제목을 입력해주세요"
-                        <c:if test="${!empty notice}">value="${notice.noticeTitle}"</c:if>
-                        >
+                        placeholder="공지사항 제목을 입력해주세요">
                 </div>
 
                 <!-- 작성일 -->
@@ -60,16 +58,14 @@
                         <h5 class="my-0">내용</h5>
                     </label>
                     <!-- 일반회원 상세조회시 textarea에 readonly 속성 추가 -->
-                    <textarea class="form-control my-3" rows="20" id="content" name="noticeContent">
-<c:if test="${!empty notice}">${notice.noticeContent}</c:if>
-                    </textarea>
+                    <textarea class="form-control my-3" rows="20" id="content" name="noticeContent"></textarea>
                 </div>
 
                 <!-- 버튼들 -->
                 <div class="d-flex" id="btn-wrapper">
                     <a href="#" class="btn gray-btn mr-auto">이전페이지</a>
                     <!-- 작성 버튼 -->
-                    <button class="btn main-btn ml-auto">작성하기</button>
+                 	<button class="btn main-btn ml-auto">작성하기</button>
                 </div>
                 
             </form>
@@ -79,12 +75,12 @@
 
     <script>
         // 오늘 날짜 출력 
-               var today = new Date();
-        
-              var str = today.getFullYear() + "-"
-                    + (today.getMonth()+1) + "-"
-                    + today.getDate();
-            $("#today").html(str);
+	var today = new Date();
+	
+	var str = today.getFullYear() + "-"
+			+ (today.getMonth()+1) + "-"
+			+ today.getDate();
+	$("#today").html(str);
     </script>
 
 </body>

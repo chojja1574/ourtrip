@@ -66,8 +66,11 @@
 
             <!-- 버튼들 -->
             <div class="d-flex" id="btn-wrapper">
-	            <a href="./updateForm?no=${notice.noticeNo}" class="btn gray-btn ml-auto">수정하기</a>
-                <a href="#" class="btn gray-btn ml-auto" id="historyBack">이전페이지</a>
+                <a href="#" class="btn gray-btn mr-auto" id="historyBack">이전페이지</a>
+                <c:if test="${loginMember.memberGrade == 'A'}">
+	            	<a href="./updateForm?no=${notice.noticeNo}" class="btn main-btn ml-auto">수정하기</a>
+	            	<button type="button" class="ml-2 btn del-btn" id="deleteBtn">삭제하기</button>
+           		</c:if>
             </div>
 
         </div>
@@ -78,6 +81,14 @@
 <script>
 	$("#historyBack").click(function(){
 		window.history.go(-1);
+	})
+	
+	$("#deleteBtn").click(function(){
+		var confirmBool = confirm('정말 삭제하시겠습니까?');
+		
+		if(confirmBool){
+			location.href="./delete?no=${notice.noticeNo}";
+		}
 	})
 </script>
 </html>

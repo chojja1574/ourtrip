@@ -64,4 +64,12 @@ public class NoticeDAO {
 	public int insertNotice(Notice notice) throws Exception{
 		return sqlSession.insert("noticeMapper.insertNotice", notice);
 	}
+
+	public int updateNotice(Notice notice) throws Exception {
+		return sqlSession.update("noticeMapper.updateNotice", notice);
+	}
+
+	public int deleteNotice(int no) throws Exception {
+		return sqlSession.delete("noticeMapper.deleteNotice", no);
+	}
 }
