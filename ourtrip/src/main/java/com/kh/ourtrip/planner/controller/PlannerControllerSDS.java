@@ -108,26 +108,30 @@ public class PlannerControllerSDS {
 			// 플래너 목록 조회
 			List<PlannerCard> pList = plannerServiceSDS.selectPList(map, pInf);
 			
+			// 검색된 조건이 없으면 널전달
 			if(pList==null) {
 				return null;
+			} else {
+				
+				System.out.println("Controller pList 목록 : " + pList);
+				for(PlannerCard item : pList) {
+					System.out.println(item);
+				}
+				
+				Map<String, Object> result = new HashMap<String, Object>();
+				
+				result.put("pList", pList);
+				result.put("pInf", pInf);
+				
+				Gson gson = new GsonBuilder().setDateFormat(
+						"yyyy-MM-dd").create();
+				
+				// Gson gson = new Gson();
+				// return gson.toJson(pList);
+				
+				return gson.toJson(result);
+				
 			}
-//			System.out.println("Controller pList 목록 : " + pList);
-			for(PlannerCard item : pList) {
-				System.out.println(item);
-			}
-			
-			Map<String, Object> result = new HashMap<String, Object>();
-			
-			result.put("pList", pList);
-			result.put("pInf", pInf);
-			
-			Gson gson = new GsonBuilder().setDateFormat(
-					"yyyy-MM-dd").create();
-			
-			// Gson gson = new Gson();
-			// return gson.toJson(pList);
-			
-			return gson.toJson(result);
 			
 			
 		} catch (Exception e) {
