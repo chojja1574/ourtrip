@@ -314,7 +314,7 @@
 			</div>
 		</form>
 	</div>
-	<jsp:include page="../common/footer.jsp" />
+	<jsp:include page="../common/footer.jsp"/>
 </body>
 
 <script type="text/javascript" src="${contextPath}/resources/js/map.js"></script>
