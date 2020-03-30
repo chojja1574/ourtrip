@@ -172,7 +172,9 @@
 	            </ul>
         	</div>
         	<div class="col-md-3">
-        		<a href="./insertForm" class="form-control btn btn-success" style="width:150px">공지사항 작성</a>
+        		<c:if test="${loginMember.memberGrade == 'A'}">
+        			<a href="./insertForm" class="form-control btn btn-success" style="width:150px">공지사항 작성</a>
+        		</c:if>
         	</div>
        	</div>
        	<div class="row">

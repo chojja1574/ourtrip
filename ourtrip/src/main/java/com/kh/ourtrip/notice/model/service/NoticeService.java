@@ -36,4 +36,8 @@ public interface NoticeService {
 
 	public abstract int insertNotice(Notice notice) throws Exception;
 
+	public abstract int updateNotice(Notice notice) throws Exception;
+
+	public abstract int deleteNotice(int no) throws Exception;
+
 }

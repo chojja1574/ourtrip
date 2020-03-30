@@ -62,4 +62,15 @@ public class NoticeServiceImpl implements NoticeService{
 		return noticeDAO.insertNotice(notice);
 	}
 
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int updateNotice(Notice notice) throws Exception {
+		return noticeDAO.updateNotice(notice);
+	}
+
+	@Override
+	public int deleteNotice(int no) throws Exception {
+		return noticeDAO.deleteNotice(no);
+	}
+
 }
