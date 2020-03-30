@@ -167,4 +167,14 @@
 		PLANNER_DELETE_YN = 'Y'
 		WHERE PLANNER_NO= #{plannerNo}
 	</update>
+	
+	<!-- planner member table에서 관련 회원들도 전부 삭제 -->
+	
+	<!-- 플래너 나가기 -->
+	<delete id="outPlanner" parameterType="PlannerMember">
+		DELETE FROM PLANNER_MEMBER
+		WHERE PLANNER_NO= #{plannerNo}
+		AND MEMBER_NO= #{memberNo}
+		AND PLANNER_PERMISSION= #{plannerPermission}
+	</delete>
 </mapper>

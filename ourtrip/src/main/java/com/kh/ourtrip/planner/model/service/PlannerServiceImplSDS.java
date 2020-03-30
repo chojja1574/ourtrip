@@ -371,5 +371,27 @@ public class PlannerServiceImplSDS implements PlannerServiceSDS{
 		
 		return result;
 	}
+
+	/** 플래너 나가기용 Service
+	 * @param outPlanner
+	 * @return result
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int outPlanner(PlannerMember outPlanner) throws Exception {
+		// 회원이 나가려는 플래너에 맞는 권한인지 확인
+		String permission = plannerDAOSDS.selectPlannerPerm(outPlanner);
+		
+		int result = 0;
+		if(!permission.equals("3")) {
+			outPlanner.setPlannerPermission(Integer.parseInt(permission));
+			result = plannerDAOSDS.outPlanner(outPlanner);
+		}
+		
+		return result;
+	}
+	
+	
 	
 }

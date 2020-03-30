@@ -239,13 +239,40 @@ public class PlannerControllerSDS {
 			
 			rdAttr.addFlashAttribute("msg", msg);
 			
+			return "redirect:/planner/myPlanner";
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 			model.addAttribute("errorMsg", "플래너 삭제 과정 중 오류 발생");
 			return "common/errorPage";
 		}
+	}
+	
+	// 플래너 나가기
+	@RequestMapping("outPlanner")
+	public String outPlanner(PlannerMember outPlanner, Model model, RedirectAttributes rdAttr) {
+		int memberNo = ((Member)model.getAttribute("loginMember")).getMemberNo();
+		outPlanner.setMemberNo(memberNo);
 		
-		return "redirect:myPlanner";
+		String msg = null;
+		
+		try {
+			int result = plannerServiceSDS.outPlanner(outPlanner);
+			
+			if(result > 0) msg = "플래너에서 나가기되었습니다.";
+			else msg = "플래너 나가기에 실패하였습니다.";
+			
+			rdAttr.addFlashAttribute("msg", msg);
+			
+			return "redirect:/planner/myPlanner";
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMsg", "플래너 나가기 과정 중 오류 발생");
+			return "common/errorPage";
+		}
+		
+		
 	}
 	
 }
