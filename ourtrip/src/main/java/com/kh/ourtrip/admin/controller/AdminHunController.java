@@ -22,7 +22,10 @@ import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.member.model.vo.ProfileImage;
 import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.Day;
+import com.kh.ourtrip.planner.model.vo.LargeArea;
+import com.kh.ourtrip.planner.model.vo.PlannerCard;
 import com.kh.ourtrip.planner.model.vo.PlannerInfo;
+import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @SessionAttributes({ "memberList", "msg" })
 @Controller
@@ -34,7 +37,6 @@ public class AdminHunController {
 
 	/**
 	 * 전체회원 조회용 Controller
-	 * 
 	 * @param model
 	 * @param currentPage
 	 * @return path
@@ -66,6 +68,13 @@ public class AdminHunController {
 
 	}
 
+	/** 회원 검색용 controller
+	 * @param model
+	 * @param searchKey
+	 * @param searchValue
+	 * @param currentPage
+	 * @return
+	 */
 	@RequestMapping("search")
 	public String memberList(Model model, @RequestParam(value = "searchKey", required = false) String searchKey,
 			@RequestParam(value = "searchValue", required = false) String searchValue,
@@ -101,6 +110,13 @@ public class AdminHunController {
 
 	}
 
+	/** 회원 상세조회용 controller
+	 * @param model
+	 * @param no
+	 * @param currentPage
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping("detail")
 	public String memberDetail(Model model, int no, Integer currentPage, HttpServletRequest request) {
 
@@ -109,7 +125,6 @@ public class AdminHunController {
 		try {
 			Member detailMem = adminHunService.detail(no);
 			ProfileImage pi = adminHunService.selectProfileImage(no);
-
 			List<Integer> plannerList = adminHunService.plannerList(no);
 
 			if (currentPage == null) {
@@ -117,20 +132,19 @@ public class AdminHunController {
 			}
 			PageInfo pInf = Pagination.getPageInfo(8, 10, currentPage, plannerList.size());
 
-			List<PlannerInfo> plannerInfo = new ArrayList<PlannerInfo>();
-			List<AreaName> plannerArea = new ArrayList<AreaName>();
+			List<PlannerCard> plannerInfo = new ArrayList<PlannerCard>();
 			List<AreaName> areaNames = new ArrayList<AreaName>();
+
 			if (!plannerList.isEmpty()) {
 				plannerInfo = adminHunService.plannerInfo(plannerList, pInf);
-				plannerArea = adminHunService.plannerArea(plannerList);
+				areaNames = adminHunService.plannerArea(plannerList);
 
-				for (PlannerInfo infList : plannerInfo) {
-					for (AreaName areaList : plannerArea) {
+				for (PlannerCard infList : plannerInfo) {
+					for (AreaName areaList : areaNames) {
 						if (infList.getPlannerNo() == areaList.getPlannerNo()) {
-							areaNames.add(areaList);
+							infList.setareaNames(areaNames);
 						}
 					}
-					infList.setAreaNames(areaNames);
 				}
 			}
 
@@ -154,6 +168,14 @@ public class AdminHunController {
 
 	}
 
+	/** 맴버 삭제용 controller
+	 * @param memberNo
+	 * @param email
+	 * @param delBecause
+	 * @param model
+	 * @param currentPage
+	 * @return
+	 */
 	@RequestMapping("memberDelete")
 	public String memberDelete(int memberNo, String email, String delBecause, Model model, Integer currentPage) {
 
@@ -170,25 +192,26 @@ public class AdminHunController {
 			}
 			PageInfo pInf = Pagination.getPageInfo(8, 10, currentPage, plannerList.size());
 
-			List<PlannerInfo> plannerInfo = new ArrayList<PlannerInfo>();
-			List<AreaName> plannerArea = new ArrayList<AreaName>();
+			List<PlannerCard> plannerInfo = new ArrayList<PlannerCard>();
 			List<AreaName> areaNames = new ArrayList<AreaName>();
+
 			if (!plannerList.isEmpty()) {
 				plannerInfo = adminHunService.plannerInfo(plannerList, pInf);
-				plannerArea = adminHunService.plannerArea(plannerList);
+				areaNames = adminHunService.plannerArea(plannerList);
 
-				for (PlannerInfo infList : plannerInfo) {
-					for (AreaName areaList : plannerArea) {
+				for (PlannerCard infList : plannerInfo) {
+					for (AreaName areaList : areaNames) {
 						if (infList.getPlannerNo() == areaList.getPlannerNo()) {
-							areaNames.add(areaList);
+							infList.setareaNames(areaNames);
 						}
 					}
-					infList.setAreaNames(areaNames);
 				}
 
 			}
+
 			if (result > 0) {
 				model.addAttribute("msg", "회원 삭제에 성공하셨습니다.");
+				model.addAttribute("pInfom" , pInf);
 				return "admin/memberDetail";
 			} else {
 				return "admin/memberDetail";
@@ -201,12 +224,22 @@ public class AdminHunController {
 
 	}
 
+	/** 플래너 리스트 조회용 controller
+	 * @param model
+	 * @param request
+	 * @param currentPage
+	 * @return
+	 */
 	@RequestMapping("plannerList")
 	public String plannerList(Model model, HttpServletRequest request, Integer currentPage) {
 		String beforUrl = request.getHeader("referer");
 
 		try {
 			int plannerCount = adminHunService.plannerCount();
+			List<LargeArea> largeNmList = adminHunService.selectLargeNmList();
+			List<SmallArea> smallNmList = adminHunService.selectsmallNmList();
+			model.addAttribute("largeNmList" , largeNmList);
+			model.addAttribute("smallNmList" , smallNmList);
 
 			if (currentPage == null) {
 				currentPage = 1;
@@ -215,26 +248,25 @@ public class AdminHunController {
 
 			List<PlannerInfo> totalList = adminHunService.plannerTotal(pInf);
 			List<AreaName> areaList = adminHunService.areaList();
-			List<AreaName> areaNames = new ArrayList<AreaName>();
-			List<Day> dayList = adminHunService.dayList();
-			Date countDay = null;
+
 			for (PlannerInfo infList : totalList) {
 				for (AreaName infoarea : areaList) {
 					if (infList.getPlannerNo() == infoarea.getPlannerNo()) {
-						areaNames.add(infoarea);
+						infList.setAreaNames(areaList);
 					}
 				}
-				infList.setAreaNames(areaNames);
 			}
 
+			List<Day> dayList = adminHunService.dayList();
+			Date countDay = null;
 			for (PlannerInfo infList : totalList) {
 				for (Day infodays : dayList) {
 					if (infList.getPlannerNo() == infodays.getPlannerNo()) {
 						countDay = new Date(
 								infList.getPlannerStartDT().getTime() + infodays.getTripDate() * (24 * 60 * 60 * 1000));
+						infList.setPlannerEndDate(countDay);
 					}
 				}
-				infList.setPlannerEndDate(countDay);
 			}
 
 			model.addAttribute("plannerList", totalList);
@@ -249,6 +281,20 @@ public class AdminHunController {
 
 	}
 
+	/** 플래너 검색용 controller
+	 * @param model
+	 * @param request
+	 * @param currentPage
+	 * @param searchKey
+	 * @param searchValue
+	 * @param searchGroup
+	 * @param searchArea
+	 * @param searchLocal
+	 * @param deleted
+	 * @param startTrip
+	 * @param endTrip
+	 * @return
+	 */
 	@RequestMapping("searchPlanner")
 	public String searchadminPlanner(Model model, HttpServletRequest request, Integer currentPage,
 			@RequestParam(value = "searchKey", required = false) String searchKey,
@@ -272,24 +318,18 @@ public class AdminHunController {
 		keyword.put("endTrip", endTrip);
 
 		try {
-			List<Integer> searchResultcount = adminHunService.resultCount(keyword);
-			System.out.println("searchResultcount 검색한 리스트 수 = " + searchResultcount);
+			
 			if (currentPage == null) {
 				currentPage = 1;
 			}
 			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, searchResultcount.size());
 
-			List<PlannerInfo> searchResult = adminHunService.searchResult(pInf, keyword);
-			System.out.println("searchResult 검색한 결과 플래너 = " + searchResult);
-			List<AreaName> areaList = adminHunService.resultArea(searchResultcount);
-			System.out.println("areaList 플래너별 지역 조회 = " + areaList);
-			List<Day> dayList = adminHunService.resultDay(searchResultcount);
-			System.out.println("dayList 플래너별 날짜 조회" + dayList);
-			Date countDay = null;
-			List<AreaName> areaNames = new ArrayList<AreaName>();
-			for (PlannerInfo infList : searchResult) {
+			
+			
+			
+			for (Integer infList : searchResult) {
 				for (AreaName infoarea : areaList) {
-					if (infList.getPlannerNo() == infoarea.getPlannerNo()) {
+					if (infList.get == infoarea.getPlannerNo()) {
 						areaNames.add(infoarea);
 					}
 				}
@@ -327,12 +367,15 @@ public class AdminHunController {
 			List<AreaName> plannerArea = adminHunService.areaDetail(no);
 
 			Date addDate = new Date(
-					plannerInfo.getPlannerStartDT().getTime() + plannerInfo.getTripDate() * (24 * 60 * 60 * 1000));
+			plannerInfo.getPlannerStartDT().getTime() + plannerInfo.getTripDate() * (24 * 60 * 60 * 1000));
 
 			plannerInfo.setPlannerEndDate(addDate);
 
 			model.addAttribute("plannerinfo", plannerInfo);
+			
+			System.out.println("plannerInfo" + plannerInfo);
 			model.addAttribute("plannerArea", plannerArea);
+			System.out.println("plannerArea" + plannerArea);
 			return "admin/adminplannerDetail";
 
 		} catch (Exception e) {

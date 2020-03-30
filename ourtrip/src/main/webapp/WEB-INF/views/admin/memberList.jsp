@@ -97,7 +97,7 @@
 							<!-- 맨 처음으로(<<) --> <!--c: url 태그에 var속성이 존재하지 않으면 변수처럼 사용되는 것이 아니라 작성된 자리에 바로 url형식으로 표기된다.  -->
 							<a class="page-link text-success"
 							href=" 
-		                    	<c:url value="list"> 
+		                    	<c:url value="List"> 
 		                    		<c:if test="${!empty param.searchKey }">
 						        		<c:param name="searchKey" value="${param.searchKey}"/>
 						        	</c:if>
@@ -114,7 +114,7 @@
 						<li>
 							<!-- 이전으로(<) --> <a class="page-link text-success"
 							href=" 
-		                    	<c:url value="list">
+		                    	<c:url value="List">
 		                    		<c:if test="${!empty param.searchKey }">
 						        		<c:param name="searchKey" value="${param.searchKey}"/>
 						        	</c:if>
@@ -140,7 +140,7 @@
 						<c:if test="${p != pInfom.currentPage}">
 							<li><a class="page-link text-success"
 								href=" 
-			                    	<c:url value="list">
+			                    	<c:url value="List">
 			                    		<c:if test="${!empty param.searchKey }">
 							        		<c:param name="searchKey" value="${param.searchKey}"/>
 							        	</c:if>
@@ -160,7 +160,7 @@
 					<c:if test="${pInfom.currentPage < pInfom.maxPage }">
 						<li><a class="page-link text-success"
 							href=" 
-		                    	<c:url value="list">
+		                    	<c:url value="List">
 		                    		<c:if test="${!empty param.searchKey }">
 						        		<c:param name="searchKey" value="${param.searchKey}"/>
 						        	</c:if>
@@ -176,7 +176,7 @@
 						<!-- 맨 끝으로(>>) -->
 						<li><a class="page-link text-success"
 							href=" 
-		                    	<c:url value="list">
+		                    	<c:url value="List">
 		                    		<c:if test="${!empty param.searchKey }">
 						        		<c:param name="searchKey" value="${param.searchKey}"/>
 						        	</c:if>

@@ -1,12 +1,16 @@
 package com.kh.ourtrip.planner.model.dao;
 
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.ourtrip.member.model.vo.Member;
+import com.kh.ourtrip.planner.model.vo.LargeArea;
 import com.kh.ourtrip.planner.model.vo.Planner;
 import com.kh.ourtrip.planner.model.vo.PlannerMember;
+import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Repository("PlannerDAO")
 public class PlannerDAO {
@@ -49,6 +53,13 @@ public class PlannerDAO {
 	 */
 	public int createpMember(PlannerMember pMember)throws Exception{
 		return sqlSessionTemplate.insert("plannerMapper.createpMember",pMember);
+	}
+	
+	public List<LargeArea> selectLargeNmList()throws Exception {
+		return sqlSessionTemplate.selectList("plannerMapper.LargeNmList");
+	}
+	public List<SmallArea> selectsmallNmList()throws Exception {
+		return sqlSessionTemplate.selectList("plannerMapper.SmallNmList");
 	}
 
 

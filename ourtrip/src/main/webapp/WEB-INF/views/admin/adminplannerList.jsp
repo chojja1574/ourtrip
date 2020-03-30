@@ -108,16 +108,18 @@
 						<div class="row">
 							<label class="col-2" style="margin-top: 7px;">지역</label>
 							<div class="col-4">
-								<select name="searchArea" id="wide-area" class="custom-select">
-									<option value="0" selected>전체</option>
-									<option value="01">서울특별시</option>
-									<option value="02">경기도</option>
-									<option value="03">강원도</option>
+								<select name="largeArea" id="wide-area"	class="custom-select">
+									<c:forEach var="largeArea" items="${largeNmList}" varStatus="vs">
+										<option value="${largeArea.largeAreaCode}">${largeArea.largeAreaName}</option>
+									</c:forEach>
 								</select>
+								
 							</div>
 							<div class="col-4">
-								<select name="searchLocal" id="local-area" class="custom-select">
-									<option value="0" selected>전체</option>
+								
+								 <select name="smallArea" id="local-area" class="custom-select">
+									<option value="전체" selected>전체</option>
+								</select>
 								</select>
 							</div>
 						</div>
@@ -163,7 +165,10 @@
 						<tr>
 							<td>${planner.plannerNo}</td>
 							<td>${planner.plannerTitle}</td>
-							<td>${planner.plannerStartDT}~${planner.plannerEndDate}</td>
+							<td>${planner.plannerStartDT}~
+							<c:if test="${planner.plannerEndDate == planner.plannerStartDT}">${planner.plannerStartDT}</c:if>
+							<c:if test="${planner.plannerEndDate != planner.plannerStartDT}">${planner.plannerEndDate}</c:if>
+							</td>
 
 							<td><c:if test="${planner.areaNames.size()>1 }">
 		                                	${planner.areaNames[0].largeAreaName}
@@ -190,7 +195,7 @@
 							<!-- 맨 처음으로(<<) --> <!--c: url 태그에 var속성이 존재하지 않으면 변수처럼 사용되는 것이 아니라 작성된 자리에 바로 url형식으로 표기된다.  -->
 							<a class="page-link text-success"
 							href=" 
-		                    	<c:url value="list"> 
+		                    	<c:url value="plannerList"> 
 		                    		<c:if test="${!empty param.searchKey }">
 						        		<c:param name="searchKey" value="${param.searchKey}"/>
 						        	</c:if>
@@ -207,7 +212,7 @@
 						<li>
 							<!-- 이전으로(<) --> <a class="page-link text-success"
 							href=" 
-		                    	<c:url value="list">
+		                    	<c:url value="plannerList">
 		                    		<c:if test="${!empty param.searchKey }">
 						        		<c:param name="searchKey" value="${param.searchKey}"/>
 						        	</c:if>
@@ -234,7 +239,7 @@
 						<c:if test="${p != pInfom.currentPage}">
 							<li><a class="page-link text-success"
 								href=" 
-			                    	<c:url value="list">
+			                    	<c:url value="plannerList">
 			                    		<c:if test="${!empty param.searchKey }">
 							        		<c:param name="searchKey" value="${param.searchKey}"/>
 							        	</c:if>
@@ -254,7 +259,7 @@
 					<c:if test="${pInfom.currentPage < pInfom.maxPage }">
 						<li><a class="page-link text-success"
 							href=" 
-		                    	<c:url value="list">
+		                    	<c:url value="plannerList">
 		                    		<c:if test="${!empty param.searchKey }">
 						        		<c:param name="searchKey" value="${param.searchKey}"/>
 						        	</c:if>
@@ -270,7 +275,7 @@
 						<!-- 맨 끝으로(>>) -->
 						<li><a class="page-link text-success"
 							href=" 
-		                    	<c:url value="list">
+		                    	<c:url value="plannerList">
 		                    		<c:if test="${!empty param.searchKey }">
 						        		<c:param name="searchKey" value="${param.searchKey}"/>
 						        	</c:if>
@@ -341,6 +346,27 @@
 					});
 		});
 		
+		
+		 $(function () {
+	            $("#wide-area").on("change", function () {
+	                var wideVal = Number($(this).val());
+	                console.log(wideVal);
+	                var html = "";
+	                switch(wideVal){
+					<c:forEach var="largeArea" items="${largeNmList}" varStatus="vs">
+					case ${largeArea.largeAreaCode} : 
+						<c:forEach var="smallArea" items="${smallNmList}" varStatus="vs">
+							<c:if test="${smallArea.largeAreaCode eq largeArea.largeAreaCode}">
+			        			html += "<option value='${smallArea.smallAreaCode}'>${smallArea.smallAreaName}</option>";
+			        		</c:if>
+			        	</c:forEach>break;
+					</c:forEach>
+	                }
+
+	                $("#local-area").html(html);
+	            });
+	        });
+			
 		
 	</script>
 

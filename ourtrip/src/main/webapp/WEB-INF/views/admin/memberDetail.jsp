@@ -187,8 +187,8 @@ body {
 					<c:forEach var="plannerInfo" items="${plannerInfo}" varStatus="vs1">
 						<div class="planner">
 							<div class="card">
-								<img class="card-img-top" src="images/ourtrip_logo.png"
-									alt="Card image">
+								<img class="card-img-top" src="${contextPath}/resources/areaImages/${plannerInfo.areaNames[0].largeAreaCode}.jpg"
+                           alt="Card image">
 								<div class="card-body">
 									<div id="plannerNo" style="display: none;">${plannerInfo.plannerNo}</div>
 									<h5 class="card-title">${plannerInfo.plannerTitle}</h5>

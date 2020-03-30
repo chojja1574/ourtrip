@@ -3,7 +3,6 @@ package com.kh.ourtrip.admin.model.dao;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,10 @@ import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.member.model.vo.ProfileImage;
 import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.Day;
-import com.kh.ourtrip.planner.model.vo.Planner;
+import com.kh.ourtrip.planner.model.vo.LargeArea;
+import com.kh.ourtrip.planner.model.vo.PlannerCard;
 import com.kh.ourtrip.planner.model.vo.PlannerInfo;
+import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Repository
 public class AdminHunDAO {
@@ -93,7 +94,7 @@ public class AdminHunDAO {
 	 * @return list
 	 * @throws Exception
 	 */
-	public List<PlannerInfo> plannerInfo(List<Integer> plannerList, PageInfo pInf) throws Exception{
+	public List<PlannerCard> plannerInfo(List<Integer> plannerList, PageInfo pInf) throws Exception{
 		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
 		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
 		
@@ -143,7 +144,7 @@ public class AdminHunDAO {
 	 * @return List<AreaName>
 	 * @throws Exception
 	 */
-	public List<AreaName> areaList()throws Exception {
+	public List<AreaName> areaList(Map<String, Object> keyword)throws Exception {
 		return sqlSession.selectList("adminhunMapper.areaList");
 	}
 
@@ -167,7 +168,7 @@ public class AdminHunDAO {
 		return sqlSession.selectList("adminhunMapper.resultCount" , keyword);
 	}
 
-	public List<PlannerInfo> searchResult(PageInfo pInf, Map<String, Object> keyword) throws Exception{
+	public List<Integer> searchResult(PageInfo pInf, Map<String, Object> keyword) throws Exception{
 		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
 		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
 		return sqlSession.selectList("adminhunMapper.searchResult",keyword,rowBounds);
@@ -203,6 +204,14 @@ public class AdminHunDAO {
 
 	public int memberDelete(int memberNo) {
 		return sqlSession.update("adminhunMapper.memberDelete" , memberNo);
+	}
+
+	public List<LargeArea> selectLargeNmList() {
+		return sqlSession.selectList("adminhunMapper.LargeNmList");
+	}
+
+	public List<SmallArea> selectsmallNmList() {
+		return sqlSession.selectList("adminhunMapper.SmallNmList");
 	}
 
 

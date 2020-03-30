@@ -9,8 +9,11 @@ import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.member.model.vo.ProfileImage;
 import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.Day;
+import com.kh.ourtrip.planner.model.vo.LargeArea;
 import com.kh.ourtrip.planner.model.vo.Planner;
+import com.kh.ourtrip.planner.model.vo.PlannerCard;
 import com.kh.ourtrip.planner.model.vo.PlannerInfo;
+import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 public interface AdminHunService {
 	
@@ -66,7 +69,7 @@ public interface AdminHunService {
 	 * @return plannerInfo
 	 * @throws Exception
 	 */
-	public abstract List<PlannerInfo> plannerInfo(List<Integer> plannerList, PageInfo pInf)throws Exception;
+	public abstract List<PlannerCard> plannerInfo(List<Integer> plannerList, PageInfo pInf)throws Exception;
 
 	/** 지역조회용 service
 	 * @param plannerList
@@ -108,36 +111,7 @@ public interface AdminHunService {
 	 */
 	public abstract List<Day> dayList()throws Exception;
 
-	
-	/** 검색후 플래너 count용 service
-	 * @param keyword
-	 * @return searchResultcount
-	 * @throws Exception
-	 */
-	public abstract List<Integer> resultCount(Map<String, Object> keyword)throws Exception;
 
-	/** 검색결과 조회 service
-	 * @param pInf
-	 * @param keyword
-	 * @return List searchResult
-	 * @throws Exception
-	 */
-	public abstract List<PlannerInfo> searchResult(PageInfo pInf, Map<String, Object> keyword)throws Exception;
-
-	/** planner별 검색 지역명 조회용 service
-	 * @param searchResultcount
-	 * @param keyword
-	 * @return AreaList
-	 * @throws Exception
-	 */
-	public abstract List<AreaName> resultArea(List<Integer> searchResultcount) throws Exception;
-
-	/** planner별 검색 날짜 조회용 service
-	 * @param searchResultcount
-	 * @return List<Day> dayList
-	 * @throws Exception
-	 */
-	public abstract List<Day> resultDay(List<Integer> searchResultcount)throws Exception;
 
 	/** 플래너 상세보기 용 service
 	 * @param no
@@ -191,6 +165,25 @@ public interface AdminHunService {
 	 * @throws Exception
 	 */
 	public abstract int memberDelete(int memberNo, String email, String delBecause)throws Exception;
+
+	/** 대지역명 조회용 service
+	 * @return list
+	 * @throws Exception
+	 */
+	public abstract List<LargeArea> selectLargeNmList()throws Exception;
+
+	/** 소지역명 조회용 service
+	 * @return list
+	 * @throws Exception
+	 */
+	public abstract List<SmallArea> selectsmallNmList()throws Exception;
+
+	/** 검색결과 최종 출력용
+	 * @param keyword
+	 * @return result
+	 * @throws Exception
+	 */
+	public abstract List<PlannerInfo> result(Map<String, Object> keyword)throws Exception;
 
 	
 	
