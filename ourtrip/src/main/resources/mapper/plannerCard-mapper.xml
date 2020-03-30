@@ -5,6 +5,7 @@
 		<id property="plannerNo" column="PLANNER_NO"/>
 		<result property="plannerTitle" column="PLANNER_TITLE"/>
 		<result property="plannerStartDT" column="PLANNER_START_DT"/>
+		<result property="tripDate" column="TRIP_DATE"/>
 		<result property="groupName" column="GROUP_NAME"/>
 		<result property="plannerCount" column="PLANNER_COUNT"/>
 		<result property="plannerUrl" column="PLANNER_URL"/>
@@ -167,4 +168,14 @@
 		PLANNER_DELETE_YN = 'Y'
 		WHERE PLANNER_NO= #{plannerNo}
 	</update>
+	
+	<!-- planner member table에서 관련 회원들도 전부 삭제 -->
+	
+	<!-- 플래너 나가기 -->
+	<delete id="outPlanner" parameterType="PlannerMember">
+		DELETE FROM PLANNER_MEMBER
+		WHERE PLANNER_NO= #{plannerNo}
+		AND MEMBER_NO= #{memberNo}
+		AND PLANNER_PERMISSION= #{plannerPermission}
+	</delete>
 </mapper>
