@@ -165,4 +165,17 @@
 	<update id="updateStartDate">
 		UPDATE PLANNER SET PLANNER_START_DT = #{plannerStartDT} WHERE PLANNER_NO = #{plannerNo}
 	</update>
+	
+	<!-- 플래너 다음번호 조회 -->
+	<select id="selectNextNo" resultType="_int">
+		SELECT SEQ_PLANNER_PNO.NEXTVAL FROM DUAL
+	</select>
+	
+	<!-- 플래너 생성 -->
+	<insert id="createPlanner" parameterType="Planner">
+		INSERT INTO PLANNER VALUES(
+			#{plannerNo}, #{plannerTitle}, #{plannerPwd},#{plannerCost},DEFAULT,DEFAULT,
+			#{plannerStartDT},#{plannerPublicYN},DEFAULT,DEFAULT,0,#{plannerUrl},#{groupCode}
+		)
+	</insert>
 </mapper>

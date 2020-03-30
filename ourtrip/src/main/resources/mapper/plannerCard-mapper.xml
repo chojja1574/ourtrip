@@ -37,6 +37,84 @@
 		<result property="plannerPermission" column="PLANNER_PERMISSION"/>
 	</resultMap>
 	
+	<resultMap type="PlannerView" id="plannerViewResultSet">
+		<id property="scheduleNo" column="SCHEDULE_NO"/>
+		<result property="plannerNo" column="PLANNER_NO"/>
+		<result property="plannerTitle" column="PLANNER_TITLE"/>
+		<result property="plannerPwd" column="PLANNER_PWD"/>
+		<result property="plannerCost" column="PLANNER_COST"/>
+		<result property="plannerCreateDT" column="PLANNER_CREATE_DT"/>
+		<result property="plannerModifyDT" column="PLANNER_MODIFT_DT"/>
+		<result property="plannerStartDT" column="PLANNER_START_DT"/>
+		<result property="plannerPublicYN" column="PLANNER_PUBLIC_YN"/>
+		<result property="plannerDeleteYN" column="PLANNER_DELETE_YN"/>
+		<result property="plannerExpiry" column="PLANNER_EXPIRY"/>
+		<result property="plannerCount" column="PLANNER_COUNT"/>
+		<result property="plannerUrl" column="PLANNER_URL"/>
+		<result property="groupCode" column="GROUP_CODE"/>
+		<result property="dateNo" column="DATE_NO"/>
+		<result property="tripDate" column="TRIP_DATE"/>
+		<result property="scheduleTitle" column="SCHEDULE_TITLE"/>
+		<result property="scheduleCost" column="SCHEDULE_COST"/>
+		<result property="scheduleTime" column="SCHEDULE_TIME"/>
+		<result property="scheduleMemo" column="SCHEDULE_MEMO"/>
+		<result property="scheduleLocationNM" column="SCHEDULE_LOCATION_NM"/>
+		<result property="scheduleLat" column="SCHEDULE_LAT"/>
+		<result property="scheduleLng" column="SCHEDULE_LNG"/>
+		<result property="smallAreaCode" column="LARGE_AREA_CODE"/>
+		<result property="largeAreaCode" column="SMALL_AREA_CODE"/>
+	</resultMap>
+	
+	<resultMap type="Planner" id="planner1ResultSet">
+		<id property="plannerNo" column="PLANNER_NO"/>
+		<result property="plannerTitle" column="PLANNER_TITLE"/>
+		<result property="plannerPwd" column="PLANNER_PWD"/>
+		<result property="plannerCost" column="PLANNER_COST"/>
+		<result property="plannerCreateDT" column="PLANNER_CREATE_DT"/>
+		<result property="plannerModifyDT" column="PLANNER_MODIFT_DT"/>
+		<result property="plannerStartDT" column="PLANNER_START_DT"/>
+		<result property="plannerPublicYN" column="PLANNER_PUBLIC_YN"/>
+		<result property="plannerDeleteYN" column="PLANNER_DELETE_YN"/>
+		<result property="plannerExpiry" column="PLANNER_EXPIRY"/>
+		<result property="plannerCount" column="PLANNER_COUNT"/>
+		<result property="plannerUrl" column="PLANNER_URL"/>
+		<result property="groupCode" column="GROUP_CODE"/>
+	</resultMap>
+	
+	<resultMap type="Day" id="dayResultSet">
+		<id property="dateNo" column="DATE_NO"/>
+		<result property="tripDate" column="TRIP_DATE"/>
+		<result property="plannerNo" column="PLANNER_NO"/>
+	</resultMap>
+	
+	<resultMap type="Schedule" id="scheduleResultSet">
+		<id property="scheduleNo" column="SCHEDULE_NO"/>
+		<result property="scheduleTitle" column="SCHEDULE_TITLE"/>
+		<result property="scheduleCost" column="SCHEDULE_COST"/>
+		<result property="scheduleTime" column="SCHEDULE_TIME"/>
+		<result property="scheduleMemo" column="SCHEDULE_MEMO"/>
+		<result property="scheduleLocationNM" column="SCHEDULE_LOCATION_NM"/>
+		<result property="scheduleLat" column="SCHEDULE_LAT"/>
+		<result property="scheduleLng" column="SCHEDULE_LNG"/>
+	</resultMap>
+	
+	<resultMap type="ChattingLogView" id="ChattingLogViewResultSet">
+		<id property="chatNo" column="CHAT_NO"/>
+		<result property="chatContent" column="CHAT_CONTENT"/>
+		<result property="chatTime" column="CHAT_TIME"/>
+		<result property="plannerNo" column="PLANNER_NO"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="memberNickName" column="MEMBER_NICK_NAME"/>
+		<result property="imagePath" column="IMAGE_PATH"/>
+	</resultMap>
+
+	<resultMap type="PlannerMemberView" id="PlannerMemberViewResultSet">
+		<id property="memberNo" column="MEMBER_NO"/>
+		<id property="plannerNo" column="PLANNER_NO"/>
+		<result property="plannerPermission" column="PLANNER_PERMISSION"/>
+		<result property="memberNickName" column="MEMBER_NICK_NAME"/>
+	</resultMap>
+	
 	
 	
 	<!-- 추천플래너 검색 -->
@@ -178,4 +256,117 @@
 		AND MEMBER_NO= #{memberNo}
 		AND PLANNER_PERMISSION= #{plannerPermission}
 	</delete>
+	
+	
+	
+	<select id="selectPlannerView" parameterType="_int" resultMap="plannerViewResultSet">
+		SELECT * FROM V_PLANNER WHERE PLANNER_NO = #{no}
+	</select>
+	
+	<select id="selectDateNo" resultType="_int">
+		SELECT SEQ_PLANNER_DATE_DNO.NEXTVAL FROM DUAL
+	</select>
+	
+	<select id="selectScheduleNo" resultType="_int">
+		SELECT SEQ_SCHEDULE_SNO.NEXTVAL FROM DUAL
+	</select>
+	
+	<insert id="insertDate" parameterType="Day">
+		INSERT INTO PLANNER_DATE VALUES(
+			#{dateNo},-1,0,#{plannerNo}
+		)
+	</insert>
+	
+	<update id="updateTripDate" parameterType="java.util.List">
+		<foreach item="day" index="i" collection="list" separator=";" open="DECLARE BEGIN" close="; END;">
+			UPDATE PLANNER_DATE SET TRIP_DATE = #{day.tripDate} WHERE DATE_NO = #{day.dateNo}
+		</foreach>
+	</update>
+	
+	<insert id="insertDefaultSchedule" parameterType="Schedule">
+		INSERT INTO SCHEDULE VALUES(
+			#{scheduleNo},'제목 없음',0,'메모 없음','','이름 없음',0,0,#{dateNo}
+		)
+	</insert>
+	
+	<delete id="deleteDate" parameterType="_int">
+		DELETE FROM PLANNER_DATE WHERE DATE_NO = #{dateNo}
+	</delete>
+	
+	<update id="updateSchedule" parameterType="Schedule">
+		UPDATE SCHEDULE SET SCHEDULE_TITLE = #{scheduleTitle}, SCHEDULE_COST = #{scheduleCost}, SCHEDULE_MEMO = #{scheduleMemo},
+		SCHEDULE_TIME = #{scheduleTime}, SCHEDULE_LOCATION_NM = #{scheduleLocationNM}, SCHEDULE_LAT = #{scheduleLat}, SCHEDULE_LNG = #{scheduleLng}
+		WHERE SCHEDULE_NO = #{scheduleNo}
+	</update>
+	
+	<insert id="insertSchedule" parameterType="Schedule">
+		INSERT INTO SCHEDULE VALUES(#{scheduleNo},#{scheduleTitle},#{scheduleCost},#{scheduleMemo},#{scheduleTime},#{scheduleLocationNM},#{scheduleLat},#{scheduleLng},#{dateNo})
+	</insert>
+	
+	<delete id="deleteSchedule">
+		DELETE FROM SCHEDULE WHERE SCHEDULE_NO = #{sno}
+	</delete>
+	
+	<insert id="insertChattingLog">
+		INSERT INTO CHATTING_LOG VALUES(SEQ_CHAT_LOG_CNO.NEXTVAL,#{chatContent},#{chatTime},#{plannerNo},#{memberNo})
+	</insert>
+	
+	<select id="selectChatList" parameterType="_int" resultMap="ChattingLogViewResultSet">
+		SELECT CHAT_CONTENT, CHAT_TIME, MEMBER_NO, MEMBER_NICK_NAME, IMAGE_PATH FROM V_CHATTING_LOG WHERE PLANNER_NO = #{no} ORDER BY CHAT_NO
+	</select>
+	
+	<select id="selectPlanerMemeberListUsePlannerNo" parameterType="_int" resultMap="PlannerMemberViewResultSet">
+		SELECT * FROM V_PLANNER_MEMBER WHERE PLANNER_NO = #{plannerNo}
+	</select>
+	
+	<select id="selectPlanerMemeberExist" parameterType="PlannerMemberView" resultType="PlannerMemberView">
+		SELECT COUNT(*) FROM PLANNER_MEMBER WHERE PLANNER_NO = #{plannerNo} AND MEMBER_NO = #{memberNo}
+	</select>
+	
+	<insert id="insertPlannerMember" parameterType="PlannerMember">
+		INSERT INTO PLANNER_MEMBER VALUES(#{plannerNo},#{memberNo},#{plannerPermission})
+	</insert>
+	
+	<update id="updatePermission" parameterType="PlannerMember">
+		UPDATE PLANNER_MEMBER SET PLANNER_PERMISSION = #{plannerPermission} WHERE PLANNER_NO = #{plannerNo} AND MEMBER_NO = #{memberNo}
+	</update>
+	
+	<update id="updateSumCost" parameterType="Planner">
+		UPDATE PLANNER SET PLANNER_COST = #{plannerCost} WHERE PLANNER_NO = #{plannerNo}
+	</update>
+	
+	<update id="updateStartDate">
+		UPDATE PLANNER SET PLANNER_START_DT = #{plannerStartDT} WHERE PLANNER_NO = #{plannerNo}
+	</update>
+	
+	<!-- 플래너 다음번호 조회 -->
+	<select id="selectNextNo" resultType="_int">
+		SELECT SEQ_PLANNER_PNO.NEXTVAL FROM DUAL
+	</select>
+	
+	<!-- 플래너 생성 -->
+	<insert id="createPlanner" parameterType="Planner">
+		INSERT INTO PLANNER VALUES(
+			#{plannerNo}, #{plannerTitle}, #{plannerPwd},#{plannerCost},DEFAULT,DEFAULT,
+			#{plannerStartDT},#{plannerPublicYN},DEFAULT,DEFAULT,0,#{plannerUrl},#{groupCode}
+		)
+	</insert>
+	
+	<insert id="copyDate" parameterType="Day">
+		INSERT INTO PLANNER_DATE VALUES(
+			#{dateNo},#{tripDate},0,#{plannerNo}
+		)
+	</insert>
+	
+	<!-- 플래너의 지역이름 조회 -->
+	<select id="selectAreaNamePlanner" parameterType="_int" resultMap="AreaNameResultSet">
+		SELECT * FROM V_AREA_NAME
+		WHERE PLANNER_NO= #{no}
+	</select>
+	
+	<!-- 지역이름 추가 -->
+	<insert id="insertAreaName" parameterType="AreaName">
+		INSERT INTO PLANNER_LOCATION
+		VALUES(#{smallAreaCode}, #{largeAreaCode}, #{plannerNo})
+	</insert>
 </mapper>
