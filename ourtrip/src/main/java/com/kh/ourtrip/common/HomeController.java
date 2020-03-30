@@ -23,14 +23,11 @@ public class HomeController {
 			
 			// 추천플래너 카드 조회
 			List<PlannerCard> recommendPCList = plannerServiceSDS.selectRecommendPCList();
-			System.out.println(recommendPCList);
 			if(!recommendPCList.isEmpty()) {
 				model.addAttribute("recommendPCList", recommendPCList);
 			} else {
 				model.addAttribute("msg", "조회내용이 없습니다");
 			}
-			System.out.println("홈 이동 정상 동작");
-			System.out.println("추천리스트 조회 : " + recommendPCList);
 			return "index";
 			
 		} catch (Exception e) {
