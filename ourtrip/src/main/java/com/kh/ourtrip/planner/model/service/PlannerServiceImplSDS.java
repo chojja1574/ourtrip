@@ -91,7 +91,7 @@ public class PlannerServiceImplSDS implements PlannerServiceSDS{
 		getListCount = pListNo.size();
 		
 		// 지역 검색 조건이 있을 경우
-		if((Integer)map.get("largeArea")!=0) {
+		if((Integer)map.get("largeArea")!=0 && !pListNo.isEmpty()) {
 			map.put("pListNo", pListNo);
 			System.out.println("map확인 : " + map);
 			// 검색된 플래너번호에 맞는 지역명 가져오기
