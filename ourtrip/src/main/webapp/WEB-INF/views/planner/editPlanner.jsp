@@ -84,7 +84,7 @@
 		id="modalBtn" class="hide">Open Modal</button>
 
 	<!-- Modal -->
-	<div class="modal noselect fade" id="myModal" role="dialog">
+	<div class="modal noselect fade plannerFont" id="myModal" role="dialog">
 		<div class="modal-dialog">
 			<!-- Modal content-->
 			<div class="modal-content">
@@ -94,9 +94,9 @@
 					<h4 class="modal-title"></h4>
 				</div>
 				<div class="modal-body">
-					<p>참여하려면 Join 버튼을 누르세요</p>
-					<p>비밀번호를 입력하세요</p>
-					<input type="password" class="form-control" name="joinPwd" id=>
+					<p class="pwdIsEmpty">참여하려면 Join 버튼을 누르세요</p>
+					<p class="pwdIsnotEmpty">비밀번호를 입력하세요</p>
+					<input class="pwdIsnotEmpty" type="password" class="form-control" name="joinPwd" id="inputPwd" style="border:1px solid lightgray; width:100%">
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="ModalBtnCss2" data-dismiss="modal"
@@ -108,8 +108,33 @@
 		</div>
 	</div>
 
-	<div class="container-fluid pt-5" style="border-top: 1px solid">
+	<div class="container-fluid pt-5 plannerFont" style="border-top: 1px solid">
 		<form action="#">
+			<div class="row noselect mb-3" id="masterOnly" style="display:none;">
+				<div class="col-md-1"></div>
+				<div class="col-md-10 pr-0">
+					<div class="main-back plannerHeader row ml-0 mr-0">
+						<div class="col-md-2">
+							<button type="button" id="updateTitle" class="plannerHeaderBtn btnColor1">제목 수정</button>
+						</div>
+						<div class="col-md-2">
+							<button type="button" id="updatePassword" class="plannerHeaderBtn btnColor1">비밀번호 수정</button>
+						</div>
+						<div class="col-md-2">
+							<button type="button" id="updateLocation" class="plannerHeaderBtn btnColor1">지역목록 수정</button>
+						</div>
+						<div class="col-md-2">
+							<button type="button" id="updateGroup" class="plannerHeaderBtn btnColor1">그룹 카테고리 수정</button>
+						</div>
+						<div class="col-md-2">
+							<button type="button" id="updatePublic" class="plannerHeaderBtn btnColor1">공개 / 비공개 설정</button>
+						</div>
+						<div class="col-md-2">
+							<button type="button" id="clearUserList" class="plannerHeaderBtn btnColor1">접속자 목록 초기화</button>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class="row noselect">
 				<div class="col-md-1"></div>
 				<div class="col-md-4">
@@ -353,22 +378,44 @@ $(function() {
 	var plannerJson = JSON.parse(plannerInfo);
 	var chatListJson = JSON.parse(chatList);
 	var profilePath = '${profilePath}';
-
+	planner.pwd = plannerJson.plannerPwd;
+	console.log("pwd : " + planner.pwd + ", " + plannerJson.plannerPwd);
+	if(planner.pwd == ''){
+		$('.pwdIsnotEmpty').each(function(i, item){
+			console.log(1);
+			$(item).css('display','none');
+		})
+	}else{
+		$('.pwdIsEmpty').each(function(i, item){
+			console.log(2);
+			$(item).css('display','none');
+		})
+	}
 	
 	$('#url').val(window.location.href);
 	$('#startrip').val(plannerJson.plannerStartDT);
 	$("#join").click(function(){
-		initChatting(chatListJson);
-		initPlanner(plannerJson);
-		initJoinMember(joinUserJson);
-		sock.send(JSON.stringify({pno:planner.no, type: 'JOIN', memberNo: memberNo, memberNickName: memberNickName}));
-		for(var i in joinMember){
-			if(joinMember[i].memberNo == memberNo){
-				permission = joinMember[i].plannerPermission;
+		var inputPwd = $('#inputPwd').val();
+		console.log(inputPwd + ", " + planner.pwd);
+		if(planner.pwd == inputPwd){
+			initChatting(chatListJson);
+			initPlanner(plannerJson);
+			initJoinMember(joinUserJson);
+			sock.send(JSON.stringify({pno:planner.no, type: 'JOIN', memberNo: memberNo, memberNickName: memberNickName}));
+			for(var i in joinMember){
+				if(joinMember[i].memberNo == memberNo){
+					permission = joinMember[i].plannerPermission;
+				}
 			}
+			if(permission == 3){
+				$('#masterOnly').css('display','flex');
+			}
+		}else{
+			alert('비밀번호가 틀렸습니다');
 		}
 	})
-	
+	console.log(plannerJson.plannerStartDT);
+	$('#startrip').val(plannerJson.plannerStartDT);
     // 페이지 입장 시 참여버튼 모달 출력
     $("#modalBtn").click();
     
@@ -423,12 +470,9 @@ function initPlanner(pj){
 			getScheduleAddr(scheduleLatLng,schedule.locationNM,schedule.no).then(function(args){
 				for(var i in scheduleMarkers){
 					for(var j in scheduleMarkers[i].scheduleMarker){
-						console.log(scheduleMarkers[i].scheduleMarker[j].sno + ' =sno= ' +  args[0]);
 						if(scheduleMarkers[i].scheduleMarker[j].sno == args[0]){
 							scheduleMarkers[i].scheduleMarker[j].infoWindow = args[1];
 							loadingAddr += 1;
-							console.log()
-							console.log(loadingAddr + ' == ' + loadingInfo);
 							if(loadingInfo == loadingAddr){
 								for(var k = 0; k < days.length; k++){
 									createDate(days[k].no,false);
@@ -569,18 +613,22 @@ function sortDaysUserTripdate(){
 }
 
 function sortDaysUseDateNo(orderDate){
-	console.log(orderDate);
 	var tempDays = new Array();
 	for(var i in orderDate){
-		for(var j in orderDate){
+		for(var j in days){
 			try{
-				if(orderDate[i].dno == days[j].no){
-					days[j].tripDate = orderDate[i].order;
-					tempDays.push(days[j]);
+				if(days[j] != undefined){
+					if(orderDate[i].dno == days[j].no){
+						days[j].tripDate = orderDate[i].order;
+						tempDays.push(days[j]);
+					}
+				}else{
 				}
 			}catch(e){
 				console.log(e.stack);
 				console.log('i : ' + i + ', j : ' + j);
+				console.log(orderDate[i]);
+				console.log(days[j]);
 			}
 		}
 	}
@@ -698,13 +746,13 @@ function addDate(){
 
 function createDate(dateNo,reorderBoolean){
 
-	var dayIndex = -1;
+	dayIndex++;
 	
 	for(var i in days){
-		if (days[i].no == dateNo)
+		if (days[i].no == dateNo){
 			dayIndex = days[i].tripDate;
+		}
 	}
-	console.log(dayIndex+"일차");
     // 일차 만드는 HTML코드, dayInd는 테스트용이고 dateNo로 바꿔줘야함
     var dayForm = 
     '<div data-dateorder="' + dayIndex + '" data-dateno="' + dateNo + '" id="days" class="daystyle" onclick="selectDay(' + dateNo + ');">' +
@@ -782,18 +830,24 @@ function selectDay(no){
 
 //일차 제거하는 함수
 function deleteDay(ind){
-	if(permission > 1)
-		sock.send(JSON.stringify({pno:planner.no, type: 'deleteDate', id: "${loginMember.getMemberEmail()}", dno:ind}));
-	else
+	if(permission > 1){
+		if(days.length > 1){
+			sock.send(JSON.stringify({pno:planner.no, type: 'deleteDate', id: "${loginMember.getMemberEmail()}", dno:ind}));
+		}else{
+			alert('삭제 실패');
+		}
+	}else{
 		alert('권한이 없습니다.');
+	}
 }
-function deleteDate(ind){
+function deleteDate(ind,reorderBool){
 	dayIndex--;
     $(".daystyle").each(function(i, box) {
         if($(box).data("dateno")==ind)
             $(box).remove();
     });
-    reorder();
+    if(reorderBool)
+    	reorder();
     selectDay($($(".daystyle").get(0)).data('dateno'));
 }
 
@@ -950,8 +1004,6 @@ function selectSchedule(no){
     
     lat = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLat();
     lng = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLng();
-    console.log('lat : ' + lat);
-    console.log('lat : ' + lng);
 };
 
 function updateSchedule(sno,title,time,location,cost,memo,llat,llng,liwContent){
@@ -1055,12 +1107,19 @@ $('#removeSchedule').click(function(){
     if($('#scheduleInfo').data('scheduleno')==0){
         alert('일정을 선택해주세요');
     } else {
+    	var dayIdx = -1;
     	var sno = $('#scheduleInfo').data('scheduleno');
     	var dno = $('#selectedDay').data('dateno');
-    	
+    	for(var i in days){
+    		if(days[i].no == dno)
+    			dayIdx = i;
+    	}
     	if(permission > 1){
-	    	sock.send(JSON.stringify({pno:planner.no, type: 'removeSchedule', id: memberNo,
-	    		dno: dno, sno: sno}));
+    		if(days[dayIdx].schedules.length > 1)
+		    	sock.send(JSON.stringify({pno:planner.no, type: 'removeSchedule', id: memberNo,
+		    		dno: dno, sno: sno}));
+    		else
+    			alert('삭제 실패');
     	}
    		else
    			alert('권한이 없습니다.');
@@ -1108,11 +1167,11 @@ function onMessage(msg) {
 		days.push({no:data['dno'],tripDate:-1,plannerNo:planner.no,schedules:new Array()});
 		scheduleMarkers.push(
 				{dno:data['dno'],scheduleMarker:new Array({sno:data['sno'],LatLng:new kakao.maps.LatLng(0,0),unselect:true,infoWindow:null})});
-		createDate(data['dno'],true);
+		createDate(data['dno'],(data['id'] == '${loginMember.memberEmail}'));
 		addSchedule(data['dno'],data['sno'],'제목 없음','','미정',0,'',0,0,null,memberNo);
 		break;
 	case 'deleteDate': 
-		deleteDate(data['dno']);
+		deleteDate(data['dno'],(data['id'] == '${loginMember.memberEmail}'));
 		break;
 	case 'updateSchedule':
 		updateSchedule(data['sno'],data['title'],data['time'],data['location'],data['cost'],data['memo'],data['lat'],data['lng'],data['iwContent'])
@@ -1154,15 +1213,12 @@ function onMessage(msg) {
 		$('#totalcost').html(data['content'] + '원');
 		break;
 	case 'orderDate':
-		console.log(days);
 		sortDaysUseDateNo(data['dateInfo']);
-		console.log(days);
 		$('#sortable').html('');
 		for(var i in days){
 			createDate(days[i].no,false);
 		}
 		for(var i in days){
-			console.log(days[i].no + ", " + $('#selectedDay').data('dateno'));
 			if(days[i].no == $('#selectedDay').data('dateno')){
 				$('#selectedDay').html((parseInt(days[i].tripDate,10) + 1 )+'일차');
 			}
@@ -1422,6 +1478,45 @@ $(function () {
     		$('#inputScheduleLocationName').val($('#inputScheduleLocationName').val().substring(0,20));
     	}
     });
+    
+	$('#updateTitle').click(function(){
+    	var inputTitle = prompt('변경할 제목을 입력해주세요');
+    	if(inputTitle != ''){
+    		sock.send(JSON.stringify({pno:planner.no, type: 'updateTitle', memberNo: memberNo, title: inputTitle}));
+    	}else{
+    		alert('제목을 입력하지 않으셨습니다');
+    	}
+    });
+	$('#updatePassword').click(function(){
+		var inputPwd1 = prompt('변경할 비밀번호를 입력해주세요');
+		var inputPwd2 = prompt('비밀번호를 다시 입력해주세요');
+    	if(inputPwd1 == inputPwd2){
+    		sock.send(JSON.stringify({pno:planner.no, type: 'updatePassword', memberNo: memberNo, pwd: inputPwd1}));
+    	}else
+    		alert('입력한 두 비밀번호가 다릅니다');
+	});
+	$('#updateLocation').click(function(){
+		
+	});
+	$('#updateGroup').click(function(){
+		
+	});
+	$('#updatePublic').click(function(){
+		var str = "비공개"
+		var publicYN = 'N';
+		if(planner.publicYN == 'N'){
+			str = "공개"
+			publicYN = 'Y';
+		}
+		if(confirm('플래너 상태를 ' + str + '로 전환하시겠습니까?')){
+			sock.send(JSON.stringify({pno:planner.no, type: 'updatePublic', memberNo: memberNo, publicYN: publicYN}));
+		}
+	});
+	$('#clearUserList').click(function(){
+		if(confirm('접속자 목록을 초기화 하시겠습니까?')){
+			sock.send(JSON.stringify({pno:planner.no, type: 'clearUserList', memberNo: memberNo}));
+		}
+	});
 });
 
 // 경비 총액 계산 후 리턴

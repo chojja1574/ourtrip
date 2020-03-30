@@ -199,7 +199,39 @@ public class PlannerService2Imlp implements PlannerService2 {
 	public int updateStartDate(Planner p) throws Exception {
 		return plannerDAO2.updateStartDate(p);
 	}
+
+	@Override
+	public int countDate(int pno) throws Exception {
+		return plannerDAO2.countDate(pno);
+	}
 	
-	
+	@Override
+	public int countSchedule(int dno) throws Exception {
+		return plannerDAO2.countSchedule(dno);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int updateTitle(Planner planner) throws Exception {
+		return plannerDAO2.updateTitle(planner);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int updatePassword(Planner planner) throws Exception {
+		return plannerDAO2.updatePassword(planner);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int updatePublic(Planner planner) throws Exception {
+		return plannerDAO2.updatePublic(planner);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int cleanUserList(int no) throws Exception {
+		return plannerDAO2.cleanUserList(no);
+	}
 
 }

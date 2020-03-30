@@ -112,8 +112,13 @@ public class Schedule {
 	}
 
 	public String toJsonString() {
+		
+		String str = "";
+		System.out.println(scheduleMemo);
+		str = scheduleMemo.replace("\n", "\\\\r\\\\n");
+		System.out.println(str);		
 		return "{\"scheduleNo\":\"" + scheduleNo + "\",\"scheduleTitle\":\"" + scheduleTitle + "\",\"scheduleCost\":\""
-				+ scheduleCost + "\",\"scheduleTime\":\"" + scheduleTime + "\",\"scheduleMemo\":\"" + scheduleMemo
+				+ scheduleCost + "\",\"scheduleTime\":\"" + scheduleTime + "\",\"scheduleMemo\":\"" + str
 				+ "\",\"scheduleLocationNM\":\"" + scheduleLocationNM + "\",\"scheduleLat\":\"" + scheduleLat + "\",\"scheduleLng\":\""
 				+ scheduleLng + "\",\"dateNo\":\"" + dateNo + "\"}";
 	}

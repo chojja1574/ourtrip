@@ -87,6 +87,18 @@ public class EchoHandler extends TextWebSocketHandler {
             	updateSumCost(session, jsonObj);
             }else if(jsonObj.get("type").equals("startDate")) {
             	updateStartDate(session, jsonObj);
+            }else if(jsonObj.get("type").equals("updateTitle")) {
+            	updateTitle(session, jsonObj);
+            }else if(jsonObj.get("type").equals("updatePassword")) {
+            	updatePassword(session, jsonObj);
+            }else if(jsonObj.get("type").equals("updateLocation")) {
+            	updateLocation(session, jsonObj);
+            }else if(jsonObj.get("type").equals("updateGroup")) {
+            	updateGroup(session, jsonObj);
+            }else if(jsonObj.get("type").equals("updatePublic")) {
+            	updatePublic(session, jsonObj);
+            }else if(jsonObj.get("type").equals("clearUserList")) {
+            	clearUserList(session, jsonObj);
             }else {
             	sendChatroom(session, jsonObj);
             }
@@ -271,6 +283,7 @@ public class EchoHandler extends TextWebSocketHandler {
 		System.out.println("deleteDate");
 		int dateNo = Integer.parseInt(msgJson.get("dno").toString());
 		System.out.println("dateNo : " + dateNo);
+		result = plannerService.countDate(Integer.parseInt(msgJson.get("pno").toString()));
 		result = plannerService.deleteDate(dateNo);
 		sendChatroom(session, msgJson);
 		
@@ -408,5 +421,95 @@ public class EchoHandler extends TextWebSocketHandler {
 		
 		return result;
 	}
+	
+	private int updateTitle(WebSocketSession session, JSONObject msgJson) throws Exception {
+		int result = 0;
+		
+		System.out.println("updateTitle");
+		
+		//{pno:planner.no, type: 'updateTitle', memberNo: memberNo, title: inputTitle}
+		
+		Planner planner = new Planner();
+		
+		planner.setPlannerNo(Integer.parseInt(msgJson.get("pno").toString()));
+		planner.setPlannerTitle(msgJson.get("title").toString());
+		
+		result = plannerService.updateTitle(planner);
+		
+		session.sendMessage(new TextMessage(msgJson.toJSONString()));
+		
+		return result;
+	}
+	
+	private int updatePassword(WebSocketSession session, JSONObject msgJson) throws Exception {
+		int result = 0;
 
+		Planner planner = new Planner();
+		
+		planner.setPlannerNo(Integer.parseInt(msgJson.get("pno").toString()));
+		planner.setPlannerPwd(msgJson.get("pwd").toString());
+		
+		result = plannerService.updatePassword(planner);
+		System.out.println("updatePassword");
+		
+		//{pno:planner.no, type: 'updatePassword', memberNo: memberNo, pwd: inputPwd1}
+		
+		session.sendMessage(new TextMessage(msgJson.toJSONString()));
+		
+		return result;
+	}
+	
+	private int updateLocation(WebSocketSession session, JSONObject msgJson) throws Exception {
+		int result = 0;
+		
+		System.out.println("updateLocation");
+
+		
+		session.sendMessage(new TextMessage(msgJson.toJSONString()));
+		
+		return result;
+	}
+	
+	private int updateGroup(WebSocketSession session, JSONObject msgJson) throws Exception {
+		int result = 0;
+		
+		System.out.println("updateGroup");
+		
+		
+		session.sendMessage(new TextMessage(msgJson.toJSONString()));
+		
+		return result;
+	}
+	
+	private int updatePublic(WebSocketSession session, JSONObject msgJson) throws Exception {
+		int result = 0;
+		
+		System.out.println("updatePublic");
+		
+
+		Planner planner = new Planner();
+		
+		planner.setPlannerNo(Integer.parseInt(msgJson.get("pno").toString()));
+		planner.setPlannerPublicYN(msgJson.get("publicYN").toString());
+		
+		result = plannerService.updatePublic(planner);
+		//sock.send(JSON.stringify({pno:planner.no, type: 'updatePublic', memberNo: memberNo, publicYN: publicYN}));
+		
+		session.sendMessage(new TextMessage(msgJson.toJSONString()));
+		
+		return result;
+	}
+	
+	private int clearUserList(WebSocketSession session, JSONObject msgJson) throws Exception {
+		int result = 0;
+		
+		System.out.println("clearUserList");
+		
+		result = plannerService.clearUserList(Integer.parseInt(msgJson.get("pno").toString()));
+		//{pno:planner.no, type: 'clearUserList', memberNo: memberNo}
+		
+		sendChatroom(session, msgJson);
+		
+		return result;
+	}
 }
