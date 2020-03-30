@@ -24,6 +24,8 @@
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerMember" alias="PlannerMember"/>
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.ChattingLogView" alias="ChattingLogView"/>
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerMemberView" alias="PlannerMemberView"/>
+		<typeAlias type="com.kh.ourtrip.notice.model.vo.Notice" alias="Notice"/>
+		
 		<!-- 신덕수 -->
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.PlannerCard" alias="PlannerCard"/>
 		<typeAlias type="com.kh.ourtrip.planner.model.vo.AreaName" alias="AreaName"/>
@@ -45,6 +47,7 @@
 		<mapper resource="/mapper/visitCount-mapper.xml"/>
 		<mapper resource="/mapper/admin-mapper.xml"/>
 		<mapper resource="/mapper/planner1-mapper.xml"/>
+		<mapper resource="/mapper/notice-mapper.xml"/>
 
 		<mapper resource="/mapper/planner-mapper.xml"/>
 		<mapper resource="/mapper/adminhun-mapper.xml"/>

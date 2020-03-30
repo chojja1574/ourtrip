@@ -1,3 +1,7 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -6,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="${contextPath}/resources/css/common.css">
     <title>공지사항</title>
 
     <style>
@@ -31,13 +35,15 @@
         <h2 class="font-weight-bold">공지사항 작성</h2>
         <hr>
         <div class="container">
-            <form action="" method="POST" onsubmit="false">
+            <form action="./insert" method="POST">
 
                 <!-- 제목 -->
                 <div class="form-inline mb-3">
                     <label for="inputTitle" class="mr-3">제목</label>
                     <input class="form-control" type="text" size="70" id="inputTitle" name="noticeTitle"
-                        placeholder="공지사항 제목을 입력해주세요">
+                        placeholder="공지사항 제목을 입력해주세요"
+                        <c:if test="${!empty notice}">value="${notice.noticeTitle}"</c:if>
+                        >
                 </div>
 
                 <!-- 작성일 -->
@@ -54,14 +60,16 @@
                         <h5 class="my-0">내용</h5>
                     </label>
                     <!-- 일반회원 상세조회시 textarea에 readonly 속성 추가 -->
-                    <textarea class="form-control my-3" rows="20" id="content" name="boardContent"></textarea>
+                    <textarea class="form-control my-3" rows="20" id="content" name="noticeContent">
+<c:if test="${!empty notice}">${notice.noticeContent}</c:if>
+                    </textarea>
                 </div>
 
                 <!-- 버튼들 -->
                 <div class="d-flex" id="btn-wrapper">
                     <a href="#" class="btn gray-btn mr-auto">이전페이지</a>
                     <!-- 작성 버튼 -->
-                    <button type="button" class="btn main-btn ml-auto">작성하기</button>
+                    <button class="btn main-btn ml-auto">작성하기</button>
                 </div>
                 
             </form>
@@ -74,7 +82,7 @@
                var today = new Date();
         
               var str = today.getFullYear() + "-"
-                    + today.getMonth()+1 + "-"
+                    + (today.getMonth()+1) + "-"
                     + today.getDate();
             $("#today").html(str);
     </script>
