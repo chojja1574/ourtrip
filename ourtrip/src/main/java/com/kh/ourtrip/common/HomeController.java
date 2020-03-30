@@ -28,6 +28,7 @@ public class HomeController {
 			} else {
 				model.addAttribute("msg", "조회내용이 없습니다");
 			}
+			
 			return "index";
 			
 		} catch (Exception e) {
