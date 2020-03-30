@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -39,7 +41,7 @@ import com.kh.ourtrip.planner.model.vo.Schedule;
 import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Controller
-@SessionAttributes({"loginMember","msg","profilePath"})
+@SessionAttributes({"loginMember","msg","profilePath", "detailUrl"})
 @RequestMapping("/planner/*") // 테스트를 위한 임시 변경
 public class PlannerControllerSDS {
 	
@@ -504,6 +506,38 @@ public class PlannerControllerSDS {
 		
 		return "planner/plannerDetail";
 	}
+	
+	@RequestMapping("plannerCopy")
+	public String plannerCopy(int no, Model model, RedirectAttributes rdAttr,
+							HttpServletRequest request) {
+		
+		try {
+			int result = plannerService.plannerCopy(no, ((Member)model.getAttribute("loginMember")).getMemberNo());
+			
+			String msg = null;
+			
+			if(result > 0) msg = "플래너 복사가 완료되었습니다.";
+			else msg = "플래너 복사에 실패했습니다.";
+			
+			rdAttr.addFlashAttribute("msg", msg);
+			
+			String beforeUrl = (String)request.getHeader("referer");
+			
+			if(beforeUrl == null) {
+				return "redirect:/";
+			}else {
+				return "redirect:" + beforeUrl;
+			}
+
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMsg", "플래너 복사중 오류 발생");
+			return "common/errorPage";
+		}
+		
+	}
+	
 	
 }
 

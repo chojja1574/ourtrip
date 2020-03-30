@@ -227,4 +227,12 @@ public interface PlannerServiceSDS {
 	 */
 	public abstract int updateStartDate(Planner p) throws Exception;
 
+	/** 플래너 복사용 Service
+	 * @param no
+	 * @param memberNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public abstract int plannerCopy(int no, int memberNo) throws Exception;
+
 }
