@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/common.css">
+    <title>공지사항</title>
+
+    <style>
+        @media screen and (max-width: 500px) {
+            table {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+    <!-- 공지사항 목록 시작 -->
+    <div class="container my-5">
+        <h2 class="font-weight-bold">공지사항</h2>
+        <hr>
+        <table class="table table-hover" style="text-align: center;">
+            <thead class="thead-dark">
+                <tr>
+                    <th>글번호</th>
+                    <th>제목</th>
+                    <th>조회수</th>
+                    <th>날짜</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="4" id="none-board">존재하는 게시글이 없습니다</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>오늘의 이벤트</td>
+                    <td>1</td>
+                    <td>2020-02-01</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>플래너 삭제시 주의사항</td>
+                    <td>13</td>
+                    <td>2020-02-01</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>회원탈퇴시 주의사항</td>
+                    <td>14</td>
+                    <td>2020-02-01</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>문의는 이메일로</td>
+                    <td>1</td>
+                    <td>2020-02-01</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>항공권 이벤트!!!</td>
+                    <td>25</td>
+                    <td>2020-02-15</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>서버 점검 시간 안내</td>
+                    <td>66</td>
+                    <td>2020-02-01</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>서버 점검 연장 안내</td>
+                    <td>66</td>
+                    <td>2020-02-01</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>서버 점검 재연장 안내</td>
+                    <td>66</td>
+                    <td>2020-02-01</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>서버 점검 재재연장 안내</td>
+                    <td>66</td>
+                    <td>2020-02-01</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>서버 점검 재재재연장 안내</td>
+                    <td>66</td>
+                    <td>2020-02-01</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- 페이징바 -->
+        <div class="pagination-wrapper mt-5" id="pagination-wrapper">
+            <nav aria-label="Page navigation" id="pagination">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">&lt;&lt;</a>
+                    </li>
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">&lt;</a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item"><a class="page-link" href="#">5</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">&gt;</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">&gt;&gt;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        <div class="d-flex btn-wrapper">
+            <a href="#" class="btn main-btn ml-auto" type="button">공지사항 작성</a>
+        </div>
+    </div>
+    <!-- 공지사항 목록 끝 -->
+    
+</body>
+
+</html>
