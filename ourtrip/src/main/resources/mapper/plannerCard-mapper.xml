@@ -5,6 +5,7 @@
 		<id property="plannerNo" column="PLANNER_NO"/>
 		<result property="plannerTitle" column="PLANNER_TITLE"/>
 		<result property="plannerStartDT" column="PLANNER_START_DT"/>
+		<result property="tripDate" column="TRIP_DATE"/>
 		<result property="groupName" column="GROUP_NAME"/>
 		<result property="plannerCount" column="PLANNER_COUNT"/>
 		<result property="plannerUrl" column="PLANNER_URL"/>

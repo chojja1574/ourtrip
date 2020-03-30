@@ -1,10 +1,16 @@
 package com.kh.ourtrip.planner.controller;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,28 +27,34 @@ import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.planner.model.service.PlannerServiceSDS;
 import com.kh.ourtrip.planner.model.vo.AreaName;
+import com.kh.ourtrip.planner.model.vo.ChattingLogView;
+import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.LargeArea;
+import com.kh.ourtrip.planner.model.vo.Planner;
 import com.kh.ourtrip.planner.model.vo.PlannerCard;
 import com.kh.ourtrip.planner.model.vo.PlannerMember;
+import com.kh.ourtrip.planner.model.vo.PlannerMemberView;
+import com.kh.ourtrip.planner.model.vo.PlannerView;
+import com.kh.ourtrip.planner.model.vo.Schedule;
 import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Controller
-@SessionAttributes({"loginMember", "msg"})
+@SessionAttributes({"loginMember","msg","profilePath"})
 @RequestMapping("/planner/*") // 테스트를 위한 임시 변경
 public class PlannerControllerSDS {
 	
 	@Autowired
-	public PlannerServiceSDS plannerServiceSDS;
+	public PlannerServiceSDS plannerService;
 	
 	@RequestMapping("search")
 	public String searchForm(Model model) {
 		try {
 			// 추천리스트 조회
-			List<PlannerCard> recommendPCList = plannerServiceSDS.selectRecommendPCList();
+			List<PlannerCard> recommendPCList = plannerService.selectRecommendPCList();
 			
 			// 화면에 보여줄 대지역, 중소지역 리스트 조회
-			List<LargeArea> largeNmList = plannerServiceSDS.selectLargeNmList();
-			List<SmallArea> smallNmList = plannerServiceSDS.selectsmallNmList();
+			List<LargeArea> largeNmList = plannerService.selectLargeNmList();
+			List<SmallArea> smallNmList = plannerService.selectsmallNmList();
 			
 			if(!recommendPCList.isEmpty()) {
 				model.addAttribute("recommendPCList", recommendPCList);
@@ -78,13 +90,6 @@ public class PlannerControllerSDS {
 			@RequestParam(value="currentPage", required=false)
 			Integer currentPage ){
 		
-		System.out.println("searchTitle : " + searchTitle);
-		System.out.println("groupName : " + groupName);
-		System.out.println("largeArea : " + largeArea);
-		System.out.println("smallArea : " + smallArea);
-		System.out.println("viaCheck : " + viaCheck);
-		System.out.println("currentPage : " + currentPage);
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchTitle", searchTitle);
 		map.put("groupName" , groupName);			
@@ -96,7 +101,7 @@ public class PlannerControllerSDS {
 		
 		try {
 			// 전체 플래너 수 조회
-			int listCount = plannerServiceSDS.getListCount(map);
+			int listCount = plannerService.getListCount(map);
 			//System.out.println("컨트롤러 listCount : " + listCount);
 			// 현재 페이지 확인
 			if(currentPage == null) currentPage = 1;
@@ -106,17 +111,12 @@ public class PlannerControllerSDS {
 					getPageInfo(4, 5, currentPage, listCount);
 			
 			// 플래너 목록 조회
-			List<PlannerCard> pList = plannerServiceSDS.selectPList(map, pInf);
+			List<PlannerCard> pList = plannerService.selectPList(map, pInf);
 			
 			// 검색된 조건이 없으면 널전달
 			if(pList==null) {
 				return null;
 			} else {
-				
-				System.out.println("Controller pList 목록 : " + pList);
-				for(PlannerCard item : pList) {
-					System.out.println(item);
-				}
 				
 				Map<String, Object> result = new HashMap<String, Object>();
 				
@@ -155,10 +155,10 @@ public class PlannerControllerSDS {
 		
 		try {
 			// 수정중인 플래너 목록 조회
-			List<PlannerCard> uPlannerList = plannerServiceSDS.updatePlannerList(memberNo);
+			List<PlannerCard> uPlannerList = plannerService.updatePlannerList(memberNo);
 
 			// 완료된 플래너 목록 조회
-			List<PlannerCard> cPlannerList = plannerServiceSDS.completePlannerList(memberNo);
+			List<PlannerCard> cPlannerList = plannerService.completePlannerList(memberNo);
 			
 			// 지역이름을 조회하기 위해 리스트에 플래너 번호를 담음
 			List<Integer> noList = new ArrayList<Integer>();
@@ -170,7 +170,7 @@ public class PlannerControllerSDS {
 			List<AreaName> areaNames = new ArrayList<AreaName>();
 			if(!noList.isEmpty()) {
 				// 플래너별 지역이름들 조회
-				areaNames = plannerServiceSDS.selectAreaNames(noList);
+				areaNames = plannerService.selectAreaNames(noList);
 			}
 			
 			// 지역이름이 있을 경우
@@ -232,7 +232,7 @@ public class PlannerControllerSDS {
 		
 		String msg = null;
 		try {
-			int result = plannerServiceSDS.delPlanner(delPlanner);
+			int result = plannerService.delPlanner(delPlanner);
 			
 			if(result > 0) msg = "플래너가 삭제되었습니다.";
 			else msg = "플래너 삭제에 실패하였습니다.";
@@ -257,7 +257,7 @@ public class PlannerControllerSDS {
 		String msg = null;
 		
 		try {
-			int result = plannerServiceSDS.outPlanner(outPlanner);
+			int result = plannerService.outPlanner(outPlanner);
 			
 			if(result > 0) msg = "플래너에서 나가기되었습니다.";
 			else msg = "플래너 나가기에 실패하였습니다.";
@@ -272,7 +272,237 @@ public class PlannerControllerSDS {
 			return "common/errorPage";
 		}
 		
+	}
+	
+	
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 필요한건지?
+	@RequestMapping("testInput")
+	public String chattingRoom() {
+		return "planner/chattingRoom";
+	}
+	
+	// 플래너 수정
+	@RequestMapping("editplanner")
+	public String chattingForm(Model model, Integer no, RedirectAttributes rdAttr) {
 		
+		JSONObject jsonObj = null;
+		JSONParser jsonParser = new JSONParser();
+		JSONArray chatArray = new JSONArray();
+		JSONArray joinUserArray = new JSONArray();
+		Planner selectedPlanner = null;
+		try {
+			
+			// PlannerView에 데이터 통째로 얻어와서 분리작업
+			boolean inputPvVal = true; 
+			int plannerNo = -1;
+			String plannerTitle = null;
+			String plannerPwd = null;
+			int plannerCost = -1;
+			Date plannerCreateDT = null;
+			Date plannerModifyDT = null;
+			Date plannerStartDT = null;
+			String plannerPublicYN = null;
+			String plannerDeleteYN = null;
+			String plannerExpiry = null;
+			int plannerCount = -1;
+			String plannerUrl = null;
+			int groupCode = -1;
+			
+			List<PlannerView> selectPlannerView = plannerService.selectPlannerView(no);
+			Map<Integer,List<PlannerView>> dateMap = new HashMap<Integer,List<PlannerView>>();
+			for(PlannerView pv : selectPlannerView) {
+				if(inputPvVal) {
+					plannerTitle = pv.getPlannerTitle();
+					plannerPwd = pv.getPlannerPwd();
+					plannerCost = pv.getPlannerCost();
+					plannerCreateDT = pv.getPlannerCreateDT();
+					plannerModifyDT = pv.getPlannerModifyDT();
+					plannerStartDT = pv.getPlannerStartDT();
+					plannerPublicYN = pv.getPlannerPublicYN();
+					plannerDeleteYN = pv.getPlannerDeleteYN();
+					plannerExpiry = pv.getPlannerExpiry();
+					plannerCount = pv.getPlannerCount();
+					plannerUrl = pv.getPlannerUrl();
+					groupCode = pv.getGroupCode();
+				}
+				
+				if(dateMap.containsKey(pv.getDateNo())) {
+					dateMap.get(pv.getDateNo()).add(pv);
+				}else {
+					List<PlannerView> pvList = new ArrayList<PlannerView>();
+					pvList.add(pv);
+					dateMap.put(pv.getDateNo(), pvList);
+				}
+			}
+			List<Day> dayList = new ArrayList<Day>();
+			Iterator iter = dateMap.entrySet().iterator();
+			while (iter.hasNext()) {
+				int dateNo = -1;
+				int tripDate = -1;
+				List<Schedule> scheduleList = new ArrayList<Schedule>();
+			    Entry entry = (Entry) iter.next();
+			    for(PlannerView pv : (List<PlannerView>)(entry.getValue())) {
+			    	if(dateNo == -1) {
+			    		dateNo = pv.getDateNo();
+			    	}
+			    	if(tripDate == -1) {
+			    		tripDate = pv.getTripDate();
+			    	}
+					if(plannerNo == -1) {
+						plannerNo = pv.getPlannerNo();
+					}
+			    	Schedule schedule = new Schedule(
+			    			pv.getScheduleNo(), pv.getScheduleTitle(), pv.getScheduleCost(),
+			    			pv.getScheduleTime(), pv.getScheduleMemo(), pv.getScheduleLocationNM(),
+			    			pv.getScheduleLat(),pv.getScheduleLng(),pv.getDateNo());
+			    	scheduleList.add(schedule);
+			    }
+			    Day oneDay = new Day(dateNo,tripDate,no,scheduleList);
+			    dayList.add(oneDay);
+			    
+			}
+			selectedPlanner = new Planner(no, plannerTitle, plannerPwd, plannerCost, 
+					plannerCreateDT, plannerModifyDT, plannerStartDT, plannerPublicYN, plannerDeleteYN, 
+					plannerExpiry, plannerCount, plannerUrl, groupCode, dayList);
+			jsonObj = (JSONObject) jsonParser.parse(selectedPlanner.toJsonString());
+			
+			// 채팅내역 얻어와서 jsonString으로 변환
+			List<ChattingLogView> chatList = null;
+			chatList = plannerService.selectChatList(no);
+			for(ChattingLogView cl : chatList) {
+				jsonObj = (JSONObject) jsonParser.parse(cl.toJsonString());
+				chatArray.add(jsonObj);
+			}
+			
+			// 참여중인 유저 목록과 권한 전달
+			List<PlannerMemberView> pmList = plannerService.selectPlannerMemeberListUsePlannerNo(no);
+			
+			for(PlannerMemberView tpm : pmList) {
+				jsonObj = (JSONObject) jsonParser.parse(tpm.toJsonString());
+				joinUserArray.add(jsonObj);
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("plannerInfo", selectedPlanner.toJsonString());
+		model.addAttribute("plannerTitle", selectedPlanner.getPlannerTitle());
+		model.addAttribute("chatList", chatArray);
+		model.addAttribute("joinUserArray",joinUserArray);
+		
+		return "planner/editPlanner";
+	}
+	
+	// 플래너 상세보기
+	@RequestMapping("plannerDetail")
+	public String mobileView(Model model, Integer no, RedirectAttributes rdAttr, String userId) {
+		
+		JSONObject jsonObj = null;
+		JSONParser jsonParser = new JSONParser();
+		JSONArray locationArray = new JSONArray();
+		JSONArray tempArray = new JSONArray();
+		Planner selectedPlanner = null;
+		try {
+			
+			// PlannerView에 데이터 통째로 얻어와서 분리작업
+			boolean inputPvVal = true; 
+			int plannerNo = -1;
+			String plannerTitle = null;
+			String plannerPwd = null;
+			int plannerCost = -1;
+			Date plannerCreateDT = null;
+			Date plannerModifyDT = null;
+			Date plannerStartDT = null;
+			String plannerPublicYN = null;
+			String plannerDeleteYN = null;
+			String plannerExpiry = null;
+			int plannerCount = -1;
+			String plannerUrl = null;
+			int groupCode = -1;
+			
+			List<PlannerView> selectPlannerView = plannerService.selectPlannerView(no);
+			Map<Integer,List<PlannerView>> dateMap = new HashMap<Integer,List<PlannerView>>();
+			for(PlannerView pv : selectPlannerView) {
+				if(inputPvVal) {
+					plannerTitle = pv.getPlannerTitle();
+					plannerPwd = pv.getPlannerPwd();
+					plannerCost = pv.getPlannerCost();
+					plannerCreateDT = pv.getPlannerCreateDT();
+					plannerModifyDT = pv.getPlannerModifyDT();
+					plannerStartDT = pv.getPlannerStartDT();
+					plannerPublicYN = pv.getPlannerPublicYN();
+					plannerDeleteYN = pv.getPlannerDeleteYN();
+					plannerExpiry = pv.getPlannerExpiry();
+					plannerCount = pv.getPlannerCount();
+					plannerUrl = pv.getPlannerUrl();
+					groupCode = pv.getGroupCode();
+					inputPvVal = false;
+				}
+
+				if(dateMap.containsKey(pv.getDateNo())) {
+					dateMap.get(pv.getDateNo()).add(pv);
+				}else {
+					List<PlannerView> pvList = new ArrayList<PlannerView>();
+					pvList.add(pv);
+					dateMap.put(pv.getDateNo(), pvList);
+				}
+			}
+			List<Day> dayList = new ArrayList<Day>();
+			Iterator iter = dateMap.entrySet().iterator();
+			while (iter.hasNext()) {
+				int dateNo = -1;
+				int tripDate = -1;				
+				
+				tempArray = new JSONArray();
+				
+				List<Schedule> scheduleList = new ArrayList<Schedule>();
+			    Entry entry = (Entry) iter.next();
+			    for(PlannerView pv : (List<PlannerView>)(entry.getValue())) {
+			    	if(dateNo == -1) {
+			    		dateNo = pv.getDateNo();
+			    	}
+			    	if(tripDate == -1) {
+			    		tripDate = pv.getTripDate();
+			    	}
+					if(plannerNo == -1) {
+						plannerNo = pv.getPlannerNo();
+					}
+			    	Schedule schedule = new Schedule(
+			    			pv.getScheduleNo(), pv.getScheduleTitle(), pv.getScheduleCost(),
+			    			pv.getScheduleTime(), pv.getScheduleMemo(), pv.getScheduleLocationNM(),
+			    			pv.getScheduleLat(),pv.getScheduleLng(),pv.getDateNo());
+			    	scheduleList.add(schedule);
+			    	String scheduleLocation = "{";
+					scheduleLocation += "\"sno\":\"" + pv.getScheduleNo() ;
+					scheduleLocation += "\",\"location\":\"" + pv.getScheduleLocationNM() ;
+					scheduleLocation += "\",\"lat\":\"" + pv.getScheduleLat() ;
+					scheduleLocation += "\",\"lng\":\"" + pv.getScheduleLng() ;
+					scheduleLocation += "\"}";
+					jsonObj = (JSONObject) jsonParser.parse(scheduleLocation);
+					tempArray.add(jsonObj);
+			    }
+			    Day oneDay = new Day(dateNo,tripDate,no,scheduleList);
+			    dayList.add(oneDay);
+	
+			    jsonObj = (JSONObject) jsonParser.parse("{\"dno\":\"" + dateNo + "\"}");
+			    jsonObj.put("schedules", tempArray);
+			    locationArray.add(jsonObj);
+			    
+			}
+			selectedPlanner = new Planner(no, plannerTitle, plannerPwd, plannerCost, 
+					plannerCreateDT, plannerModifyDT, plannerStartDT, plannerPublicYN, plannerDeleteYN, 
+					plannerExpiry, plannerCount, plannerUrl, groupCode, dayList);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("plannerInfoJson", selectedPlanner.toJsonString());
+		model.addAttribute("plannerInfo", selectedPlanner);
+		model.addAttribute("locationArray", locationArray);
+		
+		return "planner/plannerDetail";
 	}
 	
 }
