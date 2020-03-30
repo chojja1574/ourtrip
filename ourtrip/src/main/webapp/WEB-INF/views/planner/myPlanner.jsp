@@ -107,7 +107,7 @@
 		<hr>
 
 		<div class="d-flex btn-wrapper">
-			<a href="#" class="btn main-btn ml-auto" type="button">플래너 만들기</a>
+			<a href="create" class="btn main-btn ml-auto" type="button">플래너 만들기</a>
 		</div>
 
 		<!-- 플래너 컨테이너 -->

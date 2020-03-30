@@ -150,4 +150,13 @@ public class PlannerDAOSDS {
 		return sqlSession.update("plannerCardMapper.delPlanner", delPlanner);
 	}
 
+	/** 플래너 나가기용 DAO
+	 * @param outPlanner
+	 * @return result
+	 * @throws Exception
+	 */
+	public int outPlanner(PlannerMember outPlanner) throws Exception{
+		return sqlSession.delete("plannerCardMapper.outPlanner", outPlanner);
+	}
+
 }

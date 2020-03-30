@@ -87,4 +87,11 @@ public interface PlannerServiceSDS {
 	 */
 	public abstract int delPlanner(PlannerMember delPlanner) throws Exception;
 
+	/** 플래너 나가기용 Service
+	 * @param outPlanner
+	 * @return result
+	 * @throws Exception
+	 */
+	public abstract int outPlanner(PlannerMember outPlanner) throws Exception;
+
 }
