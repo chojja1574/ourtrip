@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.ourtrip.member.model.vo.Member;
+import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.LargeArea;
 import com.kh.ourtrip.planner.model.vo.Planner;
 import com.kh.ourtrip.planner.model.vo.PlannerMember;
@@ -37,14 +38,13 @@ public class PlannerDAO {
 	
 	
 	/** 로케이션 입력용 DAO
-	 * @param planner
+	 * @param aName
 	 * @return locationInsert
 	 * @throws Exception
 	 */
-	public int createLocation(Planner planner) throws Exception{
-		return sqlSessionTemplate.insert("plannerMapper.createLocation",planner);
+	public int createLocation(List<AreaName> aName) throws Exception{
+		return sqlSessionTemplate.insert("plannerMapper.createLocation",aName);
 	}
-	
 	
 	/** 멤버 플레너 입력용 DAO
 	 * @param pMember
@@ -58,6 +58,7 @@ public class PlannerDAO {
 	public List<LargeArea> selectLargeNmList()throws Exception {
 		return sqlSessionTemplate.selectList("plannerMapper.LargeNmList");
 	}
+	
 	public List<SmallArea> selectsmallNmList()throws Exception {
 		return sqlSessionTemplate.selectList("plannerMapper.SmallNmList");
 	}

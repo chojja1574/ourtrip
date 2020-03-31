@@ -69,7 +69,7 @@ body {
 }
 
 .selectArea {
-	width: 50%;
+	width: 30%;
 	display: inline-block
 }
 
@@ -79,7 +79,7 @@ body {
 
 .selectdate {
 	display: inline-block;
-	width: 44%;
+	width: 30%;
 }
 </style>
 
@@ -94,7 +94,7 @@ body {
 				<div id="createContent">
 					<form action="createPlanner" method="POST">
 						<div
-							style="width: 100%; height: 20%; position: relative; padding: 30px 30px;">
+							style="width: 100%; height: 20%; position: relative; padding-left:30px; padding-right:30px; padding-top: 20px">
 							<label for="planerTitle">
 								<h2 class="inputtext">*플래너 제목입력</h2>
 							</label> <input type="text" name="plannerTitle"
@@ -105,24 +105,30 @@ body {
 						<hr>
 
 						<div class="triPlace"
-							style="width: 100%; height: 20%; padding: 30px 30px;">
+							style="width: 100%; height: 15%; padding-left: 30px; padding-right:30px;">
 							<div class="selectArea">
 								<label for="selectbox">
 									<h2 class="inputtext">*여행장소 입력</h2>
-								</label> <select name="largeArea" id="wide-area" class="custom-select">
+								</label>
+								<button type="button" class="btn btn-primary" id="locationAdd">+</button>
+								<select name="largeArea" id="wide-area" class="custom-select"
+									style="display: inline-block">
 									<c:forEach var="largeArea" items="${largeNmList}"
 										varStatus="vs">
 										<option value="${largeArea.largeAreaCode}">${largeArea.largeAreaName}</option>
 									</c:forEach>
-								</select> <select name="smallArea" id="local-area" class="custom-select">
-									<option value="전체" selected>전체</option>
-								</select> <input type="text" id="multiInput" name="multiArea">
-								<button id="addbutton" class="btn btn-primary" type="button">+</button>
-								<span id="multiplace"></span>
-
+								</select>
+								 <select name="smallArea" id="local-area" class="custom-select"
+									style="display: inline-block">
+									<option value="0" selected>전체</option>
+								</select>
+								<input name="locationList" id="lList" style="display: none;">
 							</div>
-
-							<div class="selectGroup" style="width: 49%;">
+							<div id="locationList" style="width: 100%;"></div>
+						</div>
+						<div class="triPlace"
+							style="width: 100%; height: 15%; padding-left:30px; padding-right: 30px;  padding-top: 20px;">
+							<div class="selectGroup" style="width: 33%;">
 								<label for="selectbox">
 									<h2 class="inputtext">*여행 그룹선택</h2>
 								</label><br> <select name="groupCode" id="tripgroup"
@@ -134,12 +140,10 @@ body {
 									<option value="4">가족과 여행하기</option>
 								</select>
 							</div>
-							<br>
 						</div>
-
 						<hr>
 
-						<div style="width: 100%; height: 30%; padding: 30px 30px;">
+						<div style="width: 100%; height: 50%; padding-left:30px; padding-right: 30px;">
 							<div class="selectdate">
 								<h2 class="inputtext">*여행 일자 선택</h2>
 								<br> <label><h3>출발일</h3></label> <input
@@ -154,7 +158,7 @@ body {
 
 						<hr>
 
-						<div style="width: 100%; padding: 30px 30px;">
+						<div style="width: 100%; padding-left:30px; padding-right: 30px;">
 							<h2 class="inputtext">플래너 공개여부 설정</h2>
 							<input name=plannerPublicYN type="checkbox" id="openplanner"
 								checked="checked" /> <label for="openplanner"> (선택 시
@@ -164,7 +168,7 @@ body {
 							<hr>
 						</div>
 						<div style="width: 100%; height: 20%; padding: 30px 30px;">
-							<button type="submit" class="btn btn-primary"
+							<button type="submit" onclick="sendData()" class="btn btn-primary"
 								style="width: 40%; height: 50px;">생성</button>
 							<button type="reset" class="btn btn-primary"
 								style="width: 40%; height: 50px;">취소</button>
@@ -177,9 +181,9 @@ body {
 	</div>
 
 	<script type="text/javascript">
-	
-			/* 
-		$(function(){
+	var areal = '';
+	var locationList = new Array();
+		/* $(function(){
         	$("#event").on("click",function(){
 			var today = new Date(); 
 			var dd = today.getDate();
@@ -201,7 +205,7 @@ body {
         		console.log(startDate);
         		console.log(today)
         	})
-		}) */
+		}) */ 
 		
 		 $(function () {
 	            $("#wide-area").on("change", function () {
@@ -221,39 +225,74 @@ body {
 
 	                $("#local-area").html(html);
 	            });
-	        });
-			
-			
-		$(function(){
-			
-				
-			$("#addbutton").on("click",function(){
-				var wide = $("#wide-area option:selected").val();
-				var local = $("#local-area option:selected").val();
-				var widelocal = "";
-					widelocal += wide +","+local;
-				 	$("#multiInput").val(widelocal);
-				
-				
-				
-			});
-				
-				
-				
-			
-		});
-		
-		
-  
- 
-   
- 
- 
+	            
+		  });
 
+	   $('#locationAdd').click(function(){
+		   
+	      var locationDup = locationEqual($('#wide-area').val(),$('#local-area').val());
+		   console.log(locationDup);
+		   
+	      if(locationDup == undefined){
+	         var locationName = $('#wide-area option[value='+$('#wide-area').val()+']').html() + 
+	            " - " + $('#local-area option[value='+$('#local-area').val()+']').html();
+	         
+	         var locationDiv =
+	         '<div style="display: inline-block;">' +
+	         '<div class="locationDiv" style="width:115px; display: inline-block; margin:3px">' +
+	         '<span class="custom-select" style="background:white">' + locationName + '</span>' +
+	         '</div>' +
+	         '<button data-large="' + $('#wide-area').val() + '" data-small="' + $('#local-area').val() + '" type="button"' +
+	         'class="btn btn-danger" onclick="removeLocation(this);">-</button>'+
+	         '</div>';
+	         
+	         if(locationList.length < 5){
+	            console.log("large : " + $('#wide-area').val() + ", small : " + $('#local-area').val());
+	            locationList.push({large:$('#wide-area').val(),small:$('#local-area').val()});
+	            console.log(locationList);
+	            $('#locationList').append(locationDiv);
+	            
+	         }else{
+	            alert('지역을 더이상 추가할 수 없습니다');
+	         }
+	      }else{
+	         alert('같은 장소를 중복해서 선택할 수 없습니다');
+	      }
+	   });
+
+	   function removeLocation(location){
+	      console.log(location);
+	      console.log(locationList);
+	      locationList.splice(locationEqual($('#wide-area').val(),$('#local-area').val()),1);
+	      console.log(locationList);
+	      $(location).parent().remove();
+	   }
+
+	   function locationEqual(lc, sc){
+	      for(var i in locationList){
+	         if(locationList[i].large == lc && locationList[i].small == sc)
+	            return i;
+	      }
+	   }
+
+	   $('#updateLocation').click(function(){
+	      var locationJson = JSON.stringify(locationList);
+	      console.log(locationJson);
+	      
+	   })
+	   $("#testbut").on("click",function(){
+		   $("#lList").val(JSON.stringify(locationList));
+	   })
+	   
+	   function sendData(){
+		   $("#lList").val(JSON.stringify(locationList));
+	   }
+		  
+			
 	</script>
 
 
 
-
+	<%-- <jsp:include page="../common/footer.jsp" /> --%>
 </body>
 </html>
