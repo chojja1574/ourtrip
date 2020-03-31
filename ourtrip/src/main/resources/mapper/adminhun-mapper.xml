@@ -120,7 +120,7 @@
 
 	<select id="selectList" parameterType="map"
 		resultMap="memberResultSet">
-		SELECT PlANNER_NO
+		SELECT *
 		FROM MEMBER
 		<where>
 			<if test="searchKey != null">
