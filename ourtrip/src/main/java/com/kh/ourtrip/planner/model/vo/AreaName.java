@@ -67,7 +67,11 @@ public class AreaName {
 	public void setSmallAreaName(String smallAreaName) {
 		this.smallAreaName = smallAreaName;
 	}
-
+	
+	public String toJsonString() {
+		return "{\"pno\":\""+plannerNo+"\",\"large\":\""+largeAreaCode+"\",\"largeNM\":\""+largeAreaName+"\",\"small\":\""+smallAreaCode+"\",\"smallNM\":\""+smallAreaName+"\"}";
+	}
+	
 	@Override
 	public String toString() {
 		return "AreaName [plannerNo=" + plannerNo + ", largeAreaCode=" + largeAreaCode + ", largeAreaName="

@@ -19,12 +19,16 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.ourtrip.planner.model.service.PlannerService2;
+import com.kh.ourtrip.planner.model.service.PlannerServiceSDS;
+import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
+import com.kh.ourtrip.planner.model.vo.LargeArea;
 import com.kh.ourtrip.planner.model.vo.Planner;
 import com.kh.ourtrip.planner.model.vo.PlannerMemberView;
 import com.kh.ourtrip.planner.model.vo.PlannerView;
 import com.kh.ourtrip.planner.model.vo.Schedule;
+import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Controller
 @SessionAttributes({"loginMember","msg","profilePath"})
@@ -33,6 +37,9 @@ public class PlannerController2 {
 	
 	@Autowired
 	PlannerService2 plannerService;
+	
+	@Autowired
+	PlannerServiceSDS plannerService1;
 	
 	@RequestMapping("testInput")
 	public String chattingRoom() {
@@ -46,7 +53,13 @@ public class PlannerController2 {
 		JSONParser jsonParser = new JSONParser();
 		JSONArray chatArray = new JSONArray();
 		JSONArray joinUserArray = new JSONArray();
+		JSONArray locationArray = new JSONArray();
+		JSONArray groupArray = new JSONArray();
 		Planner selectedPlanner = null;
+		List<LargeArea> largeNmList = null;
+		List<SmallArea> smallNmList = null;
+		List<AreaName> areaNameList = null;
+		
 		System.out.println("editplanner");
 		try {
 			
@@ -141,14 +154,22 @@ public class PlannerController2 {
 				joinUserArray.add(jsonObj);
 			}
 			
+			largeNmList = plannerService1.selectLargeNmList();
+			smallNmList = plannerService1.selectsmallNmList();
+			
+			areaNameList = plannerService.selectPlannerLocationName(no);
+			System.out.println("areaNameList : " + areaNameList);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		
+		model.addAttribute("largeNmList", largeNmList);
+		model.addAttribute("smallNmList", smallNmList);
 		model.addAttribute("plannerInfo", selectedPlanner.toJsonString());
 		model.addAttribute("plannerTitle", selectedPlanner.getPlannerTitle());
 		model.addAttribute("chatList", chatArray);
 		model.addAttribute("joinUserArray",joinUserArray);
+		model.addAttribute("areaNameList",areaNameList);
 		System.out.println("editplannerend");
 		
 		return "planner/editPlanner";

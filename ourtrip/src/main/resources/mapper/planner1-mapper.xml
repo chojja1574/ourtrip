@@ -85,6 +85,14 @@
 		<result property="plannerPermission" column="PLANNER_PERMISSION"/>
 		<result property="memberNickName" column="MEMBER_NICK_NAME"/>
 	</resultMap>
+	
+	<resultMap type="AreaName" id="AreaNameResultSet">
+		<result property="plannerNo" column="PLANNER_NO"/>
+		<result property="largeAreaCode" column="LARGE_AREA_CODE"/>
+		<result property="largeAreaName" column="LARGE_AREA_NAME"/>
+		<result property="smallAreaCode" column="SMALL_AREA_CODE"/>
+		<result property="smallAreaName" column="SMALL_AREA_NAME"/>
+	</resultMap>
 
 	<select id="selectPlannerView" parameterType="_int" resultMap="plannerViewResultSet">
 		SELECT * FROM V_PLANNER WHERE PLANNER_NO = #{no}
@@ -175,15 +183,15 @@
 	</select>
 	
 	<update id="updateTitle" parameterType="Planner">
-		UPDATE PLANNER SET PLANNER_TITLE = #{plannerTitle} WHERE PLANNER_NO = #{pno}
+		UPDATE PLANNER SET PLANNER_TITLE = #{plannerTitle} WHERE PLANNER_NO = #{plannerNo}
 	</update>
 	
 	<update id="updatePassword"  parameterType="Planner">
-		UPDATE PLANNER SET PLANNER_PWD = #{plannerTitle} WHERE PLANNER_NO = #{pno}
+		UPDATE PLANNER SET PLANNER_PWD = #{plannerPwd} WHERE PLANNER_NO = #{plannerNo}
 	</update>
 	
 	<update id="updatePublic"  parameterType="Planner">
-		UPDATE PLANNER SET PLANNER_PUBLIC_YN = #{plannerTitle} WHERE PLANNER_NO = #{pno}
+		UPDATE PLANNER SET PLANNER_PUBLIC_YN = #{plannerPublicYN} WHERE PLANNER_NO = #{plannerNo}
 	</update>
 	
 	<delete id="cleanUserList"  parameterType="_int">
@@ -201,5 +209,19 @@
 			#{plannerNo}, #{plannerTitle}, #{plannerPwd},#{plannerCost},DEFAULT,DEFAULT,
 			#{plannerStartDT},#{plannerPublicYN},DEFAULT,DEFAULT,0,#{plannerUrl},#{groupCode}
 		)
+	</insert>
+	
+	<select id="selectPlannerLocationName" parameterType="_int" resultMap="AreaNameResultSet">
+		SELECT * FROM V_AREA_NAME WHERE PLANNER_NO = #{no}
+	</select>
+	
+	<delete id="deletePlannerLocation" parameterType="_int">
+		DELETE FROM PLANNER_LOCATION WHERE PLANNER_NO = #{no}
+	</delete>
+	
+	<insert id="insertLocationList" parameterType="java.util.List">
+		<foreach item="loc" index="i" collection="list" separator=";" open="DECLARE BEGIN" close="; END;">
+			INSERT INTO PLANNER_LOCATION VALUES(#{loc.smallAreaCode},#{loc.largeAreaCode},#{loc.plannerNo})
+		</foreach>
 	</insert>
 </mapper>

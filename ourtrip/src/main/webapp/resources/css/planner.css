@@ -455,3 +455,10 @@ textarea {
     right: 15px;
     outline: none;
 }
+
+.locationUpdateBtn{
+	background:#18a8f1;
+	padding: .375rem .375rem .375rem .375rem;
+	color:white;
+	font-weight:bold;
+}

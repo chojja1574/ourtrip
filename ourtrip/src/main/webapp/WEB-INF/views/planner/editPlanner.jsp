@@ -107,6 +107,7 @@
 			</div>
 		</div>
 	</div>
+	
 	<!-- Modal -->
 	<div class="modal noselect fade plannerFont" id="LocationModal" role="dialog">
 		<div class="modal-dialog">
@@ -118,15 +119,44 @@
 					<h4 class="modal-title"></h4>
 				</div>
 				<div class="modal-body">
-					<p class="pwdIsEmpty">참여하려면 Join 버튼을 누르세요</p>
-					<p class="pwdIsnotEmpty">비밀번호를 입력하세요</p>
-					<input class="pwdIsnotEmpty" type="password" class="form-control" name="joinPwd" id="inputPwd" style="border:1px solid lightgray; width:100%">
+					<div class="row mx-auto">지역 선택</div>
+					<div class="row mb-4">
+						<div class="col-5">
+							<select name="largeArea" id="wide-area"	class="custom-select">
+								<c:forEach var="largeArea" items="${largeNmList}" varStatus="vs">
+									<option value="${largeArea.largeAreaCode}">${largeArea.largeAreaName}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="col-5">
+							<select name="smallArea" id="local-area" class="custom-select">
+								<option value="0" selected>전체</option>
+							</select>
+						</div>
+						<div class="col-2">
+							<button type="button" class="custom-select locationUpdateBtn" id="locationAdd">+</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12" id="locationList">
+							<%-- <c:forEach var="areaName" items="${areaNameList}" varStatus="vs">
+								<div class="row mb-2 locationDiv">
+									<div class="col-10">
+										<span class="custom-select" style="background:white">${areaName.largeAreaName} - ${areaName.smallAreaName}</span>
+									</div>
+									<div class="col-2">
+										<button data-large="${areaName.largeAreaCode}" data-small="${areaName.smallAreaCode}" type="button"
+										class="custom-select locationUpdateBtn" onclick="removeLocation(this);">-</button>
+									</div>
+								</div>
+							</c:forEach> --%>
+						</div>
+					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="ModalBtnCss2" data-dismiss="modal"
-						onclick="goBack();">돌아가기</button>
+					<button type="button" class="ModalBtnCss2" data-dismiss="modal" >취소</button>
 					<button type="button" class="ModalBtnCss1" data-dismiss="modal"
-						id="join">Join</button>
+						id="updateLocation">수정</button>
 				</div>
 			</div>
 		</div>
@@ -141,15 +171,17 @@
 					<h4 class="modal-title"></h4>
 				</div>
 				<div class="modal-body">
-					<p class="pwdIsEmpty">참여하려면 Join 버튼을 누르세요</p>
-					<p class="pwdIsnotEmpty">비밀번호를 입력하세요</p>
-					<input class="pwdIsnotEmpty" type="password" class="form-control" name="joinPwd" id="inputPwd" style="border:1px solid lightgray; width:100%">
+					<select name="selectGroup" class="custom-select">
+						<option value='1'>혼자</option>
+						<option value='2'>커플</option>
+						<option value='3'>친구</option>
+						<option value='4'>가족</option>
+					</select>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="ModalBtnCss2" data-dismiss="modal"
-						onclick="goBack();">돌아가기</button>
+					<button type="button" class="ModalBtnCss2" data-dismiss="modal">취소</button>
 					<button type="button" class="ModalBtnCss1" data-dismiss="modal"
-						id="join">Join</button>
+						id="updateGroup">수정</button>
 				</div>
 			</div>
 		</div>
@@ -168,11 +200,11 @@
 						</div>
 						<div class="col-md-2">
 							<button type="button" data-toggle="modal" data-target="#LocationModal"
-								id="updateLocation" class="plannerHeaderBtn btnColor1">지역목록 수정</button>
+								id="updateLocationModal" class="plannerHeaderBtn btnColor1">지역목록 수정</button>
 						</div>
 						<div class="col-md-2">
 							<button type="button" data-toggle="modal" data-target="#GroupModal" 
-								id="updateGroup" class="plannerHeaderBtn btnColor1">그룹 카테고리 수정</button>
+								id="updateGroupModal" class="plannerHeaderBtn btnColor1">그룹 카테고리 수정</button>
 						</div>
 						<div class="col-md-2">
 							<button type="button" id="updatePublic" class="plannerHeaderBtn btnColor1">공개 / 비공개 설정</button>
@@ -409,6 +441,8 @@ var memberNo = null;
 var memberNickName = null;
 var permission = null;
 var joinMember = new Array();
+var joinUserJson = null;
+var locationList = new Array();
 
 $(function() {
 	memberNo = '${loginMember.memberNo}';
@@ -422,16 +456,17 @@ $(function() {
 	var plannerInfo = '${plannerInfo}';
 	var chatList = '${chatList}';
 	var joinUserArray = '${joinUserArray}';
-	var joinUserJson = JSON.parse(joinUserArray);
+	joinUserJson = JSON.parse(joinUserArray);
 	var plannerJson = JSON.parse(plannerInfo);
 	var chatListJson = JSON.parse(chatList);
 	var profilePath = '${profilePath}';
 	planner.pwd = plannerJson.plannerPwd;
 	console.log("pwd : " + planner.pwd + ", " + plannerJson.plannerPwd);
-	if(planner.pwd == ''){
+	if(planner.pwd == '' || planner.pwd == 'null'){
 		$('.pwdIsnotEmpty').each(function(i, item){
 			console.log(1);
 			$(item).css('display','none');
+			planner.pwd = '';
 		})
 	}else{
 		$('.pwdIsEmpty').each(function(i, item){
@@ -461,6 +496,14 @@ $(function() {
 		}else{
 			alert('비밀번호가 틀렸습니다');
 		}
+		console.log(locationList);
+		var tempList = new Array();
+		<c:forEach var="areaName" items="${areaNameList}" varStatus="vs">
+			console.log(12314123);
+			tempList.push({large:'${areaName.largeAreaCode}',largeNM:'${areaName.largeAreaName}',
+				small:'${areaName.smallAreaCode}',smallNM:'${areaName.smallAreaName}'});
+		</c:forEach>
+		initLocationList(tempList);
 	})
 	console.log(plannerJson.plannerStartDT);
 	$('#startrip').val(plannerJson.plannerStartDT);
@@ -1275,6 +1318,16 @@ function onMessage(msg) {
 	case 'startDate':
 		$('#startrip').val(data['content']);
 		break;
+	case 'updatePublic':
+		planner.publicYN = data['publicYN'];
+		break;
+	case 'clearUserList':
+		initJoinMember(data['joinUserArray']);
+		break;
+	case 'locationList':
+		console.log(JSON.parse(data['locationList']));
+		initLocationList(JSON.parse(data['locationList']));
+		break;
 	}
 		
 	
@@ -1355,7 +1408,9 @@ function inputChat(msg){
 //=======================================================================================//
 
 function initJoinMember(joinUserArray){
-	$('#userPermission').html('');
+	joinMember = new Array();
+	$('#userPermission option').remove();
+	
 	var color = null;
 	var icon = '';
 	var i = 0;
@@ -1379,6 +1434,7 @@ function initJoinMember(joinUserArray){
 		$('#userPermission').append(userOption);
 	}
 	// <option value="memberNo">닉네임 <option>
+	console.log(joinUserJson);
 }
 
 $('#grantBtn').click(function(){
@@ -1391,9 +1447,19 @@ $('#grantBtn').click(function(){
 
 $('#stealBtn').click(function(){
 	var grantMemberNo = $('#userPermission').val();
-	if(permission > 2)
-		sock.send(JSON.stringify({pno:planner.no, type: 'permission', memberNo: memberNo, permission: '1', grantMemberNo:grantMemberNo}));
-	else
+	var userIndex = -1;
+	for(var i in joinUserJson){
+		if(joinUserJson[i].memberNo == grantMemberNo)
+			userIndex = i;
+	}
+	
+	if(permission > 2){
+		if(joinUserJson[i].permission == 3){
+			sock.send(JSON.stringify({pno:planner.no, type: 'permission', memberNo: memberNo, permission: '1', grantMemberNo:grantMemberNo}));
+		}else{
+			alert('방장의 권한을 삭제할 수 없습니다.');		
+		}
+	}else
 		alert('권한이 없습니다.');
 });
 
@@ -1612,5 +1678,95 @@ function toggleArrow(e){
     }
 };
 
+//=======================================================================================//
+//====================================== 지역리스트 함수 ======================================//
+//=======================================================================================//
+
+//지역 선택
+$("#wide-area").on("change", function(){
+    var wideVal = Number($(this).val());
+    console.log(wideVal);
+    var html = "";
+
+    switch(wideVal){
+	<c:forEach var="largeArea" items="${largeNmList}" varStatus="vs">
+	case ${largeArea.largeAreaCode} : 
+		<c:forEach var="smallArea" items="${smallNmList}" varStatus="vs">
+			<c:if test="${smallArea.largeAreaCode eq largeArea.largeAreaCode}">
+    			html += "<option value='${smallArea.smallAreaCode}'>${smallArea.smallAreaName}</option>";
+    		</c:if>
+    	</c:forEach>break;
+	</c:forEach>
+    }
+
+    $("#local-area").html(html);
+});
+
+$('#locationAdd').click(function(){
+	var locationDup = locationEqual($('#wide-area').val(),$('#local-area').val());
+	if(locationDup == undefined){
+		addLocationList($('#wide-area').val(),$('#wide-area option[value='+$('#wide-area').val()+']').html(),
+				$('#local-area').val(),$('#local-area option[value='+$('#local-area').val()+']').html())
+	}else{
+		alert('같은 장소를 중복해서 선택할 수 없습니다');
+	}
+});
+
+function addLocationList(lc,ln,sc,sn){
+	
+	var locationName = ln + ' - ' + sn
+	var locationDiv =
+	'<div class="row mb-2 locationDiv">' +
+	'<div class="col-10">' +
+	'<span class="custom-select" style="background:white">' + locationName + '</span>' +
+	'</div>' +
+	'<div class="col-2">' +
+	'<button data-large="' + lc + '" data-small="' + sc + '" type="button"' +
+	'class="custom-select locationUpdateBtn" onclick="removeLocation(this);">-</button>' +
+	'</div>' +
+	'</div>';
+	console.log(lc, ln, sc, sn);
+	if(locationList.length < 5){
+		//console.log("large : " + lc + ", small : " + sc);
+		locationList.push({large:lc,largeNM:ln,small:sc,smallNM:sn});
+		$('#locationList').append(locationDiv);
+	}else{
+		alert('지역을 더이상 추가할 수 없습니다');
+	}
+	
+}
+
+function removeLocation(location){
+	console.log(location);
+	console.log(locationList);
+	locationList.splice(locationEqual($('#wide-area').val(),$('#local-area').val()),1);
+	console.log(locationList);
+	$(location).parent().parent().remove();
+}
+
+function locationEqual(lc, sc){
+	for(var i in locationList){
+		if(locationList[i].large == lc && locationList[i].small == sc)
+			return i;
+	}
+}
+
+$('#updateLocation').click(function(){
+	
+	var locationJson = JSON.stringify(locationList);
+	console.log(locationList);
+	console.log(locationJson);
+	sock.send(JSON.stringify({pno:planner.no, type:'locationList', locationList:locationList}));
+})
+
+function initLocationList(tempList){
+
+	locationList = new Array();
+	$('#locationList').html('');
+	
+	for(var i in tempList){
+		addLocationList(tempList[i].large,tempList[i].largeNM,tempList[i].small,tempList[i].smallNM);
+	}
+}
 </script>
 </html>

@@ -2,6 +2,7 @@ package com.kh.ourtrip.planner.model.service;
 
 import java.util.List;
 
+import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.Planner;
@@ -148,4 +149,8 @@ public interface PlannerService2 {
 	public abstract int updatePublic(Planner planner) throws Exception;
 	
 	public abstract int clearUserList(int no) throws Exception;
+
+	public abstract List<AreaName> selectPlannerLocationName(Integer no) throws Exception;
+
+	public abstract int updateLocationList(List<AreaName> locationList) throws Exception;
 }

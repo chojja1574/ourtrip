@@ -21,6 +21,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.kh.ourtrip.planner.model.service.PlannerService2;
+import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.Planner;
@@ -99,6 +100,8 @@ public class EchoHandler extends TextWebSocketHandler {
             	updatePublic(session, jsonObj);
             }else if(jsonObj.get("type").equals("clearUserList")) {
             	clearUserList(session, jsonObj);
+            }else if(jsonObj.get("type").equals("locationList")) {
+            	locationList(session, jsonObj);
             }else {
             	sendChatroom(session, jsonObj);
             }
@@ -446,15 +449,19 @@ public class EchoHandler extends TextWebSocketHandler {
 
 		Planner planner = new Planner();
 		
-		planner.setPlannerNo(Integer.parseInt(msgJson.get("pno").toString()));
-		planner.setPlannerPwd(msgJson.get("pwd").toString());
-		
-		result = plannerService.updatePassword(planner);
-		System.out.println("updatePassword");
-		
-		//{pno:planner.no, type: 'updatePassword', memberNo: memberNo, pwd: inputPwd1}
-		
-		session.sendMessage(new TextMessage(msgJson.toJSONString()));
+		if(msgJson.get("pwd") != null) {
+			planner.setPlannerNo(Integer.parseInt(msgJson.get("pno").toString()));
+			planner.setPlannerPwd(msgJson.get("pwd").toString());
+			
+			System.out.println(planner.getPlannerPwd());
+			
+			result = plannerService.updatePassword(planner);
+			System.out.println("updatePassword");
+			
+			//{pno:planner.no, type: 'updatePassword', memberNo: memberNo, pwd: inputPwd1}
+			
+			session.sendMessage(new TextMessage(msgJson.toJSONString()));
+		}
 		
 		return result;
 	}
@@ -507,6 +514,50 @@ public class EchoHandler extends TextWebSocketHandler {
 		
 		result = plannerService.clearUserList(Integer.parseInt(msgJson.get("pno").toString()));
 		//{pno:planner.no, type: 'clearUserList', memberNo: memberNo}
+		
+		List<PlannerMemberView> pmList = plannerService.selectPlannerMemeberListUsePlannerNo(Integer.parseInt(msgJson.get("pno").toString()));
+		
+		JSONObject jsonObj = null;
+		JSONParser jsonParser = new JSONParser();
+		JSONArray joinUserArray = new JSONArray();
+		
+		for(PlannerMemberView tpm : pmList) {
+			jsonObj = (JSONObject) jsonParser.parse(tpm.toJsonString());
+			joinUserArray.add(jsonObj);
+		}
+		
+		msgJson.put("joinUserArray", joinUserArray);
+		
+		sendChatroom(session, msgJson);
+		
+		return result;
+	}
+	private int locationList(WebSocketSession session, JSONObject msgJson) throws Exception {
+		
+		int result = 0;
+
+		System.out.println(msgJson.get("locationList"));
+		JSONArray locationInfo = (JSONArray)(msgJson.get("locationList"));
+
+		List<AreaName> locationList = new ArrayList<AreaName>();
+		AreaName tempLocation = null;
+		
+		if (locationInfo != null) { 
+		   for (int i=0;i<locationInfo.size();i++){ 
+			   JSONParser jsonParser = new JSONParser();
+			   JSONObject jsonObj = (JSONObject) jsonParser.parse(locationInfo.get(i).toString());
+			   tempLocation = new AreaName();
+			   tempLocation.setPlannerNo(Integer.parseInt(msgJson.get("pno").toString()));
+			   tempLocation.setLargeAreaCode(Integer.parseInt(jsonObj.get("large").toString()));
+			   tempLocation.setLargeAreaName(jsonObj.get("largeNM").toString());
+			   tempLocation.setSmallAreaCode(Integer.parseInt(jsonObj.get("small").toString()));
+			   tempLocation.setSmallAreaName(jsonObj.get("smallNM").toString());
+
+			   locationList.add(tempLocation);
+		   } 
+		}
+		
+		result = plannerService.updateLocationList(locationList);
 		
 		sendChatroom(session, msgJson);
 		
