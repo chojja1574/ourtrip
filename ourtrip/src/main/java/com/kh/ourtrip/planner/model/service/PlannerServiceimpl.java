@@ -1,6 +1,8 @@
 package com.kh.ourtrip.planner.model.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -481,10 +483,13 @@ public class PlannerServiceimpl implements PlannerService {
 			// 2. DB에서 플래너 다음번호 생성 후 값 붙여넣고 DB에 날림
 			int plannerNextNo = plannerDAO.selectNextNo2();
 			// url 생성
-			String url = "";
-			for(int i = 1; i<16; i++) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			Calendar c1 = Calendar.getInstance();
+			String strToday = sdf.format(c1.getTime());
+			String url = strToday;
+			for (int i = 1; i < 8; i++) {
 				double random = Math.random();
-				int ranDomInt = (int)(random *10); 
+				int ranDomInt = (int) (random * 10);
 				url += ranDomInt;
 			}
 			
