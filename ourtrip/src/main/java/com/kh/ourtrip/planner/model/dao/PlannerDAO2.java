@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.Planner;
@@ -114,5 +115,18 @@ public class PlannerDAO2 {
 	
 	public int clearUserList(int no) {
 		return sqlSessionTemplate.delete("planner1Mapper.cleanUserList", no);
+	}
+
+	public List<AreaName> selectPlannerLocationName(Integer no) {
+		return sqlSessionTemplate.selectList("planner1Mapper.selectPlannerLocationName", no);
+	}
+
+	public int deletePlannerLocation(int no) {
+		return sqlSessionTemplate.delete("planner1Mapper.deletePlannerLocation", no);
+	}
+	
+	public int updateLocationList(List<AreaName> locationList) {
+		System.out.println(locationList.get(0).getSmallAreaCode());
+		return sqlSessionTemplate.insert("planner1Mapper.insertLocationList", locationList);
 	}
 }

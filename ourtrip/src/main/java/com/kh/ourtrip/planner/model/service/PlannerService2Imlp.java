@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.ourtrip.planner.model.dao.PlannerDAO2;
+import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.Planner;
@@ -232,6 +233,17 @@ public class PlannerService2Imlp implements PlannerService2 {
 	@Override
 	public int clearUserList(int no) throws Exception {
 		return plannerDAO2.clearUserList(no);
+	}
+
+	@Override
+	public List<AreaName> selectPlannerLocationName(Integer no) throws Exception {
+		return plannerDAO2.selectPlannerLocationName(no);
+	}
+
+	@Override
+	public int updateLocationList(List<AreaName> locationList) throws Exception {
+		plannerDAO2.deletePlannerLocation(locationList.get(0).getPlannerNo());
+		return plannerDAO2.updateLocationList(locationList);
 	}
 
 }
