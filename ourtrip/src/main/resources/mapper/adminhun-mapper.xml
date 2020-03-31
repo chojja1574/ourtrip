@@ -350,7 +350,7 @@
 		</where>
 	</select>
 	
-	<select id="plannerInfo" parameterType="map" resultMap="plannerInfoResultSet">
+	<select id="plannerInfomaion" parameterType="map" resultMap="plannerInfoResultSet">
 	SELECT * FROM PLANNER
 		<where>
 			<if test="searchKey != null and searchValue != ''">

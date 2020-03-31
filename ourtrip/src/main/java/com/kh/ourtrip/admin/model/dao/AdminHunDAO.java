@@ -201,7 +201,7 @@ public class AdminHunDAO {
 	public List<PlannerInfo> plannerInfo(Map<String, Object> keyword, PageInfo pInf) {
 		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
 		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
-		return sqlSession.selectList("adminhunMapper.plannerInfo" , keyword ,rowBounds);
+		return sqlSession.selectList("adminhunMapper.plannerInfomaion" , keyword ,rowBounds);
 	}
 
 	
