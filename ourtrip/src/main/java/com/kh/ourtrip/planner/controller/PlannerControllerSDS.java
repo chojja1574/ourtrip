@@ -42,7 +42,7 @@ import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Controller
 @SessionAttributes({"loginMember","msg","profilePath", "detailUrl"})
-@RequestMapping("/planner/*") // 테스트를 위한 임시 변경
+@RequestMapping("/planner2/*") // 테스트를 위한 임시 변경
 public class PlannerControllerSDS {
 	
 	@Autowired
