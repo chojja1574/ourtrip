@@ -521,7 +521,7 @@ public class PlannerServiceImplSDS implements PlannerServiceSDS{
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public int insertPlannerMember(PlannerMember pm) throws Exception {
-		return plannerDAO.insertPlannerMemeber(pm);
+		return plannerDAO.insertPlannerMember(pm);
 	}
 	
 	/** PLANNER_MEMBER 테이블의 permission값 수정 Service
@@ -546,5 +546,101 @@ public class PlannerServiceImplSDS implements PlannerServiceSDS{
 	public int updateStartDate(Planner p) throws Exception {
 		return plannerDAO.updateStartDate(p);
 	}
+
+	/** 플래너 복사용 Service
+	 * @param no
+	 * @param memberNo
+	 * @return result
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int plannerCopy(int no, int memberNo) throws Exception {
+		
+		int result = 0;
+		
+		// 1. DB에서 플래너에 관한 상세정보 조회
+		List<PlannerView> plannerDetail = plannerDAO.selectPlannerView(no);
+		
+		// 해당 플래너의 지역정보 조회
+		List<AreaName> areaNameList = plannerDAO.selectAreaNamePlanner(no);
+		
+		if(!plannerDetail.isEmpty()) {
+			// 2. DB에서 플래너 다음번호 생성 후 값 붙여넣고 DB에 날림
+			int plannerNextNo = plannerDAO.selectNextNo();
+			// url 생성
+			String url = "";
+			for(int i = 1; i<16; i++) {
+				double random = Math.random();
+				int ranDomInt = (int)(random *10); 
+				url += ranDomInt;
+			}
+			
+			Planner copyPlanner = new Planner(plannerNextNo, plannerDetail.get(0).getPlannerTitle(), plannerDetail.get(0).getPlannerCost(),
+					plannerDetail.get(0).getPlannerStartDT(), "Y", 
+					plannerDetail.get(0).getPlannerExpiry(), url, plannerDetail.get(0).getGroupCode());
+			
+			System.out.println("service planner : " + copyPlanner);
+			result = plannerDAO.createPlanner(copyPlanner);
+			if(result <= 0) throw new Exception("플래너 복사 후 생성 과정중 오류 발생");
+			
+			result = plannerDAO.insertPlannerMember(new PlannerMember(copyPlanner.getPlannerNo(), memberNo, 3));
+			if(result <= 0) throw new Exception("플래너 생성 후 플래너 회원 테이블에 insert과정중 오류 발생");
+			
+			// 플래너 복사 성공 시 가져왔던 DB 추가
+			for(AreaName areaName : areaNameList) {
+				areaName.setPlannerNo(plannerNextNo);
+				result = plannerDAO.insertAreaName(areaName);
+			}
+			
+			// 3. DB에서 날짜번호 생성 후 값 붙여넣고 DB에 날림
+			
+			// DateNo에 대한 중복제거
+			Set<Integer> dateNoList = new HashSet<Integer>();
+			for(PlannerView pd : plannerDetail) dateNoList.add(pd.getDateNo());
+			
+			List<Day> dayList = new ArrayList<Day>();
+			List<Schedule> scheduleList = new ArrayList<Schedule>();
+			
+			// 중복제거된 번호를 이용하여 Date테이블에 넣을 값 복사
+			for(Integer dateNo : dateNoList) {
+				boolean isPass = false; // 똑같은 날짜인지 검사
+				
+				int dateNextNo = 0; // 하나의 날짜에 여러개의 스케쥴을 담기위한 날짜 가져오기용 변수
+				// 플래너 순환
+				for(PlannerView pd : plannerDetail) {
+					if(dateNo == pd.getDateNo()) { // 중복제거된 번호랑 순환되는 번호랑 같으면
+						if(!isPass) { // 중복되는 날짜가 없었다면
+							dateNextNo = plannerDAO.getNextDateNo();
+							dayList.add(new Day(dateNextNo, pd.getTripDate(), plannerNextNo));
+							scheduleList.add(new Schedule(plannerDAO.getNextScheduleNo(), pd.getScheduleTitle(), pd.getScheduleCost(), pd.getScheduleTime(),
+									pd.getScheduleMemo(), pd.getScheduleLocationNM(), pd.getScheduleLat(), pd.getScheduleLng(), dateNextNo));
+							isPass = true;
+														
+						}else {
+							scheduleList.add(new Schedule(plannerDAO.getNextScheduleNo(), pd.getScheduleTitle(), pd.getScheduleCost(), pd.getScheduleTime(),
+									pd.getScheduleMemo(), pd.getScheduleLocationNM(), pd.getScheduleLat(), pd.getScheduleLng(), dateNextNo));
+						}
+					}
+				}
+			}
+			
+			// 복사된 플래너 날짜 DB에 삽입
+			for(Day day : dayList) {
+				result = plannerDAO.copyDate(day);
+				if(result <= 0) throw new Exception("플래너 날짜 복사 과정중 오류 발생");
+			}
+			
+			// 4. DB에서 스케줄번호 생성 후 값 붙여넣고 DB에 날림
+			for(Schedule schedule : scheduleList) {
+				result = plannerDAO.insertSchedule(schedule);
+				if(result <= 0) throw new Exception("플래너 스케쥴 복사 과정중 오류 발생");
+			}
+			
+		}
+		
+		return result;
+	}
+	
 	
 }

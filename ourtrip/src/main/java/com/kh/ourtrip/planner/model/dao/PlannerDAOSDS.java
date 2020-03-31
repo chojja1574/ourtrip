@@ -223,7 +223,7 @@ public class PlannerDAOSDS {
 		return sqlSession.selectOne("planner1Mapper.selectPlanerMemeberExist", pm);
 	}
 
-	public int insertPlannerMemeber(PlannerMember pm) {
+	public int insertPlannerMember(PlannerMember pm) {
 		return sqlSession.insert("planner1Mapper.insertPlannerMember", pm);
 	}
 
@@ -237,6 +237,50 @@ public class PlannerDAOSDS {
 
 	public int updateStartDate(Planner p) {
 		return sqlSession.update("planner1Mapper.updateStartDate", p);
+	}
+	
+	/** 플래너 번호 조회용 DAO
+	 * @return palnnerNo test
+	 * @throws Exception
+	 */
+	public int selectNextNo() throws Exception{
+		
+		return sqlSession.selectOne("plannerCardMapper.selectNextNo");
+	}
+	/**플래너생성용 DAO
+	 * @param planner
+	 * @return result 
+	 * @throws Exception
+	 */
+	public int createPlanner(Planner planner) throws Exception{
+		return sqlSession.insert("plannerCardMapper.createPlanner",planner);
+	}
+
+	/** 플래너 날짜 복사용 DAO
+	 * @param day
+	 * @return result
+	 * @throws Exception
+	 */
+	public int copyDate(Day day) throws Exception{
+		return sqlSession.insert("plannerCardMapper.copyDate", day);
+	}
+
+	/** 플래너 지역 복사용 DAO
+	 * @param no
+	 * @return areaNameList
+	 * @throws Exception
+	 */
+	public List<AreaName> selectAreaNamePlanner(int no) throws Exception{
+		return sqlSession.selectList("plannerCardMapper.selectAreaNamePlanner", no);
+	}
+
+	/** 지역이름 추가용 DAO
+	 * @param areaName
+	 * @return result
+	 * @throws Exception
+	 */
+	public int insertAreaName(AreaName areaName) throws Exception{
+		return sqlSession.insert("plannerCardMapper.insertAreaName", areaName);
 	}
 
 }

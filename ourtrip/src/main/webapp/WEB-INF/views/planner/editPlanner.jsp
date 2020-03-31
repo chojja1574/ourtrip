@@ -81,7 +81,7 @@
 	<jsp:include page="../common/header.jsp" />
 	<jsp:include page="../common/nav.jsp" />
 	<button type="button" data-toggle="modal" data-target="#myModal"
-		id="modalBtn" class="hide">Open Modal</button>
+		id="modalBtn" style="display:none"></button>
 
 	<!-- Modal -->
 	<div class="modal noselect fade plannerFont" id="myModal" role="dialog">
@@ -107,7 +107,53 @@
 			</div>
 		</div>
 	</div>
-
+	<!-- Modal -->
+	<div class="modal noselect fade plannerFont" id="LocationModal" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					지역 수정
+					<button type="button" class="close" data-dismiss="modal">×</button>
+					<h4 class="modal-title"></h4>
+				</div>
+				<div class="modal-body">
+					<p class="pwdIsEmpty">참여하려면 Join 버튼을 누르세요</p>
+					<p class="pwdIsnotEmpty">비밀번호를 입력하세요</p>
+					<input class="pwdIsnotEmpty" type="password" class="form-control" name="joinPwd" id="inputPwd" style="border:1px solid lightgray; width:100%">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="ModalBtnCss2" data-dismiss="modal"
+						onclick="goBack();">돌아가기</button>
+					<button type="button" class="ModalBtnCss1" data-dismiss="modal"
+						id="join">Join</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal noselect fade plannerFont" id="GroupModal" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					그룹 수정
+					<button type="button" class="close" data-dismiss="modal">×</button>
+					<h4 class="modal-title"></h4>
+				</div>
+				<div class="modal-body">
+					<p class="pwdIsEmpty">참여하려면 Join 버튼을 누르세요</p>
+					<p class="pwdIsnotEmpty">비밀번호를 입력하세요</p>
+					<input class="pwdIsnotEmpty" type="password" class="form-control" name="joinPwd" id="inputPwd" style="border:1px solid lightgray; width:100%">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="ModalBtnCss2" data-dismiss="modal"
+						onclick="goBack();">돌아가기</button>
+					<button type="button" class="ModalBtnCss1" data-dismiss="modal"
+						id="join">Join</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="container-fluid pt-5 plannerFont" style="border-top: 1px solid">
 		<form action="#">
 			<div class="row noselect mb-3" id="masterOnly" style="display:none;">
@@ -121,10 +167,12 @@
 							<button type="button" id="updatePassword" class="plannerHeaderBtn btnColor1">비밀번호 수정</button>
 						</div>
 						<div class="col-md-2">
-							<button type="button" id="updateLocation" class="plannerHeaderBtn btnColor1">지역목록 수정</button>
+							<button type="button" data-toggle="modal" data-target="#LocationModal"
+								id="updateLocation" class="plannerHeaderBtn btnColor1">지역목록 수정</button>
 						</div>
 						<div class="col-md-2">
-							<button type="button" id="updateGroup" class="plannerHeaderBtn btnColor1">그룹 카테고리 수정</button>
+							<button type="button" data-toggle="modal" data-target="#GroupModal" 
+								id="updateGroup" class="plannerHeaderBtn btnColor1">그룹 카테고리 수정</button>
 						</div>
 						<div class="col-md-2">
 							<button type="button" id="updatePublic" class="plannerHeaderBtn btnColor1">공개 / 비공개 설정</button>
