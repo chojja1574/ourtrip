@@ -4,7 +4,6 @@ import org.mybatis.spring.SqlSessionTemplate;
 
 public class VisitCountDAO {
 	
-		
 	/** 방문자수 저장용 DAO
 	 * @param ip
 	 * @param sqlSession

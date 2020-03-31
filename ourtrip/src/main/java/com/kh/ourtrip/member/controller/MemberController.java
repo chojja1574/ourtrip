@@ -271,10 +271,6 @@ public class MemberController {
 			String[] arrUrl = beforeUrl.split("/");
 			String lastUrl = arrUrl[arrUrl.length - 1];
 			
-			System.out.println("detailURl : " + model.getAttribute("detailUrl"));
-			System.out.println("beforeUrl : " + beforeUrl);
-			System.out.println("lastUrl : " + lastUrl);
-			
 			// 회원정보 수정관련 주소와 같지 않으면 url저장
 			if(!model.getAttribute("detailUrl").equals(beforeUrl) ||
 				!lastUrl.equals("update") ||

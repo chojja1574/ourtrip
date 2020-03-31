@@ -133,4 +133,19 @@ public interface PlannerService2 {
 	 * @return
 	 */
 	public abstract int updateStartDate(Planner p) throws Exception;
+
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public abstract int countDate(int pno) throws Exception;
+	
+	public abstract int countSchedule(int dno) throws Exception;
+
+	public abstract int updateTitle(Planner planner) throws Exception;
+	
+	public abstract int updatePassword(Planner planner) throws Exception;
+	
+	public abstract int updatePublic(Planner planner) throws Exception;
+	
+	public abstract int clearUserList(int no) throws Exception;
 }

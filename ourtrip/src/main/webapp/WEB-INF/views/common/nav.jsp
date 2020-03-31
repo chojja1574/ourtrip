@@ -40,7 +40,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <div class="container my-0 px-0">
             <div class="col-sm-3 nav-item">
-                <a href="#" class="nav-text">
+                <a href="${contextPath}" class="nav-text">
                     <h5>홈</h5>
                 </a>
             </div>

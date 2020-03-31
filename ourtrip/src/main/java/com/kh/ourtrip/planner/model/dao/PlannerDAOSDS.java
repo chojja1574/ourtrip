@@ -11,9 +11,15 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.planner.model.vo.AreaName;
+import com.kh.ourtrip.planner.model.vo.ChattingLogView;
+import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.LargeArea;
+import com.kh.ourtrip.planner.model.vo.Planner;
 import com.kh.ourtrip.planner.model.vo.PlannerCard;
 import com.kh.ourtrip.planner.model.vo.PlannerMember;
+import com.kh.ourtrip.planner.model.vo.PlannerMemberView;
+import com.kh.ourtrip.planner.model.vo.PlannerView;
+import com.kh.ourtrip.planner.model.vo.Schedule;
 import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Repository
@@ -22,6 +28,7 @@ public class PlannerDAOSDS {
 	@Autowired
 	public SqlSessionTemplate sqlSession;
 	
+	// @author 신덕수
 	/** 추천리스트 조회용 DAO
 	 * @return
 	 * @throws Exception
@@ -80,6 +87,7 @@ public class PlannerDAOSDS {
 		return sqlSession.selectList("plannerCardMapper.selectPList", map, rowBounds);
 	}
 	
+	// @author 조유상
 	/** 대지역 목록 조회용 DAO
 	 * @return largeNmList
 	 * @throws Exception
@@ -148,6 +156,131 @@ public class PlannerDAOSDS {
 	 */
 	public int delPlanner(PlannerMember delPlanner) throws Exception{
 		return sqlSession.update("plannerCardMapper.delPlanner", delPlanner);
+	}
+
+	/** 플래너 나가기용 DAO
+	 * @param outPlanner
+	 * @return result
+	 * @throws Exception
+	 */
+	public int outPlanner(PlannerMember outPlanner) throws Exception{
+		return sqlSession.delete("plannerCardMapper.outPlanner", outPlanner);
+	}
+	
+	// @author 박지현
+	public List<PlannerView> selectPlannerView(int no) throws Exception{
+		return sqlSession.selectList("planner1Mapper.selectPlannerView",no);
+	}
+
+	public int getNextDateNo() throws Exception {
+		return sqlSession.selectOne("planner1Mapper.selectDateNo");
+	}
+	public int getNextScheduleNo() throws Exception {
+		return sqlSession.selectOne("planner1Mapper.selectScheduleNo");
+	}
+
+	public int insertDate(Day day) throws Exception {
+		return sqlSession.insert("planner1Mapper.insertDate", day);
+	}
+
+	public int updateTripDate(List<Day> dayList) throws Exception {
+		return sqlSession.update("planner1Mapper.updateTripDate", dayList);
+	}
+
+	public int insertDefaultSchedule(Schedule schedule) throws Exception {
+		return sqlSession.insert("planner1Mapper.insertDefaultSchedule", schedule);
+	}
+
+	public int deleteDate(int dateNo) throws Exception {
+		return sqlSession.delete("planner1Mapper.deleteDate", dateNo);
+	}
+
+	public int updateSchedule(Schedule sche) throws Exception {
+		return sqlSession.update("planner1Mapper.updateSchedule", sche);
+	}
+
+	public int insertSchedule(Schedule sche) throws Exception {
+		return sqlSession.insert("planner1Mapper.insertSchedule", sche);
+	}
+
+	public int deleteSchedule(int sno) throws Exception {
+		return sqlSession.delete("planner1Mapper.deleteSchedule", sno);
+	}
+
+	public int insertChattingLog(ChattingLogView chatLog) throws Exception {
+		return sqlSession.insert("planner1Mapper.insertChattingLog", chatLog);
+	}
+
+	public List<ChattingLogView> selectChatList(int no) throws Exception {
+		return sqlSession.selectList("planner1Mapper.selectChatList", no);
+	}
+
+	public List<PlannerMemberView> selectPlannerMemeberListUsePlannerNo(int pno) {
+		return sqlSession.selectList("planner1Mapper.selectPlanerMemeberListUsePlannerNo", pno);
+	}
+	
+	public int selectPlannerMemeberExist(PlannerMemberView pm) {
+		return sqlSession.selectOne("planner1Mapper.selectPlanerMemeberExist", pm);
+	}
+
+	public int insertPlannerMember(PlannerMember pm) {
+		return sqlSession.insert("planner1Mapper.insertPlannerMember", pm);
+	}
+
+	public int updatePermission(PlannerMember pm) {
+		return sqlSession.update("planner1Mapper.updatePermission", pm);
+	}
+
+	public int updateSumCost(Planner p) {
+		return sqlSession.update("planner1Mapper.updateSumCost", p);
+	}
+
+	public int updateStartDate(Planner p) {
+		return sqlSession.update("planner1Mapper.updateStartDate", p);
+	}
+	
+	/** 플래너 번호 조회용 DAO
+	 * @return palnnerNo test
+	 * @throws Exception
+	 */
+	public int selectNextNo() throws Exception{
+		
+		return sqlSession.selectOne("plannerCardMapper.selectNextNo");
+	}
+	/**플래너생성용 DAO
+	 * @param planner
+	 * @return result 
+	 * @throws Exception
+	 */
+	public int createPlanner(Planner planner) throws Exception{
+		return sqlSession.insert("plannerCardMapper.createPlanner",planner);
+	}
+
+	/** 플래너 날짜 복사용 DAO
+	 * @param day
+	 * @return result
+	 * @throws Exception
+	 */
+	public int copyDate(Day day) throws Exception{
+		return sqlSession.insert("plannerCardMapper.copyDate", day);
+	}
+
+	/** 플래너 지역 복사용 DAO
+	 * @param no
+	 * @return areaNameList
+	 * @throws Exception
+	 */
+	public List<AreaName> selectAreaNamePlanner(int no) throws Exception{
+		return sqlSession.selectList("plannerCardMapper.selectAreaNamePlanner", no);
+	}
+
+	/** 지역이름 추가용 DAO
+	 * @param areaName
+	 * @return result
+	 * @throws Exception
+	 */
+	public int insertAreaName(AreaName areaName) throws Exception{
+		return sqlSession.insert("plannerCardMapper.insertAreaName", areaName);
 	}
 
 }

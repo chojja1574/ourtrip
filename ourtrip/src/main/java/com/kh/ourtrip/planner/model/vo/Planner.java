@@ -87,6 +87,32 @@ public class Planner {
 		this.largeAreaCode = largeAreaCode;
 		this.smallAreaCode = smallAreaCode;
 	}
+	
+	public Planner(int plannerNo, String plannerTitle, int plannerCost, Date plannerStartDT, String plannerExpiry,
+			String plannerUrl, int groupCode) {
+		super();
+		this.plannerNo = plannerNo;
+		this.plannerTitle = plannerTitle;
+		this.plannerCost = plannerCost;
+		this.plannerStartDT = plannerStartDT;
+		this.plannerExpiry = plannerExpiry;
+		this.plannerUrl = plannerUrl;
+		this.groupCode = groupCode;
+	}
+	
+
+	public Planner(int plannerNo, String plannerTitle, int plannerCost, Date plannerStartDT, String plannerPublicYN,
+			String plannerExpiry, String plannerUrl, int groupCode) {
+		super();
+		this.plannerNo = plannerNo;
+		this.plannerTitle = plannerTitle;
+		this.plannerCost = plannerCost;
+		this.plannerStartDT = plannerStartDT;
+		this.plannerPublicYN = plannerPublicYN;
+		this.plannerExpiry = plannerExpiry;
+		this.plannerUrl = plannerUrl;
+		this.groupCode = groupCode;
+	}
 
 	public int getPlannerNo() {
 		return plannerNo;

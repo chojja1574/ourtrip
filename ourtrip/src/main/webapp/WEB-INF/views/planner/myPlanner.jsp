@@ -107,7 +107,7 @@
 		<hr>
 
 		<div class="d-flex btn-wrapper">
-			<a href="#" class="btn main-btn ml-auto" type="button">플래너 만들기</a>
+			<a href="create" class="btn main-btn ml-auto" type="button">플래너 만들기</a>
 		</div>
 
 		<!-- 플래너 컨테이너 -->
@@ -146,9 +146,12 @@
 									<div class="d-flex justify-content-between">
 										<div class="btn-wrapper">
 											<input type="hidden" name="plannerNo" value="${planner.plannerNo}">
-											<button type="button" class="btn btn-sm main-btn">바로가기</button>
+											<a href="editplanner?no=${planner.plannerNo}" type="button" class="btn btn-sm main-btn">수정하기</a>
 											<c:if test="${planner.plannerPermission eq '3'}">
 												<button type="button" class="btn btn-sm del-btn planner-delete">삭제</button>
+											</c:if>
+											<c:if test="${planner.plannerPermission ne '3'}">
+												<button type="button" class="btn btn-sm gray-btn planner-out">나가기</button>
 											</c:if>
 										</div>
 										<div>
@@ -216,9 +219,12 @@
 									<div class="d-flex justify-content-between">
 										<div class="btn-wrapper">
 											<input type="hidden" name="plannerNo" value="${planner.plannerNo}">
-											<button type="button" class="btn btn-sm main-btn">바로가기</button>
+											<a href="plannerDetail?no=${planner.plannerNo}" type="button" class="btn btn-sm main-btn">바로가기</a>
 											<c:if test="${planner.plannerPermission eq '3'}">
 												<button type="button" class="btn  btn-sm del-btn planner-delete">삭제</button>
+											</c:if>
+											<c:if test="${planner.plannerPermission ne '3'}">
+												<button type="button" class="btn btn-sm gray-btn planner-out">나가기</button>
 											</c:if>
 										</div>
 										<div>
@@ -277,6 +283,14 @@
 
                 if (confirm("플래너를 삭제하시겠습니까?")) {
                     location.href="delPlanner?plannerNo=" + plannerNo;
+                }
+            });
+            
+            $(".planner-out").on("click", function () {
+                var plannerNo = $(this).parent().children("input").val();
+
+                if (confirm("플래너를 나가시겠습니까?")) {
+                    location.href="outPlanner?plannerNo=" + plannerNo;
                 }
             });
         });
