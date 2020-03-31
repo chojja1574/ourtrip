@@ -89,15 +89,15 @@
 		)
 	</insert>
 	
-	<insert id="createLocation" parameterType="Planner">
-		INSERT INTO PLANNER_LOCATION VALUES(
-			#{smallAreaCode},#{largeAreaCode},#{plannerNo}
-		)
+	<insert id="createLocation" parameterType="list">
+		<foreach item="loc" index="i" collection="list" separator=";" open="DECLARE BEGIN" close="; END;">
+         INSERT INTO PLANNER_LOCATION VALUES(#{loc.smallAreaCode},#{loc.largeAreaCode},#{loc.plannerNo})
+      </foreach>
 	</insert>
 	
 	<insert id="createpMember" parameterType="PlannerMember">
-		INSERT INTO MEMBER_PLANNER VALUES(
-			#{memberNo} , #{plannerNo}
+		INSERT INTO PLANNER_MEMBER VALUES(
+			 #{plannerNo} , #{memberNo} ,DEFAULT
 		)
 	</insert>
 	
