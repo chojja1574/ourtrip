@@ -103,6 +103,14 @@ public interface PlannerServiceSDS {
 	 */
 	public abstract int outPlanner(PlannerMember outPlanner) throws Exception;
 	
+
+	/** 플래너 복사용 Service
+	 * @param no
+	 * @param memberNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public abstract int plannerCopy(int no, int memberNo) throws Exception;
 	
 	// @author 박지현
 	/** PlannerView에서 플래너 번호를 이용하여 플래너 정보를 가져오는 Service
@@ -226,13 +234,5 @@ public interface PlannerServiceSDS {
 	 * @return
 	 */
 	public abstract int updateStartDate(Planner p) throws Exception;
-
-	/** 플래너 복사용 Service
-	 * @param no
-	 * @param memberNo
-	 * @return result
-	 * @throws Exception
-	 */
-	public abstract int plannerCopy(int no, int memberNo) throws Exception;
-
+	
 }

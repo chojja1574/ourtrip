@@ -171,7 +171,7 @@
 					<h4 class="modal-title"></h4>
 				</div>
 				<div class="modal-body">
-					<select name="selectGroup" class="custom-select">
+					<select name="selectGroup" class="custom-select" id="groupCode">
 						<option value='1'>혼자</option>
 						<option value='2'>커플</option>
 						<option value='3'>친구</option>
@@ -484,7 +484,7 @@ $(function() {
 			initChatting(chatListJson);
 			initPlanner(plannerJson);
 			initJoinMember(joinUserJson);
-			sock.send(JSON.stringify({pno:planner.no, type: 'JOIN', memberNo: memberNo, memberNickName: memberNickName}));
+			
 			for(var i in joinMember){
 				if(joinMember[i].memberNo == memberNo){
 					permission = joinMember[i].plannerPermission;
@@ -504,14 +504,18 @@ $(function() {
 				small:'${areaName.smallAreaCode}',smallNM:'${areaName.smallAreaName}'});
 		</c:forEach>
 		initLocationList(tempList);
+		$('#totalcost').html(calculator() + '원');
+		var newJoinUser = {memberNo:memberNo,plannerNo:plannerJson.plannerNo,plannerPermission:permission,memberNickName:memberNickName};
+		
+		sock.send(JSON.stringify({pno:planner.no, type: 'JOIN', memberNo: memberNo, memberNickName: memberNickName,newJoinUser:newJoinUser}));
 	})
 	console.log(plannerJson.plannerStartDT);
 	$('#startrip').val(plannerJson.plannerStartDT);
     // 페이지 입장 시 참여버튼 모달 출력
+    $('#groupCode option[value="' + plannerJson.groupCode + '"]').attr('selected','true');
     $("#modalBtn").click();
-    
-    
 });
+
 var iwContent = '';
 function initPlanner(pj){
 	planner.no = pj.plannerNo;
@@ -1330,8 +1334,6 @@ function onMessage(msg) {
 		break;
 	}
 		
-	
-
 }
 
 // 서버와 연결을 끊었을 때
@@ -1446,6 +1448,7 @@ $('#grantBtn').click(function(){
 });
 
 $('#stealBtn').click(function(){
+	console.log(joinUserJson);
 	var grantMemberNo = $('#userPermission').val();
 	var userIndex = -1;
 	for(var i in joinUserJson){
@@ -1454,7 +1457,9 @@ $('#stealBtn').click(function(){
 	}
 	
 	if(permission > 2){
-		if(joinUserJson[i].permission == 3){
+		console.log(grantMemberNo);
+		console.log(joinUserJson[userIndex]);
+		if(joinUserJson[userIndex].plannerPermission != 3){
 			sock.send(JSON.stringify({pno:planner.no, type: 'permission', memberNo: memberNo, permission: '1', grantMemberNo:grantMemberNo}));
 		}else{
 			alert('방장의 권한을 삭제할 수 없습니다.');		
@@ -1612,9 +1617,7 @@ $(function () {
 	$('#updateLocation').click(function(){
 		
 	});
-	$('#updateGroup').click(function(){
-		
-	});
+
 	$('#updatePublic').click(function(){
 		var str = "비공개"
 		var publicYN = 'N';
@@ -1626,10 +1629,16 @@ $(function () {
 			sock.send(JSON.stringify({pno:planner.no, type: 'updatePublic', memberNo: memberNo, publicYN: publicYN}));
 		}
 	});
+	
 	$('#clearUserList').click(function(){
 		if(confirm('접속자 목록을 초기화 하시겠습니까?')){
 			sock.send(JSON.stringify({pno:planner.no, type: 'clearUserList', memberNo: memberNo}));
 		}
+	});
+
+	$('#updateGroup').click(function(){
+		planner.groupCode = $('#groupCode').val();
+		sock.send(JSON.stringify({pno:planner.no, type:'updateGroup', gco:$('#groupCode').val()}));
 	});
 });
 

@@ -153,4 +153,6 @@ public interface PlannerService2 {
 	public abstract List<AreaName> selectPlannerLocationName(Integer no) throws Exception;
 
 	public abstract int updateLocationList(List<AreaName> locationList) throws Exception;
+
+	public abstract int updateGroup(Planner planner) throws Exception;
 }

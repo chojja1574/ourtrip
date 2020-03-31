@@ -95,7 +95,7 @@
 	</resultMap>
 
 	<select id="selectPlannerView" parameterType="_int" resultMap="plannerViewResultSet">
-		SELECT * FROM V_PLANNER WHERE PLANNER_NO = #{no}
+		SELECT * FROM V_PLANNER WHERE PLANNER_URL = #{no}
 	</select>
 	
 	<select id="selectDateNo" resultType="_int">
@@ -224,4 +224,8 @@
 			INSERT INTO PLANNER_LOCATION VALUES(#{loc.smallAreaCode},#{loc.largeAreaCode},#{loc.plannerNo})
 		</foreach>
 	</insert>
+	
+	<update id="updateGroup" parameterType="Planner">
+		UPDATE PLANNER SET GROUP_CODE = #{groupCode} WHERE PLANNER_NO = #{plannerNo}
+	</update>
 </mapper>
