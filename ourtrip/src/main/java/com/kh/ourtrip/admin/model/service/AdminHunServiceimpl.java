@@ -327,35 +327,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 	}
 
 	/**
-	 * 플래너 검색용 service
-	 * 
-	 * @param keyword
-	 * @return list
-	 * @throws Exception
-	 */
-	@Override
-	public List<Integer> searchPlanner(Map<String, Object> keyword) throws Exception {
-		if (keyword.get("startTrip") == "")
-			keyword.replace("startTrip", null);
-		if (keyword.get("endTrip") == "")
-			keyword.replace("endTrip", null);
-
-		return adminHunDAO.searchPlanner(keyword);
-	}
-
-	/**
-	 * 지역명 검색 조회용 service
-	 * 
-	 * @param keyword
-	 * @return List
-	 * @throws Exception
-	 */
-	@Override
-	public List<AreaName> areaResult(Map<String, Object> keyword) throws Exception {
-		return adminHunDAO.areaResult(keyword);
-	}
-
-	/**
 	 * 전체 플래너 리스트 지역명 조회용 service
 	 * 
 	 * @return list
@@ -367,27 +338,36 @@ public class AdminHunServiceimpl implements AdminHunService {
 	}
 
 	/**
-	 * 검색 결과 조회용 service
+	 * plannerInfo 검색용 service
 	 * 
-	 * @param resultList
-	 * @return list
+	 * @param keyword
+	 * @return searchList
 	 * @throws Exception
 	 */
 	@Override
-	public List<PlannerInfo> searchResult(Map<String, Object> keyword, PageInfo pInf) throws Exception {
-
-		return adminHunDAO.searchResult(keyword, pInf);
+	public List<PlannerInfo> searchList(Map<String, Object> keyword) throws Exception {
+		return adminHunDAO.searchList(keyword);
 	}
-
-	/** 지역명으로 검색결과 존재할경우 service
-	 * @param areaResult
-	 * @param pInf
-	 * @return list
+	
+	/** areaInfo 검색용 service
+	 * @param keyword
+	 * @return areaInfo
 	 * @throws Exception
 	 */
 	@Override
-	public List<PlannerInfo> searchAreaResult(List<AreaName> areaResult, PageInfo pInf) throws Exception {
-		return adminHunDAO.searchAreaResult(areaResult,pInf);
+	public List<AreaName> areaInfo(Map<String, Object> keyword) throws Exception {
+		return adminHunDAO.areaInfo(keyword);
+	}
+	
+	/** 검색결과, 페이징 처리용 serivce
+	 * @param keyword
+	 * @param pInf
+	 * @return plannerInfo
+	 * @throws Exception
+	 */
+	@Override
+	public List<PlannerInfo> plannerInfo(Map<String, Object> keyword, PageInfo pInf) throws Exception {
+		return adminHunDAO.plannerInfo(keyword,pInf);
 	}
 
 }

@@ -171,45 +171,34 @@ public interface AdminHunService {
 	 * @throws Exception
 	 */
 	public abstract List<SmallArea> selectsmallNmList()throws Exception;
-
-
-	/** 플래너 검색용 service
-	 * @param keyword
-	 * @return list
-	 * @throws Exception
-	 */
-	public abstract List<Integer> searchPlanner(Map<String, Object> keyword)throws Exception;
-
-
-
-	/** 지역명 검색 조회용 service
-	 * @param keyword
-	 * @return List
-	 * @throws Exception
-	 */
-	public abstract List<AreaName> areaResult(Map<String, Object> keyword) throws Exception;
-
 	/** 전체 플래너 리스트 지역명 조회용 service
 	 * @return list
 	 * @throws Exception
 	 */
 	public abstract List<AreaName> totalAList()throws Exception;
 
-	/** 검색 결과 조회용 service
-	 * @param resultList
-	 * @return list
+	/** plannerInfo 검색용 service
+	 * @param keyword
+	 * @return searchList
 	 * @throws Exception
 	 */
-	public abstract List<PlannerInfo> searchResult(Map<String, Object> keyword, PageInfo pInf)throws Exception;
+	public abstract List<PlannerInfo> searchList(Map<String, Object> keyword)throws Exception;
 
-	/** 지역명으로 검색결과 존재할경우 service
-	 * @param areaResult
+	/** areaInfo 검색용 service
+	 * @param keyword
+	 * @return areaInfo
+	 * @throws Exception
+	 */
+	public abstract List<AreaName> areaInfo(Map<String, Object> keyword)throws Exception;
+
+	/** 검색결과, 페이징 처리용 serivce
+	 * @param keyword
 	 * @param pInf
-	 * @return list
+	 * @return plannerInfo
 	 * @throws Exception
 	 */
-	public abstract List<PlannerInfo> searchAreaResult(List<AreaName> areaResult, PageInfo pInf)throws Exception;
-
+	public abstract List<PlannerInfo> plannerInfo(Map<String, Object> keyword, PageInfo pInf)throws Exception;
+	
 	
 	
 

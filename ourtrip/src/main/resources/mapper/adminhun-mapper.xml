@@ -90,7 +90,8 @@
 	<select id="selectFullList" resultMap="memberResultSet">
 		SELECT *
 		FROM MEMBER
-		ORDER BY MEMBER_NO DESC
+		ORDER
+		BY MEMBER_NO DESC
 	</select>
 
 	<select id="listCount" parameterType="map" resultType="_int">
@@ -250,7 +251,8 @@
 	<insert id="reason" parameterType="PlannerDeleteReason">
 		INSERT INTO
 		PLANNER_DELETE_REASON VALUES(
-		SEQ_PLANNER_D_R_DNO.NEXTVAL , #{deleteReason} , #{plannerNo}
+		SEQ_PLANNER_D_R_DNO.NEXTVAL ,
+		#{deleteReason} , #{plannerNo}
 		)
 	</insert>
 
@@ -274,9 +276,35 @@
 		ORDER BY LARGE_AREA_CODE, SMALL_AREA_CODE
 	</select>
 
-	<select id="searchPlanner" parameterType="map"
+	<select id="totalAList" resultMap="AreaNameResultSet">
+		SELECT * FROM V_AREA_NAME
+	</select>
+
+
+	<!--검색용 mapper -->
+	<!-- <select id="searchPlanner" parameterType="map" resultMap="plannerInfoResultSet"> 
+		SELECT PLANNER_NO FROM PLANNER <where> <if test="searchKey != null and searchValue 
+		!= ''"> <bind name="sv" value="'%' + _parameter.searchValue + '%'" /> <choose> 
+		<when test="searchKey == 'title' "> AND PLANNER_TITLE LIKE #{sv} </when> 
+		<when test="searchKey == 'nickName' "> AND MEMBER_NICK_NAME LIKE #{sv} </when> 
+		</choose> </if> <if test="searchGroup != null"> AND GROUP_CODE IN <foreach 
+		index="index" item="group" collection="searchGroup" open="(" separator="," 
+		close=")"> #{group} </foreach> </if> <if test="deleted != 'all'"> AND PLANNER_DELETE_YN 
+		= #{deleted} </if> <if test="startTrip != null and endTrip != null"> <![CDATA[AND 
+		PLANNER_START_DT >= #{startTrip} AND PLANNER_START_DT + TRIP_DATE <= #{endTrip} 
+		]]> </if> </where> ORDER BY PLANNER_NO DESC </select> -->
+
+
+	<!-- <select id="searchArea" parameterType="map" resultMap="AreaNameResultSet"> 
+		SELECT * FROM V_AREA_NAME <where> <if test="searchArea != null"> AND LARGE_AREA_CODE 
+		= #{largeAreaCode} </if> <if test="searchArea != null and searchLocal != 
+		null"> AND SMALL_AREA_CODE = #{smallAreaCode} </if> <if test="pList != ''"> 
+		AND PLANNER_NO IN <foreach index="index" item="no" collection="pList" open="(" 
+		separator="," close=")"> #{no} </foreach> </if> </where> </select> -->
+
+	<select id="searchList" parameterType="map"
 		resultMap="plannerInfoResultSet">
-		SELECT PLANNER_NO FROM PLANNER
+		SELECT * FROM PLANNER
 		<where>
 			<if test="searchKey != null and searchValue != ''">
 				<bind name="sv" value="'%' + _parameter.searchValue + '%'" />
@@ -297,11 +325,9 @@
 					#{group}
 				</foreach>
 			</if>
-
 			<if test="deleted != 'all'">
 				AND PLANNER_DELETE_YN = #{deleted}
 			</if>
-
 			<if test="startTrip != null and endTrip != null">
 					<![CDATA[AND PLANNER_START_DT >= #{startTrip}
 					AND PLANNER_START_DT + TRIP_DATE <= #{endTrip}
@@ -311,8 +337,7 @@
 		ORDER BY PLANNER_NO DESC
 	</select>
 
-
-	<select id="areaResult" parameterType="map"
+	<select id="areaInfo" parameterType="map"
 		resultMap="AreaNameResultSet">
 		SELECT * FROM V_AREA_NAME
 		<where>
@@ -322,22 +347,11 @@
 			<if test="searchArea != null and  searchLocal != null">
 				AND SMALL_AREA_CODE = #{smallAreaCode}
 			</if>
-			<if test="pList != ''">
-				AND PLANNER_NO IN 
-				<foreach index="index" item="list" collection="pList"
-					open="(" separator="," close=")">
-					#{list}
-				</foreach>
-			</if>
 		</where>
 	</select>
-
-	<select id="totalAList" resultMap="AreaNameResultSet">
-		SELECT * FROM V_AREA_NAME
-	</select>
 	
-	<select id="searchResult" parameterType="list" resultMap="plannerInfoResultSet">
-		SELECT * FROM V_PLANNER_INFO
+	<select id="plannerInfo" parameterType="map" resultMap="plannerInfoResultSet">
+	SELECT * FROM PLANNER
 		<where>
 			<if test="searchKey != null and searchValue != ''">
 				<bind name="sv" value="'%' + _parameter.searchValue + '%'" />
@@ -358,11 +372,9 @@
 					#{group}
 				</foreach>
 			</if>
-
 			<if test="deleted != 'all'">
 				AND PLANNER_DELETE_YN = #{deleted}
 			</if>
-
 			<if test="startTrip != null and endTrip != null">
 					<![CDATA[AND PLANNER_START_DT >= #{startTrip}
 					AND PLANNER_START_DT + TRIP_DATE <= #{endTrip}
@@ -371,14 +383,6 @@
 		</where>
 		ORDER BY PLANNER_NO DESC
 	</select>
-	
-	<select id="searchAreaResult" parameterType="list" resultMap="plannerInfoResultSet">
-		SELECT * FROM V_PLANNER_INFO WHERE PLANNER_NO IN
-				<foreach index="index" item="group" collection="searchGroup"
-					open="(" separator="," close=")">
-					#{group}
-				</foreach>
-	</select>
-	
+
 
 </mapper>
