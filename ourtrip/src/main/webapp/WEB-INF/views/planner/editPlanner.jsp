@@ -484,7 +484,7 @@ $(function() {
 			initChatting(chatListJson);
 			initPlanner(plannerJson);
 			initJoinMember(joinUserJson);
-			sock.send(JSON.stringify({pno:planner.no, type: 'JOIN', memberNo: memberNo, memberNickName: memberNickName}));
+			
 			for(var i in joinMember){
 				if(joinMember[i].memberNo == memberNo){
 					permission = joinMember[i].plannerPermission;
@@ -505,15 +505,17 @@ $(function() {
 		</c:forEach>
 		initLocationList(tempList);
 		$('#totalcost').html(calculator() + '원');
+		var newJoinUser = {memberNo:memberNo,plannerNo:plannerJson.plannerNo,plannerPermission:permission,memberNickName:memberNickName};
+		
+		sock.send(JSON.stringify({pno:planner.no, type: 'JOIN', memberNo: memberNo, memberNickName: memberNickName,newJoinUser:newJoinUser}));
 	})
 	console.log(plannerJson.plannerStartDT);
 	$('#startrip').val(plannerJson.plannerStartDT);
     // 페이지 입장 시 참여버튼 모달 출력
     $('#groupCode option[value="' + plannerJson.groupCode + '"]').attr('selected','true');
     $("#modalBtn").click();
-    
-    
 });
+
 var iwContent = '';
 function initPlanner(pj){
 	planner.no = pj.plannerNo;
@@ -1446,6 +1448,7 @@ $('#grantBtn').click(function(){
 });
 
 $('#stealBtn').click(function(){
+	console.log(joinUserJson);
 	var grantMemberNo = $('#userPermission').val();
 	var userIndex = -1;
 	for(var i in joinUserJson){
@@ -1454,7 +1457,9 @@ $('#stealBtn').click(function(){
 	}
 	
 	if(permission > 2){
-		if(joinUserJson[i].permission == 3){
+		console.log(grantMemberNo);
+		console.log(joinUserJson[userIndex]);
+		if(joinUserJson[userIndex].plannerPermission != 3){
 			sock.send(JSON.stringify({pno:planner.no, type: 'permission', memberNo: memberNo, permission: '1', grantMemberNo:grantMemberNo}));
 		}else{
 			alert('방장의 권한을 삭제할 수 없습니다.');		
