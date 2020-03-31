@@ -126,7 +126,10 @@ public class PlannerDAO2 {
 	}
 	
 	public int updateLocationList(List<AreaName> locationList) {
-		System.out.println(locationList.get(0).getSmallAreaCode());
 		return sqlSessionTemplate.insert("planner1Mapper.insertLocationList", locationList);
+	}
+
+	public int updateGroup(Planner planner) {
+		return sqlSessionTemplate.update("planner1Mapper.updateGroup", planner);
 	}
 }

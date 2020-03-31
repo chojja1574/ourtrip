@@ -240,10 +240,17 @@ public class PlannerService2Imlp implements PlannerService2 {
 		return plannerDAO2.selectPlannerLocationName(no);
 	}
 
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public int updateLocationList(List<AreaName> locationList) throws Exception {
 		plannerDAO2.deletePlannerLocation(locationList.get(0).getPlannerNo());
 		return plannerDAO2.updateLocationList(locationList);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int updateGroup(Planner planner) throws Exception {
+		return plannerDAO2.updateGroup(planner);
 	}
 
 }

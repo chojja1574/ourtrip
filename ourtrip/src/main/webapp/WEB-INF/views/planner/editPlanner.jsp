@@ -171,7 +171,7 @@
 					<h4 class="modal-title"></h4>
 				</div>
 				<div class="modal-body">
-					<select name="selectGroup" class="custom-select">
+					<select name="selectGroup" class="custom-select" id="groupCode">
 						<option value='1'>혼자</option>
 						<option value='2'>커플</option>
 						<option value='3'>친구</option>
@@ -504,10 +504,12 @@ $(function() {
 				small:'${areaName.smallAreaCode}',smallNM:'${areaName.smallAreaName}'});
 		</c:forEach>
 		initLocationList(tempList);
+		$('#totalcost').html(calculator() + '원');
 	})
 	console.log(plannerJson.plannerStartDT);
 	$('#startrip').val(plannerJson.plannerStartDT);
     // 페이지 입장 시 참여버튼 모달 출력
+    $('#groupCode option[value="' + plannerJson.groupCode + '"]').attr('selected','true');
     $("#modalBtn").click();
     
     
@@ -1330,8 +1332,6 @@ function onMessage(msg) {
 		break;
 	}
 		
-	
-
 }
 
 // 서버와 연결을 끊었을 때
@@ -1612,9 +1612,7 @@ $(function () {
 	$('#updateLocation').click(function(){
 		
 	});
-	$('#updateGroup').click(function(){
-		
-	});
+
 	$('#updatePublic').click(function(){
 		var str = "비공개"
 		var publicYN = 'N';
@@ -1626,10 +1624,16 @@ $(function () {
 			sock.send(JSON.stringify({pno:planner.no, type: 'updatePublic', memberNo: memberNo, publicYN: publicYN}));
 		}
 	});
+	
 	$('#clearUserList').click(function(){
 		if(confirm('접속자 목록을 초기화 하시겠습니까?')){
 			sock.send(JSON.stringify({pno:planner.no, type: 'clearUserList', memberNo: memberNo}));
 		}
+	});
+
+	$('#updateGroup').click(function(){
+		planner.groupCode = $('#groupCode').val();
+		sock.send(JSON.stringify({pno:planner.no, type:'updateGroup', gco:$('#groupCode').val()}));
 	});
 });
 

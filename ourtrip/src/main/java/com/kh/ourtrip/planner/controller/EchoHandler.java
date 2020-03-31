@@ -482,6 +482,16 @@ public class EchoHandler extends TextWebSocketHandler {
 		
 		System.out.println("updateGroup");
 		
+		Planner planner = new Planner();
+		
+		planner.setPlannerNo(Integer.parseInt(msgJson.get("pno").toString()));
+		planner.setGroupCode(Integer.parseInt(msgJson.get("gco").toString()));
+
+		System.out.println(planner);
+		
+		result = plannerService.updateGroup(planner);
+		
+		System.out.println(result);
 		
 		session.sendMessage(new TextMessage(msgJson.toJSONString()));
 		

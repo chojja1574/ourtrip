@@ -224,4 +224,8 @@
 			INSERT INTO PLANNER_LOCATION VALUES(#{loc.smallAreaCode},#{loc.largeAreaCode},#{loc.plannerNo})
 		</foreach>
 	</insert>
+	
+	<update id="updateGroup" parameterType="Planner">
+		UPDATE PLANNER SET GROUP_CODE = #{groupCode} WHERE PLANNER_NO = #{plannerNo}
+	</update>
 </mapper>
