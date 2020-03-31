@@ -202,6 +202,14 @@ public interface AdminHunService {
 	 */
 	public abstract List<PlannerInfo> searchResult(Map<String, Object> keyword, PageInfo pInf)throws Exception;
 
+	/** 지역명으로 검색결과 존재할경우 service
+	 * @param areaResult
+	 * @param pInf
+	 * @return list
+	 * @throws Exception
+	 */
+	public abstract List<PlannerInfo> searchAreaResult(List<AreaName> areaResult, PageInfo pInf)throws Exception;
+
 	
 	
 

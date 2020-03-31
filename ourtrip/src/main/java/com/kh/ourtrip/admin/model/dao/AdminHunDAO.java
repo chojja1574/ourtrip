@@ -212,6 +212,12 @@ public class AdminHunDAO {
 		return sqlSession.selectList("adminhunMapper.searchResult",keyword, rowBounds);
 	}
 
+	public List<PlannerInfo> searchAreaResult(List<AreaName> areaResult, PageInfo pInf) {
+		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
+		return sqlSession.selectList("adminhunMapper.searchAreaResult" , areaResult ,rowBounds);
+	}
+
 
 
 }

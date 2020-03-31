@@ -334,20 +334,46 @@ public class AdminHunController {
 			model.addAttribute("largeNmList", largeNmList);
 			model.addAttribute("smallNmList", smallNmList);
 
+			
+			
+			
 			List<Integer> plannerList = adminHunService.searchPlanner(keyword);
+			List<AreaName> areaResult1 = adminHunService.areaResult(keyword);
+			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, plannerList.size());
 
+			if(plannerList.isEmpty()) { // 지역제외 검색결과 없고 
+				List<AreaName> areaResult = adminHunService.areaResult(keyword); // 지역 검색
+				if(areaResult.isEmpty()) { // 지역, 지역제외 검색결과 없음. 검색에 일치하는 값 없음
+					model.addAttribute("plannerList", null);
+				}else {// 지역검색 결과 있음
+					List<PlannerInfo> searchResult = adminHunService.searchAreaResult(areaResult, pInf);
+					for (PlannerInfo infList : searchResult) {
+						for (AreaName areaList : areaResult) {
+							if (infList.getPlannerNo() == areaList.getPlannerNo()) {
+								infList.setAreaNames(areaResult);
+							}
+						}
+					}
+					model.addAttribute("plannerList", searchResult);
+				}
+			}
+			
+			if(!plannerList.isEmpty()) {
+				
+				keyword.put("pList", plannerList);
+				List<PlannerInfo> searchResult = adminHunService.searchResult(keyword, pInf);
+				List<AreaName> areaResult = adminHunService.areaResult(keyword);
+				
+			}
+			
 			keyword.put("pList", plannerList);
 			System.out.println(keyword);
 			if (currentPage == null) {
 				currentPage = 1;
 			}
-			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, plannerList.size());
 
-			List<PlannerInfo> searchResult = adminHunService.searchResult(keyword , pInf);
-
-			List<AreaName> areaResult = adminHunService.areaResult(keyword);
-
-			List<Day> dayList = adminHunService.dayList();
+			List<PlannerInfo> searchResult = adminHunService.searchResult(keyword, pInf);
+			
 
 			for (PlannerInfo infList : searchResult) {
 				for (AreaName areaList : areaResult) {
@@ -356,6 +382,8 @@ public class AdminHunController {
 					}
 				}
 			}
+
+			List<Day> dayList = adminHunService.dayList();
 
 			Date countDay = null;
 			for (PlannerInfo infList : searchResult) {

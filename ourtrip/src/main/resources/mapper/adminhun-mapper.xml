@@ -322,7 +322,13 @@
 			<if test="searchArea != null and  searchLocal != null">
 				AND SMALL_AREA_CODE = #{smallAreaCode}
 			</if>
-			
+			<if test="pList != ''">
+				AND PLANNER_NO IN 
+				<foreach index="index" item="list" collection="pList"
+					open="(" separator="," close=")">
+					#{list}
+				</foreach>
+			</if>
 		</where>
 	</select>
 
@@ -364,6 +370,14 @@
 			</if>
 		</where>
 		ORDER BY PLANNER_NO DESC
+	</select>
+	
+	<select id="searchAreaResult" parameterType="list" resultMap="plannerInfoResultSet">
+		SELECT * FROM V_PLANNER_INFO WHERE PLANNER_NO IN
+				<foreach index="index" item="group" collection="searchGroup"
+					open="(" separator="," close=")">
+					#{group}
+				</foreach>
 	</select>
 	
 
