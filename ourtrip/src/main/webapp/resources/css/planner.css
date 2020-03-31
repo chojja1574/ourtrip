@@ -150,8 +150,8 @@ textarea {
     display: block;
 }
 
-body {
-    font-family: 'Ubuntu', sans-serif;
+.plannerFont{
+	font-family: 'Ubuntu', sans-serif;
     font-family: 'Nanum Pen Script', cursive;
     font-size: 24px;
 }

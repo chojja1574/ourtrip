@@ -166,6 +166,30 @@
 		UPDATE PLANNER SET PLANNER_START_DT = #{plannerStartDT} WHERE PLANNER_NO = #{plannerNo}
 	</update>
 	
+	<select id="countDate" parameterType="_int" resultType="_int">
+		SELECT COUNT(*) FROM PLANNER_DATE WHERE PLANNER_NO = #{pno}
+	</select>
+	
+	<select id="countSchedule" parameterType="_int" resultType="_int">
+		SELECT COUNT(*) FROM SCHEDULE WHERE DATE_NO = #{dno}
+	</select>
+	
+	<update id="updateTitle" parameterType="Planner">
+		UPDATE PLANNER SET PLANNER_TITLE = #{plannerTitle} WHERE PLANNER_NO = #{pno}
+	</update>
+	
+	<update id="updatePassword"  parameterType="Planner">
+		UPDATE PLANNER SET PLANNER_PWD = #{plannerTitle} WHERE PLANNER_NO = #{pno}
+	</update>
+	
+	<update id="updatePublic"  parameterType="Planner">
+		UPDATE PLANNER SET PLANNER_PUBLIC_YN = #{plannerTitle} WHERE PLANNER_NO = #{pno}
+	</update>
+	
+	<delete id="cleanUserList"  parameterType="_int">
+		DELETE FROM PLANNER_MEMBER WHERE PLANNER_NO = #{no} AND PLANNER_PERMISSION != '3'
+	</delete>
+	
 	<!-- 플래너 다음번호 조회 -->
 	<select id="selectNextNo" resultType="_int">
 		SELECT SEQ_PLANNER_PNO.NEXTVAL FROM DUAL

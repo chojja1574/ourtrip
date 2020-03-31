@@ -68,28 +68,51 @@ public class PlannerDAO2 {
 		return sqlSessionTemplate.selectList("planner1Mapper.selectChatList", no);
 	}
 
-	public List<PlannerMemberView> selectPlannerMemeberListUsePlannerNo(int pno) {
+	public List<PlannerMemberView> selectPlannerMemeberListUsePlannerNo(int pno) throws Exception {
 		return sqlSessionTemplate.selectList("planner1Mapper.selectPlanerMemeberListUsePlannerNo", pno);
 	}
 	
-	public int selectPlannerMemeberExist(PlannerMemberView pm) {
+	public int selectPlannerMemeberExist(PlannerMemberView pm) throws Exception {
 		return sqlSessionTemplate.selectOne("planner1Mapper.selectPlanerMemeberExist", pm);
 	}
 
-	public int insertPlannerMemeber(PlannerMember pm) {
+	public int insertPlannerMemeber(PlannerMember pm) throws Exception {
 		return sqlSessionTemplate.insert("planner1Mapper.insertPlannerMember", pm);
 	}
 
-	public int updatePermission(PlannerMember pm) {
+	public int updatePermission(PlannerMember pm) throws Exception {
 		return sqlSessionTemplate.update("planner1Mapper.updatePermission", pm);
 	}
 
-	public int updateSumCost(Planner p) {
+	public int updateSumCost(Planner p) throws Exception {
 		return sqlSessionTemplate.update("planner1Mapper.updateSumCost", p);
 	}
 
-	public int updateStartDate(Planner p) {
+	public int updateStartDate(Planner p) throws Exception {
 		return sqlSessionTemplate.update("planner1Mapper.updateStartDate", p);
 	}
+
+	public int countDate(int pno) throws Exception {
+		return sqlSessionTemplate.selectOne("planner1Mapper.countDate",pno);
+	}
 	
+	public int countSchedule(int dno) throws Exception {
+		return sqlSessionTemplate.selectOne("planner1Mapper.countSchedule",dno);
+	}
+
+	public int updateTitle(Planner planner) {
+		return sqlSessionTemplate.update("planner1Mapper.updateTitle", planner);
+	}
+	
+	public int updatePassword(Planner planner) {
+		return sqlSessionTemplate.update("planner1Mapper.updatePassword", planner);
+	}
+	
+	public int updatePublic(Planner planner) {
+		return sqlSessionTemplate.update("planner1Mapper.updatePublic", planner);
+	}
+	
+	public int clearUserList(int no) {
+		return sqlSessionTemplate.delete("planner1Mapper.cleanUserList", no);
+	}
 }
