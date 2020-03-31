@@ -118,8 +118,7 @@
 							<div class="col-4">
 								
 								 <select name="smallArea" id="local-area" class="custom-select">
-									<option value="전체" selected>전체</option>
-								</select>
+									<option value="0" selected>전체</option>
 								</select>
 							</div>
 						</div>
