@@ -95,7 +95,7 @@
 	</resultMap>
 
 	<select id="selectPlannerView" parameterType="_int" resultMap="plannerViewResultSet">
-		SELECT * FROM V_PLANNER WHERE PLANNER_NO = #{no}
+		SELECT * FROM V_PLANNER WHERE PLANNER_URL = #{no}
 	</select>
 	
 	<select id="selectDateNo" resultType="_int">
