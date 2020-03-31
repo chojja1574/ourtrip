@@ -311,8 +311,8 @@ public class AdminHunController {
 			@RequestParam(value = "searchKey", required = false) String searchKey,
 			@RequestParam(value = "searchValue", required = false) String searchValue,
 			@RequestParam(value = "searchGroup", required = false) List<Integer> searchGroup,
-			@RequestParam(value = "searchArea", required = false) String searchArea,
-			@RequestParam(value = "searchLocal", required = false) String searchLocal,
+			@RequestParam(value = "largeArea", required = false) String largeArea,
+			@RequestParam(value = "smallArea", required = false) String smallArea,
 			@RequestParam(value = "deleted", required = false) String deleted,
 			@RequestParam(value = "startTrip", required = false) String startTrip,
 			@RequestParam(value = "endTrip", required = false) String endTrip) {
@@ -322,8 +322,8 @@ public class AdminHunController {
 		keyword.put("searchKey", searchKey);
 		keyword.put("searchValue", searchValue);
 		keyword.put("searchGroup", searchGroup);
-		keyword.put("searchArea", searchArea);
-		keyword.put("searchLocal", searchLocal);
+		keyword.put("largeArea", largeArea);
+		keyword.put("smallArea", smallArea);
 		keyword.put("deleted", deleted);
 		keyword.put("startTrip", startTrip);
 		keyword.put("endTrip", endTrip);
@@ -333,7 +333,7 @@ public class AdminHunController {
 			List<SmallArea> smallNmList = adminHunService.selectsmallNmList();
 			model.addAttribute("largeNmList", largeNmList);
 			model.addAttribute("smallNmList", smallNmList);
-
+			System.out.println("keyword" + keyword);
 			
 			
 			List<PlannerInfo> searchList = adminHunService.searchList(keyword);// 지역이외 검색 후 검색된 플래너리스트

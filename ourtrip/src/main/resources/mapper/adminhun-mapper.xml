@@ -304,7 +304,7 @@
 
 	<select id="searchList" parameterType="map"
 		resultMap="plannerInfoResultSet">
-		SELECT * FROM PLANNER
+		SELECT * FROM V_PLANNER_INFO
 		<where>
 			<if test="searchKey != null and searchValue != ''">
 				<bind name="sv" value="'%' + _parameter.searchValue + '%'" />
@@ -328,7 +328,7 @@
 			<if test="deleted != 'all'">
 				AND PLANNER_DELETE_YN = #{deleted}
 			</if>
-			<if test="startTrip != null and endTrip != null">
+			<if test="startTrip != '' and endTrip != ''">
 					<![CDATA[AND PLANNER_START_DT >= #{startTrip}
 					AND PLANNER_START_DT + TRIP_DATE <= #{endTrip}
 					]]>
@@ -341,17 +341,17 @@
 		resultMap="AreaNameResultSet">
 		SELECT * FROM V_AREA_NAME
 		<where>
-			<if test="searchArea !=  null">
+			<if test="largeArea !=  0">
 				AND LARGE_AREA_CODE = #{largeAreaCode}
 			</if>
-			<if test="searchArea != null and  searchLocal != null">
+			<if test="largeArea != 0 and  smallArea != 0">
 				AND SMALL_AREA_CODE = #{smallAreaCode}
 			</if>
 		</where>
 	</select>
 	
 	<select id="plannerInfomaion" parameterType="map" resultMap="plannerInfoResultSet">
-	SELECT * FROM PLANNER
+	SELECT * FROM V_PLANNER_INFO
 		<where>
 			<if test="searchKey != null and searchValue != ''">
 				<bind name="sv" value="'%' + _parameter.searchValue + '%'" />
@@ -375,7 +375,7 @@
 			<if test="deleted != 'all'">
 				AND PLANNER_DELETE_YN = #{deleted}
 			</if>
-			<if test="startTrip != null and endTrip != null">
+			<if test="startTrip != '' and endTrip != ''">
 					<![CDATA[AND PLANNER_START_DT >= #{startTrip}
 					AND PLANNER_START_DT + TRIP_DATE <= #{endTrip}
 					]]>
