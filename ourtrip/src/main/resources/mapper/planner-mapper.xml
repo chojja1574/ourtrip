@@ -60,6 +60,18 @@
 		<id property="memberNo" column="MEMBER_NO"/>
 		<id property="plannerNo" column="PLANNER_NO"/>
 	</resultMap>
+	
+	<resultMap type="LargeArea" id="LargeAreaResultSet">
+		<id property="largeAreaCode" column="LARGE_AREA_CODE"/>
+		<result property="largeAreaName" column="LARGE_AREA_NAME"/>
+	</resultMap>
+	
+	<resultMap type="SmallArea" id="SmallAreaResultSet">
+		<result property="smallAreaCode" column="SMALL_AREA_CODE"/>
+		<result property="largeAreaCode" column="LARGE_AREA_CODE"/>
+		<result property="smallAreaName" column="SMALL_AREA_NAME"/>
+	</resultMap>
+	
 
 	<select id="selectPlannerView" parameterType="_int"
 		resultMap="plannerViewResultSet">
@@ -88,5 +100,16 @@
 			#{memberNo} , #{plannerNo}
 		)
 	</insert>
+	
+	<select id="LargeNmList" resultMap="LargeAreaResultSet">
+	SELECT * FROM LARGE_AREA
+		ORDER BY LARGE_AREA_CODE
+	</select>
+	
+	
+	<select id="SmallNmList" resultMap="SmallAreaResultSet">
+	SELECT * FROM SMALL_AREA
+		ORDER BY LARGE_AREA_CODE, SMALL_AREA_CODE
+	</select>
 
 </mapper>

@@ -94,7 +94,7 @@ body {
 						</tr>
 						<tr>
 							<td><h5>여행 기간</h5></td>
-							<td><h5>${plannerinfo.plannerStartDT }~
+							<td><h5>${plannerinfo.plannerStartDT}~
 									${plannerinfo.plannerEndDate}</h5></td>
 						</tr>
 						<tr>
@@ -120,7 +120,8 @@ body {
 			</div>
 			<div class="col-md-4">
 				<h4>플래너 사진</h4>
-				<img src="../4_jQuery/image/cacao1.png" alt="이미지테스트"
+					<img class="card-img-top" src="${contextPath}/resources/areaImages/${plannerArea[0].largeAreaCode}.jpg"
+                           alt="Card image"
 					style="width: 100%; height: auto;">
 			</div>
 		</div>

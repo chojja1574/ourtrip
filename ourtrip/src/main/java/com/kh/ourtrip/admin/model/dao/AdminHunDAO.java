@@ -3,7 +3,6 @@ package com.kh.ourtrip.admin.model.dao;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,10 @@ import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.member.model.vo.ProfileImage;
 import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.Day;
-import com.kh.ourtrip.planner.model.vo.Planner;
+import com.kh.ourtrip.planner.model.vo.LargeArea;
+import com.kh.ourtrip.planner.model.vo.PlannerCard;
 import com.kh.ourtrip.planner.model.vo.PlannerInfo;
+import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Repository
 public class AdminHunDAO {
@@ -72,7 +73,6 @@ public class AdminHunDAO {
 	 * @throws Exception
 	 */
 	public Member detail(int no) throws Exception{
-		
 		return sqlSession.selectOne("adminhunMapper.detail", no);
 	}
 
@@ -93,7 +93,7 @@ public class AdminHunDAO {
 	 * @return list
 	 * @throws Exception
 	 */
-	public List<PlannerInfo> plannerInfo(List<Integer> plannerList, PageInfo pInf) throws Exception{
+	public List<PlannerCard> plannerInfo(List<Integer> plannerList, PageInfo pInf) throws Exception{
 		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
 		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
 		
@@ -139,13 +139,6 @@ public class AdminHunDAO {
 		return sqlSession.selectOne("adminhunMapper.plannerCount");
 	}
 
-	/** 플래너 위치 조회용 DAO
-	 * @return List<AreaName>
-	 * @throws Exception
-	 */
-	public List<AreaName> areaList()throws Exception {
-		return sqlSession.selectList("adminhunMapper.areaList");
-	}
 
 	/** 플래너 날짜 조회용 DAO
 	 * @return List<Day>
@@ -153,24 +146,6 @@ public class AdminHunDAO {
 	 */
 	public List<Day> dayList()throws Exception{
 		return sqlSession.selectList("adminhunMapper.dayList");
-	}
-
-	/** 검색 플래너수 조회용 DAO
-	 * @param keyword
-	 * @return List resultCount
-	 */
-	public List<Integer> resultCount(Map<String, Object> keyword)throws Exception{
-		for(String st : keyword.keySet()) {
-			System.out.println(st + " / " + keyword.get(st));
-		}
-		
-		return sqlSession.selectList("adminhunMapper.resultCount" , keyword);
-	}
-
-	public List<PlannerInfo> searchResult(PageInfo pInf, Map<String, Object> keyword) throws Exception{
-		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
-		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
-		return sqlSession.selectList("adminhunMapper.searchResult",keyword,rowBounds);
 	}
 
 	public List<AreaName> resultArea(List<Integer> searchResultcount) throws Exception{
@@ -203,6 +178,44 @@ public class AdminHunDAO {
 
 	public int memberDelete(int memberNo) {
 		return sqlSession.update("adminhunMapper.memberDelete" , memberNo);
+	}
+
+	public List<LargeArea> selectLargeNmList() {
+		return sqlSession.selectList("adminhunMapper.LargeNmList");
+	}
+
+	public List<SmallArea> selectsmallNmList() {
+		return sqlSession.selectList("adminhunMapper.SmallNmList");
+	}
+
+	/** 플래너 검색용 DAO
+	 * @param keyword
+	 * @return list
+	 * @throws Exception
+	 */
+	public List<Integer> searchPlanner(Map<String, Object> keyword)throws Exception {
+		return sqlSession.selectList("adminhunMapper.searchPlanner" , keyword);
+	}
+
+
+	public List<AreaName> areaResult(Map<String, Object> keyword) {
+		return sqlSession.selectList("adminhunMapper.areaResult" , keyword);
+	}
+
+	public List<AreaName> totalAList() {
+		return sqlSession.selectList("adminhunMapper.totalAList");
+	}
+
+	public List<PlannerInfo> searchResult(Map<String, Object> keyword, PageInfo pInf) {
+		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
+		return sqlSession.selectList("adminhunMapper.searchResult",keyword, rowBounds);
+	}
+
+	public List<PlannerInfo> searchAreaResult(List<AreaName> areaResult, PageInfo pInf) {
+		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
+		return sqlSession.selectList("adminhunMapper.searchAreaResult" , areaResult ,rowBounds);
 	}
 
 

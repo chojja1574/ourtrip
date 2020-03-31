@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -108,40 +109,24 @@ body {
 							<div class="selectArea">
 								<label for="selectbox">
 									<h2 class="inputtext">*여행장소 입력</h2>
-								</label> <br> <select name="largeAreaCode" id="largeArea"
-									class="required areaselect">
-									<option selected disabled hidden>지역 선택</option>
-									<option value="1">서울</option>
-									<option value="2">경기</option>
-									<option value="3">강원</option>
-									<option value="4">충북</option>
-									<option value="5">충남</option>
-									<option value="6">전북</option>
-									<option value="7">전남</option>
-									<option value="8">경북</option>
-									<option value="9">경남</option>
-									<option value="0">제주</option>
-								</select> 
-								<select name="smallAreaCode" id="smallArea"
-									class="required areaselect">
-									<option selected disabled hidden>장소 선택</option>
-									<option value="11">서울</option>
-									<option value="12">경기</option>
-									<option value="13">강원</option>
-									<option value="14">충북</option>
-									<option value="15">충남</option>
-									<option value="16">전북</option>
-									<option value="17">전남</option>
-									<option value="18">경북</option>
-									<option value="19">경남</option>
-									<option value="00">제주</option>
-								</select>
+								</label> <select name="largeArea" id="wide-area" class="custom-select">
+									<c:forEach var="largeArea" items="${largeNmList}"
+										varStatus="vs">
+										<option value="${largeArea.largeAreaCode}">${largeArea.largeAreaName}</option>
+									</c:forEach>
+								</select> <select name="smallArea" id="local-area" class="custom-select">
+									<option value="전체" selected>전체</option>
+								</select> <input type="text" id="multiInput" name="multiArea">
+								<button id="addbutton" class="btn btn-primary" type="button">+</button>
+								<span id="multiplace"></span>
+
 							</div>
+
 							<div class="selectGroup" style="width: 49%;">
 								<label for="selectbox">
 									<h2 class="inputtext">*여행 그룹선택</h2>
 								</label><br> <select name="groupCode" id="tripgroup"
-									class="required">
+									class="required form-control">
 									<option selected disabled hidden>그룹 선택</option>
 									<option value="1">혼자 여행하기</option>
 									<option value="2">친구랑 여행하기</option>
@@ -149,22 +134,21 @@ body {
 									<option value="4">가족과 여행하기</option>
 								</select>
 							</div>
-							<br> <input type="text" class="planPlaces" readonly>
+							<br>
 						</div>
 
 						<hr>
 
 						<div style="width: 100%; height: 30%; padding: 30px 30px;">
 							<div class="selectdate">
-								<label for="datePlanner">
-									<h2 class="inputtext">*여행 일자 선택</h2>
-								</label> <br> <input name="plannerStartDT" type="date"
-									id="startPlanner">
+								<h2 class="inputtext">*여행 일자 선택</h2>
+								<br> <label><h3>출발일</h3></label> <input
+									name="plannerStartDT" type="date" id="startPlanner"
+									class="form-control">
 							</div>
 							<div class="selectdate">
-
-								<input name="plannerExpiry" type="date" id="endPlanner">
-								<button type="button" id="event">이벤트</button>
+								<label><h3>종료일</h3></label> <input name="plannerExpiry"
+									class="form-control" type="date" id="endPlanner">
 							</div>
 						</div>
 
@@ -174,8 +158,8 @@ body {
 							<h2 class="inputtext">플래너 공개여부 설정</h2>
 							<input name=plannerPublicYN type="checkbox" id="openplanner"
 								checked="checked" /> <label for="openplanner"> (선택 시
-								비공개) </label> <input name="plannerPwd" type="text"
-								placeholder="비밀번호 입력 ">
+								비공개) </label> <input name="plannerPwd" type="password"
+								class="form-control" placeholder="비밀번호 입력 ">
 
 							<hr>
 						</div>
@@ -194,8 +178,8 @@ body {
 
 	<script type="text/javascript">
 	
+			/* 
 		$(function(){
-			
         	$("#event").on("click",function(){
 			var today = new Date(); 
 			var dd = today.getDate();
@@ -210,21 +194,62 @@ body {
                  
         	var startDateCompare = new Date(startDateArr[0], parseInt(startDateArr[1])-1, startDateArr[2]);
         	var endDateCompare = new Date(endDateArr[0], parseInt(endDateArr[1])-1, endDateArr[2]);
-         
         	if(startDateCompare.getDate() > endDateCompare.getDate()) {
         		 alert("시작날짜와 종료날짜를 확인해 주세요.");
-                 
                  return;	
         	}
-        	
-        	
         		console.log(startDate);
         		console.log(today)
         	})
+		}) */
 		
+		 $(function () {
+	            $("#wide-area").on("change", function () {
+	                var wideVal = Number($(this).val());
+	                console.log(wideVal);
+	                var html = "";
+	                switch(wideVal){
+					<c:forEach var="largeArea" items="${largeNmList}" varStatus="vs">
+					case ${largeArea.largeAreaCode} : 
+						<c:forEach var="smallArea" items="${smallNmList}" varStatus="vs">
+							<c:if test="${smallArea.largeAreaCode eq largeArea.largeAreaCode}">
+			        			html += "<option value='${smallArea.smallAreaCode}'>${smallArea.smallAreaName}</option>";
+			        		</c:if>
+			        	</c:forEach>break;
+					</c:forEach>
+	                }
+
+	                $("#local-area").html(html);
+	            });
+	        });
 			
-		})
-	
+			
+		$(function(){
+			
+				
+			$("#addbutton").on("click",function(){
+				var wide = $("#wide-area option:selected").val();
+				var local = $("#local-area option:selected").val();
+				var widelocal = "";
+					widelocal += wide +","+local;
+				 	$("#multiInput").val(widelocal);
+				
+				
+				
+			});
+				
+				
+				
+			
+		});
+		
+		
+  
+ 
+   
+ 
+ 
+
 	</script>
 
 

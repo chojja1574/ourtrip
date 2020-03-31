@@ -1,7 +1,10 @@
 package com.kh.ourtrip.admin.model.service;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.mail.internet.MimeMessage;
 
@@ -18,8 +21,10 @@ import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.member.model.vo.ProfileImage;
 import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.Day;
-import com.kh.ourtrip.planner.model.vo.Planner;
+import com.kh.ourtrip.planner.model.vo.LargeArea;
+import com.kh.ourtrip.planner.model.vo.PlannerCard;
 import com.kh.ourtrip.planner.model.vo.PlannerInfo;
+import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @Service
 public class AdminHunServiceimpl implements AdminHunService {
@@ -116,7 +121,7 @@ public class AdminHunServiceimpl implements AdminHunService {
 	 * @throws Exception
 	 */
 	@Override
-	public List<PlannerInfo> plannerInfo(List<Integer> plannerList, PageInfo pInf) throws Exception {
+	public List<PlannerCard> plannerInfo(List<Integer> plannerList, PageInfo pInf) throws Exception {
 
 		return adminHunDAO.plannerInfo(plannerList, pInf);
 	}
@@ -168,17 +173,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 	}
 
 	/**
-	 * 플래너 위치조회용 DAO
-	 * 
-	 * @return list<areaName>
-	 * @throws Exception
-	 */
-	@Override
-	public List<AreaName> areaList() throws Exception {
-		return adminHunDAO.areaList();
-	}
-
-	/**
 	 * 여행일자 조회용 service
 	 * 
 	 * @return list<day>
@@ -188,68 +182,6 @@ public class AdminHunServiceimpl implements AdminHunService {
 	public List<Day> dayList() throws Exception {
 
 		return adminHunDAO.dayList();
-	}
-
-	/**
-	 * 검색후 플래너 count용 service
-	 * 
-	 * @param keyword
-	 * @return searchResultcount
-	 * @throws Exception
-	 */
-	@Override
-	public List<Integer> resultCount(Map<String, Object> keyword) throws Exception {
-		if (keyword.get("startTrip") == "") {
-			keyword.put("startTrip", null);
-		}
-		if (keyword.get("endTrip") == "") {
-			keyword.put("endTrip", null);
-		}
-
-		return adminHunDAO.resultCount(keyword);
-	}
-
-	/**
-	 * 검색결과 조회 service
-	 * 
-	 * @param pInf
-	 * @param keyword
-	 * @return List searchResult
-	 * @throws Exception
-	 */
-	@Override
-	public List<PlannerInfo> searchResult(PageInfo pInf, Map<String, Object> keyword) throws Exception {
-		if (keyword.get("startTrip") == "") {
-			keyword.put("startTrip", null);
-		}
-		if (keyword.get("endTrip") == "") {
-			keyword.put("endTrip", null);
-		}
-
-		return adminHunDAO.searchResult(pInf, keyword);
-	}
-
-	@Override
-	public List<AreaName> resultArea(List<Integer> searchResultcount) throws Exception {
-		if (searchResultcount.isEmpty()) {
-			searchResultcount = null;
-		}
-		return adminHunDAO.resultArea(searchResultcount);
-	}
-
-	/**
-	 * planner별 검색 날짜 조회용 service
-	 * 
-	 * @param searchResultcount
-	 * @return List<Day> dayList
-	 * @throws Exception
-	 */
-	@Override
-	public List<Day> resultDay(List<Integer> searchResultcount) throws Exception {
-		if (searchResultcount.isEmpty()) {
-			searchResultcount = null;
-		}
-		return adminHunDAO.resultDay(searchResultcount);
 	}
 
 	/**
@@ -339,7 +271,9 @@ public class AdminHunServiceimpl implements AdminHunService {
 		return adminHunDAO.recoveryPlanner(plannerNo);
 	}
 
-	/** 회원 강퇴용 service
+	/**
+	 * 회원 강퇴용 service
+	 * 
 	 * @param memberNo
 	 * @param email
 	 * @param delBecause
@@ -350,10 +284,10 @@ public class AdminHunServiceimpl implements AdminHunService {
 	@Transactional(rollbackFor = Exception.class)
 	public int memberDelete(int memberNo, String email, String delBecause) throws Exception {
 		int result = 0;
-		
-		result =adminHunDAO.memberDelete(memberNo);
-		
-		if(result >0 ) {
+
+		result = adminHunDAO.memberDelete(memberNo);
+
+		if (result > 0) {
 			String setfrom = "khourtrip@gmail.com";
 
 			MimeMessage message = mailSender.createMimeMessage();
@@ -366,9 +300,94 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 			mailSender.send(message);
 		}
-		
-		
-		
+
 		return result;
 	}
+
+	/**
+	 * 대지역명 조회용 service
+	 * 
+	 * @return list
+	 * @throws Exception
+	 */
+	@Override
+	public List<LargeArea> selectLargeNmList() throws Exception {
+		return adminHunDAO.selectLargeNmList();
+	}
+
+	/**
+	 * 소지역명 조회용 service
+	 * 
+	 * @return list
+	 * @throws Exception
+	 */
+	@Override
+	public List<SmallArea> selectsmallNmList() throws Exception {
+		return adminHunDAO.selectsmallNmList();
+	}
+
+	/**
+	 * 플래너 검색용 service
+	 * 
+	 * @param keyword
+	 * @return list
+	 * @throws Exception
+	 */
+	@Override
+	public List<Integer> searchPlanner(Map<String, Object> keyword) throws Exception {
+		if (keyword.get("startTrip") == "")
+			keyword.replace("startTrip", null);
+		if (keyword.get("endTrip") == "")
+			keyword.replace("endTrip", null);
+
+		return adminHunDAO.searchPlanner(keyword);
+	}
+
+	/**
+	 * 지역명 검색 조회용 service
+	 * 
+	 * @param keyword
+	 * @return List
+	 * @throws Exception
+	 */
+	@Override
+	public List<AreaName> areaResult(Map<String, Object> keyword) throws Exception {
+		return adminHunDAO.areaResult(keyword);
+	}
+
+	/**
+	 * 전체 플래너 리스트 지역명 조회용 service
+	 * 
+	 * @return list
+	 * @throws Exception
+	 */
+	@Override
+	public List<AreaName> totalAList() throws Exception {
+		return adminHunDAO.totalAList();
+	}
+
+	/**
+	 * 검색 결과 조회용 service
+	 * 
+	 * @param resultList
+	 * @return list
+	 * @throws Exception
+	 */
+	@Override
+	public List<PlannerInfo> searchResult(Map<String, Object> keyword, PageInfo pInf) throws Exception {
+
+		return adminHunDAO.searchResult(keyword, pInf);
+	}
+
+	/** 지역명으로 검색결과 존재할경우 service
+	 * @param areaResult
+	 * @param pInf
+	 * @return list
+	 * @throws Exception
+	 */
+	@Override
+	public List<PlannerInfo> searchAreaResult(List<AreaName> areaResult, PageInfo pInf) throws Exception {
+		return adminHunDAO.searchAreaResult(areaResult,pInf);
+	}
+
 }
