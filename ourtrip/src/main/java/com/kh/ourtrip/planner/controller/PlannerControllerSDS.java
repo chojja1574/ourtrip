@@ -538,6 +538,10 @@ public class PlannerControllerSDS {
 		
 	}
 	
+	@RequestMapping("guide")
+	public String plannerGuide() {
+		return "planner/plannerGuide";
+	}
 	
 }
 
