@@ -331,6 +331,13 @@ public class MemberController {
 				if (!folder.exists()) folder.mkdir();
 				
 				result = memberService.updateProfileImage(loginMember.getMemberNo(), profileImage, savePath, isDefault);
+				
+				if(result > 0) {
+					// profileImagePath에 프로필사진 경로 저장
+					String profileImagePath = memberService.getProfileImagePath(loginMember.getMemberNo());
+					model.addAttribute("profilePath", profileImagePath);
+				}
+				
 			}
 			
 			if(result > 0) msg = "회원정보가 수정되었습니다";
