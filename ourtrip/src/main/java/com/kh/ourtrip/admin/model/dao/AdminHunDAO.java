@@ -175,7 +175,6 @@ public class AdminHunDAO {
 	public int recoveryPlanner(int plannerNo) {
 		return sqlSession.update("adminhunMapper.recovery", plannerNo);
 	}
-
 	public int memberDelete(int memberNo) {
 		return sqlSession.update("adminhunMapper.memberDelete" , memberNo);
 	}
@@ -187,37 +186,25 @@ public class AdminHunDAO {
 	public List<SmallArea> selectsmallNmList() {
 		return sqlSession.selectList("adminhunMapper.SmallNmList");
 	}
-
-	/** 플래너 검색용 DAO
-	 * @param keyword
-	 * @return list
-	 * @throws Exception
-	 */
-	public List<Integer> searchPlanner(Map<String, Object> keyword)throws Exception {
-		return sqlSession.selectList("adminhunMapper.searchPlanner" , keyword);
-	}
-
-
-	public List<AreaName> areaResult(Map<String, Object> keyword) {
-		return sqlSession.selectList("adminhunMapper.areaResult" , keyword);
-	}
-
 	public List<AreaName> totalAList() {
 		return sqlSession.selectList("adminhunMapper.totalAList");
 	}
 
-	public List<PlannerInfo> searchResult(Map<String, Object> keyword, PageInfo pInf) {
-		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
-		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
-		return sqlSession.selectList("adminhunMapper.searchResult",keyword, rowBounds);
+	public List<PlannerInfo> searchList(Map<String, Object> keyword) {
+		return sqlSession.selectList("adminhunMapper.searchList",keyword);
 	}
 
-	public List<PlannerInfo> searchAreaResult(List<AreaName> areaResult, PageInfo pInf) {
-		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
-		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
-		return sqlSession.selectList("adminhunMapper.searchAreaResult" , areaResult ,rowBounds);
+	public List<AreaName> areaInfo(Map<String, Object> keyword) {
+		return sqlSession.selectList("adminhunMapper.areaInfo", keyword);
 	}
 
+	public List<PlannerInfo> plannerInfo(Map<String, Object> keyword, PageInfo pInf) {
+		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
+		return sqlSession.selectList("adminhunMapper.plannerInfo" , keyword ,rowBounds);
+	}
+
+	
 
 
 }

@@ -336,68 +336,44 @@ public class AdminHunController {
 
 			
 			
-			
-			List<Integer> plannerList = adminHunService.searchPlanner(keyword);
-			List<AreaName> areaResult1 = adminHunService.areaResult(keyword);
-			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, plannerList.size());
-
-			if(plannerList.isEmpty()) { // 지역제외 검색결과 없고 
-				List<AreaName> areaResult = adminHunService.areaResult(keyword); // 지역 검색
-				if(areaResult.isEmpty()) { // 지역, 지역제외 검색결과 없음. 검색에 일치하는 값 없음
-					model.addAttribute("plannerList", null);
-				}else {// 지역검색 결과 있음
-					List<PlannerInfo> searchResult = adminHunService.searchAreaResult(areaResult, pInf);
-					for (PlannerInfo infList : searchResult) {
-						for (AreaName areaList : areaResult) {
-							if (infList.getPlannerNo() == areaList.getPlannerNo()) {
-								infList.setAreaNames(areaResult);
-							}
-						}
-					}
-					model.addAttribute("plannerList", searchResult);
-				}
-			}
-			
-			if(!plannerList.isEmpty()) {
-				
-				keyword.put("pList", plannerList);
-				List<PlannerInfo> searchResult = adminHunService.searchResult(keyword, pInf);
-				List<AreaName> areaResult = adminHunService.areaResult(keyword);
-				
-			}
-			
-			keyword.put("pList", plannerList);
-			System.out.println(keyword);
+			List<PlannerInfo> searchList = adminHunService.searchList(keyword);// 지역이외 검색 후 검색된 플래너리스트
+			List<AreaName> areaInfo = adminHunService.areaInfo(keyword);
 			if (currentPage == null) {
 				currentPage = 1;
 			}
-
-			List<PlannerInfo> searchResult = adminHunService.searchResult(keyword, pInf);
+			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, searchList.size());
 			
+			List<PlannerInfo> plannerInfo = adminHunService.plannerInfo( keyword,pInf);
 
-			for (PlannerInfo infList : searchResult) {
-				for (AreaName areaList : areaResult) {
-					if (infList.getPlannerNo() == areaList.getPlannerNo()) {
-						infList.setAreaNames(areaResult);
+			if (plannerInfo.isEmpty()) {// 지역이외 검색 결과가 없을경우
+				model.addAttribute("plannerList", null);
+				
+			} else {// 지역이외 검색결과 있을경우
+				if (!areaInfo.isEmpty()) {// 지역검색결과 있을경우 
+					for (PlannerInfo infList : plannerInfo) {
+						for (AreaName infoarea : areaInfo) {
+							if (infList.getPlannerNo() == infoarea.getPlannerNo()) {
+								infList.setAreaNames(areaInfo);
+							}
+						}
 					}
+					List<Day> dayList = adminHunService.dayList();
+					Date countDay = null;
+					for (PlannerInfo infList : plannerInfo) {
+						for (Day infodays : dayList) {
+							if (infList.getPlannerNo() == infodays.getPlannerNo()) {
+								countDay = new Date(infList.getPlannerStartDT().getTime()
+										+ infodays.getTripDate() * (24 * 60 * 60 * 1000));
+								infList.setPlannerEndDate(countDay);
+							}
+						}
+					}
+					model.addAttribute("plannerList", plannerInfo);
+				}else {//지역이외 검색결과 있고 , 지역검색결과가 없는경우 
+					model.addAttribute("plannerList", null);
 				}
 			}
 
-			List<Day> dayList = adminHunService.dayList();
-
-			Date countDay = null;
-			for (PlannerInfo infList : searchResult) {
-				for (Day infodays : dayList) {
-					if (infList.getPlannerNo() == infodays.getPlannerNo()) {
-						countDay = new Date(infList.getPlannerStartDT().getTime()
-								+ (infodays.getTripDate() * (24 * 60 * 60 * 1000)));
-						infList.setPlannerEndDate(countDay);
-					}
-				}
-			}
-
-			model.addAttribute("plannerList", searchResult);
-			model.addAttribute("pInfom", pInf);
 			return "admin/adminplannerList";
 
 		} catch (Exception e) {
