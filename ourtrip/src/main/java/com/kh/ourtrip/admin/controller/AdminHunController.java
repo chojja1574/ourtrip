@@ -31,7 +31,7 @@ import com.kh.ourtrip.planner.model.vo.SmallArea;
 
 @SessionAttributes({ "memberList", "msg" })
 @Controller
-@RequestMapping("/admin/*")
+@RequestMapping("/admin1/*")
 public class AdminHunController {
 
 	@Autowired
