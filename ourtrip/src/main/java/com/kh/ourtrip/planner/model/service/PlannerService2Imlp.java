@@ -28,7 +28,7 @@ public class PlannerService2Imlp implements PlannerService2 {
 	 * @throws Exception
 	 */
 	@Override
-	public List<PlannerView> selectPlannerView(int no) throws Exception {
+	public List<PlannerView> selectPlannerView(String no) throws Exception {
 		return plannerDAO2.selectPlannerView(no);
 	}
 

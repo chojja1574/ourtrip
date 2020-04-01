@@ -18,7 +18,7 @@ public interface PlannerService2 {
 	 * @return pList
 	 * @throws Exception
 	 */
-	public abstract List<PlannerView> selectPlannerView(int no) throws Exception;
+	public abstract List<PlannerView> selectPlannerView(String no) throws Exception;
 	
 	/** PLANNER_DATE 테이블의 다음 DATE_NO를 가져오는 Service
 	 * @return result

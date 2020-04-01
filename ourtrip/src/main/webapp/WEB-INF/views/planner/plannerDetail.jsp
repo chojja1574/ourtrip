@@ -63,7 +63,6 @@
                 border-top: 2px solid #18a8f1;
 
             }
-            
             .card-body::-webkit-scrollbar {
 			    width: 5px;
 			    background-color: none;
@@ -74,6 +73,19 @@
 			    background-color: rgba(0, 0, 0, 0.15);
 			}
 			.card-body::-webkit-scrollbar-track {
+			    width: 5px;
+			    background-color: none;
+			}
+            .scheduleInfo::-webkit-scrollbar {
+			    width: 5px;
+			    background-color: none;
+			}
+			.scheduleInfo::-webkit-scrollbar-thumb {
+			    width: 5px;
+			    border-radius: 15px;
+			    background-color: rgba(0, 0, 0, 0.15);
+			}
+			.scheduleInfo::-webkit-scrollbar-track {
 			    width: 5px;
 			    background-color: none;
 			}
@@ -155,9 +167,11 @@
         </style>
     </head>
     <body>
-       	<jsp:include page="../common/header.jsp" />
-		<jsp:include page="../common/nav.jsp" />
-        <div class="container-fluid">
+    	<div class="header">
+	       	<jsp:include page="../common/header.jsp" />
+			<jsp:include page="../common/nav.jsp" />
+		</div>
+        <div class="container-fluid mb-5">
 			<div class="row">
 				<div class="col-md-2"></div>
 		        <h2 class="card-header main-back col-md-8" style="height:70px;">${plannerInfo.plannerTitle}</h2>
@@ -196,10 +210,10 @@
 		            </div>
 	            </div>
 	            <div class="col-md-3 p-4 scheduleInfo PCOnly" style="overflow:auto; height:800px">
-                    <h1 class="mb-4 selectTitle">제목</h1>
-                    <h2 class="mb-3 selectTime">시간 : </h2>
-                    <h3 class="mb-3 selectLocation">장소 : 서울역</h3>
-                    <h3 class="mb-3 selectCost">경비 : 10,000원 </h3>
+                    <h1 class="mb-4 selectTitle">제목:</h1>
+                    <h2 class="mb-3 selectTime">시간 :</h2>
+                    <h3 class="mb-3 selectLocation">장소 :</h3>
+                    <h3 class="mb-3 selectCost">경비 :</h3>
                     <h3 class="mb-3">메모</h3>
                     <textarea class="selectMemo" readonly style="height:200px; width: 400px; resize: none; padding: 20px;" >
 
@@ -232,9 +246,9 @@
                         </button>
                     </div>
                     <div class="modal-body">
-	                    <h2 class="mb-3 selectTime">시간 : </h2>
-	                    <h3 class="mb-3 selectLocation">장소 : 서울역</h3>
-	                    <h3 class="mb-3 selectCost">경비 : 10,000원 </h3>
+	                    <h2 class="mb-3 selectTime">시간 :</h2>
+	                    <h3 class="mb-3 selectLocation">장소 :</h3>
+	                    <h3 class="mb-3 selectCost">경비 :</h3>
 	                    <h3 class="mb-3">메모</h3>
 	                    <textarea class="selectMemo" readonly style="height:200px; width: 400px; resize: none; padding: 20px;" >
 	
@@ -248,7 +262,9 @@
             </div>
         </div>
     </body>
-    
+    <div class="header">
+    	<jsp:include page="../common/footer.jsp" />
+    </div>
 	<script type="text/javascript" src="${contextPath}/resources/js/map.js"></script>
     <script>
     var planner = new Object();
@@ -267,7 +283,6 @@
     	var plannerInfo = '${plannerInfoJson}';
     	var plannerJson = JSON.parse(plannerInfo);
     	locationJson = ${locationArray};
-    	console.log(locationJson);
     	initPlanner(plannerJson);
     	initMap();
     });
@@ -465,7 +480,7 @@
 						$($('.selectTime')[k]).html('시간 : ' + timeToTime(days[i].schedules[j].time));
 						$($('.selectLocation')[k]).html('장소 : ' + days[i].schedules[j].locationNM);
 						$($('.selectCost')[k]).html('비용 : ' + days[i].schedules[j].cost);
-						$($('.selectMemo')[k]).val(days[i].schedules[j].memo);
+						$($('.selectMemo')[k]).html(days[i].schedules[j].memo);
 					}
 				}
 				if(scheduleMarkers[i].scheduleMarker[j].sno == $(this).data('sno')){

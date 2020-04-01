@@ -203,7 +203,7 @@ public class PlannerDAO {
 	}
 	
 	// @author 박지현
-	public List<PlannerView> selectPlannerView(int no) throws Exception{
+	public List<PlannerView> selectPlannerView(String no) throws Exception{
 		return sqlSessionTemplate.selectList("planner1Mapper.selectPlannerView",no);
 	}
 

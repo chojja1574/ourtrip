@@ -113,7 +113,8 @@ public class Schedule {
 
 	public String toJsonString() {
 		
-		String str = "";
+		String str = scheduleMemo.replaceAll("\n","\\\\\\\\r\\\\\\\\n");
+		System.out.println(str);
 		return "{\"scheduleNo\":\"" + scheduleNo + "\",\"scheduleTitle\":\"" + scheduleTitle + "\",\"scheduleCost\":\""
 				+ scheduleCost + "\",\"scheduleTime\":\"" + scheduleTime + "\",\"scheduleMemo\":\"" + str
 				+ "\",\"scheduleLocationNM\":\"" + scheduleLocationNM + "\",\"scheduleLat\":\"" + scheduleLat + "\",\"scheduleLng\":\""
