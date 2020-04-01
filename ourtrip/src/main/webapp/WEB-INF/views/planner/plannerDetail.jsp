@@ -230,7 +230,9 @@
 	        <div class="row">
 	        	<div class="col-md-2"></div>
 	        	<div class="card-footer text-muted d-flex hideCon col-md-8" style="height:70px;">
+	        	<c:if test="${loginMember != null }">
 		            <button type="button" class="btn main-btn mr-auto PCOnly" id="copyBtn">복사</button>
+		        </c:if>
 		            <button type="button" class="btn gray-btn ml-auto PCOnly" id="beforeBtn">이전으로</button>
 			    </div>
 	        </div>
