@@ -1015,10 +1015,11 @@ $('#addSchedule').click(function(){
 });
 
 function addSchedule(dno,sno,title,time,location,cost,memo,llat,llng,liwContent,lmemberNo){
-
+	
     // 새로운 일정을 만드는 것이니 시퀀스 NEXTVAL 얻어와서 넣어야함
     // 테스트때 임시로 createNo 변수 사용
     var dayIdx;
+
 	for(var i in days){
 		if(days[i].no == dno){
 			days[i].schedules.push({no:sno, title:title, cost:cost, time:removeColonFromTime(time), memo:memo})
@@ -1027,9 +1028,11 @@ function addSchedule(dno,sno,title,time,location,cost,memo,llat,llng,liwContent,
 	}
 	// 마커 배열에 새로운 자리를 만듦
 	var today = extractDayMarker(dno);
-
 	var locationLatLng = new kakao.maps.LatLng(llat,llng)
 	today.scheduleMarker.push({"sno" : sno, "LatLng" : locationLatLng, "unselect" : (llat+llng==0?true:false), "infoWindow" : liwContent});
+	console.log("addSchedule");
+	console.log(today);
+	console.log(days[dayIdx]);
 	
 	if($('#selectedDay').data('dateno') == dno){
 		createSchedule(sno,title,time,cost,memo,location);
@@ -1181,6 +1184,8 @@ function removeSchedule(dno,sno){
     			}
     		}
     	}
+    }
+    for(var i in days){
     	if(days[i].no == dno){
     		for(var j in days[i].schedules){
     			if(days[i].schedules[j].no == sno){
@@ -1268,8 +1273,7 @@ function onMessage(msg) {
 		break;
 	case 'addDate': 
 		days.push({no:data['dno'],tripDate:-1,plannerNo:planner.no,schedules:new Array()});
-		scheduleMarkers.push(
-				{dno:data['dno'],scheduleMarker:new Array({sno:data['sno'],LatLng:new kakao.maps.LatLng(0,0),unselect:true,infoWindow:null})});
+		scheduleMarkers.push({dno:data['dno'],scheduleMarker:new Array()});
 		createDate(data['dno'],(data['id'] == '${loginMember.memberEmail}'));
 		addSchedule(data['dno'],data['sno'],'제목 없음','','미정',0,'',0,0,null,memberNo);
 		break;
