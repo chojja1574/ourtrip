@@ -229,6 +229,7 @@ public class EchoHandler extends TextWebSocketHandler {
 		Day day = new Day();
 		day.setPlannerNo(Integer.parseInt(msgJson.get("pno").toString()));
 		day.setDateNo(dateNo);
+		day.setTripDate(-1);
 		
 		day.setSchedules(new ArrayList<Schedule>());
 		
