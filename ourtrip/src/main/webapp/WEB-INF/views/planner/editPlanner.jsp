@@ -584,7 +584,6 @@ function initPlanner(pj){
 	console.log("planner");
 	console.log(planner);
 	console.log("days");
-	console.log(days);
 	sortDaysUserTripdate(days);
 	console.log(days);
 	console.log("scheduleMarkers");

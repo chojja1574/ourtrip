@@ -65,7 +65,7 @@ body {
 
 #createContent {
 	background-color: rgba(135, 206, 235, 0.4);
-	height: 860px;
+	height: 900px;
 }
 
 .selectArea {
