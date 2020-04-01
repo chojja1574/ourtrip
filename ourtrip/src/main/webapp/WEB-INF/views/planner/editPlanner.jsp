@@ -457,6 +457,7 @@ $(function() {
 	var chatList = '${chatList}';
 	var joinUserArray = '${joinUserArray}';
 	joinUserJson = JSON.parse(joinUserArray);
+	initJoinMember(joinUserJson);
 	var plannerJson = JSON.parse(plannerInfo);
 	var chatListJson = JSON.parse(chatList);
 	var profilePath = '${profilePath}';
@@ -483,7 +484,6 @@ $(function() {
 		if(planner.pwd == inputPwd){
 			initChatting(chatListJson);
 			initPlanner(plannerJson);
-			initJoinMember(joinUserJson);
 			
 			for(var i in joinMember){
 				if(joinMember[i].memberNo == memberNo){
@@ -617,8 +617,12 @@ function initChatting(chatList){
 //====================================== 변환 관련 함수  ======================================//
 //=======================================================================================//
 function timeToTime(time){
-	var str = time.replace(/(.{2})/g,"$1:").slice(0,-1);
-	return str;
+	if(!time.includes(':')){
+		var str = time.replace(/(.{2})/g,"$1:").slice(0,-1);
+		return str;
+	}else{
+		return time;
+	}
 } 
 
 //=======================================================================================//
@@ -954,6 +958,7 @@ function deleteDate(ind,reorderBool){
 //첫번째 매개변수는 SCHEDULE 테이블에서 SCHEDULE_NO값이 들어가야 하는데
 //새로운 일정을 만드는 것이니 시퀀스 NEXTVAL 얻어와서 넣어야함
 function createSchedule(no,title,time,cost,memo,locationName){
+	console.log('time : ' + time);
 	var schedule = 
 	'<div data-scheduleno="' + no + '" class="btn p-cont schedule" onclick="selectSchedule(' + no + ')">' +
 	'<div class="row font-weight-bold accodianElement mb-1">' +
@@ -1095,10 +1100,11 @@ function selectSchedule(no){
     
     // marker.setPosition(mouseEvent.latLng);
     // marker.setMap(map);
-    initMarker(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng,scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].infoWindow);
     
+    initMarker(scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng,scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].infoWindow);
     lat = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLat();
     lng = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].LatLng.getLng();
+    iwContent = scheduleMarkers[scheInfo[0]].scheduleMarker[scheInfo[1]].infoWindow;
 };
 
 function updateSchedule(sno,title,time,location,cost,memo,llat,llng,liwContent){
@@ -1290,13 +1296,23 @@ function onMessage(msg) {
 	    }
 		break;
 	case 'JOIN':
-		if(data['newJoinUser'] != undefined)
-			joinMember.push(data['newJoinUser']);
-		try{
-			var userOption = 
-				'<option value="' + data['newJoinUser'].memberNo + '">' + data['newJoinUser'].memberNickName + '</option>'
-			$('#userPermission').append(userOption);
-		}catch(e){}
+		var dupCheck = false;
+		for(var i in joinMember){
+			console.log(joinMember[i].memberNo + ' == ' + data['newJoinUser']);
+			if(joinMember[i].memberNo == data['newJoinUser'].memberNo)
+				dupCheck = true;
+		}
+		if(!dupCheck){
+			if(data['newJoinUser'] != undefined)
+				joinMember.push(data['newJoinUser']);
+			try{
+				var userOption = 
+					'<option value="' + data['newJoinUser'].memberNo + '">' + data['newJoinUser'].memberNickName + '</option>'
+				$('#userPermission').append(userOption);
+			}catch(e){
+				e.stack;
+			}
+		}
 		break;
 	case 'permission':
 		grantPermission(data['grantMemberNo'],data['permission']);
