@@ -93,7 +93,7 @@ h5 {
 	<jsp:include page="/WEB-INF/views/common/nav.jsp" />
 
 	<!-- main content -->
-	<div class="container-fluid mx-0 mt-2 px-0">
+	<div class="container-fluid mx-0 mt-0 px-0">
 		<div class="carousel slide mainspot" id="carousel-628660">
 			<ol class="carousel-indicators">
 				<li data-slide-to="0" data-target="#carousel-628660" class="active">

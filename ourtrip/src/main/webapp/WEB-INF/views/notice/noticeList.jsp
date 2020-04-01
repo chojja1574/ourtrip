@@ -76,7 +76,7 @@
 	            	<c:if test="${pInf.currentPage > 1}">
 		                <li>
 		                	<!-- 맨 처음으로(<<) -->
-		                    <a class="page-link text-success" 
+		                    <a class="page-link text-main" 
 		                    	href=" 
 		                    	<c:url value="list">
 		                    		<c:if test="${!empty param.searchKey }">
@@ -92,7 +92,7 @@
 		                
 		                <li>
 		                	<!-- 이전으로(<) -->
-	                   		<a class="page-link text-success" 
+	                   		<a class="page-link text-main" 
 		                    	href=" 
 		                    	<c:url value="list">
 		                    		<c:if test="${!empty param.searchKey }">
@@ -119,7 +119,7 @@
 	                	
 	                	<c:if test="${p != pInf.currentPage}">
 	                		<li>
-		                    	<a class="page-link text-success" 
+		                    	<a class="page-link text-main" 
 			                    	href=" 
 			                    	<c:url value="list">
 			                    		<c:if test="${!empty param.searchKey }">
@@ -139,7 +139,7 @@
 	                <!-- 다음 페이지로(>) -->
 	                <c:if test="${pInf.currentPage < pInf.maxPage }">
 		                <li>
-							<a class="page-link text-success" 
+							<a class="page-link text-main" 
 		                    	href=" 
 		                    	<c:url value="list">
 		                    		<c:if test="${!empty param.searchKey }">
@@ -155,7 +155,7 @@
 		                
 		                <!-- 맨 끝으로(>>) -->
 		                <li>
-		                    <a class="page-link text-success" 
+		                    <a class="page-link text-main" 
 		                    	href=" 
 		                    	<c:url value="list">
 		                    		<c:if test="${!empty param.searchKey }">
@@ -173,7 +173,7 @@
         	</div>
         	<div class="col-md-3">
         		<c:if test="${loginMember.memberGrade == 'A'}">
-        			<a href="./insertForm" class="form-control btn btn-success" style="width:150px">공지사항 작성</a>
+        			<a href="./insertForm" class="form-control btn main-btn" style="width:150px">공지사항 작성</a>
         		</c:if>
         	</div>
        	</div>
@@ -187,7 +187,7 @@
 	                    <option value="titcont">제목+내용</option>
 	                </select>
 	                <input type="text" name="searchValue" class="form-control" style="width:25%; display: inline-block;">
-	                <button class="form-control btn btn-success" style="width:100px; display: inline-block;">검색</button>
+	                <button class="form-control btn main-btn" style="width:100px; display: inline-block;">검색</button>
 	            </form>
 	            
 	           	<script>

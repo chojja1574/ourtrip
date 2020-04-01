@@ -171,7 +171,7 @@
 	       	<jsp:include page="../common/header.jsp" />
 			<jsp:include page="../common/nav.jsp" />
 		</div>
-        <div class="container-fluid mb-5">
+        <div class="container-fluid mb-5 mt-5">
 			<div class="row">
 				<div class="col-md-2"></div>
 		        <h2 class="card-header main-back col-md-8" style="height:70px;">${plannerInfo.plannerTitle}</h2>
