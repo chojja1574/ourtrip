@@ -581,6 +581,10 @@ function initPlanner(pj){
 		scheduleMarkers.push({"dno" : day.no, "scheduleMarker" : scheduleMarker});
 		days.push(day);
 	}
+	//setTimeout(function(){
+	for(var i = 0; i < days.length; i++){
+		sortSchedules(days[i].schedules);
+	}
 	console.log("planner");
 	console.log(planner);
 	console.log("days");
@@ -588,10 +592,6 @@ function initPlanner(pj){
 	console.log(days);
 	console.log("scheduleMarkers");
 	console.log(scheduleMarkers);
-	//setTimeout(function(){
-	for(var i = 0; i < days.length; i++){
-		sortSchedules(days[i].schedules);
-	}
 	//}, 1000);
 }
 function initChatting(chatList){
@@ -628,11 +628,14 @@ function timeToTime(time){
 //=======================================================================================//
 
 function sortSchedules(schedules){
-	var dno = schedules.dateNo;
+	console.log("schedules");
+	console.log(schedules);
+	var dno = schedules[0].dateNo;
 	var dayIdx = -1;
 	var i = null;
 	var j = null;
 	for(i in scheduleMarkers){
+		console.log(scheduleMarkers[i].dno + ' == ' + dno)
 		if(scheduleMarkers[i].dno == dno)
 			dayIdx = i;
 	}
@@ -654,6 +657,7 @@ function sortSchedules(schedules){
 		console.log('error : i = ' + i + ', j = ' + j + ', idx : ' + dayIdx);
 		console.log(scheduleMarkers[dayIdx]);
 	}
+	
 }
 
 function sortSchedule(){
