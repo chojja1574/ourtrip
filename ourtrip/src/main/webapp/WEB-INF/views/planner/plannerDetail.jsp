@@ -63,7 +63,6 @@
                 border-top: 2px solid #18a8f1;
 
             }
-            
             .card-body::-webkit-scrollbar {
 			    width: 5px;
 			    background-color: none;
@@ -74,6 +73,19 @@
 			    background-color: rgba(0, 0, 0, 0.15);
 			}
 			.card-body::-webkit-scrollbar-track {
+			    width: 5px;
+			    background-color: none;
+			}
+            .scheduleInfo::-webkit-scrollbar {
+			    width: 5px;
+			    background-color: none;
+			}
+			.scheduleInfo::-webkit-scrollbar-thumb {
+			    width: 5px;
+			    border-radius: 15px;
+			    background-color: rgba(0, 0, 0, 0.15);
+			}
+			.scheduleInfo::-webkit-scrollbar-track {
 			    width: 5px;
 			    background-color: none;
 			}
@@ -155,8 +167,10 @@
         </style>
     </head>
     <body>
-       	<jsp:include page="../common/header.jsp" />
-		<jsp:include page="../common/nav.jsp" />
+    	<div class="header">
+	       	<jsp:include page="../common/header.jsp" />
+			<jsp:include page="../common/nav.jsp" />
+		</div>
         <div class="container-fluid mb-5">
 			<div class="row">
 				<div class="col-md-2"></div>
@@ -248,7 +262,9 @@
             </div>
         </div>
     </body>
-    <jsp:include page="../common/footer.jsp" />
+    <div class="header">
+    	<jsp:include page="../common/footer.jsp" />
+    </div>
 	<script type="text/javascript" src="${contextPath}/resources/js/map.js"></script>
     <script>
     var planner = new Object();
