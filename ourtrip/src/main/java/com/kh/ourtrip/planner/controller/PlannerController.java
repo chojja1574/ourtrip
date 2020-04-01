@@ -77,10 +77,10 @@ public class PlannerController {
 		
 		
 		if(planner.getPlannerPublicYN() == null){
-			planner.setPlannerPublicYN("N");
+			planner.setPlannerPublicYN("Y");
 		}
 		if (planner.getPlannerPublicYN().equals("on")) {
-			planner.setPlannerPublicYN("Y");
+			planner.setPlannerPublicYN("N");
 		} 
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");

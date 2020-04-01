@@ -287,8 +287,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-12">
-									<button type="button" class="updateBtn btnColor1">이용
-										방법</button>
+									<button type="button" class="updateBtn btnColor1" id="guide">이용 방법</button>
 								</div>
 							</div>
 						</div>
@@ -1656,6 +1655,10 @@ $(function () {
 		planner.groupCode = $('#groupCode').val();
 		sock.send(JSON.stringify({pno:planner.no, type:'updateGroup', gco:$('#groupCode').val()}));
 	});
+	
+	$('#guide').click(function(){
+		window.open("${contextPath}/planner/guide",'_blank');
+	})
 });
 
 // 경비 총액 계산 후 리턴
