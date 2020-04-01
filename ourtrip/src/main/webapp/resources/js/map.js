@@ -188,18 +188,27 @@ function addMarker(place) {
 
 
 function displayInfowindow(marker, i, map) {
+	console.log("displayInfowindow : i");
 	console.log(i);
     var content = '<div style="padding:5px;z-index:1;">' + i + '</div>';
-    infowindowAll = new kakao.maps.InfoWindow({
-        removable : true
-    });
+   
     infowindowAll.setContent(content);
     infowindowAll.open(map, marker);
 }
 
-// 검색 결과 목록과 마커를 표출하는 함수입니다
-function displayAllPlaces(pointsArr,mymap,mymarkers) {
+function displayInfowindowLocal(marker, i, map,infowindowLocal) {
+	console.log("displayInfowindow : i");
+	console.log(i);
+    var content = '<div style="padding:5px;z-index:1;">' + i + '</div>';
+    
+    infowindowLocal.setContent(content);
+    infowindowLocal.open(map, marker);
+}
 
+// 검색 결과 목록과 마커를 표출하는 함수입니다
+function displayAllPlaces(pointsArr,mymap,mymarkers,myIw) {
+	console.log("myIw");
+	console.log(myIw);
 	// 버튼을 클릭하면 아래 배열의 좌표들이 모두 보이게 지도 범위를 재설정합니다
     var allBounds = new kakao.maps.LatLngBounds();
 
@@ -235,7 +244,12 @@ function displayAllPlaces(pointsArr,mymap,mymarkers) {
                 // 마커 위에 인포윈도우를 표시합니다
             	console.log("set infoWindow")
             	console.log(pointsArr.scheduleMarker[i].infoWindow);
-                displayInfowindow(allMarker, pointsArr.scheduleMarker[i].infoWindow, mymap);
+            	if(myIw == null || myIw == undefined){
+            		displayInfowindow(allMarker, pointsArr.scheduleMarker[i].infoWindow, mymap);
+            	}else{
+            		displayInfowindowLocal(allMarker, pointsArr.scheduleMarker[i].infoWindow, mymap,myIw);
+            	}
+                
             });
         })(allMarker, i);
 

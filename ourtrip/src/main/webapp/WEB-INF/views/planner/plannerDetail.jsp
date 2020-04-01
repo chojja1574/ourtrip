@@ -6,6 +6,7 @@
     <html lang = "ko">
     <head>
     <meta charset="UTF-8">
+    	
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -267,8 +268,8 @@
 	    	<jsp:include page="../common/footer.jsp" />
 	    </div>
     </body>
-   
-	<script type="text/javascript" src="${contextPath}/resources/js/map.js"></script>
+    <!-- 지도관련 javascript -->
+   	<script type="text/javascript" src="${contextPath}/resources/js/map.js"></script>
     <script>
     var planner = new Object();
     var days = new Array();
@@ -281,7 +282,10 @@
     var selectMap = null;
     var marker = new kakao.maps.Marker();
 	var infowindow = new kakao.maps.InfoWindow({zIndex:1});
-    
+	var infowindowLocal = new kakao.maps.InfoWindow({
+        removable : true
+    });
+	
     $(function(){
     	var plannerInfo = '${plannerInfoJson}';
     	var plannerJson = JSON.parse(plannerInfo);
@@ -339,7 +343,7 @@
 										scheduleMarkers[i].map = new kakao.maps.Map(mapDiv, mapOption);
 									}
 									for(var i in scheduleMarkers){
-							    		displayAllPlaces(scheduleMarkers[i],scheduleMarkers[i].map,scheduleMarkers[i].markers);
+							    		displayAllPlaces(scheduleMarkers[i],scheduleMarkers[i].map,scheduleMarkers[i].markers,infowindowLocal);
 							    	}
 								}
 							}
