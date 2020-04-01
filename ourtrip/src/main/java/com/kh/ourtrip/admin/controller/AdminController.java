@@ -49,6 +49,8 @@ public class AdminController {
 			if(!dashBoardData.isEmpty()) {
 				model.addAttribute("dashBoardData", dashBoardData);
 				//System.out.println("대시보드 성공");
+				//System.out.println(dashBoardData);
+				//System.out.println(dashBoardData.get("weekVisitCount"));
 			} else {
 				model.addAttribute("msg", "데쉬보드 정보 조회 실패");
 			}

@@ -2,6 +2,7 @@ package com.kh.ourtrip.admin.model.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -49,45 +50,53 @@ public class AdminServiceImpl implements AdminService{
 		Map<String, Object> dashBoardData = new HashMap<String, Object>();
 		
 		// 포맷형식
-		// SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
-		SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
 		
 		// 방문자 전체 날짜 가져오기(java.util.Date타입)
 		List<Date> vList = adminDAO.getVisitDateList();
-		
+//		for(Date day : vList) {
+//			System.out.println("방문자 전체날짜");
+//			System.out.println(day);
+//		}
 		// 오늘날짜 생성
 		Date today = new Date();
 		
-		// MM만 나오게 포맷
-		String strMonth = monthFormat.format(today);
-		// dd만 나오게 포맷
-		String strDay = dayFormat.format(today);
+		String StringToday = format.format(today);
+		System.out.println("스트링투데이 " + StringToday);
+		String[] dayList = StringToday.split("-");
+		System.out.println(dayList[0] + " / " +dayList[1] + " / "  + dayList[2]);
+		Calendar cal = Calendar.getInstance();
+		cal.set(Integer.parseInt(dayList[0]), Integer.parseInt(dayList[1])-1, Integer.parseInt(dayList[2]), 23, 59);
 		
-		// dd를 int타입으로 형변환
-		int intDay = Integer.parseInt(strDay);
+		System.out.println("날짜 조작  : " + cal.getTime());
 		
+		Date endToday = cal.getTime();
+		
+		///////////////////
+		
+		//System.out.println("오늘날짜 변형 : " + today.toString());
+		//Date formatDay = format.parse(today.toString());
+		System.out.println("오늘날짜 : " + today);
 		// 날짜별 방문수 담을 배열 생성
 		Integer[] weekVisitCount = {0,0,0,0,0,0,0};
 		
 		// 이번달 방문수 담을 객체
 		Integer vMonthCount = 0;
 		
+		// 이번달 방문수  MM만 나오게 포맷
+		String strMonth = monthFormat.format(today);
+		
 		for(Date date : vList) {
-			// 달부분이 같은 경우 이번달 방문수 증가
-			if(strMonth.equals(monthFormat.format(date))) {
-				vMonthCount++;
-			}
 			
-			// 일일 방문 통계 계산
+			// 오늘날짜에서 데이터날짜 뺌
+			long difference = endToday.getTime() - date.getTime();
 			
-			// 날짜만 추출
-			String strDate = dayFormat.format(date);
-			// 비교계산을 위해 숫자형으로 형변환
-			int intDate = Integer.parseInt(strDate);
-			// 현재날짜 - 데이터날짜  = 경과시간
-			int result = intDay - intDate;
+			// 형변환
+			int result = (int)(difference/ (24*60*60*1000));
 			
+			//System.out.println("오늘날짜에서 뺸값 : " + result);
+
 			switch (result) {
 			case 0: weekVisitCount[6]++; break;
 			case 1: weekVisitCount[5]++; break;
@@ -97,44 +106,47 @@ public class AdminServiceImpl implements AdminService{
 			case 5: weekVisitCount[1]++; break;
 			case 6: weekVisitCount[0]++; break;
 			}
-
+			// -------------- 일주일 방문 수 끝 ----------------
+			
+			// 달부분이 같은 경우 이번달 방문수 증가
+			if(strMonth.equals(monthFormat.format(date))) {
+				vMonthCount++;
+			}
+			
+			// -------------- 이번달 방문 수 끝 ----------------
 		}
-		// 날짜별 방문수 확인
-//		for(int i=0; i<weekVisitCount.length; i++) {
-//			System.out.println("날짜별 방문수 : " + weekVisitCount[i]);
-//		}
 		
+		// 일주일 치 방문 수 확인 
+//		for(int i=0; i<weekVisitCount.length; i++) {
+//			System.out.println(weekVisitCount[i]);
+//		}
+
 		// 총 방문수 
 		Integer vTotal = vList.size();
+		
+		// 일일 , 일주일 , 총방문수를 담음
 		dashBoardData.put("weekVisitCount", weekVisitCount);
 		dashBoardData.put("vMonthCount", vMonthCount);
 		dashBoardData.put("vTotal", vTotal);
 		
-		///////////////////////////////////////////////////////
+		//------------------- 날짜 정보 끝 -------------------------
+		
 		// 플래너 생성 전체 날짜  가져오기
 		List<Date> pList = adminDAO.getPlannerDateList();
-		
-		// 이번달 플래너수 담을 객체
-		Integer pMonthCount = 0;
 		
 		// 날짜별 planner 담을 배열 생성
 		Integer[] weekPlannerCount = {0,0,0,0,0,0,0};
 		
+		// 이번달 플래너수 담을 객체
+		Integer pMonthCount = 0;
+		
 		for(Date date : pList) {
 			
-			// 달부분이 같은 경우 이번달 플래너수 증가
-			if(strMonth.equals(monthFormat.format(date))) {
-				pMonthCount++;
-			}
+			// 오늘날짜에서 데이터날짜 뺌
+			long difference = endToday.getTime() - date.getTime();
 			
-			// 일일 방문 통계 계산
-			
-			// 날짜만 추출
-			String strDate = dayFormat.format(date);
-			// 비교계산을 위해 숫자형으로 형변환
-			int intDate = Integer.parseInt(strDate);
-			// 현재날짜 - 데이터날짜  = 경과시간
-			int result = intDay - intDate;
+			// 형변환
+			int result = (int)(difference/ (24*60*60*1000));
 			
 			switch (result) {
 			case 0: weekPlannerCount[6]++; break;
@@ -145,13 +157,21 @@ public class AdminServiceImpl implements AdminService{
 			case 5: weekPlannerCount[1]++; break;
 			case 6: weekPlannerCount[0]++; break;
 			}
-
+			// ----- 일주일 플래너 생성 카운트 끝 ---------------------
+			
+			// 달부분이 같은 경우 이번달 플래너수 증가
+			if(strMonth.equals(monthFormat.format(date))) {
+				pMonthCount++;
+			}
+			
+			// ----- 이번달 플래너 생성 카운트 끝 -------------------
 		}
-		// 날짜별 플래너 수 확인
-//		for(int i=0; i<weekVisitCount.length; i++) {
-//			System.out.println("날짜별 플래너 수 : " + weekPlannerCount[i]);
-//		}
 		
+		// 플래너 수 확인
+//		for(int i=0; i<weekPlannerCount.length; i++) {
+//			System.out.println(weekPlannerCount[i]);
+//		}
+
 		// 총 플래너수 
 		Integer pTotal = pList.size();
 		dashBoardData.put("weekPlannerCount", weekPlannerCount);
@@ -162,11 +182,8 @@ public class AdminServiceImpl implements AdminService{
 		//System.out.println(pList);
 		
 		return dashBoardData;
-		
 	}
 	
-	
-
 	/** 회원수 전체 + 검색조회용 service
 	 * @return listCount
 	 * @throws Exception
