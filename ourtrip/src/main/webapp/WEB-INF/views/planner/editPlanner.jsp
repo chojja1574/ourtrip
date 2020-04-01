@@ -1747,7 +1747,7 @@ function addLocationList(lc,ln,sc,sn){
 	'</div>' +
 	'<div class="col-2">' +
 	'<button data-large="' + lc + '" data-small="' + sc + '" type="button"' +
-	'class="custom-select locationUpdateBtn" onclick="removeLocation(this);">-</button>' +
+	'class="btn btn-block btn-danger" onclick="removeLocation(this);">-</button>' +
 	'</div>' +
 	'</div>';
 	console.log(lc, ln, sc, sn);

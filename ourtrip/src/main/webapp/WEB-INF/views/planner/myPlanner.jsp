@@ -146,7 +146,7 @@
 									<div class="d-flex justify-content-between">
 										<div class="btn-wrapper">
 											<input type="hidden" name="plannerNo" value="${planner.plannerNo}">
-											<a href="editplanner?no=${planner.plannerNo}" type="button" class="btn btn-sm main-btn">수정하기</a>
+											<a href="editplanner?no=${planner.plannerUrl}" type="button" class="btn btn-sm main-btn">수정하기</a>
 											<c:if test="${planner.plannerPermission eq '3'}">
 												<button type="button" class="btn btn-sm del-btn planner-delete">삭제</button>
 											</c:if>
@@ -219,7 +219,7 @@
 									<div class="d-flex justify-content-between">
 										<div class="btn-wrapper">
 											<input type="hidden" name="plannerNo" value="${planner.plannerNo}">
-											<a href="plannerDetail?no=${planner.plannerNo}" type="button" class="btn btn-sm main-btn">바로가기</a>
+											<a href="plannerDetail?no=${planner.plannerUrl}" type="button" class="btn btn-sm main-btn">바로가기</a>
 											<c:if test="${planner.plannerPermission eq '3'}">
 												<button type="button" class="btn  btn-sm del-btn planner-delete">삭제</button>
 											</c:if>

@@ -66,7 +66,7 @@
 
                 <!-- 버튼들 -->
                 <div class="d-flex" id="btn-wrapper">
-                    <a href="#" class="btn gray-btn mr-auto">이전페이지</a>
+                    <a href="javascript:history.go(-1)" class="btn gray-btn mr-auto">이전페이지</a>
                     <!-- 작성 버튼 -->
                  	<button class="btn main-btn ml-auto">작성하기</button>
                 </div>
