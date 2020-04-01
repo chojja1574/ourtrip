@@ -30,6 +30,9 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
 
+	<jsp:include page="/WEB-INF/views/common/header.jsp"/>
+	<jsp:include page="/WEB-INF/views/common/nav.jsp"/>
+
     <!-- 공지사항 상세조회 시작 -->
     <div class="container my-5">
         <h2 class="font-weight-bold">공지사항 작성</h2>
@@ -72,7 +75,7 @@
         </div>
     </div>
     <!-- 공지사항 상세조회 끝 -->
-
+	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
     <script>
         // 오늘 날짜 출력 
 	var today = new Date();

@@ -55,7 +55,7 @@
                 </a>
             </div>
             <div class="col-sm-3 nav-item">
-                <a href="#" class="nav-text">
+                <a href="${contextPath}/notice/list" class="nav-text">
                     <h5>공지사항</h5>
                 </a>
             </div>
