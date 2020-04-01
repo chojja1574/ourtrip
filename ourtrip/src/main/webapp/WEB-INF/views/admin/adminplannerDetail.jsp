@@ -22,7 +22,7 @@
 	integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
 	crossorigin="anonymous"></script>
 
-<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="${contextPath}/resources/css/common.css">
 <!-- 폰트어썸 -->
 <!-- <script src="https://kit.fontawesome.com/76b49c6d9b.js" crossorigin="anonymous"></script> -->
 <title>플래너 상세 조회</title>
@@ -67,7 +67,7 @@ body {
 							<c:if test="${plannerinfo.plannerDeleteYN == 'Y'}">
 								<th><h4 class="mb-0">
 										<span class="badge badge-danger"
-											style="background-color: red;">탈퇴</span>
+											style="background-color: red;">삭제</span>
 									</h4></th>
 							</c:if>
 						</tr>
@@ -126,13 +126,18 @@ body {
 			</div>
 		</div>
 		<!-- 하단버튼 -->
-		<div class="d-flex">
-			<a href="${contextPath}/admin/plannerList"
+		<div class="d-flex mb-5">
+			<a href="${beforeUrl}"
 				class="btn main-btn mr-auto">목록으로</a>
 			<div class="ml-auto">
-				<button type="button" class="btn del-btn" data-toggle="modal"
-					data-target="#myModal">삭제</button>
-				<a class="btn gray-btn" id="restore">복구</a>
+				<c:if test="${plannerinfo.plannerDeleteYN == 'Y'}">
+					<a class="btn gray-btn" id="restore">복구</a>
+				</c:if>
+				
+				<c:if test="${plannerinfo.plannerDeleteYN == 'N'}">
+					<button type="button" class="btn del-btn" data-toggle="modal"
+						data-target="#myModal">삭제</button>
+				</c:if>
 			</div>
 
 
@@ -149,7 +154,7 @@ body {
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
-						<form action="plannerDelete" method="POST">
+						<form action="plannerDelete" method="POST" onsubmit="return validate();">
 							<div class="modal-body text-center">
 								<textarea id="delBecause" name="deleteReason"
 									style="width: 400px; height: 200px;" placeholder="삭제사유를 입력해주세요"></textarea>
@@ -164,7 +169,7 @@ body {
 							</div>
 							<div class="custom-control custom-checkbox text-right">
 								<input type="checkbox" class="custom-control-input"
-									id="delCheck" checked="checked"> <label
+									id="delCheck"> <label
 									class="custom-control-label" for="delCheck"
 									style="margin-right: 20px; margin-bottom: 10px">확인</label>
 							</div>
@@ -182,23 +187,21 @@ body {
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 	<!-- 복구질문 -->
 	<script>
+	function validate() {
+		if($("#delCheck").prop("checked")) {
+			return true;
+		} else {
+			alert("설명을 읽고 체크해주세요");
+			return false;
+		}
+	}
 	
 	$(function(){
-		
-		var plannerNo = ${plannerinfo.plannerNo};
-		var N = "N";
-		var Y = "Y";
-		
 		$("#restore").on("click",function() {
-			if(${plannerinfo.plannerDeleteYN} == N){
-				alert("삭제 되지 않은 플래너 입니다.")
-			}
-			if(${plannerinfo.plannerDeleteYN} == Y){
-			 (confirm("복구하시겠습니까?")) 
-				location.href = "${contextPath}/admin/plannerRecovery?plannerNo="+ plannerNo
-			}
+		 	if(confirm("복구하시겠습니까?")){
+				location.href = "${contextPath}/admin/plannerRecovery?plannerNo=${plannerinfo.plannerNo}";
+		 	}
 		});
-		
 	});
 		
 		

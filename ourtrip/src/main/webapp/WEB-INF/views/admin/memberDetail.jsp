@@ -23,9 +23,13 @@
 	integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
 	crossorigin="anonymous"></script>
 <!-- 공용 css -->
-<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="${contextPath}/resources/css/common.css">
 <!-- 폰트어썸 -->
-<!-- <script src="https://kit.fontawesome.com/76b49c6d9b.js" crossorigin="anonymous"></script> -->
+<script src="https://kit.fontawesome.com/76b49c6d9b.js"
+	crossorigin="anonymous"></script>
+<link
+	href="https://fonts.googleapis.com/css?family=Stylish&display=swap"
+	rel="stylesheet">
 <title>회원 상세 조회</title>
 <style>
 body {
@@ -66,6 +70,18 @@ body {
 .card-img-top {
 	width: 100%;
 	height: 50%;
+}
+
+.page-num{
+	color: #18a8f1;
+}
+
+.page-num:hover{
+	cursor: pointer;
+}
+
+.displayNone {
+	display: none;
 }
 
 @media screen and (max-width: 1199px) {
@@ -136,7 +152,7 @@ body {
 							<td><h5>
 									<c:if test="${detailMember.signUpRoute == '1'}">일반가입</c:if>
 									<c:if test="${detailMember.signUpRoute == '2'}">카카오</c:if>
-									<c:if test="${detailMember.signUpRoute == '3'}">구글</c:if>
+									<c:if test="${detailMember.signUpRoute == '3'}">네이버</c:if>
 								</h5></td>
 						</tr>
 						<tr>
@@ -148,16 +164,15 @@ body {
 				</table>
 			</div>
 			<div class="col-md-4">
-				<h4>프로필 사진</h4>
+				<h4 style="height: 10%">프로필 사진</h4>
 				<c:if test="${!empty pi}">
-
 					<!-- 카카오에서 가져온 이미지 경로일 경우 -->
-					<c:if test="${fn:contains(profileImage.imagePath, 'http://')}">
+					<c:if test="${fn:contains(pi.imagePath, 'http')}">
 						<c:set var="filePath" value="${pi.imagePath}" />
 					</c:if>
 
 					<!-- ourtrip서버에 있는 경로일 경우 -->
-					<c:if test="${!fn:contains(profileImage.imagePath, 'http://')}">
+					<c:if test="${!fn:contains(pi.imagePath, 'http')}">
 						<c:set var="fileName" value="${fn:split(pi.imagePath, '/')}" />
 						<c:set var="filePath"
 							value="${contextPath}/resources/profileImages/${fileName[fn:length(fileName) - 1]}" />
@@ -165,7 +180,7 @@ body {
 				</c:if>
 
 				<img id="ot_profile_image" alt="your image" class="rounded mx-auto"
-					width="200" height="200"
+					width="100%" height="85%"
 					src=<c:if test="${!empty pi}">
 								"${filePath}"
 							</c:if>
@@ -175,45 +190,49 @@ body {
 			</div>
 		</div>
 		<hr>
-		<!-- 나의 플래너 -->
-		<div class="py-3 planner-wrapper">
-			<h2 class="display-5">회원 플래너 목록</h2>
-			<!-- 플래너 리스트 -->
+		<!-- 플래너 컨테이너 -->
+		<div class="py-3">
+			<h4>회원의 플래너 목록</h4>
+
+			<!-- 수정중인 플래너 리스트 -->
 			<div class="planner-wrapper my-3">
-				<c:if test="${empty plannerInfo }">
-						존재하는 플래너가 없습니다.
+				<c:if test="${empty plannerList}">
+					<div class="planner" style="height: 250px;">수정중인 플래너가 없습니다.</div>
 				</c:if>
-				<c:if test="${!empty plannerInfo }">
-					<c:forEach var="plannerInfo" items="${plannerInfo}" varStatus="vs1">
-						<div class="planner">
+				<c:if test="${!empty plannerList}">
+					<c:forEach var="planner" items="${plannerList}" varStatus="vs">
+						<div
+							class="planner<c:if test='${vs.count > 4}'> displayNone</c:if>"
+							id="planner${vs.count}">
 							<div class="card">
-								<img class="card-img-top" src="${contextPath}/resources/areaImages/${plannerInfo.areaNames[0].largeAreaCode}.jpg"
-                           alt="Card image">
+								<img class="card-img-top"
+									src="${contextPath}/resources/areaImages/${planner.areaNames[0].largeAreaCode}.jpg"
+									alt="Card image">
 								<div class="card-body">
-									<div id="plannerNo" style="display: none;">${plannerInfo.plannerNo}</div>
-									<h5 class="card-title">${plannerInfo.plannerTitle}</h5>
+									<h5 class="card-title">${planner.plannerTitle}</h5>
 									<p class="card-text">
-										<span>시작일 :${plannerInfo.plannerStartDT}</span><br> <span>${plannerInfo.groupName}
-										</span><br>
-										<c:if test="${plannerInfo.areaNames.size()>1 }">
-											<span>${plannerInfo.areaNames[0].largeAreaName}
-												${plannerInfo.areaNames[0].smallAreaName} ...</span>
+										<span>시작일 : ${planner.plannerStartDT}
+											${planner.tripDate}DAYS</span><br> <span>${planner.groupName}
+											여행</span><br>
+										<c:if test="${planner.areaNames.size()>1 }">
+											<span>${planner.areaNames[0].largeAreaName}
+												${planner.areaNames[0].smallAreaName} ...</span>
 										</c:if>
-										<c:if test="${plannerInfo.areaNames.size()==1 }">
-											<span>${plannerInfo.areaNames[0].largeAreaName}
-												${plannerInfo.areaNames[0].smallAreaName} </span>
+										<c:if test="${planner.areaNames.size()==1 }">
+											<span>${planner.areaNames[0].largeAreaName}
+												${planner.areaNames[0].smallAreaName} </span>
 										</c:if>
-										<c:if test="${plannerInfo.areaNames.size()<1 }">
-											<span></span>
+										<c:if test="${planner.areaNames.size()<1 }">
+											<span>없음 </span>
 										</c:if>
 									</p>
 									<div class="d-flex justify-content-between">
 										<div class="btn-wrapper">
-											<button type="button" class="btn btn-sm main-btn">바로가기</button>
-											<button type="button" class="btn  btn-sm main-btn copy-btn">복사</button>
+											<a href="plannerDetail?no=${planner.plannerNo}" type="button"
+												class="btn btn-sm main-btn">플래너 확인</a>
 										</div>
 										<div>
-											<i class="fas fa-eye">${plannerInfo.plannerCount}</i>&nbsp;조회수
+											<i class="fas fa-eye"></i>&nbsp;${planner.plannerCount}
 										</div>
 									</div>
 								</div>
@@ -221,85 +240,37 @@ body {
 						</div>
 					</c:forEach>
 				</c:if>
+
+			</div>
+
+			<script>
+				var limit = 4;
+				var pagingBarSize = 5;
+				
+				var plannerSize = ${plannerList.size()};
+				var currentPage = 1;
+			</script>
+
+			<!-- 페이징바 -->
+			<div class="pagination-wrapper" id="plannerPaging">
+				<nav aria-label="Page navigation">
+					<ul class="pagination justify-content-center"></ul>
+				</nav>
 			</div>
 		</div>
-		<!-- 페이징바 -->
-		<div class="pagination-wrapper">
-			<nav aria-label="Page navigation">
-				<ul class="pagination justify-content-center">
-					<c:if test="${pInfom.currentPage > 1}">
-						<li>
-							<!-- 맨 처음으로(<<) --> <!--c: url 태그에 var속성이 존재하지 않으면 변수처럼 사용되는 것이 아니라 작성된 자리에 바로 url형식으로 표기된다.  -->
-							<a class="page-link text-success"
-							href=" 
-		                    	<c:url value="detail"> 
-		                    		<c:param name="currentPage" value="1"/>
-		                    	</c:url>
-	                    	">
-								&lt;&lt; </a>
-						</li>
-						<li>
-							<!-- 이전으로(<) --> <a class="page-link text-success"
-							href=" 
-		                    	<c:url value="detail">
-		                    		
-		                    		<c:param name="currentPage" value="${pInfom.currentPage-1}"/>
-		                    	</c:url>
-	                    	">
-								&lt; </a>
-						</li>
-					</c:if>
-					<!-- 10개의 페이지 목록 -->
-					<c:forEach var="p" begin="${pInfom.startPage}"
-						end="${pInfom.endPage}">
-						<c:if test="${p == pInfom.currentPage}">
-							<li><a class="page-link">${p}</a></li>
-						</c:if>
-
-						<c:if test="${p != pInfom.currentPage}">
-							<li><a class="page-link text-success"
-								href=" 
-			                    	<c:url value="detail">
-			                    		
-			                    		<c:param name="currentPage" value="${p}"/>
-			                    	</c:url>
-		                    	">
-									${p} </a></li>
-						</c:if>
-
-					</c:forEach>
-					<!-- 다음 페이지로(>) -->
-					<c:if test="${pInfom.currentPage < pInfom.maxPage }">
-						<li><a class="page-link text-success"
-							href=" 
-		                    	<c:url value="detail">
-		                    		
-		                    		<c:param name="currentPage" value="${pInfom.currentPage+1}"/>
-		                    	</c:url>
-	                    	">
-								&gt; </a></li>
-						<!-- 맨 끝으로(>>) -->
-						<li><a class="page-link text-success"
-							href=" 
-		                    	<c:url value="detail">
-		                    		
-		                    		<c:param name="currentPage" value="${pInfom.maxPage}"/>
-		                    	</c:url>
-	                    	">
-								&gt;&gt; </a></li>
-					</c:if>
-				</ul>
-			</nav>
-		</div>
-
+		<!-- 수정화면 -->
 
 		<!-- 하단버튼 -->
-		<div class="d-flex">
-			<a href="${contextPath}/admin/List" class="btn main-btn mr-auto">목록으로</a>
+		<div class="d-flex mb-3">
+			<a href="${beforeUrl}" class="btn gray-btn mr-auto">목록으로</a>
 			<div class="ml-auto">
-				<button type="button" class="btn del-btn" data-toggle="modal"
-					data-target="#myModal">삭제</button>
-				<a href="#" class="btn gray-btn" id="restore">복구</a>
+				<c:if test="${detailMember.memberStatus eq 'N'}">
+					<button type="button" class="btn del-btn" data-toggle="modal"
+						data-target="#myModal">삭제</button>
+				</c:if>
+				<c:if test="${detailMember.memberStatus ne 'N'}">
+					<button class="btn gray-btn" id="restore">복구</button>
+				</c:if>
 			</div>
 
 
@@ -314,7 +285,9 @@ body {
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
-						<form action="${contextPath}/admin/memberDelete" method="POST">
+						<form action="${contextPath}/admin/memberDelete" method="POST" onsubmit="return validate();">
+							<input type="hidden" name="memberNo" value="${detailMember.memberNo}"></input>
+							<input type="hidden" name="email" value="${detailMember.memberEmail}"></input>
 							<div class="modal-body text-center">
 								<textarea id="delBecause" name="delBecause"
 									style="width: 400px; height: 200px;" placeholder="삭제사유를 입력해주세요"></textarea>
@@ -323,47 +296,155 @@ body {
 									전송됩니다.<br> 삭제된 회원은 로그인을 할 수 없습니다.<br> 삭제된 회원은 같은 이메일,
 									가입경로로 회원가입을 할 수 없습니다.<br> 삭제된 회원은 복구시킬 수 있습니다.
 								</p>
-								<input type="text" value="${detailMember.memberEmail}" style="display: none">
 							</div>
 							<div class="custom-control custom-checkbox text-right">
 								<input type="checkbox" class="custom-control-input"
-									id="delCheck" checked=""> <label
+									id="delCheck"> <label
 									class="custom-control-label" for="delCheck"
 									style="margin-right: 20px; margin-bottom: 10px">확인</label>
 							</div>
 							<div class="modal-footer">
-								<button type="submit" class="btn btn-primary">
-									삭제
-									<button type="button" class="btn btn-secondary"
-										data-dismiss="modal">취소</button>
+								<button type="submit" class="btn del-btn">삭제</button>
+								<button type="button" class="btn gray-btn" data-dismiss="modal">취소</button>
 							</div>
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
-		
-		<!-- 복구질문 -->
-		<script>
-		$(function(){
-			
-			var MemberNo = ${detailMember.memberNo};
-			var N = "N";
-			var Y = "Y";
-			
-			$("#restore").on("click",function() {
-				if(${MemberNo.memberStatus} == N){
-					alert("삭제 되지 않은 플래너 입니다.")
-				}
-				if(${MemberNo.memberStatus} == Y){
-				 (confirm("복구하시겠습니까?")) 
-					location.href = "${contextPath}/admin/plannerRecovery?memberNo="+ MemberNo
-				}
-			});
-			
-		});
-		</script>
+
 	</div>
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
+
+
+	<!-- 복구질문 -->
+	<script>
+	
+	function validate() {
+		if($("#delCheck").prop("checked")) {
+			return true;
+		} else {
+			alert("설명을 읽고 체크해주세요");
+			return false;
+		}
+	}
+	
+	$(function(){
+		
+		
+		var MemberNo = ${detailMember.memberNo};
+		
+		$("#restore").on("click",function() {
+			if("${detailMember.memberStatus}" == "Y"){
+			 	if(confirm("복구하시겠습니까?")){
+					location.href = "${contextPath}/admin/memberRecovery?memberNo="+ MemberNo
+			 	}
+			}
+		});
+
+       	// 수정중인 플래너 페이징바 초기화
+       	pagingHtmlFn();
+       	disCurrent($("#plannerPaging").children().children().children());
+
+        $(".planner-delete").on("click", function () {
+            var plannerNo = $(this).parent().children("input").val();
+
+            if (confirm("플래너를 삭제하시겠습니까?")) {
+                location.href="delPlanner?plannerNo=" + plannerNo;
+            }
+        });
+           
+        $(".planner-out").on("click", function () {
+            var plannerNo = $(this).parent().children("input").val();
+
+            if (confirm("플래너를 나가시겠습니까?")) {
+                location.href="outPlanner?plannerNo=" + plannerNo;
+            }
+        });
+	});
+		// 페이징 번호 작성 함수
+        function pagingHtmlFn(){
+			
+			var maxPage = (plannerSize + (limit - (plannerSize % limit)) % limit) / limit;
+            
+            var totalPage = Math.ceil(plannerSize/limit);    // 총 페이지 수
+            var pageGroup = Math.ceil(currentPage/pagingBarSize);    // 페이지 그룹
+            
+            var last = pageGroup * pagingBarSize;    // 화면에 보여질 마지막 페이지 번호
+            
+            if(last > totalPage){
+                last = totalPage;
+            }
+            var first = ((pageGroup - 1) * pagingBarSize) + 1;    // 화면에 보여질 첫번째 페이지 번호
+            /* var next = last+1;
+            var prev = first-1; */
+            
+        	var $plannerChild = $("#plannerPaging").children().children();
+			
+        	var pagingHtml = "";
+        	if(currentPage > 1){
+        		pagingHtml += "<li class='page-item'><span class='page-link page-num paging'><<</span></li>";
+        		pagingHtml += "<li class='page-item'><span class='page-link page-num paging'><</span></li>";
+        	}
+        	
+        	for(var i=first; i<=last; i++){
+        		pagingHtml += "<li class='page-item'><span class='page-link page-num paging'>" + i + "</span></li>";
+        	}
+        	
+        	if(currentPage < maxPage){
+        		pagingHtml += "<li class='page-item'><span class='page-link page-num paging'>></span></li>";
+        		pagingHtml += "<li class='page-item'><span class='page-link page-num paging'>>></span></li>";
+        	}
+        	
+        	// 플래너 display:none으로 초기화
+			for(var i=1; i<=plannerSize; i++){
+				$("#planner" + i).addClass("displayNone");
+			}
+			
+			var startIndex = (currentPage - 1) * limit + 1;
+    		var endIndex = startIndex + limit - 1;
+    		if(endIndex > plannerSize){
+    			endIndex = plannerSize;
+    		}
+			// 해당되는 플래너들만 보여줌
+			for(var i=startIndex; i<=endIndex; i++){
+				$("#planner" + i).removeClass("displayNone");
+			}
+        	console.log(pagingHtml);
+        	$plannerChild.html(pagingHtml);
+        	
+        	$(".paging").on("click", function(){
+        		var $click = $(this);
+        		
+        		if($click.text() == "<<"){
+        			currentPage = 1;
+        		}else if($click.text() == "<"){
+        			currentPage = Number(currentPage) - 1;
+        		}else if($click.text() == ">"){
+        			currentPage = Number(currentPage) + 1;
+        		}else if($click.text() == ">>"){
+        			currentPage = totalPage;
+        		}else if($click.text() != currentPage){
+        			currentPage = $click.text();
+        		}
+        		
+        		$click = $click.parent().parent();
+       			pagingHtmlFn();
+       			disCurrent($click.children());
+        	});
+        	
+        }
+        
+        // 현재 페이지번호와 같을 시 disabled시키는 함수
+        function disCurrent(list){
+        	$(list).each(function(index, item){
+        		if($(item).text() == currentPage){
+        			$(item).addClass("disabled");
+        		}else{
+        			$(item).removeClass("disabled");
+        		}
+        	});
+        }
+    </script>
 </body>
 </html>

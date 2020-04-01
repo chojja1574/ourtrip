@@ -1,5 +1,6 @@
 package com.kh.ourtrip.admin.model.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -34,16 +35,14 @@ public class AdminHunServiceimpl implements AdminHunService {
 	@Autowired
 	private JavaMailSender mailSender;
 
-	/**
-	 * 회원수 전체조회용 service
-	 * 
-	 * @return listFullCount
+	/** 회원수 전체 + 검색조회용 service
+	 * @return listCount
 	 * @throws Exception
 	 */
 	@Override
-	public int getListFullCount() throws Exception {
+	public int getListCount(Map<String, Object> map) throws Exception {
 
-		return adminHunDAO.getListFullCount();
+		return adminHunDAO.getListCount(map);
 	}
 
 	/**
@@ -54,37 +53,11 @@ public class AdminHunServiceimpl implements AdminHunService {
 	 * @throws Exception
 	 */
 	@Override
-	public List<Member> selectFullList(PageInfo pInf) throws Exception {
-
-		return adminHunDAO.selectFUllList(pInf);
-	}
-
-	/**
-	 * 회원 목록 조회용 service
-	 * 
-	 * @param map
-	 * @return listCount
-	 * @throws Exception
-	 */
-	@Override
-	public int getListCount(Map<String, String> map) throws Exception {
-
-		return adminHunDAO.getListCount(map);
-	}
-
-	/**
-	 * 회원 목록조회용 service
-	 * 
-	 * @param map
-	 * @param pInf
-	 * @return memberList
-	 * @throws Exception
-	 */
-	@Override
-	public List<Member> selectList(Map<String, String> map, PageInfo pInf) throws Exception {
+	public List<Member> selectList(Map<String, Object> map, PageInfo pInf) throws Exception {
 
 		return adminHunDAO.selectList(map, pInf);
 	}
+
 
 	/**
 	 * 회원 상세조회용 service
@@ -107,7 +80,7 @@ public class AdminHunServiceimpl implements AdminHunService {
 	 * @throws Exception
 	 */
 	@Override
-	public List<Integer> plannerList(int no) throws Exception {
+	public List<PlannerCard> plannerList(int no) throws Exception {
 
 		return adminHunDAO.plannerList(no);
 	}
@@ -295,7 +268,7 @@ public class AdminHunServiceimpl implements AdminHunService {
 
 			messageHelper.setFrom(setfrom); // 보내는사람 생략하거나 하면 정상작동을 안함
 			messageHelper.setTo(email); // 받는사람 이메일
-			messageHelper.setSubject("OurTrip 플래너 삭제 사유"); // 메일제목은 생략이 가능하다
+			messageHelper.setSubject("OurTrip 회원 삭제 사유"); // 메일제목은 생략이 가능하다
 			messageHelper.setText(delBecause); // 메일 내용
 
 			mailSender.send(message);
@@ -304,6 +277,18 @@ public class AdminHunServiceimpl implements AdminHunService {
 		return result;
 	}
 
+	/** 회원 복구용 service
+	 * @param memberNo
+	 * @return result
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int memberRecovery(int memberNo) throws Exception {
+		return adminHunDAO.memberRecovery(memberNo);
+	}
+	
+	
 	/**
 	 * 대지역명 조회용 service
 	 * 
@@ -370,4 +355,74 @@ public class AdminHunServiceimpl implements AdminHunService {
 		return adminHunDAO.plannerInfo(keyword,pInf);
 	}
 
+	/** 플래너 개수 조회용 service
+	 * @param keyword
+	 * @return pListCount
+	 * @throws Exception
+	 */
+	@Override
+	public List<Integer> getPlannerListCount(Map<String, Object> keyword) throws Exception {
+		// 플래너 리스트(plannerTitle + groupName) 필터링1
+		List<Integer> pListNo = adminHunDAO.getPlannerList(keyword);
+		
+		if(keyword.get("largeArea") == null) keyword.put("largeArea", 0);
+		
+		// 지역 검색 조건이 있을 경우
+		if(!pListNo.isEmpty()) {
+			
+			keyword.put("pListNo", pListNo);
+
+//			List<AreaName> aList = adminHunDAO.getAreaNameList(keyword);
+			
+			// 지역 필터링된 번호를 얻어오기
+			pListNo = adminHunDAO.getAreaFilterList(keyword);
+
+			Set<Integer> rListNo = new HashSet<Integer>();
+			for (Integer item : pListNo) {
+				rListNo.add(item);
+			}
+			pListNo.clear();
+			for(Integer item : rListNo) {
+				pListNo.add(item);
+			}
+		}
+		
+		return pListNo;
+		
+	}
+
+	/** 플래너 목록 조회용 Service
+	 * @param keyword
+	 * @param pInf
+	 * @return plannerList
+	 * @throws Exception
+	 */
+	@Override
+	public List<PlannerCard> selectPlannerList(Map<String, Object> keyword, PageInfo pInf) throws Exception {
+		
+		List<PlannerCard> pInfoList = adminHunDAO.selectPlannerList(keyword, pInf);
+		
+		// 검색된 플래너번호에 맞는 지역명 가져오기
+		List<AreaName> aList = adminHunDAO.getAreaNameList(keyword);
+		
+		// 위에서 지역정보를 담고 있는 aList를 이용하여 지역명 담기
+		// 추천리스트에 지역리스트를 담음
+		for (PlannerCard planner : pInfoList) {
+
+			List<AreaName> areaNames = new ArrayList<AreaName>();
+
+			for (AreaName areaName : aList) {
+				if (planner.getPlannerNo() == areaName.getPlannerNo())
+					areaNames.add(areaName);
+
+			}
+
+			planner.setAreaNames(areaNames);
+		}
+		return pInfoList;
+		
+	}
+
+	
+	
 }

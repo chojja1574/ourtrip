@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.ourtrip.admin.model.service.AdminHunService;
 import com.kh.ourtrip.admin.model.vo.PlannerDeleteReason;
@@ -20,6 +21,7 @@ import com.kh.ourtrip.common.Pagination;
 import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.member.model.vo.ProfileImage;
+import com.kh.ourtrip.planner.model.service.PlannerServiceSDS;
 import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.LargeArea;
@@ -33,74 +35,50 @@ import com.kh.ourtrip.planner.model.vo.SmallArea;
 public class AdminHunController {
 
 	@Autowired
-	AdminHunService adminHunService;
+	private AdminHunService adminHunService;
 
+	@Autowired
+	private PlannerServiceSDS plannerService;
+	
+	
 	/**
 	 * 전체회원 조회용 Controller
-	 * 
 	 * @param model
 	 * @param currentPage
 	 * @return path
 	 */
-	@RequestMapping("List")
+	@RequestMapping("list")
 	public String memberFullList(Model model,
-			@RequestParam(value = "currentPage", required = false) Integer currentPage) {
-
+			@RequestParam(value="currentPage", required=false)
+			Integer currentPage,
+			@RequestParam(value="searchKey", required=false)
+			String searchKey,
+			@RequestParam(value="searchValue", required=false)
+			String searchValue) {
+		
 		try {
 
-			int listFullCount = adminHunService.getListFullCount();
-
-			if (currentPage == null) {
-				currentPage = 1;
-			}
-			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, listFullCount);
-
-			List<Member> memberList = adminHunService.selectFullList(pInf);
-
-			model.addAttribute("memberList", memberList);
-			model.addAttribute("pInfom", pInf);
-			return "admin/memberList";
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("errorMsg", "회원 목록 조회중 오류 발생");
-			return "common/errorPage";
-		}
-
-	}
-
-	/**
-	 * 회원 검색용 controller
-	 * 
-	 * @param model
-	 * @param searchKey
-	 * @param searchValue
-	 * @param currentPage
-	 * @return
-	 */
-	@RequestMapping("search")
-	public String memberList(Model model, @RequestParam(value = "searchKey", required = false) String searchKey,
-			@RequestParam(value = "searchValue", required = false) String searchValue,
-			@RequestParam(value = "currentPage", required = false) Integer currentPage) {
-
-		try {
-
-			Map<String, String> map = null;
-			if (searchKey != null && searchValue != null) {
-				map = new HashMap<String, String>();
+			Map<String, Object> map = null;
+			if(searchKey != null && searchValue != null) {
+				map = new HashMap<String, Object>();
 				map.put("searchKey", searchKey);
 				map.put("searchValue", searchValue);
 			}
-
+			
 			int listCount = adminHunService.getListCount(map);
-
+			
+			//System.out.println("회원 리스트수 : " + listCount);
+			
 			if (currentPage == null) {
 				currentPage = 1;
 			}
+			
+			//System.out.println("map 확인 : " + map);
 			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, listCount);
-
+			
+			// 전체 + 검색 회원 목록 조회
 			List<Member> memberList = adminHunService.selectList(map, pInf);
-
+			
 			model.addAttribute("memberList", memberList);
 			model.addAttribute("pInf", pInf);
 			return "admin/memberList";
@@ -113,9 +91,10 @@ public class AdminHunController {
 
 	}
 
+	
 	/**
 	 * 회원 상세조회용 controller
-	 * 
+	 * 회원 플래너까지
 	 * @param model
 	 * @param no
 	 * @param currentPage
@@ -123,46 +102,54 @@ public class AdminHunController {
 	 * @return
 	 */
 	@RequestMapping("detail")
-	public String memberDetail(Model model, int no, Integer currentPage, HttpServletRequest request) {
+	public String memberDetail(Model model, int no, HttpServletRequest request) {
 
-		String beforUrl = request.getHeader("referer"); // 이전페이지 주소
+		String beforeUrl = request.getHeader("referer"); // 이전페이지 주소
 
 		try {
 			Member detailMem = adminHunService.detail(no);
 			ProfileImage pi = adminHunService.selectProfileImage(no);
-			List<Integer> plannerList = adminHunService.plannerList(no);
-
-			if (currentPage == null) {
-				currentPage = 1;
+			List<PlannerCard> plannerList = adminHunService.plannerList(no);
+			List<Integer> plannerNo = new ArrayList<Integer>();
+			
+			for(PlannerCard item : plannerList) {
+				plannerNo.add(item.getPlannerNo());
 			}
-			PageInfo pInf = Pagination.getPageInfo(8, 10, currentPage, plannerList.size());
-
-			List<PlannerCard> plannerInfo = new ArrayList<PlannerCard>();
-			List<AreaName> areaNames = new ArrayList<AreaName>();
-
-			if (!plannerList.isEmpty()) {
-				plannerInfo = adminHunService.plannerInfo(plannerList, pInf);
-				areaNames = adminHunService.plannerArea(plannerList);
-
-				for (PlannerCard infList : plannerInfo) {
-					for (AreaName areaList : areaNames) {
-						if (infList.getPlannerNo() == areaList.getPlannerNo()) {
-							infList.setareaNames(areaNames);
+			
+			List<AreaName> aList = null;
+			
+			if(!plannerNo.isEmpty()) {
+				
+				aList = plannerService.selectAreaNames(plannerNo);
+			
+			
+				for(AreaName name : aList) {
+					
+					for(PlannerCard item : plannerList) {
+						if(item.getPlannerNo() == name.getPlannerNo()) {
+							if(item.getareaNames() == null) {
+								List<AreaName> temp = new ArrayList<AreaName>();
+								temp.add(name);
+								item.setareaNames(temp);
+							} else {
+								item.getareaNames().add(name);
+							}
+							
+							break;
 						}
+							
 					}
 				}
 			}
-
-			if (detailMem != null && plannerInfo != null) {
-
+			if (detailMem != null) {
+				model.addAttribute("plannerList", plannerList);
 				model.addAttribute("detailMember", detailMem);
-				model.addAttribute("pInfom", pInf);
-				model.addAttribute("plannerInfo", plannerInfo);
 				model.addAttribute("pi", pi);
+				model.addAttribute("beforeUrl", beforeUrl);
 				return "admin/memberDetail";
 			} else {
 				model.addAttribute("msg", "회원정보 상세조회 실패 .");
-				return "redirect:" + beforUrl;
+				return "redirect:" + beforeUrl;
 			}
 
 		} catch (Exception e) {
@@ -174,7 +161,7 @@ public class AdminHunController {
 	}
 
 	/**
-	 * 맴버 삭제용 controller
+	 * 회원삭제용 삭제용 controller
 	 * 
 	 * @param memberNo
 	 * @param email
@@ -184,53 +171,49 @@ public class AdminHunController {
 	 * @return
 	 */
 	@RequestMapping("memberDelete")
-	public String memberDelete(int memberNo, String email, String delBecause, Model model, Integer currentPage) {
+	public String memberDelete(int memberNo, String email, String delBecause, Model model,
+								RedirectAttributes rdattr) {
 
 		try {
 			int result = adminHunService.memberDelete(memberNo, email, delBecause);
 
-			Member detailMem = adminHunService.detail(memberNo);
-			ProfileImage pi = adminHunService.selectProfileImage(memberNo);
+			if(result > 0) 	rdattr.addFlashAttribute("msg", "회원 삭제에 성공하셨습니다.");
+			else rdattr.addFlashAttribute("msg", "회원 삭제에 실패하였습니다.");
+			return "redirect:list";
 
-			List<Integer> plannerList = adminHunService.plannerList(memberNo);
-
-			if (currentPage == null) {
-				currentPage = 1;
-			}
-			PageInfo pInf = Pagination.getPageInfo(8, 10, currentPage, plannerList.size());
-
-			List<PlannerCard> plannerInfo = new ArrayList<PlannerCard>();
-			List<AreaName> areaNames = new ArrayList<AreaName>();
-
-			if (!plannerList.isEmpty()) {
-				plannerInfo = adminHunService.plannerInfo(plannerList, pInf);
-				areaNames = adminHunService.plannerArea(plannerList);
-
-				for (PlannerCard infList : plannerInfo) {
-					for (AreaName areaList : areaNames) {
-						if (infList.getPlannerNo() == areaList.getPlannerNo()) {
-							infList.setareaNames(areaNames);
-						}
-					}
-				}
-
-			}
-
-			if (result > 0) {
-				model.addAttribute("msg", "회원 삭제에 성공하셨습니다.");
-				model.addAttribute("pInfom", pInf);
-				return "admin/memberDetail";
-			} else {
-				return "admin/memberDetail";
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			model.addAttribute("errorMsg", "회원 강퇴중 오류 발생");
+			model.addAttribute("errorMsg", "회원 삭제 중 오류 발생");
 			return "common/errorPage";
 		}
 
 	}
+	
+	/** 회원복구용 Controller
+	 * @param memberNo
+	 * @param model
+	 * @param rdattr
+	 * @return result
+	 */
+	@RequestMapping("memberRecovery")
+	public String memberRecovery(int memberNo, Model model,
+								RedirectAttributes rdattr) {
+		try {
+			
+			int result = adminHunService.memberRecovery(memberNo);
+			if(result>0) rdattr.addFlashAttribute("msg", "회원 복구 성공!");
+			else rdattr.addFlashAttribute("msg", "회원복구중 실패");
+			
+			return "redirect:list";
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMsg", "회원 복구 중 오류 발생");
+			return "common/errorPage";
+		}
+	}
 
+	///////////////////////////////////////////회원목록끝/////////////////////////////////////////////
+	
 	/**
 	 * 플래너 전체 리스트 조회용 controller
 	 * 
@@ -239,9 +222,9 @@ public class AdminHunController {
 	 * @param currentPage
 	 * @return
 	 */
+	
 	@RequestMapping("plannerList")
-	public String plannerList(Model model, HttpServletRequest request, Integer currentPage) {
-		String beforUrl = request.getHeader("referer");
+	public String plannerList(Model model, Integer currentPage) {
 
 		try {
 			int plannerCount = adminHunService.plannerCount();
@@ -253,7 +236,7 @@ public class AdminHunController {
 			if (currentPage == null) {
 				currentPage = 1;
 			}
-			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, plannerCount);
+			PageInfo pInf = Pagination.getPageInfo(10, 5, currentPage, plannerCount);
 
 			List<PlannerInfo> totalList = adminHunService.plannerTotal(pInf);
 			List<AreaName> totalAList = adminHunService.totalAList();
@@ -285,7 +268,7 @@ public class AdminHunController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("msg", "플래너목록 조회 실패 .");
-			return "redirect:" + beforUrl;
+			return "common/errorPage";
 		}
 
 	}
@@ -307,7 +290,7 @@ public class AdminHunController {
 	 * @return
 	 */
 	@RequestMapping("searchPlanner")
-	public String searchadminPlanner(Model model, HttpServletRequest request, Integer currentPage,
+	public String searchadminPlanner(Model model, Integer currentPage,
 			@RequestParam(value = "searchKey", required = false) String searchKey,
 			@RequestParam(value = "searchValue", required = false) String searchValue,
 			@RequestParam(value = "searchGroup", required = false) List<Integer> searchGroup,
@@ -317,7 +300,6 @@ public class AdminHunController {
 			@RequestParam(value = "startTrip", required = false) String startTrip,
 			@RequestParam(value = "endTrip", required = false) String endTrip) {
 
-		String beforUrl = request.getHeader("referer");
 		Map<String, Object> keyword = new HashMap<String, Object>();
 		keyword.put("searchKey", searchKey);
 		keyword.put("searchValue", searchValue);
@@ -327,59 +309,46 @@ public class AdminHunController {
 		keyword.put("deleted", deleted);
 		keyword.put("startTrip", startTrip);
 		keyword.put("endTrip", endTrip);
+		
+		
+		model.addAttribute("searchGroup", searchGroup);
+		model.addAttribute("param", keyword);
 
 		try {
 			List<LargeArea> largeNmList = adminHunService.selectLargeNmList();
 			List<SmallArea> smallNmList = adminHunService.selectsmallNmList();
 			model.addAttribute("largeNmList", largeNmList);
 			model.addAttribute("smallNmList", smallNmList);
-			System.out.println("keyword" + keyword);
 			
+			List<Integer> pNoList = adminHunService.getPlannerListCount(keyword);
 			
-			List<PlannerInfo> searchList = adminHunService.searchList(keyword);// 지역이외 검색 후 검색된 플래너리스트
-			List<AreaName> areaInfo = adminHunService.areaInfo(keyword);
+			keyword.put("pNoList", pNoList);
+			
 			if (currentPage == null) {
 				currentPage = 1;
 			}
-			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, searchList.size());
+			PageInfo pInf = Pagination.getPageInfo(10, 10, currentPage, pNoList.size());
 			
-			List<PlannerInfo> plannerInfo = adminHunService.plannerInfo( keyword,pInf);
-
-			if (plannerInfo.isEmpty()) {// 지역이외 검색 결과가 없을경우
-				model.addAttribute("plannerList", null);
+			List<PlannerCard> pInfoList = new ArrayList<PlannerCard>();
+			if(!pNoList.isEmpty()) {
 				
-			} else {// 지역이외 검색결과 있을경우
-				if (!areaInfo.isEmpty()) {// 지역검색결과 있을경우 
-					for (PlannerInfo infList : plannerInfo) {
-						for (AreaName infoarea : areaInfo) {
-							if (infList.getPlannerNo() == infoarea.getPlannerNo()) {
-								infList.setAreaNames(areaInfo);
-							}
-						}
-					}
-					List<Day> dayList = adminHunService.dayList();
-					Date countDay = null;
-					for (PlannerInfo infList : plannerInfo) {
-						for (Day infodays : dayList) {
-							if (infList.getPlannerNo() == infodays.getPlannerNo()) {
-								countDay = new Date(infList.getPlannerStartDT().getTime()
-										+ infodays.getTripDate() * (24 * 60 * 60 * 1000));
-								infList.setPlannerEndDate(countDay);
-							}
-						}
-					}
-					model.addAttribute("plannerList", plannerInfo);
-				}else {//지역이외 검색결과 있고 , 지역검색결과가 없는경우 
-					model.addAttribute("plannerList", null);
+				pInfoList = adminHunService.selectPlannerList(keyword, pInf);
+				
+				// endDate 계산
+				for (PlannerCard plannerInfo : pInfoList) {
+					plannerInfo.setPlannerEndDT(new Date(plannerInfo.getPlannerStartDT().getTime()
+							+ plannerInfo.getTripDate() * (24 * 60 * 60 * 1000)));
 				}
 			}
+			model.addAttribute("pInf", pInf);
+			model.addAttribute("plannerList", pInfoList);
 
 			return "admin/adminplannerList";
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			model.addAttribute("msg", "플래너 검색 실패 .");
-			return "redirect:" + beforUrl;
+			model.addAttribute("msg", "플래너 검색 실패");
+			return "common/errorPage";
 		}
 
 	}
@@ -397,6 +366,7 @@ public class AdminHunController {
 
 			plannerInfo.setPlannerEndDate(addDate);
 
+			model.addAttribute("beforeUrl", beforUrl);
 			model.addAttribute("plannerinfo", plannerInfo);
 			model.addAttribute("plannerArea", plannerArea);
 			return "admin/adminplannerDetail";
@@ -404,7 +374,7 @@ public class AdminHunController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("msg", "플래너 상세조회 실패 .");
-			return "redirect:" + beforUrl;
+			return "common/errorPage";
 		}
 
 	}
@@ -476,5 +446,7 @@ public class AdminHunController {
 		}
 
 	}
+	
+	
 
 }

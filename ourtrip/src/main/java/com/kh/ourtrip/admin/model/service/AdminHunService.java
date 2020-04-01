@@ -18,34 +18,19 @@ import com.kh.ourtrip.planner.model.vo.SmallArea;
 public interface AdminHunService {
 	
 	
-	/** 회원수 전체조회용 service
-	 * @return listFullCount
+	/** 회원수 전체 + 검색 조회용 service
+	 * @return listCount
 	 * @throws Exception
 	 */
-	public abstract int getListFullCount()throws Exception;
+	public abstract int getListCount(Map<String, Object> map) throws Exception;
 	
 	/** 회원 전체조회용 service
 	 * @param pInf
 	 * @return memberList
 	 * @throws Exception
 	 */
-	public abstract List<Member> selectFullList(PageInfo pInf) throws Exception;
+	public abstract List<Member> selectList(Map<String, Object> map, PageInfo pInf) throws Exception;
 	
-	
-	/** 회원수 조회용 service
-	 * @param map
-	 * @return listCount
-	 * @throws Exception
-	 */
-	public abstract int getListCount(Map<String, String> map)throws Exception;
-
-	/** 회원 목록조회용 service
-	 * @param map
-	 * @param pInf
-	 * @return memberList
-	 * @throws Exception
-	 */
-	public abstract List<Member> selectList(Map<String, String> map, PageInfo pInf)throws Exception;
 
 	/** 회원 상세조회용 service
 	 * @param no
@@ -54,14 +39,22 @@ public interface AdminHunService {
 	 */
 	public abstract Member detail(int no)throws Exception;
 
+	
+	/** 회원 복구용 service
+	 * @param memberNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public abstract int memberRecovery(int memberNo) throws Exception;
 
+	//------------------------회원 --------------------//
 	
 	/** 플래너 넘버 조회용 service
 	 * @param no
 	 * @return plannerList
 	 * @throws Exception
 	 */
-	public abstract List<Integer> plannerList(int no)throws Exception;
+	public abstract List<PlannerCard> plannerList(int no)throws Exception;
 
 	/** 플래너 카드 조회용 service
 	 * @param plannerList
@@ -198,10 +191,20 @@ public interface AdminHunService {
 	 * @throws Exception
 	 */
 	public abstract List<PlannerInfo> plannerInfo(Map<String, Object> keyword, PageInfo pInf)throws Exception;
-	
-	
-	
 
+	/** 플래너 개수 조회용 service
+	 * @param keyword
+	 * @return pListCount
+	 * @throws Exception
+	 */
+	public abstract List<Integer> getPlannerListCount(Map<String, Object> keyword) throws Exception;
 
+	/** 플래너 목록 조회용 Service
+	 * @param keyword
+	 * @param pInf
+	 * @return plannerList
+	 * @throws Exception
+	 */
+	public abstract List<PlannerCard> selectPlannerList(Map<String, Object> keyword, PageInfo pInf) throws Exception;
 
 }

@@ -21,7 +21,7 @@ public class PlannerInfo {
 	private List<Day> days;
 	private List<AreaName> areaNames;
 	private Date plannerEndDate;
-	private int TripDate;
+	private int tripDate;
 	private int largeAreaCode;
 	private int smallAreaCode;
 	
@@ -52,7 +52,7 @@ public class PlannerInfo {
 		this.days = days;
 		this.areaNames = areaNames;
 		this.plannerEndDate = plannerEndDate;
-		TripDate = tripDate;
+		this.tripDate = tripDate;
 		this.largeAreaCode = largeAreaCode;
 		this.smallAreaCode = smallAreaCode;
 	}
@@ -219,12 +219,12 @@ public class PlannerInfo {
 
 
 	public int getTripDate() {
-		return TripDate;
+		return tripDate;
 	}
 
 
 	public void setTripDate(int tripDate) {
-		TripDate = tripDate;
+		this.tripDate = tripDate;
 	}
 
 
@@ -255,12 +255,8 @@ public class PlannerInfo {
 				+ plannerCreateDT + ", plannerStartDT=" + plannerStartDT + ", plannerPublicYN=" + plannerPublicYN
 				+ ", plannerDeleteYN=" + plannerDeleteYN + ", plannerCount=" + plannerCount + ", plannerUrl="
 				+ plannerUrl + ", groupName=" + groupName + ", groupCode=" + groupCode + ", days=" + days
-				+ ", areaNames=" + areaNames + ", plannerEndDate=" + plannerEndDate + ", TripDate=" + TripDate
+				+ ", areaNames=" + areaNames + ", plannerEndDate=" + plannerEndDate + ", tripDate=" + tripDate
 				+ ", largeAreaCode=" + largeAreaCode + ", smallAreaCode=" + smallAreaCode + "]";
 	}
-
-
-
-	
 	
 }

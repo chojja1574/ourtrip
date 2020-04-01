@@ -22,6 +22,7 @@
 		<result property="plannerUrl" column="PLANNER_URL" />
 		<result property="plannerPermission"
 			column="PLANNER_PERMISSION" />
+		<result property="plannerCreateDT" column="PLANNER_CREATE_DT"/>
 	</resultMap>
 
 	<resultMap type="PlannerMember" id="PlannerMemberResultSet">
@@ -47,13 +48,13 @@
 		<result property="largeAreaCode" column="TRIP_DATE" />
 		<result property="smallAreaCode" column="TRIP_DATE" />
 	</resultMap>
-
+	
 	<resultMap type="AreaName" id="AreaNameResultSet">
-		<result property="plannerNo" column="PLANNER_NO" />
-		<result property="largeAreaCode" column="LARGE_AREA_CODE" />
-		<result property="largeAreaName" column="LARGE_AREA_NAME" />
-		<result property="smallAreaCode" column="SMALL_AREA_CODE" />
-		<result property="smallAreaName" column="SMALL_AREA_NAME" />
+		<result property="plannerNo" column="PLANNER_NO"/>
+		<result property="largeAreaCode" column="LARGE_AREA_CODE"/>
+		<result property="largeAreaName" column="LARGE_AREA_NAME"/>
+		<result property="smallAreaCode" column="SMALL_AREA_CODE"/>
+		<result property="smallAreaName" column="SMALL_AREA_NAME"/>
 	</resultMap>
 
 	<resultMap type="ProfileImage" id="piResultSet">
@@ -81,12 +82,14 @@
 		<result property="smallAreaName" column="SMALL_AREA_NAME" />
 	</resultMap>
 
+	<!-- 삭제 예정 -->
 	<select id="listFullCount" resultType="_int">
 		SELECT COUNT(*) FROM
 		MEMBER
 		ORDER BY MEMBER_NO DESC
 	</select>
 
+	<!-- 삭제 예정 -->
 	<select id="selectFullList" resultMap="memberResultSet">
 		SELECT *
 		FROM MEMBER
@@ -94,7 +97,8 @@
 		BY MEMBER_NO DESC
 	</select>
 
-	<select id="listCount" parameterType="map" resultType="_int">
+	<!-- 검색 + 전체 멤버 수 조회 -->
+	<select id="getlistCount" parameterType="map" resultType="_int">
 		SELECT COUNT(*) FROM MEMBER
 		<where>
 			<if test="searchKey != null">
@@ -113,11 +117,11 @@
 					</otherwise>
 				</choose>
 			</if>
+			AND MEMBER_NO NOT IN (-1)
 		</where>
-		ORDER BY MEMBER_NO DESC
 	</select>
 
-
+	<!-- 검색 + 전체 회원 리스트 조회 -->
 	<select id="selectList" parameterType="map"
 		resultMap="memberResultSet">
 		SELECT *
@@ -126,10 +130,10 @@
 			<if test="searchKey != null">
 				<bind name="sv" value="'%' + _parameter.searchValue + '%'" />
 				<choose>
-					<when test="searchKey == 'title'">
+					<when test="searchKey == 'email'">
 						AND MEMBER_EMAIL LIKE #{sv}
 					</when>
-					<when test="searchKey == 'content'">
+					<when test="searchKey == 'nickName'">
 						AND MEMBER_NICK_NAME LIKE #{sv}
 					</when>
 					<otherwise>
@@ -139,6 +143,7 @@
 					</otherwise>
 				</choose>
 			</if>
+			AND MEMBER_NO NOT IN (-1)
 		</where>
 		ORDER BY MEMBER_NO DESC
 	</select>
@@ -149,11 +154,12 @@
 		WHERE MEMBER_NO = ${memberNo}
 	</select>
 
+	<!-- 회원의 플래너목록 조회 -->
 	<select id="plannerList" parameterType="_int"
-		resultMap="PlannerMemberResultSet">
-		SELECT PLANNER_NO FROM
-		MEMBER_PLANNER WHERE MEMBER_NO =
-		#{memberNo}
+		resultMap="PlannerCardResultSet">
+		SELECT * FROM PLANNER_MEMBER
+		OUTER JOIN V_PLANNER_CARD USING(PLANNER_NO)
+		WHERE MEMBER_NO= #{memberNo}
 	</select>
 
 	<select id="plannerInfo" parameterType="list"
@@ -235,7 +241,9 @@
 
 	<select id="plannerDetail" parameterType="_int"
 		resultMap="plannerInfoResultSet">
-		SELECT * FROM V_PLANNER_INFO WHERE PLANNER_NO = #{no}
+		SELECT * FROM V_PLANNER_INFO
+		WHERE PLANNER_NO = #{no}
+		AND PLANNER_PERMISSION=3
 	</select>
 
 	<select id="areaDetail" parameterType="_int"
@@ -263,7 +271,7 @@
 
 	<update id="memberDelete" parameterType="_int">
 		UPDATE MEMBER SET
-		MEMBER_DELETE_YN = "Y" WHERE MEMBER_NO = #{memberNo}
+		MEMBER_DELETE_YN = 'Y' WHERE MEMBER_NO = #{memberNo}
 	</update>
 
 	<select id="LargeNmList" resultMap="LargeAreaResultSet">
@@ -302,17 +310,18 @@
 		AND PLANNER_NO IN <foreach index="index" item="no" collection="pList" open="(" 
 		separator="," close=")"> #{no} </foreach> </if> </where> </select> -->
 
+	<!-- <if test="searchKey != null and searchValue != ''"> </if>-->
 	<select id="searchList" parameterType="map"
 		resultMap="plannerInfoResultSet">
 		SELECT * FROM V_PLANNER_INFO
 		<where>
-			<if test="searchKey != null and searchValue != ''">
+			<if test="searchKey != null and searchValue != null"> 
 				<bind name="sv" value="'%' + _parameter.searchValue + '%'" />
 				<choose>
 					<when test="searchKey == 'title' ">
 						AND PLANNER_TITLE LIKE #{sv}
 					</when>
-
+	
 					<when test="searchKey == 'nickName' ">
 						AND MEMBER_NICK_NAME LIKE #{sv}
 					</when>
@@ -325,13 +334,21 @@
 					#{group}
 				</foreach>
 			</if>
-			<if test="deleted != 'all'">
+			<if test="deleted != 'all' and deleted != null">
 				AND PLANNER_DELETE_YN = #{deleted}
 			</if>
-			<if test="startTrip != '' and endTrip != ''">
+			<if test="startTrip != null and endTrip != null">
+				<if test="startTrip != '' and endTrip == ''">
+					<![CDATA[AND PLANNER_START_DT >= #{startTrip}]]>
+				</if>
+				<if test="startTrip == '' and endTrip != ''">
+					<![CDATA[AND PLANNER_START_DT + TRIP_DATE <= #{endTrip}]]>
+				</if>
+				<if test="startTrip != '' and endTrip != ''">
 					<![CDATA[AND PLANNER_START_DT >= #{startTrip}
 					AND PLANNER_START_DT + TRIP_DATE <= #{endTrip}
 					]]>
+				</if>
 			</if>
 		</where>
 		ORDER BY PLANNER_NO DESC
@@ -384,5 +401,88 @@
 		ORDER BY PLANNER_NO DESC
 	</select>
 
-
+	<update id="memberRecovery" parameterType="_int">
+		UPDATE MEMBER SET
+		MEMBER_DELETE_YN = 'N' WHERE MEMBER_NO = #{memberNo} 
+	</update>
+	
+	<select id="getPlannerListCount" parameterType="map" resultType="_int">
+		SELECT PLANNER_NO FROM V_PLANNER_INFO
+		<where>
+			<if test="searchKey != null and searchValue != null"> 
+				<bind name="sv" value="'%' + _parameter.searchValue + '%'" />
+				<choose>
+					<when test="searchKey == 'title' ">
+						AND PLANNER_TITLE LIKE #{sv}
+					</when>
+	
+					<when test="searchKey == 'nickName' ">
+						AND MEMBER_NICK_NAME LIKE #{sv}
+					</when>
+				</choose>
+			</if>
+			<if test="searchGroup != null">
+				AND GROUP_CODE IN
+				<foreach index="index" item="group" collection="searchGroup"
+					open="(" separator="," close=")">
+					#{group}
+				</foreach>
+			</if>
+			<if test="deleted != 'all' and deleted != null">
+				AND PLANNER_DELETE_YN = #{deleted}
+			</if>
+			<if test="startTrip != null and endTrip != null">
+				<if test="startTrip != '' and endTrip == ''">
+					<![CDATA[AND PLANNER_START_DT >= #{startTrip}]]>
+				</if>
+				<if test="startTrip == '' and endTrip != ''">
+					<![CDATA[AND PLANNER_START_DT + TRIP_DATE <= #{endTrip}]]>
+				</if>
+				<if test="startTrip != '' and endTrip != ''">
+					<![CDATA[AND PLANNER_START_DT >= #{startTrip}
+					AND PLANNER_START_DT + TRIP_DATE <= #{endTrip}
+					]]>
+				</if>
+			</if>
+		</where>
+	</select>
+	
+	<select id="getAreaNameList" parameterType="map" resultMap="AreaNameResultSet">
+		SELECT * FROM V_AREA_NAME
+		WHERE PLANNER_NO IN
+		<foreach item="item" index="index" collection="pNoList"
+		open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="getAreaFilterList" parameterType="map"
+		resultType="_int">
+		SELECT PLANNER_NO FROM V_AREA_NAME
+		<where>
+			AND PLANNER_NO IN
+			<foreach item="item" index="index" collection="pListNo"
+			open="(" separator="," close=")">
+			#{item}
+			</foreach>
+			<if test="largeArea != 0 and smallArea == 0">
+				AND LARGE_AREA_CODE = #{largeArea}
+			</if>
+			<if test="largeArea != 0 and smallArea != 0">
+				AND LARGE_AREA_CODE = #{largeArea}
+				AND SMALL_AREA_CODE = #{smallArea}
+			</if>
+		</where>
+	</select>
+	
+		<!-- 검색된 플래너 목록 조회 -->
+	<select id="selectPlannerList" parameterType="map"
+	resultMap="PlannerCardResultSet">
+		SELECT * FROM V_PLANNER_CARD
+		WHERE PLANNER_NO IN
+		<foreach item="item" index="index" collection="pNoList"
+		open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

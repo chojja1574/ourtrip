@@ -8,6 +8,8 @@ public class PlannerCard {
 	private int plannerNo; //플래너번호
 	private String plannerTitle; //플래너제목
 	private Date plannerStartDT; //여행시작일
+	private Date plannerEndDT; //여행시작일
+	private Date plannerCreateDT; // 플래너 생성 날짜
 	private int tripDate; // 여행기간
 	private String groupName; // 그룹네임
 	private List<AreaName> areaNames; // 지역
@@ -18,6 +20,7 @@ public class PlannerCard {
 	public PlannerCard() {
 		// TODO Auto-generated constructor stub
 	}
+
 
 	public PlannerCard(int plannerNo, String plannerTitle, Date plannerStartDT, int tripDate, String groupName,
 			List<AreaName> areaNames, int plannerCount, String plannerUrl, String plannerPermission) {
@@ -33,12 +36,43 @@ public class PlannerCard {
 		this.plannerPermission = plannerPermission;
 	}
 	
+	public PlannerCard(int plannerNo, String plannerTitle, Date plannerStartDT, Date plannerCreateDT, int tripDate,
+			String groupName, List<AreaName> areaNames, int plannerCount, String plannerUrl, String plannerPermission) {
+		super();
+		this.plannerNo = plannerNo;
+		this.plannerTitle = plannerTitle;
+		this.plannerStartDT = plannerStartDT;
+		this.plannerCreateDT = plannerCreateDT;
+		this.tripDate = tripDate;
+		this.groupName = groupName;
+		this.areaNames = areaNames;
+		this.plannerCount = plannerCount;
+		this.plannerUrl = plannerUrl;
+		this.plannerPermission = plannerPermission;
+	}
+
+
 	public int getPlannerNo() {
 		return plannerNo;
 	}
 
 	public void setPlannerNo(int plannerNo) {
 		this.plannerNo = plannerNo;
+	}
+	public Date getPlannerCreateDT() {
+		return plannerCreateDT;
+	}
+	
+	public void setPlannerCreateDT(Date plannerCreateDT) {
+		this.plannerCreateDT = plannerCreateDT;
+	}
+	
+	public List<AreaName> getAreaNames() {
+		return areaNames;
+	}
+	
+	public void setAreaNames(List<AreaName> areaNames) {
+		this.areaNames = areaNames;
 	}
 
 	public String getPlannerTitle() {
@@ -104,17 +138,26 @@ public class PlannerCard {
 	public void setPlannerPermission(String plannerPermission) {
 		this.plannerPermission = plannerPermission;
 	}
+	
+	public Date getPlannerEndDT() {
+		return plannerEndDT;
+	}
+
+
+	public void setPlannerEndDT(Date plannerEndDT) {
+		this.plannerEndDT = plannerEndDT;
+	}
 
 
 	@Override
 	public String toString() {
 		return "PlannerCard [plannerNo=" + plannerNo + ", plannerTitle=" + plannerTitle + ", plannerStartDT="
-				+ plannerStartDT + ", tripDate=" + tripDate + ", groupName=" + groupName + ", areaNames=" + areaNames
-				+ ", plannerCount=" + plannerCount + ", plannerUrl=" + plannerUrl + ", plannerPermission="
-				+ plannerPermission + "]";
+				+ plannerStartDT + ", plannerEndDT=" + plannerEndDT + ", plannerCreateDT=" + plannerCreateDT
+				+ ", tripDate=" + tripDate + ", groupName=" + groupName + ", areaNames=" + areaNames + ", plannerCount="
+				+ plannerCount + ", plannerUrl=" + plannerUrl + ", plannerPermission=" + plannerPermission + "]";
 	}
-	
-	
+
 
 	
+
 }
