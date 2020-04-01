@@ -93,9 +93,11 @@ public class PlannerController {
 		planner.setPlannerUrl(url);
 
 		Member member = (Member) (model.getAttribute("loginMember"));
-		System.out.println("member = " + member);
-
+		
 		try {
+			
+			
+			
 			// JSON Parse 선언
 			JSONParser jsonParser = new JSONParser();
 			// 오브젝트에 담음
