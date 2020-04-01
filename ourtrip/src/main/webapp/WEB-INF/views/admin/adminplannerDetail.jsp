@@ -100,9 +100,10 @@ body {
 						<tr>
 							<td><h5>지역 카테고리</h5></td>
 							<td><h5>
-									<c:forEach var="Area" items="${plannerArea}" varStatus="vs">
-							${Area.largeAreaName}
+							<c:forEach var="Area" items="${plannerArea}" varStatus="vs">
+							${Area.largeAreaName}-
 		                    ${Area.smallAreaName} 
+		                    <c:if test="${!vs.last}">,</c:if>
 							</c:forEach>
 								</h5></td>
 						</tr>
@@ -127,7 +128,7 @@ body {
 		</div>
 		<!-- 하단버튼 -->
 		<div class="d-flex mb-5">
-			<a href="${beforeUrl}"
+			<a href="${contextPath}/admin/searchPlanner"
 				class="btn main-btn mr-auto">목록으로</a>
 			<div class="ml-auto">
 				<c:if test="${plannerinfo.plannerDeleteYN == 'Y'}">
