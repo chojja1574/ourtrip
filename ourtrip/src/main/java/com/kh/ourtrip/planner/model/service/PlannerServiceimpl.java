@@ -37,9 +37,7 @@ import com.kh.ourtrip.planner.model.vo.SmallArea;
 public class PlannerServiceimpl implements PlannerService {
 
 	@Autowired
-	PlannerDAO plannerDAO;
-
-	PlannerMember pMember;
+	private PlannerDAO plannerDAO;
 
 	/**
 	 * 플레너 생성용 Service
@@ -477,10 +475,11 @@ public class PlannerServiceimpl implements PlannerService {
 		int result = 0;
 		
 		// 1. DB에서 플래너에 관한 상세정보 조회
-		List<PlannerView> plannerDetail = plannerDAO.selectPlannerView(no+"");
+		List<PlannerView> plannerDetail = plannerDAO.selectPlannerViewUseNo(no);
 		
 		// 해당 플래너의 지역정보 조회
 		List<AreaName> areaNameList = plannerDAO.selectAreaNamePlanner(no);
+		System.out.println("names : " + areaNameList);
 		
 		if(!plannerDetail.isEmpty()) {
 			// 2. DB에서 플래너 다음번호 생성 후 값 붙여넣고 DB에 날림
@@ -511,6 +510,7 @@ public class PlannerServiceimpl implements PlannerService {
 			for(AreaName areaName : areaNameList) {
 				areaName.setPlannerNo(plannerNextNo);
 				result = plannerDAO.insertAreaName(areaName);
+				System.out.println("result : " + result);
 			}
 			
 			// 3. DB에서 날짜번호 생성 후 값 붙여넣고 DB에 날림

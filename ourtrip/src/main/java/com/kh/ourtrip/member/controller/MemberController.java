@@ -32,10 +32,6 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
-//	private final String client_id = "cajbBEXn_EXigNoRN2Oc";
-//	private final String client_secret = "0ePrMUlYzw";
-//	private final String naver_redirect_uri = "http://localhost:8080/ourtrip/member/naverCallBack";
-	
 	// 로그인 화면 이동
 	@RequestMapping(value="loginForm")
 	public String loginForm(Model model, HttpServletRequest request, HttpSession session,
@@ -268,17 +264,17 @@ public class MemberController {
 		
 		try {
 			String beforeUrl = request.getHeader("referer");
-			String[] arrUrl = beforeUrl.split("/");
-			String lastUrl = arrUrl[arrUrl.length - 1];
+			
+			System.out.println("before : " + beforeUrl);
+			System.out.println("detail : " + model.getAttribute("detailUrl"));
 			
 			// 회원정보 수정관련 주소와 같지 않으면 url저장
-			if(!model.getAttribute("detailUrl").equals(beforeUrl) ||
-				!lastUrl.equals("update") ||
-				!lastUrl.equals("updateForm") ||
-				!lastUrl.equals("changePwdForm") ||
-				!lastUrl.equals("changePwd") ||
-				!lastUrl.equals("secessionForm") ||
-				!lastUrl.equals("secession")) model.addAttribute("detailUrl", beforeUrl);
+			if(	!beforeUrl.contains("/update") &&
+				!beforeUrl.contains("/updateForm") &&
+				!beforeUrl.contains("/changePwdForm") &&
+				!beforeUrl.contains("/changePwd") &&
+				!beforeUrl.contains("/secessionForm") &&
+				!beforeUrl.contains("/secession")) model.addAttribute("detailUrl", beforeUrl);
 			
 			ProfileImage pi = memberService.selectProfileImage(loginMember.getMemberNo());
 			model.addAttribute("profileImage", pi);

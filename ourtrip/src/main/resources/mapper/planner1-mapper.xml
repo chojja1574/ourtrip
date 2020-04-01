@@ -96,6 +96,11 @@
 
 	<select id="selectPlannerView" parameterType="String" resultMap="plannerViewResultSet">
 		SELECT * FROM V_PLANNER WHERE PLANNER_URL = #{no}
+		AND PLANNER_DELETE_YN = 'N'
+	</select>
+	
+	<select id="selectPlannerViewUseNo" parameterType="_int" resultMap="plannerViewResultSet">
+		SELECT * FROM V_PLANNER WHERE PLANNER_NO = #{no}
 	</select>
 	
 	<select id="selectDateNo" resultType="_int">
