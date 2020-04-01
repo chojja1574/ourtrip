@@ -11,7 +11,7 @@
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
 	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
 	crossorigin="anonymous">
-<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="${contextPath}/resources/css/common.css">
 
 <title>회원목록</title>
 
@@ -41,17 +41,18 @@
 		crossorigin="anonymous"></script>
 
 
-	<div class="container my-5">
+	<div class="container my-3" style="min-height:730px;">
 		<!-- 검색창 -->
 		<div>
 			<!-- 가운데정렬시 class="text-center" -->
-			<form action="search" method="GET" class="text-center"
+			<form action="list" method="GET" class="text-center"
 				id="searchForm" onsubmit="return checkValue();">
 				<select name="searchKey" class="form-control"
 					style="width: 100px; display: inline-block;">
 					<option value="email">이메일</option>
 					<option value="nickName">닉네임</option>
-				</select> <input type="text" name="searchValue" id="searchValue"
+				</select> 
+				<input type="text" name="searchValue" id="searchValue"
 					class="form-control" style="width: 25%; display: inline-block;">
 				<button class="form-control btn main-btn"
 					style="width: 100px; display: inline-block; margin-bottom: 5px;">검색</button>
@@ -59,7 +60,7 @@
 		</div>
 
 		<h2>회원목록</h2>
-		<table class="table table-hover" style="text-align: center;"
+		<table class="table table-hover my-3" style="text-align: center;"
 			id="memberTable">
 			<thead class="thead-dark">
 				<tr>
@@ -92,19 +93,17 @@
 		<div class="pagination-wrapper mt-5" id="pagination-wrapper">
 			<nav aria-label="Page navigation" id="pagination">
 				<ul class="pagination justify-content-center">
-					<c:if test="${pInfom.currentPage > 1}">
+					<c:if test="${pInf.currentPage > 1}">
 						<li>
 							<!-- 맨 처음으로(<<) --> <!--c: url 태그에 var속성이 존재하지 않으면 변수처럼 사용되는 것이 아니라 작성된 자리에 바로 url형식으로 표기된다.  -->
 							<a class="page-link text-success"
 							href=" 
-		                    	<c:url value="List"> 
+		                    	<c:url value="list"> 
 		                    		<c:if test="${!empty param.searchKey }">
 						        		<c:param name="searchKey" value="${param.searchKey}"/>
-						        	</c:if>
-						        	
-						        	<c:if test="${!empty param.searchValue }">
 						        		<c:param name="searchValue" value="${param.searchValue}"/>
 						        	</c:if>
+						        	
 		                    		<c:param name="currentPage" value="1"/>
 		                    	</c:url>
 	                    	">
@@ -112,17 +111,16 @@
 						</li>
 
 						<li>
-							<!-- 이전으로(<) --> <a class="page-link text-success"
-							href=" 
-		                    	<c:url value="List">
+							<!-- 이전으로(<) --> 
+							<a class="page-link text-success"
+								href=" 
+		                    	<c:url value="list">
 		                    		<c:if test="${!empty param.searchKey }">
 						        		<c:param name="searchKey" value="${param.searchKey}"/>
-						        	</c:if>
-						        	
-						        	<c:if test="${!empty param.searchValue }">
 						        		<c:param name="searchValue" value="${param.searchValue}"/>
 						        	</c:if>
-		                    		<c:param name="currentPage" value="${pInfom.currentPage-1}"/>
+						        	
+		                    		<c:param name="currentPage" value="${pInf.currentPage-1}"/>
 		                    	</c:url>
 	                    	">
 								&lt; </a>
@@ -130,24 +128,22 @@
 					</c:if>
 
 					<!-- 10개의 페이지 목록 -->
-					<c:forEach var="p" begin="${pInfom.startPage}" end="${pInfom.endPage}">
+					<c:forEach var="p" begin="${pInf.startPage}" end="${pInf.endPage}">
 
 
-						<c:if test="${p == pInfom.currentPage}">
+						<c:if test="${p == pInf.currentPage}">
 							<li><a class="page-link">${p}</a></li>
 						</c:if>
 
-						<c:if test="${p != pInfom.currentPage}">
+						<c:if test="${p != pInf.currentPage}">
 							<li><a class="page-link text-success"
 								href=" 
-			                    	<c:url value="List">
+			                    	<c:url value="list">
 			                    		<c:if test="${!empty param.searchKey }">
 							        		<c:param name="searchKey" value="${param.searchKey}"/>
-							        	</c:if>
-							        	
-							        	<c:if test="${!empty param.searchValue }">
 							        		<c:param name="searchValue" value="${param.searchValue}"/>
 							        	</c:if>
+							        	
 			                    		<c:param name="currentPage" value="${p}"/>
 			                    	</c:url>
 		                    	">
@@ -157,18 +153,17 @@
 					</c:forEach>
 
 					<!-- 다음 페이지로(>) -->
-					<c:if test="${pInfom.currentPage < pInfom.maxPage }">
-						<li><a class="page-link text-success"
-							href=" 
-		                    	<c:url value="List">
+					<c:if test="${pInf.currentPage < pInf.maxPage }">
+						<li>
+							<a class="page-link text-success"
+								href=" 
+		                    	<c:url value="list">
 		                    		<c:if test="${!empty param.searchKey }">
 						        		<c:param name="searchKey" value="${param.searchKey}"/>
-						        	</c:if>
-						        	
-						        	<c:if test="${!empty param.searchValue }">
 						        		<c:param name="searchValue" value="${param.searchValue}"/>
 						        	</c:if>
-		                    		<c:param name="currentPage" value="${pInfom.currentPage+1}"/>
+						        	
+		                    		<c:param name="currentPage" value="${pInf.currentPage+1}"/>
 		                    	</c:url>
 	                    	">
 								&gt; </a></li>
@@ -176,14 +171,12 @@
 						<!-- 맨 끝으로(>>) -->
 						<li><a class="page-link text-success"
 							href=" 
-		                    	<c:url value="List">
+		                    	<c:url value="list">
 		                    		<c:if test="${!empty param.searchKey }">
 						        		<c:param name="searchKey" value="${param.searchKey}"/>
-						        	</c:if>
-						        	<c:if test="${!empty param.searchValue }">
 						        		<c:param name="searchValue" value="${param.searchValue}"/>
 						        	</c:if>
-		                    		<c:param name="currentPage" value="${pInfom.maxPage}"/>
+		                    		<c:param name="currentPage" value="${pInf.maxPage}"/>
 		                    	</c:url>
 	                    	">
 								&gt;&gt; </a></li>
@@ -206,19 +199,43 @@
 				return true;
 			}
 		}
-
+		
+		
 		$(function() {
-			$("#memberTable td")
-					.click(
-							function() {
-								var memberNo = $(this).parent().children()
-										.eq(0).text();
-								location.href = "${contextPath}/admin/detail?no="
-										+ memberNo ;
-							}).mouseenter(function() {
+			// 회원 목록 상세 조회
+			$("#memberTable td").click(function() {
+					var memberNo = $(this).parent().children().eq(0).text();
+					<c:url var="detailUrl" value="detail">			
+						<c:if test="${!empty param.searchKey }">
+		        			<c:param name="searchKey" value="${param.searchKey}"/>
+			        	</c:if>
+			        	<c:if test="${!empty param.searchValue }">
+			        		<c:param name="searchValue" value="${param.searchValue}"/>
+		        		</c:if>
+					
+		        		<c:param name="currentPage" value="${pInf.currentPage}"/>
+        			</c:url>
+        			
+					location.href = "${contextPath}/admin/detail?no="+ memberNo ;
+					
+					}).mouseenter(function() {
 						$(this).parent().css("cursor", "pointer");
 
 					});
+			// 검색내용 유지
+			
+				var searchKey = "${param.searchKey}";
+				var searchValue = "${param.searchValue}";
+				
+				if(searchKey != "null" && searchValue != "null"){
+					$.each($("select[name=searchKey] > option"), function(index, item){
+						if($(item).val() == searchKey){
+							$(item).prop("selected","true");
+						} 
+					});
+					$("input[name=searchValue]").val(searchValue);
+				}
+			
 
 		});
 	</script>

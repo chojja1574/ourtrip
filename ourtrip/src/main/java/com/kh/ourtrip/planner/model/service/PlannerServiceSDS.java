@@ -10,6 +10,7 @@ import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.LargeArea;
 import com.kh.ourtrip.planner.model.vo.Planner;
 import com.kh.ourtrip.planner.model.vo.PlannerCard;
+import com.kh.ourtrip.planner.model.vo.PlannerInfo;
 import com.kh.ourtrip.planner.model.vo.PlannerMember;
 import com.kh.ourtrip.planner.model.vo.PlannerMemberView;
 import com.kh.ourtrip.planner.model.vo.PlannerView;

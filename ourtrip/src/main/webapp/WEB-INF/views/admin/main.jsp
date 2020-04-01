@@ -34,9 +34,6 @@
 		text-align: center;
 	}
 	
-	body {
-		padding: 20px 20px;
-	}
 </style>
 </head>
 <body>

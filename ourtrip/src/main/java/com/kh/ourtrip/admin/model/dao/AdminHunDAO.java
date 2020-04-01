@@ -25,7 +25,18 @@ public class AdminHunDAO {
 	@Autowired
 	public SqlSessionTemplate sqlSession;
 
-	/** 회원수 총 조회용 DAO
+	/** 총 회원 수 조회용 DAO
+	 * @param map
+	 * @return listCount
+	 * @throws Exception
+	 */
+	public int getListCount(Map<String, Object> map) throws Exception{
+		
+		return sqlSession.selectOne("adminhunMapper.getlistCount", map);
+	}
+	
+	// 삭제 예정
+	/** 회원수 총 조회용 DAO + 검색
 	 * @return listFullCount
 	 * @throws Exception
 	 */
@@ -33,39 +44,31 @@ public class AdminHunDAO {
 		return sqlSession.selectOne("adminhunMapper.listFullCount");
 	}
 	
-	/**
+	/** 회원목록 조회용 + 검색
 	 * @param pInf
 	 * @return memberList
 	 */
-	public List<Member> selectFUllList(PageInfo pInf) {
+	public List<Member> selectList(Map<String, Object> map, PageInfo pInf) throws Exception{
 		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
 		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
-		return sqlSession.selectList("adminhunMapper.selectFullList",rowBounds);
+		return sqlSession.selectList("adminhunMapper.selectList", map, rowBounds);
 	}
 	
 	
-	/** 회원 수 조회용 DAO
-	 * @param map
-	 * @return listCount
-	 * @throws Exception
-	 */
-	public int getListCount(Map<String, String> map) throws Exception{
-		
-		return sqlSession.selectOne("adminhunMapper.listCount", map);
-	}
-
+	// 삭제 예정
 	/** 회원 목록 조회용 DAO
 	 * @param map
 	 * @param pInf
 	 * @return memberList
 	 */
-	public List<Member> selectList(Map<String, String> map, PageInfo pInf) {
-		
-		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
-		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
-		
-		return sqlSession.selectList("adminhunMapper.selectList",map,rowBounds);
-	}
+	/*
+	 * public List<Member> selectList(Map<String, String> map, PageInfo pInf) {
+	 * 
+	 * int offset = (pInf.getCurrentPage()-1) * pInf.getLimit(); RowBounds rowBounds
+	 * = new RowBounds(offset, pInf.getLimit());
+	 * 
+	 * return sqlSession.selectList("adminhunMapper.selectList",map,rowBounds); }
+	 */
 
 	/** 회원 정보 조회용 DAO
 	 * @param no
@@ -82,7 +85,7 @@ public class AdminHunDAO {
 	 * @return plannerList
 	 * @throws Exception
 	 */
-	public List<Integer> plannerList(int no) throws Exception{
+	public List<PlannerCard> plannerList(int no) throws Exception{
 		
 		return sqlSession.selectList("adminhunMapper.plannerList",no);
 	}
@@ -203,6 +206,55 @@ public class AdminHunDAO {
 		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
 		return sqlSession.selectList("adminhunMapper.plannerInfomaion" , keyword ,rowBounds);
 	}
+
+	/** 회원 복구용 DAO
+	 * @param memberNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int memberRecovery(int memberNo) throws Exception {
+		return sqlSession.update("adminhunMapper.memberRecovery", memberNo);
+	}
+
+	/** 플래너 개수 조회용 DAO
+	 * @param keyword
+	 * @return pList
+	 * @throws Exception
+	 */
+	public List<Integer> getPlannerList(Map<String, Object> keyword) throws Exception{
+		return sqlSession.selectList("adminhunMapper.getPlannerListCount", keyword);
+	}
+
+	/** 플래너에 맞는 지역명 조회용 DAO
+	 * @param pListNo
+	 * @return areaNameList
+	 * @throws Exception
+	 */
+	public List<AreaName> getAreaNameList(Map<String, Object> keyword) throws Exception{
+		return sqlSession.selectList("adminhunMapper.getAreaNameList", keyword);
+	}
+
+	/** 플래너 지역명 필터 조회용 DAO
+	 * @param keyword
+	 * @return areaFilterList
+	 * @throws Exception
+	 */
+	public List<Integer> getAreaFilterList(Map<String, Object> keyword) throws Exception{
+		return sqlSession.selectList("adminhunMapper.getAreaFilterList", keyword);
+	}
+
+	/** 플래너 Info 조회용 DAO
+	 * @param keyword
+	 * @param pInf
+	 * @return pInfoList
+	 * @throws Exception
+	 */
+	public List<PlannerCard> selectPlannerList(Map<String, Object> keyword, PageInfo pInf) throws Exception{
+		int offset = (pInf.getCurrentPage()-1) * pInf.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, pInf.getLimit());
+		return sqlSession.selectList("adminhunMapper.selectPlannerList", keyword, rowBounds);
+	}
+
 
 	
 
