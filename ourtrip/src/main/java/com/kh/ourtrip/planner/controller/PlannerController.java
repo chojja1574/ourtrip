@@ -516,4 +516,9 @@ public class PlannerController {
 		}
 		
 	}
+	
+	@RequestMapping("guide")
+	public String plannerGuide() {
+		return "planner/plannerGuide";
+	}
 }
