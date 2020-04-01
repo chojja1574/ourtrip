@@ -92,7 +92,7 @@ body {
 			<div class="col-md-3"></div>
 			<div class="col-md-6">
 				<div id="createContent">
-					<form action="createPlanner" method="POST">
+					<form action="createPlanner" method="POST" onsubmit="return sendData()" >
 						<div
 							style="width: 100%; height: 20%; position: relative; padding-left:30px; padding-right:30px; padding-top: 20px">
 							<label for="planerTitle">
@@ -112,14 +112,14 @@ body {
 								</label>
 								<button type="button" class="btn btn-primary" id="locationAdd">+</button>
 								<select name="largeArea" id="wide-area" class="custom-select"
-									style="display: inline-block">
+									style="display: inline-block" required>
 									<c:forEach var="largeArea" items="${largeNmList}"
 										varStatus="vs">
 										<option value="${largeArea.largeAreaCode}">${largeArea.largeAreaName}</option>
 									</c:forEach>
 								</select>
 								 <select name="smallArea" id="local-area" class="custom-select"
-									style="display: inline-block">
+									style="display: inline-block" required>
 									<option value="0" selected>전체</option>
 								</select>
 								<input name="locationList" id="lList" style="display: none;">
@@ -161,17 +161,17 @@ body {
 						<div style="width: 100%; padding-left:30px; padding-right: 30px;">
 							<h2 class="inputtext">플래너 공개여부 설정</h2>
 							<input name=plannerPublicYN type="checkbox" id="openplanner"
-								checked="checked" /> <label for="openplanner"> (선택 시
-								비공개) </label> <input name="plannerPwd" type="password"
+								checked="checked"/> <label for="openplanner"> (선택 시
+								비공개) </label> <input id="pwd" name="plannerPwd" type="password"
 								class="form-control" placeholder="비밀번호 입력 ">
 
 							<hr>
 						</div>
-						<div style="width: 100%; height: 20%; padding: 30px 30px;">
-							<button type="submit" onclick="sendData()" class="btn btn-primary"
-								style="width: 40%; height: 50px;">생성</button>
-							<button type="reset" class="btn btn-primary"
-								style="width: 40%; height: 50px;">취소</button>
+						<div style="width: 100%; height: 20%; padding: 30px 30px; ">
+							<button type="submit" class="btn btn-primary" id="event"
+								style="width: 40%; height: 50px; float: right; margin: 5px;">생성</button>
+							<button type="button" class="btn btn-primary" id="cancle"
+								style="width: 40%; height: 50px; float: left; margin: 5px; ">취소</button>
 						</div>
 					</form>
 				</div>
@@ -183,7 +183,8 @@ body {
 	<script type="text/javascript">
 	var areal = '';
 	var locationList = new Array();
-		/* $(function(){
+	
+		
         	$("#event").on("click",function(){
 			var today = new Date(); 
 			var dd = today.getDate();
@@ -198,14 +199,14 @@ body {
                  
         	var startDateCompare = new Date(startDateArr[0], parseInt(startDateArr[1])-1, startDateArr[2]);
         	var endDateCompare = new Date(endDateArr[0], parseInt(endDateArr[1])-1, endDateArr[2]);
+        	var todateCompare = new Date(yyyy , mm , dd);
         	if(startDateCompare.getDate() > endDateCompare.getDate()) {
         		 alert("시작날짜와 종료날짜를 확인해 주세요.");
-                 return;	
+                 return false;	
         	}
-        		console.log(startDate);
-        		console.log(today)
         	})
-		}) */ 
+		
+        		
 		
 		 $(function () {
 	            $("#wide-area").on("change", function () {
@@ -278,21 +279,48 @@ body {
 	   $('#updateLocation').click(function(){
 	      var locationJson = JSON.stringify(locationList);
 	      console.log(locationJson);
-	      
-	   })
-	   $("#testbut").on("click",function(){
-		   $("#lList").val(JSON.stringify(locationList));
-	   })
+	   });
+	   
 	   
 	   function sendData(){
+		   
+		   if($("#planerTitle").val() == ''){
+			   alert('플래너 제목을 입력해 주세요');
+			   $("#planerTitle").focus()
+			   return false;
+		   }else if(locationList.length < 1){
+			   alert('여행지를 선택해 주세요');
+			   return false;
+		   }else if($("#tripgroup").val() == null){
+			   alert('여행 그룹을 선택해 주세요');
+			   return false
+		   }else if($("#startPlanner").val == ''){
+			   alert('출발일 선택해 주세요');
+			   return false
+		   }else if($("#endPlanner").val == ''){
+			   alert('종료일 선택해 주세요');
+			   return false
+		   }else if($("#openplanner").is(":checked") == true && $("#pwd").val() == ''){
+			   alert("비공개인경우 비밀번호를 입력해주세요")
+			   return false
+		   }
 		   $("#lList").val(JSON.stringify(locationList));
-	   }
-		  
+		   return true;
+	   };
+	   
+		   $("#cancle").on("click",function(){
+			   if(confirm("취소 하시겠습니까?")){
+				  	location.href="${contextPath}"
+				   console.log("test")
+			   }
+			   
+		   })
+	  
 			
 	</script>
 
 
 
-	<%-- <jsp:include page="../common/footer.jsp" /> --%>
+	<jsp:include page="../common/footer.jsp" />
 </body>
 </html>
