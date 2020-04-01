@@ -65,7 +65,7 @@ body {
 
 #createContent {
 	background-color: rgba(135, 206, 235, 0.4);
-	height: 1020px;
+	height: 860px;
 }
 
 .selectArea {
@@ -126,12 +126,14 @@ body {
 							</div>
 							<div id="locationList" style="width: 100%;"></div>
 						</div>
+						<hr>
 						<div class="triPlace"
 							style="width: 100%; height: 15%; padding-left:30px; padding-right: 30px;  padding-top: 20px;">
-							<div class="selectGroup" style="width: 33%;">
+							
+							<div class="selectGroup" style="width: 35%;">
 								<label for="selectbox">
 									<h2 class="inputtext">*여행 그룹선택</h2>
-								</label><br> <select name="groupCode" id="tripgroup"
+								</label><br><label><h3>여행그룹</h3></label> <select name="groupCode" id="tripgroup"
 									class="required form-control">
 									<option selected disabled hidden>그룹 선택</option>
 									<option value="1">혼자 여행하기</option>
@@ -140,10 +142,17 @@ body {
 									<option value="4">가족과 여행하기</option>
 								</select>
 							</div>
+							<div class="selectdate" style="width: 45%;">
+								<h2 class="inputtext">*여행 일자 선택</h2>
+								 <label><h3>출발일</h3></label> <input
+									name="plannerStartDT" type="date" id="startPlanner"
+									class="form-control">
+							</div>
+							
 						</div>
 						<hr>
 
-						<div style="width: 100%; height: 50%; padding-left:30px; padding-right: 30px;">
+						<!-- <div style="width: 100%; height: 50%; padding-left:30px; padding-right: 30px;">
 							<div class="selectdate">
 								<h2 class="inputtext">*여행 일자 선택</h2>
 								<br> <label><h3>출발일</h3></label> <input
@@ -154,9 +163,8 @@ body {
 								<label><h3>종료일</h3></label> <input name="plannerExpiry"
 									class="form-control" type="date" id="endPlanner">
 							</div>
-						</div>
+						</div> -->
 
-						<hr>
 
 						<div style="width: 100%; padding-left:30px; padding-right: 30px;">
 							<h2 class="inputtext">플래너 공개여부 설정</h2>
@@ -168,10 +176,10 @@ body {
 							<hr>
 						</div>
 						<div style="width: 100%; height: 20%; padding: 30px 30px; ">
-							<button type="submit" class="btn btn-primary" id="event"
-								style="width: 40%; height: 50px; float: right; margin: 5px;">생성</button>
 							<button type="button" class="btn btn-primary" id="cancle"
-								style="width: 40%; height: 50px; float: left; margin: 5px; ">취소</button>
+								style="width: 40%; height: 50px; float: right; margin: 5px;">취소</button>
+							<button type="submit" class="btn btn-primary" id="event"
+								style="width: 40%; height: 50px; float: left; margin: 5px; ">생성</button>
 						</div>
 					</form>
 				</div>

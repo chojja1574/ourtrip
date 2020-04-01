@@ -74,12 +74,14 @@ public class PlannerController {
 
 	@RequestMapping("createPlanner")
 	public String createPlanner(Planner planner, Model model, String locationList) {
-
-		if (planner.getPlannerPublicYN().equals("on")) {
-			planner.setPlannerPublicYN("Y");
-		} else {
+		
+		
+		if(planner.getPlannerPublicYN() == null){
 			planner.setPlannerPublicYN("N");
 		}
+		if (planner.getPlannerPublicYN().equals("on")) {
+			planner.setPlannerPublicYN("Y");
+		} 
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		Calendar c1 = Calendar.getInstance();
@@ -132,7 +134,7 @@ public class PlannerController {
 				
 				if (result != 0) {
 					model.addAttribute("플래너 생성이 완료되었습니다");
-					return "planner/myPlanner";
+					return "redirect:myPlanner";
 				}
 			}
 

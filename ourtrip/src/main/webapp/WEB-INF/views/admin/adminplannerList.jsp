@@ -67,8 +67,8 @@
 			<!-- 첫번째 검색 조건 -->
 			<div class="row mt-3">
 				<div class="col-md-6">
-					<label class="col-3">여행기간</label>&nbsp;
-					<input name="startTrip"	type="date"> ~ <input name="endTrip" type="date">
+					<label class="col-3">여행기간</label>&nbsp;<br>
+					<input name="startTrip" class="form-control" style="width: 40%; display: inline-block;" type="date"> ~ <input name="endTrip" class="form-control" style="width: 40%; display: inline-block;" type="date">
 				</div>
 
 				<div class="col-md-6 custom-control custom-checkbox">
