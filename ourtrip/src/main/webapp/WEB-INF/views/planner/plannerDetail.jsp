@@ -158,7 +158,7 @@
             display: block;
             }
 
-            body{
+            .applyFont{
                 font-family: 'Ubuntu', sans-serif;
                 font-family: 'Nanum Pen Script', cursive;
                 font-size: 24px;
@@ -171,7 +171,7 @@
 	       	<jsp:include page="../common/header.jsp" />
 			<jsp:include page="../common/nav.jsp" />
 		</div>
-        <div class="container-fluid mb-5 mt-5">
+        <div class="container-fluid mb-5 mt-5 applyFont">
 			<div class="row">
 				<div class="col-md-2"></div>
 		        <h2 class="card-header main-back col-md-8" style="height:70px;">${plannerInfo.plannerTitle}</h2>
@@ -230,13 +230,13 @@
 	        <div class="row">
 	        	<div class="col-md-2"></div>
 	        	<div class="card-footer text-muted d-flex hideCon col-md-8" style="height:70px;">
-		            <button type="button" href="#" class="btn main-btn mr-auto PCOnly">복사</button>
-		            <button type="button" href="#" class="btn gray-btn ml-auto PCOnly">목록으로</button>
+		            <button type="button" class="btn main-btn mr-auto PCOnly" id="copyBtn">복사</button>
+		            <button type="button" class="btn gray-btn ml-auto PCOnly" id="beforeBtn">이전으로</button>
 			    </div>
 	        </div>
 		</div>
         <!-- 모달창 -->
-        <div class="modal mobileOnly" id="myModal">
+        <div class="modal mobileOnly applyFont" id="myModal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header main-back">
@@ -261,10 +261,11 @@
                 </div>
             </div>
         </div>
+        <div class="header">
+	    	<jsp:include page="../common/footer.jsp" />
+	    </div>
     </body>
-    <div class="header">
-    	<jsp:include page="../common/footer.jsp" />
-    </div>
+   
 	<script type="text/javascript" src="${contextPath}/resources/js/map.js"></script>
     <script>
     var planner = new Object();
@@ -285,6 +286,14 @@
     	locationJson = ${locationArray};
     	initPlanner(plannerJson);
     	initMap();
+    });
+    
+    $('#copyBtn').click(function(){
+    	location.href="${contextPath}/planner/plannerCopy?no="+planner.no;
+    });
+    
+    $('#beforeBtn').click(function(){
+    	window.history.go(-1);
     });
     
     function initMap(){
