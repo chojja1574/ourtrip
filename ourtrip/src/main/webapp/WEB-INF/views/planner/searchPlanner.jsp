@@ -235,8 +235,10 @@
 								</p>
 								<div class="d-flex justify-content-between">
 									<div class="btn-wrapper">
-										<a href="${contextPath}/planner/plannerDetail?no=${recommendCard.plannerNo}" class="btn btn-sm main-btn">바로가기</a>
-										<a href="${contextPath}/planner/plannerCopy?no=${recommendCard.plannerNo}" class="btn  btn-sm gray-btn copy-btn">복사</a>
+										<a href="${contextPath}/planner/plannerDetail?no=${recommendCard.plannerUrl}" class="btn btn-sm main-btn">바로가기</a>
+										<c:if test="${!empty loginMember}">
+											<a href="${contextPath}/planner/plannerCopy?no=${recommendCard.plannerNo}" class="btn  btn-sm gray-btn copy-btn">복사</a>
+										</c:if>
 									</div>
 									<div>
 										<i class="fas fa-eye"></i>&nbsp;${recommendCard.plannerCount}

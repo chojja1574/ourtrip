@@ -2,9 +2,9 @@ package com.kh.ourtrip.admin.model.vo;
 
 public class PlannerDeleteReason {
 	
-	int deleteNo;
-	int plannerNo;
-	String deleteReason;
+	private int deleteNo;
+	private int plannerNo;
+	private String deleteReason;
 	
 	public PlannerDeleteReason() {
 		// TODO Auto-generated constructor stub

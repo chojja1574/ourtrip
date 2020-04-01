@@ -47,7 +47,7 @@ import com.kh.ourtrip.planner.model.vo.SmallArea;
 public class PlannerController {
 
 	@Autowired
-	PlannerService plannerService;
+	private PlannerService plannerService;
 
 	@RequestMapping("create")
 	public String createPlannerform(HttpServletRequest request, Member loginMember, Model model) {

@@ -27,7 +27,7 @@ import com.kh.ourtrip.planner.model.vo.SmallArea;
 public class PlannerDAO {
 
 	@Autowired
-	SqlSessionTemplate sqlSessionTemplate;
+	private SqlSessionTemplate sqlSessionTemplate;
 
 	/** 플래너 번호 조회용 DAO
 	 * @return palnnerNo test
@@ -205,6 +205,10 @@ public class PlannerDAO {
 	// @author 박지현
 	public List<PlannerView> selectPlannerView(String no) throws Exception{
 		return sqlSessionTemplate.selectList("planner1Mapper.selectPlannerView",no);
+	}
+	
+	public List<PlannerView> selectPlannerViewUseNo(int no) throws Exception{
+		return sqlSessionTemplate.selectList("planner1Mapper.selectPlannerViewUseNo",no);
 	}
 
 	public int getNextDateNo() throws Exception {

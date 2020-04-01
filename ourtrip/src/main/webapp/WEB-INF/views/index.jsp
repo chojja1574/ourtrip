@@ -168,8 +168,9 @@ h5 {
 		                            </p>
 		                            <div class="d-flex justify-content-between">
 		                                <div class="btn-wrapper">
-		                                    <a href="#" class="btn btn-sm main-btn">바로가기</a>
-		                                    <a href="#" class="btn btn-sm gray-btn copy-btn">복사</a>
+		                                	<input type="hidden" name="no" value="${recommendCard.plannerNo}">
+		                                    <a href="${contextPath}/planner/plannerDetail?no=${recommendCard.plannerUrl}" class="btn btn-sm main-btn">바로가기</a>
+		                                    <button class="btn btn-sm gray-btn copy-btn">복사</button>
 		                                </div>
 		                                <div><i class="fas fa-eye"></i>&nbsp;${recommendCard.plannerCount}</div>
 		                            </div>
@@ -193,12 +194,10 @@ h5 {
 						생성하기</a>
 				</c:if>
 				<c:if test="${empty loginMember }">
-					<a href= '${contextPath}/member/loginForm'
-						id="nologincreate" class="btn btn-lg btn-primary" type="button" style="color:white;">로그인
-						후 생성</a>
+					<button id="nologincreate" class="btn btn-lg btn-primary" type="button" style="color:white;">
+						로그인 후 생성</button>
 				</c:if>
-				<a href="${contextPath}/planner/guide" class="btn btn-lg btn-success" type="button"> 플래너 생성
-					가이드</a>
+				<a href="${contextPath}/planner/guide" target="_blank" class="btn btn-lg btn-success">플래너 생성 가이드</a>
 			</div>
 		</div>	
 	</div>
@@ -232,6 +231,9 @@ h5 {
 				if(${empty loginMember}) {
 					alert("로그인후 이용해 주세요");
 					location.href = "${contextPath}/member/loginForm";
+				}else{
+					var plannerNo = $(this).parent().children("input").val();
+					location.href = "${contextPath}/planner/plannerCopy?no=" + plannerNo;
 				}
 			});
 			
