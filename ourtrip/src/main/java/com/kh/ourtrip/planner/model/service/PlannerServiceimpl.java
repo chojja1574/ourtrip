@@ -569,6 +569,7 @@ public class PlannerServiceimpl implements PlannerService {
 	 * @return pList
 	 * @throws Exception
 	 */
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public Planner selectPlannerView(String no) throws Exception {
 		
@@ -591,6 +592,7 @@ public class PlannerServiceimpl implements PlannerService {
 		int groupCode = -1;
 		
 		List<PlannerView> selectPlannerView = plannerDAO.selectPlannerView(no);
+		
 		System.out.println(selectPlannerView);
 		Map<Integer,List<PlannerView>> dateMap = new HashMap<Integer,List<PlannerView>>();
 		for(PlannerView pv : selectPlannerView) {
@@ -648,6 +650,10 @@ public class PlannerServiceimpl implements PlannerService {
 		selectedPlanner = new Planner(plannerNo, plannerTitle, plannerPwd, plannerCost, 
 				plannerCreateDT, plannerModifyDT, plannerStartDT, plannerPublicYN, plannerDeleteYN, 
 				plannerExpiry, plannerCount, plannerUrl, groupCode, dayList);
+		
+		if(selectPlannerView != null) {
+			int result = plannerDAO.increasePlannerCount(plannerNo);
+		}
 		return selectedPlanner;
 	}
 

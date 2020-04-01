@@ -33,7 +33,7 @@
 </head>
 <body>
 <!-- start nav area -->
-<nav class="navbar navbar-expand-sm nabigater" style="background-color: white;">
+<nav class="navbar navbar-expand-sm nabigater" style="background-color: white; border-bottom:1px solid gray;">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
         <i class="fas fa-bars"></i>
     </button>

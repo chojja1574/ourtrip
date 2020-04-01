@@ -228,4 +228,8 @@
 	<update id="updateGroup" parameterType="Planner">
 		UPDATE PLANNER SET GROUP_CODE = #{groupCode} WHERE PLANNER_NO = #{plannerNo}
 	</update>
+	
+	<update id="increasePlannerCount">
+		UPDATE PLANNER SET PLANNER_COUNT = PLANNER_COUNT + 1 WHERE PLANNER_NO = #{plannerNo}
+	</update>
 </mapper>

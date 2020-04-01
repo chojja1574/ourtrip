@@ -356,6 +356,9 @@ public class PlannerDAO {
 	public int insertAreaName(AreaName areaName) throws Exception{
 		return sqlSessionTemplate.insert("plannerCardMapper.insertAreaName", areaName);
 	}
+	public int increasePlannerCount(int plannerNo) {
+		return sqlSessionTemplate.update("planner1Mapper.increasePlannerCount",plannerNo);
+	}
 
 
 	
