@@ -108,7 +108,7 @@
 	
 	<insert id="insertDate" parameterType="Day">
 		INSERT INTO PLANNER_DATE VALUES(
-			#{dateNo},-1,0,#{plannerNo}
+			#{dateNo},#{tripDate},0,#{plannerNo}
 		)
 	</insert>
 	
