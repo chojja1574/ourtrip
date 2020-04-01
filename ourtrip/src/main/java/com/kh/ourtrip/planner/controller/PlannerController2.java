@@ -47,7 +47,7 @@ public class PlannerController2 {
 	}
 	
 	@RequestMapping("editplanner")
-	public String chattingForm(Model model, Integer no, RedirectAttributes rdAttr) {
+	public String chattingForm(Model model, String no, RedirectAttributes rdAttr) {
 		
 		JSONObject jsonObj = null;
 		JSONParser jsonParser = new JSONParser();
@@ -84,6 +84,7 @@ public class PlannerController2 {
 			Map<Integer,List<PlannerView>> dateMap = new HashMap<Integer,List<PlannerView>>();
 			for(PlannerView pv : selectPlannerView) {
 				if(inputPvVal) {
+					plannerNo = pv.getPlannerNo();
 					plannerTitle = pv.getPlannerTitle();
 					plannerPwd = pv.getPlannerPwd();
 					plannerCost = pv.getPlannerCost();
@@ -129,25 +130,25 @@ public class PlannerController2 {
 			    			pv.getScheduleLat(),pv.getScheduleLng(),pv.getDateNo());
 			    	scheduleList.add(schedule);
 			    }
-			    Day oneDay = new Day(dateNo,tripDate,no,scheduleList);
+			    Day oneDay = new Day(dateNo,tripDate,plannerNo,scheduleList);
 			    dayList.add(oneDay);
 			    
 			}
-			selectedPlanner = new Planner(no, plannerTitle, plannerPwd, plannerCost, 
+			selectedPlanner = new Planner(plannerNo, plannerTitle, plannerPwd, plannerCost, 
 					plannerCreateDT, plannerModifyDT, plannerStartDT, plannerPublicYN, plannerDeleteYN, 
 					plannerExpiry, plannerCount, plannerUrl, groupCode, dayList);
 			jsonObj = (JSONObject) jsonParser.parse(selectedPlanner.toJsonString());
 			
 			// 채팅내역 얻어와서 jsonString으로 변환
 			List<ChattingLogView> chatList = null;
-			chatList = plannerService.selectChatList(no);
+			chatList = plannerService.selectChatList(plannerNo);
 			for(ChattingLogView cl : chatList) {
 				jsonObj = (JSONObject) jsonParser.parse(cl.toJsonString());
 				chatArray.add(jsonObj);
 			}
 			
 			// 참여중인 유저 목록과 권한 전달
-			List<PlannerMemberView> pmList = plannerService.selectPlannerMemeberListUsePlannerNo(no);
+			List<PlannerMemberView> pmList = plannerService.selectPlannerMemeberListUsePlannerNo(plannerNo);
 			
 			for(PlannerMemberView tpm : pmList) {
 				jsonObj = (JSONObject) jsonParser.parse(tpm.toJsonString());
@@ -157,7 +158,7 @@ public class PlannerController2 {
 			largeNmList = plannerService1.selectLargeNmList();
 			smallNmList = plannerService1.selectsmallNmList();
 			
-			areaNameList = plannerService.selectPlannerLocationName(no);
+			areaNameList = plannerService.selectPlannerLocationName(plannerNo);
 			System.out.println("areaNameList : " + areaNameList);
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -176,7 +177,7 @@ public class PlannerController2 {
 	}
 	
 	@RequestMapping("plannerDetail")
-	public String mobileView(Model model, Integer no, RedirectAttributes rdAttr, String userId) {
+	public String mobileView(Model model, String no, RedirectAttributes rdAttr, String userId) {
 		
 		JSONObject jsonObj = null;
 		JSONParser jsonParser = new JSONParser();
@@ -207,6 +208,7 @@ public class PlannerController2 {
 			Map<Integer,List<PlannerView>> dateMap = new HashMap<Integer,List<PlannerView>>();
 			for(PlannerView pv : selectPlannerView) {
 				if(inputPvVal) {
+					plannerNo = pv.getPlannerNo();
 					plannerTitle = pv.getPlannerTitle();
 					plannerPwd = pv.getPlannerPwd();
 					plannerCost = pv.getPlannerCost();
@@ -264,7 +266,7 @@ public class PlannerController2 {
 					jsonObj = (JSONObject) jsonParser.parse(scheduleLocation);
 					tempArray.add(jsonObj);
 			    }
-			    Day oneDay = new Day(dateNo,tripDate,no,scheduleList);
+			    Day oneDay = new Day(dateNo,tripDate,plannerNo,scheduleList);
 			    dayList.add(oneDay);
 	
 			    jsonObj = (JSONObject) jsonParser.parse("{\"dno\":\"" + dateNo + "\"}");
@@ -272,7 +274,7 @@ public class PlannerController2 {
 			    locationArray.add(jsonObj);
 			    
 			}
-			selectedPlanner = new Planner(no, plannerTitle, plannerPwd, plannerCost, 
+			selectedPlanner = new Planner(plannerNo, plannerTitle, plannerPwd, plannerCost, 
 					plannerCreateDT, plannerModifyDT, plannerStartDT, plannerPublicYN, plannerDeleteYN, 
 					plannerExpiry, plannerCount, plannerUrl, groupCode, dayList);
 		}catch(Exception e) {

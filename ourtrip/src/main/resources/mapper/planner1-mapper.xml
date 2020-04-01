@@ -94,7 +94,7 @@
 		<result property="smallAreaName" column="SMALL_AREA_NAME"/>
 	</resultMap>
 
-	<select id="selectPlannerView" parameterType="_int" resultMap="plannerViewResultSet">
+	<select id="selectPlannerView" parameterType="String" resultMap="plannerViewResultSet">
 		SELECT * FROM V_PLANNER WHERE PLANNER_URL = #{no}
 	</select>
 	

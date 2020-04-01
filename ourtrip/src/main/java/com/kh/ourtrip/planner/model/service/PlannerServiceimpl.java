@@ -1,13 +1,16 @@
 package com.kh.ourtrip.planner.model.service;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -474,7 +477,7 @@ public class PlannerServiceimpl implements PlannerService {
 		int result = 0;
 		
 		// 1. DB에서 플래너에 관한 상세정보 조회
-		List<PlannerView> plannerDetail = plannerDAO.selectPlannerView(no);
+		List<PlannerView> plannerDetail = plannerDAO.selectPlannerView(no+"");
 		
 		// 해당 플래너의 지역정보 조회
 		List<AreaName> areaNameList = plannerDAO.selectAreaNamePlanner(no);
@@ -567,8 +570,85 @@ public class PlannerServiceimpl implements PlannerService {
 	 * @throws Exception
 	 */
 	@Override
-	public List<PlannerView> selectPlannerView(int no) throws Exception {
-		return plannerDAO.selectPlannerView(no);
+	public Planner selectPlannerView(String no) throws Exception {
+		
+		Planner selectedPlanner = null;
+		
+		// PlannerView에 데이터 통째로 얻어와서 분리작업
+		boolean inputPvVal = true; 
+		int plannerNo = -1;
+		String plannerTitle = null;
+		String plannerPwd = null;
+		int plannerCost = -1;
+		Date plannerCreateDT = null;
+		Date plannerModifyDT = null;
+		Date plannerStartDT = null;
+		String plannerPublicYN = null;
+		String plannerDeleteYN = null;
+		String plannerExpiry = null;
+		int plannerCount = -1;
+		String plannerUrl = null;
+		int groupCode = -1;
+		
+		List<PlannerView> selectPlannerView = plannerDAO.selectPlannerView(no);
+		System.out.println(selectPlannerView);
+		Map<Integer,List<PlannerView>> dateMap = new HashMap<Integer,List<PlannerView>>();
+		for(PlannerView pv : selectPlannerView) {
+			if(inputPvVal) {
+				plannerNo = pv.getPlannerNo();
+				plannerTitle = pv.getPlannerTitle();
+				plannerPwd = pv.getPlannerPwd();
+				plannerCost = pv.getPlannerCost();
+				plannerCreateDT = pv.getPlannerCreateDT();
+				plannerModifyDT = pv.getPlannerModifyDT();
+				plannerStartDT = pv.getPlannerStartDT();
+				plannerPublicYN = pv.getPlannerPublicYN();
+				plannerDeleteYN = pv.getPlannerDeleteYN();
+				plannerExpiry = pv.getPlannerExpiry();
+				plannerCount = pv.getPlannerCount();
+				plannerUrl = pv.getPlannerUrl();
+				groupCode = pv.getGroupCode();
+			}
+			
+			if(dateMap.containsKey(pv.getDateNo())) {
+				dateMap.get(pv.getDateNo()).add(pv);
+			}else {
+				List<PlannerView> pvList = new ArrayList<PlannerView>();
+				pvList.add(pv);
+				dateMap.put(pv.getDateNo(), pvList);
+			}
+		}
+		List<Day> dayList = new ArrayList<Day>();
+		Iterator iter = dateMap.entrySet().iterator();
+		while (iter.hasNext()) {
+			int dateNo = -1;
+			int tripDate = -1;
+			List<Schedule> scheduleList = new ArrayList<Schedule>();
+		    Entry entry = (Entry) iter.next();
+		    for(PlannerView pv : (List<PlannerView>)(entry.getValue())) {
+		    	if(dateNo == -1) {
+		    		dateNo = pv.getDateNo();
+		    	}
+		    	if(tripDate == -1) {
+		    		tripDate = pv.getTripDate();
+		    	}
+				if(plannerNo == -1) {
+					plannerNo = pv.getPlannerNo();
+				}
+		    	Schedule schedule = new Schedule(
+		    			pv.getScheduleNo(), pv.getScheduleTitle(), pv.getScheduleCost(),
+		    			pv.getScheduleTime(), pv.getScheduleMemo(), pv.getScheduleLocationNM(),
+		    			pv.getScheduleLat(),pv.getScheduleLng(),pv.getDateNo());
+		    	scheduleList.add(schedule);
+		    }
+		    Day oneDay = new Day(dateNo,tripDate,plannerNo,scheduleList);
+		    dayList.add(oneDay);
+		    
+		}
+		selectedPlanner = new Planner(plannerNo, plannerTitle, plannerPwd, plannerCost, 
+				plannerCreateDT, plannerModifyDT, plannerStartDT, plannerPublicYN, plannerDeleteYN, 
+				plannerExpiry, plannerCount, plannerUrl, groupCode, dayList);
+		return selectedPlanner;
 	}
 
 	/** PLANNER_DATE 테이블의 다음 DATE_NO를 가져오는 Service
