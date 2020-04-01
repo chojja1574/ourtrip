@@ -197,7 +197,7 @@ h5 {
 						id="nologincreate" class="btn btn-lg btn-primary" type="button" style="color:white;">로그인
 						후 생성</a>
 				</c:if>
-				<a href="#" class="btn btn-lg btn-success" type="button"> 플래너 생성
+				<a href="${contextPath}/planner/guide" class="btn btn-lg btn-success" type="button"> 플래너 생성
 					가이드</a>
 			</div>
 		</div>	
