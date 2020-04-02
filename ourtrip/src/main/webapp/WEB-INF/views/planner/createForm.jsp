@@ -88,7 +88,7 @@
 	<jsp:include page="../common/header.jsp" />
 	<jsp:include page="../common/nav.jsp" />
 	<div class="container-fluid">
-		<div class="row">
+		<div class="row mt-4 mb-4">
 			<div class="col-md-3"></div>
 			<div class="col-md-6">
 				<div id="createContent">
@@ -173,7 +173,7 @@
 			<div class="col-md-3"></div>
 		</div>
 	</div>
-
+	<jsp:include page="../common/footer.jsp" />
 	<script type="text/javascript">
 	var areal = '';
 	var locationList = new Array();
@@ -312,9 +312,5 @@
 	  
 			
 	</script>
-
-
-
-	<jsp:include page="../common/footer.jsp" />
 </body>
 </html>
