@@ -80,7 +80,7 @@
 </body>
 <script>
 	$("#historyBack").click(function(){
-		window.history.go(-1);
+		location.href="${detailUrl}";
 	})
 	
 	$("#deleteBtn").click(function(){

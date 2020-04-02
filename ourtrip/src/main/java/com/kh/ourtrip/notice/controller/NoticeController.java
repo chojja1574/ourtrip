@@ -78,6 +78,16 @@ public class NoticeController {
 			System.out.println(notice);
 			if (notice != null) {
 
+				System.out.println("before : " + beforeUrl);
+				System.out.println("detail : " + model.getAttribute("detailUrl"));
+				
+				// 회원정보 수정관련 주소와 같지 않으면 url저장
+				if(	!beforeUrl.contains("/notice/insert") &&
+					!beforeUrl.contains("/notice/insertForm") &&
+					!beforeUrl.contains("/notice/delete") &&
+					!beforeUrl.contains("/notice/update") &&
+					!beforeUrl.contains("/notice/updateForm")) model.addAttribute("detailUrl", beforeUrl);
+				
 				noticeService.increaseNoticeCount(no);
 
 				notice.setNoticeCount(notice.getNoticeCount() + 1);
