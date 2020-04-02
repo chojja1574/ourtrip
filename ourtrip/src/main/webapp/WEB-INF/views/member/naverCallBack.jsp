@@ -38,10 +38,11 @@
 		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
 		crossorigin="anonymous"></script>
 	<script>
+		console.log('192.168.10.59:8080');
 		var naverLogin = new naver.LoginWithNaverId(
 			{
 				clientId: "cajbBEXn_EXigNoRN2Oc",
-    			callbackUrl: "http://localhost:8080/ourtrip/member/naverCallBack",
+    			callbackUrl: "http://192.168.10.59:8080/ourtrip/member/naverCallBack",
 				isPopup: true,
 				callbackHandle: true
 				/* callback 페이지가 분리되었을 경우에 callback 페이지에서는 callback처리를 해줄수 있도록 설정합니다. */
@@ -89,7 +90,7 @@
 		
 				} else {
 					alert("callback 처리에 실패하였습니다.");
-					location.href = "${contextPath}/member/loginForm";
+					location.href = "http://192.168.10.59:8080/ourtrip/member/loginForm";
 				}
 			});
 		});

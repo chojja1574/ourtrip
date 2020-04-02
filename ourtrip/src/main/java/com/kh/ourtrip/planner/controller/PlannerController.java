@@ -196,6 +196,7 @@ public class PlannerController {
 			return "common/errorPage";
 		}
 
+		model.addAttribute("plannerurl", selectedPlanner.getPlannerUrl());
 		model.addAttribute("largeNmList", largeNmList);
 		model.addAttribute("smallNmList", smallNmList);
 		model.addAttribute("plannerInfo", selectedPlanner.toJsonString());
