@@ -348,7 +348,7 @@
 	<insert id="createPlanner" parameterType="Planner">
 		INSERT INTO PLANNER VALUES(
 			#{plannerNo}, #{plannerTitle}, #{plannerPwd},#{plannerCost},DEFAULT,DEFAULT,
-			#{plannerStartDT},#{plannerPublicYN},DEFAULT,DEFAULT,0,#{plannerUrl},#{groupCode}
+			SYSDATE + 7,#{plannerPublicYN},DEFAULT,DEFAULT,0,#{plannerUrl},#{groupCode}
 		)
 	</insert>
 	
