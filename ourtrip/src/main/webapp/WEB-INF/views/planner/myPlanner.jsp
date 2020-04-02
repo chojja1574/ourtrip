@@ -132,8 +132,13 @@
 									<p class="card-text">
 										<span>시작일 : ${planner.plannerStartDT} ${planner.tripDate}DAYS</span><br> <span>${planner.groupName} 여행</span><br>
 		                                <c:if test="${planner.areaNames.size()>1 }">
-		                                	<span>${planner.areaNames[0].largeAreaName}
-		                                		  ${planner.areaNames[0].smallAreaName} ...</span>
+		                                	<span data-html="true" class="area-toolTip"
+		                                		title="<c:forEach var="areaName" items="${planner.areaNames}" varStatus="vs">
+		                                			${areaName.largeAreaName}&nbsp;${areaName.smallAreaName}
+		                                				<c:if test="${!vs.last}"><br></c:if>
+		                                			</c:forEach>">
+		                                		${planner.areaNames[0].largeAreaName}
+		                                		${planner.areaNames[0].smallAreaName} ...</span>
 		                                </c:if>
 		                                <c:if test="${planner.areaNames.size()==1 }">
 		                                	<span>${planner.areaNames[0].largeAreaName}
@@ -205,8 +210,13 @@
 									<p class="card-text">
 										<span>시작일 : ${planner.plannerStartDT} ${planner.tripDate}DAYS</span><br> <span>${planner.groupName} 여행</span><br>
 		                                <c:if test="${planner.areaNames.size()>1 }">
-		                                	<span>${planner.areaNames[0].largeAreaName}
-		                                		  ${planner.areaNames[0].smallAreaName} ...</span>
+		                                	<span data-html="true" class="area-toolTip"
+		                                		title="<c:forEach var="areaName" items="${planner.areaNames}" varStatus="vs">
+		                                			${areaName.largeAreaName}&nbsp;${areaName.smallAreaName}
+		                                				<c:if test="${!vs.last}"><br></c:if>
+		                                			</c:forEach>">
+		                                		${planner.areaNames[0].largeAreaName}
+		                                		${planner.areaNames[0].smallAreaName} ...</span>
 		                                </c:if>
 		                                <c:if test="${planner.areaNames.size()==1 }">
 		                                	<span>${planner.areaNames[0].largeAreaName}
@@ -269,6 +279,9 @@
 
 	<script>
         $(function () {
+        	//tooltip 생성
+	        $(".area-toolTip").tooltip();
+        	
         	// 수정중인 플래너 페이징바 초기화
         	pagingHtmlFn(uPlannerSize, uCurrentPage, 'u');
         	disCurrent($("#uPlannerPaging").children().children().children(), uCurrentPage);

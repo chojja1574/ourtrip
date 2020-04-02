@@ -155,8 +155,13 @@ h5 {
 		                                <span>시작일 : ${recommendCard.plannerStartDT} ${recommendCard.tripDate}DAYS</span><br>
 		                                <span>${recommendCard.groupName }</span><br>
 		                                <c:if test="${recommendCard.areaNames.size()>1 }">
-		                                	<span>${recommendCard.areaNames[0].largeAreaName}
-		                                		  ${recommendCard.areaNames[0].smallAreaName} ...</span>
+		                                <span data-html="true" class="area-toolTip"
+                                            title="<c:forEach var="areaName" items="${recommendCard.areaNames}" varStatus="vs">
+                                               ${areaName.largeAreaName}&nbsp;${areaName.smallAreaName}
+                                                  <c:if test="${!vs.last}"><br></c:if>
+                                               </c:forEach>">
+		                                		${recommendCard.areaNames[0].largeAreaName}
+		                                		${recommendCard.areaNames[0].smallAreaName} ...</span>
 		                                </c:if>
 		                                <c:if test="${recommendCard.areaNames.size()==1 }">
 		                                	<span>${recommendCard.areaNames[0].largeAreaName}
@@ -237,6 +242,8 @@ h5 {
 				}
 			});
 			
+			// 툴팁
+			$(".area-toolTip").tooltip();
 		});
 		
 		

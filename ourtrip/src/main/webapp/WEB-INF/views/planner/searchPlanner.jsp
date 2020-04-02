@@ -222,8 +222,13 @@
 								<p class="card-text">
 									<span>시작일 : ${recommendCard.plannerStartDT} ${recommendCard.tripDate}DAYS</span><br> <span>${recommendCard.groupName} 여행</span><br>
 									<c:if test="${recommendCard.areaNames.size()>1}">
-										<span>${recommendCard.areaNames[0].largeAreaName}
-											${recommnedCard.areaNames[0].smallAreaName} ...</span>
+										<span data-html="true" class="area-toolTip"
+                                            title="<c:forEach var="areaName" items="${recommendCard.areaNames}" varStatus="vs">
+                                               ${areaName.largeAreaName}&nbsp;${areaName.smallAreaName}
+                                                  <c:if test="${!vs.last}"><br></c:if>
+                                               </c:forEach>">
+											${recommendCard.areaNames[0].largeAreaName}
+											${recommendCard.areaNames[0].smallAreaName} ...</span>
 									</c:if>
 									<c:if test="${recommendCard.areaNames.size()==1}">
 										<span>${recommendCard.areaNames[0].largeAreaName}
@@ -280,6 +285,9 @@
 		
 		$(function () {
         	
+			// 툴팁
+			$(".area-toolTip").tooltip();
+			
         	// 지역 선택
         	$("#wide-area").on("change", function () {
                 var wideVal = Number($(this).val());
@@ -354,7 +362,20 @@
    								'<p class="card-text">' +
    								'<span>시작일 : ' + result.pList[i].plannerStartDT + ' ' +result.pList[i].tripDate + 'DAYS</span><br> <span>' + result.pList[i].groupName + ' 여행</span><br>';
    								if(result.pList[i].areaNames.length > 1) { 
-   									pHtml += '<span>' + result.pList[i].areaNames[0].largeAreaName + ' ' + 
+   									
+   									var tooltipstr = "";
+   									for(var j in result.pList[i].areaNames){
+   										tooltipstr +=  result.pList[i].areaNames[j].largeAreaName + 
+   										' ' + result.pList[i].areaNames[j].smallAreaName;
+   										if(result.pList[i].areaNames.length != j+1){
+   											tooltipstr += '<br>';
+   										}
+   									}
+   									
+   									pHtml += 
+   									'<span data-html="true" class="area-toolTip" title="' + 
+   									tooltipstr +'">' + 
+   									result.pList[i].areaNames[0].largeAreaName + ' ' + 
    									result.pList[i].areaNames[0].smallAreaName + '...</span>'; 
    								} else {
    									pHtml += '<span>' + result.pList[i].areaNames[0].largeAreaName + ' ' + 
@@ -366,8 +387,10 @@
    								'</p>' + 
 	        					'<div class="d-flex justify-content-between">' +
 	        					'<div class="btn-wrapper">' +
-	        					'<a href="${contextPath}/planner/plannerDetail?no=' + result.pList[i].plannerNo + '" class="btn btn-sm main-btn">바로가기</a> ' +
-								'<a href="${contextPath}/planner/plannerCopy?no=' + result.pList[i].plannerNo + '" class="btn  btn-sm gray-btn copy-btn">복사</a>' +
+	        					'<a href="${contextPath}/planner/plannerDetail?no=' + result.pList[i].plannerUrl + '" class="btn btn-sm main-btn">바로가기</a> ' +
+	        					<c:if test="${!empty loginMember}">
+									'<a href="${contextPath}/planner/plannerCopy?no=' + result.pList[i].plannerNo + '" class="btn  btn-sm gray-btn copy-btn">복사</a>' +    	        					
+	        					</c:if>
 	        					'</div>' +
 	        					'<div>' +
 	        					'<i class="fas fa-eye"></i>&nbsp;'+ result.pList[i].plannerCount +
@@ -383,6 +406,9 @@
         					
         					pagingHtmlFn(result.pInf);
         					disCurrent($(".pagination-wrapper").children().children().children(), currentPage);
+        					
+        					// 툴팁
+        					$(".area-toolTip").tooltip();
         				}
         			},
         			error : function(e){
@@ -481,20 +507,35 @@
     									'<p class="card-text">' +
     									'<span>시작일 : ' + result.pList[i].plannerStartDT + ' ' +result.pList[i].tripDate + 'DAYS</span><br> <span>' + result.pList[i].groupName + ' 여행</span><br>';
     									if(result.pList[i].areaNames.length > 1) { 
-    										pHtml += '<span>' + result.pList[i].areaNames[0].largeAreaName + ' ' + 
-    										result.pList[i].areaNames[0].smallAreaName + '...</span>'; 
-    									} else {
-    										pHtml += '<span>' + result.pList[i].areaNames[0].largeAreaName + ' ' + 
-    										result.pList[i].areaNames[0].smallAreaName + '</span>'; 
-    									}
+    	   									
+    	   									var tooltipstr = "";
+    	   									for(var j in result.pList[i].areaNames){
+    	   										tooltipstr +=  result.pList[i].areaNames[j].largeAreaName + 
+    	   										' ' + result.pList[i].areaNames[j].smallAreaName;
+    	   										if(result.pList[i].areaNames.length != j+1){
+    	   											tooltipstr += '<br>';
+    	   										}
+    	   									}
+    	   									
+    	   									pHtml += 
+    	   									'<span data-html="true" class="area-toolTip" title="' + 
+    	   									tooltipstr +'">' + 
+    	   									result.pList[i].areaNames[0].largeAreaName + ' ' + 
+    	   									result.pList[i].areaNames[0].smallAreaName + '...</span>'; 
+    	   								} else {
+    	   									pHtml += '<span>' + result.pList[i].areaNames[0].largeAreaName + ' ' + 
+    	   									result.pList[i].areaNames[0].smallAreaName + '</span>'; 
+    	   								}
     									//var now = new Date(result[i].plannerStartDT);
     									//console.log(now);
     									pHtml +=  
     									'</p>' + 
     	        					'<div class="d-flex justify-content-between">' +
     	        					'<div class="btn-wrapper">' +
-    	        					'<a href="${contextPath}/planner/plannerDetail?no=' + result.pList[i].plannerNo + '" class="btn btn-sm main-btn">바로가기</a> ' +
-    								'<a href="${contextPath}/planner/plannerCopy?no=' + result.pList[i].plannerNo + '" class="btn  btn-sm gray-btn copy-btn">복사</a>' +
+    	        					'<a href="${contextPath}/planner/plannerDetail?no=' + result.pList[i].plannerUrl + '" class="btn btn-sm main-btn">바로가기</a> ' +
+    	        					<c:if test="${!empty loginMember}">
+	    								'<a href="${contextPath}/planner/plannerCopy?no=' + result.pList[i].plannerNo + '" class="btn  btn-sm gray-btn copy-btn">복사</a>' +    	        					
+    	        					</c:if>
     	        					'</div>' +
     	        					'<div>' +
     	        					'<i class="fas fa-eye"></i>&nbsp;'+ result.pList[i].plannerCount +
@@ -509,6 +550,9 @@
     	    					$pWrapper.html(pHtml);
     	    					pagingHtmlFn(result.pInf);
     	    					disCurrent($click.children(), currentPage);
+    	    					
+    	    					// 툴팁
+            					$(".area-toolTip").tooltip();
     	    				}
     	    			},
     	    			error : function(e){

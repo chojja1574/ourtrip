@@ -224,14 +224,24 @@
                     <div class="dayMap" id="PCMap">
                     </div>
                 </div>
-                <div class="col-md-2 p-5 scheduleInfo PCOnly">
+                <div class="col-md-2 p-2 scheduleInfo PCOnly">
+                	<a href="https://www.hotelscombined.co.kr" target="_blank">
+                		<img alt="광고 배너" src="${contextPath}/resources/images/hotelAds.jpg"
+                			style="width:100%; height:50%;">
+                	</a>
+                	<a href="http://eurecar-lotterentcar.com" target="_blank">
+                		<img alt="광고 배너" src="${contextPath}/resources/images/carAds.jpg"
+                			style="width:100%; height:50%;">
+                	</a>
 	            </div>
 	        </div> 
 	        <!-- slider wrapper 끝 -->
 	        <div class="row">
 	        	<div class="col-md-2"></div>
 	        	<div class="card-footer text-muted d-flex hideCon col-md-8" style="height:70px;">
+	        	<c:if test="${loginMember != null }">
 		            <button type="button" class="btn main-btn mr-auto PCOnly" id="copyBtn">복사</button>
+		        </c:if>
 		            <button type="button" class="btn gray-btn ml-auto PCOnly" id="beforeBtn">이전으로</button>
 			    </div>
 	        </div>

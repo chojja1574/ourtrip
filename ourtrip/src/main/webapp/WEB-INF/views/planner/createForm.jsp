@@ -31,9 +31,9 @@
 	integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
 	crossorigin="anonymous"></script>
 
-
+<link rel="stylesheet" href="../resources/css/common.css">
 <style>
-body {
+#createContent {
 	font-family: 'Ubuntu', sans-serif;
 	font-family: 'Nanum Pen Script', cursive;
 	font-size: 28px;
@@ -92,9 +92,10 @@ body {
 			<div class="col-md-3"></div>
 			<div class="col-md-6">
 				<div id="createContent">
-					<form action="createPlanner" method="POST" onsubmit="return sendData()" >
+					<form action="createPlanner" method="POST"
+						onsubmit="return sendData()">
 						<div
-							style="width: 100%; height: 20%; position: relative; padding-left:30px; padding-right:30px; padding-top: 20px">
+							style="width: 100%; height: 20%; position: relative; padding-left: 30px; padding-right: 30px; padding-top: 20px">
 							<label for="planerTitle">
 								<h2 class="inputtext">*플래너 제목입력</h2>
 							</label> <input type="text" name="plannerTitle"
@@ -105,7 +106,7 @@ body {
 						<hr>
 
 						<div class="triPlace"
-							style="width: 100%; height: 15%; padding-left: 30px; padding-right:30px;">
+							style="width: 100%; height: 15%; padding-left: 30px; padding-right: 30px;">
 							<div class="selectArea">
 								<label for="selectbox">
 									<h2 class="inputtext">*여행장소 입력</h2>
@@ -117,24 +118,22 @@ body {
 										varStatus="vs">
 										<option value="${largeArea.largeAreaCode}">${largeArea.largeAreaName}</option>
 									</c:forEach>
-								</select>
-								 <select name="smallArea" id="local-area" class="custom-select"
+								</select> <select name="smallArea" id="local-area" class="custom-select"
 									style="display: inline-block" required>
 									<option value="0" selected>전체</option>
-								</select>
-								<input name="locationList" id="lList" style="display: none;">
+								</select> <input name="locationList" id="lList" style="display: none;">
 							</div>
 							<div id="locationList" style="width: 100%;"></div>
 						</div>
 						<hr>
 						<div class="triPlace"
-							style="width: 100%; height: 15%; padding-left:30px; padding-right: 30px;  padding-top: 20px;">
-							
+							style="width: 100%; height: 15%; padding-left: 30px; padding-right: 30px; padding-top: 20px;">
+
 							<div class="selectGroup" style="width: 35%;">
 								<label for="selectbox">
 									<h2 class="inputtext">*여행 그룹선택</h2>
-								</label><br><label><h3>여행그룹</h3></label> <select name="groupCode" id="tripgroup"
-									class="required form-control">
+								</label><br> <label><h3>여행그룹</h3></label> <select name="groupCode"
+									id="tripgroup" class="required form-control">
 									<option selected disabled hidden>그룹 선택</option>
 									<option value="1">혼자 여행하기</option>
 									<option value="2">친구랑 여행하기</option>
@@ -142,44 +141,31 @@ body {
 									<option value="4">가족과 여행하기</option>
 								</select>
 							</div>
-							<div class="selectdate" style="width: 45%;">
+							<div class="selectdate" style="width: 35%;">
 								<h2 class="inputtext">*여행 일자 선택</h2>
-								 <label><h3>출발일</h3></label> <input
-									name="plannerStartDT" type="date" id="startPlanner"
-									class="form-control">
+								<label><h3>출발일</h3></label> <input name="plannerStartDT"
+									type="date" id="startPlanner" class="form-control">
 							</div>
-							
+
 						</div>
 						<hr>
 
-						<!-- <div style="width: 100%; height: 50%; padding-left:30px; padding-right: 30px;">
-							<div class="selectdate">
-								<h2 class="inputtext">*여행 일자 선택</h2>
-								<br> <label><h3>출발일</h3></label> <input
-									name="plannerStartDT" type="date" id="startPlanner"
-									class="form-control">
-							</div>
-							<div class="selectdate">
-								<label><h3>종료일</h3></label> <input name="plannerExpiry"
-									class="form-control" type="date" id="endPlanner">
-							</div>
-						</div> -->
-
-
-						<div style="width: 100%; padding-left:30px; padding-right: 30px;">
+						<div
+							style="width: 100%; height: 20%; padding-left: 30px; padding-right: 30px;">
 							<h2 class="inputtext">플래너 공개여부 설정</h2>
 							<input name=plannerPublicYN type="checkbox" id="openplanner"
-								checked="checked"/> <label for="openplanner"> (선택 시
+								checked="checked" /> <label for="openplanner"> (선택 시
 								비공개) </label> <input id="pwd" name="plannerPwd" type="password"
 								class="form-control" placeholder="비밀번호 입력 ">
 
-							<hr>
 						</div>
-						<div style="width: 100%; height: 20%; padding: 30px 30px; ">
-							<button type="button" class="btn btn-primary" id="cancle"
-								style="width: 40%; height: 50px; float: right; margin: 5px;">취소</button>
-							<button type="submit" class="btn btn-primary" id="event"
-								style="width: 40%; height: 50px; float: left; margin: 5px; ">생성</button>
+						<hr>
+						<div style="width: 100%; height: 20%; padding: 30px 30px;">
+							
+								<button type="button" class="btn btn-primary" id="cancle"
+									style="width: 40%; height: 50px; float: right; margin: 5px;">취소</button>
+								<button type="submit" class="btn btn-primary" id="event"
+									style="width: 40%; height: 50px; float: left; margin: 5px;">생성</button>
 						</div>
 					</form>
 				</div>
