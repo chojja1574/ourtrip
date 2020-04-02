@@ -42,8 +42,13 @@ public class MemberController {
 		String beforeUrl = request.getHeader("referer");
 		
 		// 이전 페이지의 URL 저장
+		// 회원정보 수정관련 주소와 같지 않으면 url저장
 		if(model.getAttribute("detailUrl") == null) model.addAttribute("detailUrl", beforeUrl);
-		else if(!model.getAttribute("detailUrl").equals(beforeUrl)) model.addAttribute("detailUrl", beforeUrl);
+		else if(!model.getAttribute("detailUrl").equals(beforeUrl) &&
+				!beforeUrl.contains("/login") &&
+				!beforeUrl.contains("/loginForm") &&
+				!beforeUrl.contains("/findPwdForm") &&
+				!beforeUrl.contains("/naverCallBack"))	model.addAttribute("detailUrl", beforeUrl);
 		
 		if(saveEmail != null) model.addAttribute("saveEmail", saveEmail);
 		
