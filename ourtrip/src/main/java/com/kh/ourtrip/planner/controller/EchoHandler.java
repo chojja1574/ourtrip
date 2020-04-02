@@ -20,7 +20,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import com.kh.ourtrip.planner.model.service.PlannerService2;
+import com.kh.ourtrip.planner.model.service.PlannerService;
 import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.ChattingLogView;
 import com.kh.ourtrip.planner.model.vo.Day;
@@ -38,7 +38,7 @@ public class EchoHandler extends TextWebSocketHandler {
 	private Map<String, List<UserInfo>> chatroomMap = new HashMap<String, List<UserInfo>>();
 	
 	@Autowired
-	private PlannerService2 plannerService;
+	private PlannerService plannerService;
 	
 	// 클라이언트와 연결 이후에 실행되는 메서드
 	@Override
