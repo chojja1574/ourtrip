@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.kh.ourtrip.planner.model.service.PlannerServiceSDS;
+import com.kh.ourtrip.planner.model.service.PlannerService;
 import com.kh.ourtrip.planner.model.vo.PlannerCard;
 
 
@@ -15,14 +15,14 @@ import com.kh.ourtrip.planner.model.vo.PlannerCard;
 public class HomeController {
 
 	@Autowired
-	public PlannerServiceSDS plannerServiceSDS;
+	public PlannerService plannerService;
 	
 	@RequestMapping("/")
 	public String intro(Model model) {
 		try {
 			
 			// 추천플래너 카드 조회
-			List<PlannerCard> recommendPCList = plannerServiceSDS.selectRecommendPCList();
+			List<PlannerCard> recommendPCList = plannerService.selectRecommendPCList();
 			if(!recommendPCList.isEmpty()) {
 				model.addAttribute("recommendPCList", recommendPCList);
 			} else {
