@@ -459,18 +459,14 @@
     			$(".paging").on("click", function(){
     				var $click = $(this);
     				if($click.text() == "<<") {
-    					console.log(currentPage = 1);
     					currentPage = 1;
     				} else if ($click.text() == "<") {
-    					console.log(currentPage = Number(currentPage) -1);
     					currentPage = Number(currentPage) -1;
     				} else if($click.text() == ">>") {
-    					console.log(currentPage = maxPage);
     					currentPage = maxPage;
     				} else if($click.text() == ">") {
-    					console.log(currentPage = Number(currentPage) +1);
+    					currentPage = Number(currentPage) +1;
     				} else if($click.text() != currentPage) {
-    					console.log(currentPage = $(this).text());
     					currentPage = $(this).text();
     				}
     				
