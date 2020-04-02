@@ -136,8 +136,8 @@
 									id="tripgroup" class="required form-control">
 									<option selected disabled hidden>그룹 선택</option>
 									<option value="1">혼자 여행하기</option>
-									<option value="2">친구랑 여행하기</option>
-									<option value="3">연인이랑 여행하기</option>
+									<option value="2">연인이랑 여행하기</option>
+									<option value="3">친구랑 여행하기</option>
 									<option value="4">가족과 여행하기</option>
 								</select>
 							</div>
