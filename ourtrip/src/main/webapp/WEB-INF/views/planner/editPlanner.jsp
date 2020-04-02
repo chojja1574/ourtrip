@@ -920,11 +920,19 @@ function selectDay(no){
 		if(!todayMarker.scheduleMarker[i].unselect)
 			existMarker = true;
 	}
+	console.log('selectDay');
+	console.log(extractDayMarker(no));
+	console.log(existMarker);
 	if(existMarker){
+		console.log('displayAllPlaces');
 		displayAllPlaces(extractDayMarker(no),allMap,allMarkers);
 	}else{
+		
+		allMap = new kakao.maps.Map(allMapContainer, mapOption);
+		
 		initMapBtn();
 		removeAllMarker();
+
 	}
     infowindowAll.close();
 }
