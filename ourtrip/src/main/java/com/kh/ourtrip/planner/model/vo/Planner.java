@@ -113,6 +113,18 @@ public class Planner {
 		this.plannerUrl = plannerUrl;
 		this.groupCode = groupCode;
 	}
+	
+	public Planner(int plannerNo, String plannerTitle, int plannerCost, String plannerPublicYN, String plannerExpiry,
+			String plannerUrl, int groupCode) {
+		super();
+		this.plannerNo = plannerNo;
+		this.plannerTitle = plannerTitle;
+		this.plannerCost = plannerCost;
+		this.plannerPublicYN = plannerPublicYN;
+		this.plannerExpiry = plannerExpiry;
+		this.plannerUrl = plannerUrl;
+		this.groupCode = groupCode;
+	}
 
 	public int getPlannerNo() {
 		return plannerNo;

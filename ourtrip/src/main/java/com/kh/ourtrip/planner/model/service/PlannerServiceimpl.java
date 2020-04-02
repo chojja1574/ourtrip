@@ -495,9 +495,8 @@ public class PlannerServiceimpl implements PlannerService {
 				url += ranDomInt;
 			}
 			
-			Planner copyPlanner = new Planner(plannerNextNo, plannerDetail.get(0).getPlannerTitle(), plannerDetail.get(0).getPlannerCost(),
-					plannerDetail.get(0).getPlannerStartDT(), "Y", 
-					plannerDetail.get(0).getPlannerExpiry(), url, plannerDetail.get(0).getGroupCode());
+			Planner copyPlanner = new Planner(plannerNextNo, plannerDetail.get(0).getPlannerTitle() + "_복사본", plannerDetail.get(0).getPlannerCost(),
+					"Y", plannerDetail.get(0).getPlannerExpiry(), url, plannerDetail.get(0).getGroupCode());
 			
 			System.out.println("service planner : " + copyPlanner);
 			result = plannerDAO.createPlanner2(copyPlanner);
