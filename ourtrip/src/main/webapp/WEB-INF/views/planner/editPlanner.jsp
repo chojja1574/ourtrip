@@ -1043,8 +1043,8 @@ function addSchedule(dno,sno,title,time,location,cost,memo,llat,llng,liwContent,
 	
 	if($('#selectedDay').data('dateno') == dno){
 		createSchedule(sno,title,time,cost,memo,location);
-		if(memberNo == lmemberNo)
-			selectSchedule(sno);
+/* 		if(memberNo == lmemberNo)
+			selectSchedule(sno); */
 	}
 }
 
@@ -1289,19 +1289,19 @@ function onMessage(msg) {
 	case 'addDate': 
 		days.push({no:data['dno'],tripDate:-1,plannerNo:planner.no,schedules:new Array()});
 		scheduleMarkers.push({dno:data['dno'],scheduleMarker:new Array()});
-		createDate(data['dno'],true);
+		createDate(data['dno'],(data['id'] == '${loginMember.memberEmail}'));
 		//createDate(data['dno'],(data['id'] == '${loginMember.memberEmail}'));
-		addSchedule(data['dno'],data['sno'],'제목 없음','','미정',0,'',0,0,null,memberNo);
+		addSchedule(data['dno'],data['sno'],'제목 없음','','미정',0,'',0,0,null,data['id']);
 		break;
 	case 'deleteDate': 
-		deleteDate(data['dno'],true);
+		deleteDate(data['dno'],(data['id'] == '${loginMember.memberEmail}'));
 		//deleteDate(data['dno'],(data['id'] == '${loginMember.memberEmail}'));
 		break;
 	case 'updateSchedule':
 		updateSchedule(data['sno'],data['title'],data['time'],data['location'],data['cost'],data['memo'],data['lat'],data['lng'],data['iwContent'])
 		break;
-	case 'addSchedule': 
-		addSchedule(data['dno'],data['sno'],data['title'],data['time'],data['location'],data['cost'],data['memo'],data['lat'],data['lng'],data['iwContent'],memberNo)
+	case 'addSchedule':
+		addSchedule(data['dno'],data['sno'],data['title'],data['time'],data['location'],data['cost'],data['memo'],data['lat'],data['lng'],data['iwContent'],data['id'])
 		sortSchedule(data['sno']);
 	    for(var i in days){
 	    	if(days[i].no == data['dno']){
