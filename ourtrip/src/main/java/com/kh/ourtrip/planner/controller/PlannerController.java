@@ -195,7 +195,7 @@ public class PlannerController {
 			model.addAttribute("msg", "플래너 수정화면 로드중 오류발생");
 			return "common/errorPage";
 		}
-		
+
 		model.addAttribute("largeNmList", largeNmList);
 		model.addAttribute("smallNmList", smallNmList);
 		model.addAttribute("plannerInfo", selectedPlanner.toJsonString());
@@ -242,12 +242,26 @@ public class PlannerController {
 				locationArray.add(jsonObj);
 			}
 			
+			List<Day> days = selectedPlanner.getDays();
+			
+			for(int i = days.size()-1; i > 0; i--) {
+				for(int j = 0; j < i; j++) {
+					if(days.get(j).getTripDate() > days.get(j+1).getTripDate()) {
+						Day temp = days.get(j);
+						days.set(j, days.get(j+1));
+						days.set(j+1, temp);
+					}
+				}
+			}
+			
+			selectedPlanner.setDays(days);
 			
 		}catch(Exception e) {
 			e.printStackTrace();
 			model.addAttribute("msg", "플래너 조회중 오류발생");
 			return "common/errorPage";
 		}
+		System.out.println(selectedPlanner.getDays());
 		
 		model.addAttribute("plannerInfoJson", selectedPlanner.toJsonString());
 		model.addAttribute("plannerInfo", selectedPlanner);
