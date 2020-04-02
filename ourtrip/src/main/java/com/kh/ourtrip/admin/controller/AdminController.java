@@ -22,7 +22,6 @@ import com.kh.ourtrip.common.vo.PageInfo;
 import com.kh.ourtrip.member.model.vo.Member;
 import com.kh.ourtrip.member.model.vo.ProfileImage;
 import com.kh.ourtrip.planner.model.service.PlannerService;
-import com.kh.ourtrip.planner.model.service.PlannerServiceSDS;
 import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.Day;
 import com.kh.ourtrip.planner.model.vo.LargeArea;
