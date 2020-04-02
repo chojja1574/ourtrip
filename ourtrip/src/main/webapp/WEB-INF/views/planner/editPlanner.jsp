@@ -220,13 +220,21 @@
 				<div class="col-md-4">
 					<div class="main-back plannerHeader row ml-0 mr-0"
 						style="text-align: center;">
-						<div class="col-md-9 pl-2 pr-0">
-							<input type="text" id="url" class="pl-2" readonly
+						<div class="hide">
+							<input type="text" id="edit-url" class="pl-2" readonly
 								value="">
 						</div>
-						<div class="col-md-3">
-							<button type="button" id="copy"
-								class="plannerHeaderBtn btnColor1">복사</button>
+						<div class="hide">
+							<input type="text" id="detail-url" class="pl-2" readonly
+								value="">
+						</div>
+						<div class="col-md-6">
+							<button type="button" id="editcopy"
+								class="plannerHeaderBtn btnColor1">수정페이지 주소 복사</button>
+						</div>
+						<div class="col-md-6">
+							<button type="button" id="detailcopy"
+								class="plannerHeaderBtn btnColor1">조회페이지 주소 복사</button>
 						</div>
 					</div>
 				</div>
@@ -472,7 +480,8 @@ $(function() {
 		})
 	}
 	
-	$('#url').val(window.location.href);
+	$('#edit-url').val(window.location.href);
+	$('#detail-url').val((window.location.href).replace('editplanner','plannerDetail'));
 	$('#startrip').val(plannerJson.plannerStartDT);
 	$("#join").click(function(){
 		var inputPwd = $('#inputPwd').val();
@@ -1510,13 +1519,36 @@ function changePermissionColor(i){
 $(function () {
         
     // 복사 버튼 클릭 시 페이지 url 클립보드에 복사
-    $("#copy").on("click", function () {
-        var urlbox = document.getElementById('url');
+    $("#editcopy").on("click", function () {
+        var urlbox = document.getElementById('edit-url');
         urlbox.select();
         document.execCommand('Copy');
-        alert('URL 이 복사 되었습니다.');
+        alert('수정페이지 URL이 복사 되었습니다.');
+    })
+    $("#detailcopy").on("click", function () {
+        var urlbox = document.getElementById('detail-url');
+        urlbox.select();
+        document.execCommand('Copy');
+        alert('조회페이지 URL이 복사 되었습니다.');
     })
 
+    /* <div class="hide">
+		<input type="text" id="edit-url" class="pl-2" readonly
+			value="">
+	</div>
+	<div class="hide">
+		<input type="text" id="detail-url" class="pl-2" readonly
+			value="">
+	</div>
+	<div class="col-md-6">
+		<button type="button" id="editcopy"
+			class="plannerHeaderBtn btnColor1">수정페이지 주소 복사</button>
+	</div>
+	<div class="col-md-6">
+		<button type="button" id="detailcopy"
+			class="plannerHeaderBtn btnColor1">조회페이지 주소 복사</button>
+	</div> */
+    
     // 내가 쓴 채팅 보내는 함수
     $("#send").click(function(){
         // 채팅 입력창 내용 변수에 저장
