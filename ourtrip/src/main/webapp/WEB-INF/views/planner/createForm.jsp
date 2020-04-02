@@ -161,11 +161,11 @@
 						</div>
 						<hr>
 						<div style="width: 100%; height: 20%; padding: 30px 30px;">
-							
-								<button type="button" class="btn btn-primary" id="cancle"
-									style="width: 40%; height: 50px; float: right; margin: 5px;">취소</button>
-								<button type="submit" class="btn btn-primary" id="event"
-									style="width: 40%; height: 50px; float: left; margin: 5px;">생성</button>
+
+							<button type="button" class="btn btn-primary" id="cancle"
+								style="width: 40%; height: 50px; float: right; margin: 5px;">취소</button>
+							<button type="submit" class="btn btn-primary" id="event"
+								style="width: 40%; height: 50px; float: left; margin: 5px;">생성</button>
 						</div>
 					</form>
 				</div>
@@ -188,17 +188,21 @@
 			var startDate = $("#startPlanner").val(); 
        		var startDateArr = startDate.split('-');
          
-        	var endDate = $("#endPlanner").val(); 
-        	var endDateArr = endDate.split('-');
                  
         	var startDateCompare = new Date(startDateArr[0], parseInt(startDateArr[1])-1, startDateArr[2]);
-        	var endDateCompare = new Date(endDateArr[0], parseInt(endDateArr[1])-1, endDateArr[2]);
         	var todateCompare = new Date(yyyy , mm , dd);
-        	if(startDateCompare.getDate() > endDateCompare.getDate()) {
-        		 alert("시작날짜와 종료날짜를 확인해 주세요.");
+        	
+        	if(startDateArr[0] <  yyyy ){
+        		 alert("시작년도를 확인해 주세요.");
                  return false;	
-        	}
-        	})
+        	}else if(startDateArr[1] <  mm){
+        		 alert("달을 확인해 주세요.");
+                 return false;	
+        	}else if(startDateArr[2] < dd){
+        		 alert("달을 확인해 주세요.");
+                 return false;	
+        	} return true;
+        	});
 		
         		
 		
@@ -290,9 +294,6 @@
 			   return false
 		   }else if($("#startPlanner").val == ''){
 			   alert('출발일 선택해 주세요');
-			   return false
-		   }else if($("#endPlanner").val == ''){
-			   alert('종료일 선택해 주세요');
 			   return false
 		   }else if($("#openplanner").is(":checked") == true && $("#pwd").val() == ''){
 			   alert("비공개인경우 비밀번호를 입력해주세요")
