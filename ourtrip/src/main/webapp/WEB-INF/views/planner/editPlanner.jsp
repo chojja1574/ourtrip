@@ -1638,11 +1638,16 @@ $(function () {
     });
 	$('#updatePassword').click(function(){
 		var inputPwd1 = prompt('변경할 비밀번호를 입력해주세요');
-		var inputPwd2 = prompt('비밀번호를 다시 입력해주세요');
-    	if(inputPwd1 == inputPwd2){
-    		sock.send(JSON.stringify({pno:planner.no, type: 'updatePassword', memberNo: memberNo, pwd: inputPwd1}));
-    	}else
-    		alert('입력한 두 비밀번호가 다릅니다');
+		console.log(inputPwd1);
+		if(inputPwd1 == '' || inputPwd1 == 'null' || inputPwd1 == null){
+			sock.send(JSON.stringify({pno:planner.no, type: 'updatePassword', memberNo: memberNo, pwd: ''}));
+		}else{
+			var inputPwd2 = prompt('비밀번호를 다시 입력해주세요');
+	    	if(inputPwd1 == inputPwd2){
+	    		sock.send(JSON.stringify({pno:planner.no, type: 'updatePassword', memberNo: memberNo, pwd: inputPwd1}));
+	    	}else
+	    		alert('입력한 두 비밀번호가 다릅니다');
+		}
 	});
 	$('#updateLocation').click(function(){
 		
