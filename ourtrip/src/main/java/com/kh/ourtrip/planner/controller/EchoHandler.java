@@ -139,14 +139,14 @@ public class EchoHandler extends TextWebSocketHandler {
 		UserInfo uInf = findUserInfo(session);
 		System.out.println("pno : " + Integer.parseInt((String)joinJson.get("pno")));
 		if(uInf == null) {
-			uInf = new UserInfo(session,(String)joinJson.get("writer"),Integer.parseInt((String)joinJson.get("pno")));
+			uInf = new UserInfo(session,(String)joinJson.get("memberNickName"),Integer.parseInt((String)joinJson.get("pno")));
 			userList.add(uInf);
 			System.out.println("uInf 추가" + uInf);
 		}
 		String rId = (String)joinJson.get("pno");
 		
 		int existUser = -1;
-		
+		System.out.println("uInf : " + uInf);
 		if(chatroomMap.containsKey(rId)) {
 			for(UserInfo inf : chatroomMap.get(rId)) {
 				if(inf.getSession() == uInf.getSession())

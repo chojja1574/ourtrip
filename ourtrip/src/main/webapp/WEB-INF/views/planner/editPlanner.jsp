@@ -84,7 +84,7 @@
 		id="modalBtn" style="display:none"></button>
 
 	<!-- Modal -->
-	<div class="modal noselect fade plannerFont" id="myModal" role="dialog">
+	<div data-backdrop="static" class="modal noselect fade plannerFont" id="myModal" role="dialog">
 		<div class="modal-dialog">
 			<!-- Modal content-->
 			<div class="modal-content">
@@ -430,12 +430,9 @@
 <script type="text/javascript" src="${contextPath}/resources/js/map.js"></script>
 <script>
 
-//페이지 로딩 시 일정 수에 맞게 위치정보 Array에 자리생성
-// 0 = schedule 번호
-// 1 = 카카오 위치 객체
-// 2 = lat + lng
-// 3 = 인포 윈도우
-
+let sock = new SockJS("<c:url value="/echo"/>");
+sock.onmessage = onMessage;
+sock.onclose = onClose;
 var scheduleMarkers = new Array();
 var planner = new Object();
 var days = new Array();
@@ -450,41 +447,60 @@ var joinUserJson = null;
 var locationList = new Array();
 
 $(function() {
-	memberNo = '${loginMember.memberNo}';
-	if(memberNo == ''){
-		memberNo = '-1';
-	}
-	memberNickName = '${loginMember.memberNickName}';
-	if(memberNickName == ''){
-		memberNickName = '비회원';
-	}
-	var plannerInfo = '${plannerInfo}';
-	var chatList = '${chatList}';
-	var joinUserArray = '${joinUserArray}';
-	joinUserJson = JSON.parse(joinUserArray);
-	initJoinMember(joinUserJson);
-	var plannerJson = JSON.parse(plannerInfo);
-	var chatListJson = JSON.parse(chatList);
-	var profilePath = '${profilePath}';
-	planner.pwd = plannerJson.plannerPwd;
-	if(planner.pwd == '' || planner.pwd == 'null'){
-		$('.pwdIsnotEmpty').each(function(i, item){
-			$(item).css('display','none');
-			planner.pwd = '';
-		})
-	}else{
-		$('.pwdIsEmpty').each(function(i, item){
-			$(item).css('display','none');
-		})
-	}
-	
-	$('#startrip').val(plannerJson.plannerStartDT);
-	$("#join").click(function(){
-		var inputPwd = $('#inputPwd').val();
-		if(planner.pwd == inputPwd){
+	setTimeout(function() {
+		  console.log('Works!');
+		  memberNo = '${loginMember.memberNo}';
+			if(memberNo == ''){
+				memberNo = '-1';
+			}
+			memberNickName = '${loginMember.memberNickName}';
+			if(memberNickName == ''){
+				memberNickName = '비회원';
+			}
+			var plannerInfo = '${plannerInfo}';
+			var chatList = '${chatList}';
+			var joinUserArray = '${joinUserArray}';
+			joinUserJson = JSON.parse(joinUserArray);
+			initJoinMember(joinUserJson);
+			var plannerJson = JSON.parse(plannerInfo);
+			var chatListJson = JSON.parse(chatList);
+			var profilePath = '${profilePath}';
+			planner.pwd = plannerJson.plannerPwd;
+			if(planner.pwd == '' || planner.pwd == 'null'){
+				$('.pwdIsnotEmpty').each(function(i, item){
+					$(item).css('display','none');
+					planner.pwd = '';
+				})
+			}else{
+				$('.pwdIsEmpty').each(function(i, item){
+					$(item).css('display','none');
+				})
+			}
+			
+			$('#startrip').val(plannerJson.plannerStartDT);
+			$("#join").click(function(){
+				var inputPwd = $('#inputPwd').val();
+				console.log(planner.pwd);
+				console.log(inputPwd);
+				if(planner.pwd == inputPwd || planner.pwd == 'null' || planner.pwd == '' || planner.pwd == null){
+					
+				}else{
+					alert('비밀번호가 틀렸습니다');
+					window.history.back();
+				}
+			})
+			
+			var newJoinUser = {memberNo:memberNo,plannerNo:plannerJson.plannerNo,plannerPermission:permission,memberNickName:memberNickName};
+			sock.send(JSON.stringify({pno:plannerJson.plannerNo, type: 'JOIN', memberNo: memberNo, memberNickName: memberNickName,newJoinUser:newJoinUser}));
+			var tempList = new Array();
+			<c:forEach var="areaName" items="${areaNameList}" varStatus="vs">
+				tempList.push({large:'${areaName.largeAreaCode}',largeNM:'${areaName.largeAreaName}',
+					small:'${areaName.smallAreaCode}',smallNM:'${areaName.smallAreaName}'});
+			</c:forEach>
+			initLocationList(tempList);
+			$('#totalcost').html(calculator() + '원');
 			initChatting(chatListJson);
 			initPlanner(plannerJson);
-			
 			for(var i in joinMember){
 				if(joinMember[i].memberNo == memberNo){
 					permission = joinMember[i].plannerPermission;
@@ -493,24 +509,11 @@ $(function() {
 			if(permission == 3){
 				$('#masterOnly').css('display','flex');
 			}
-		}else{
-			alert('비밀번호가 틀렸습니다');
-		}
-		var tempList = new Array();
-		<c:forEach var="areaName" items="${areaNameList}" varStatus="vs">
-			tempList.push({large:'${areaName.largeAreaCode}',largeNM:'${areaName.largeAreaName}',
-				small:'${areaName.smallAreaCode}',smallNM:'${areaName.smallAreaName}'});
-		</c:forEach>
-		initLocationList(tempList);
-		$('#totalcost').html(calculator() + '원');
-		var newJoinUser = {memberNo:memberNo,plannerNo:plannerJson.plannerNo,plannerPermission:permission,memberNickName:memberNickName};
-		
-		sock.send(JSON.stringify({pno:planner.no, type: 'JOIN', memberNo: memberNo, memberNickName: memberNickName,newJoinUser:newJoinUser}));
-	})
-	$('#startrip').val(plannerJson.plannerStartDT);
-    // 페이지 입장 시 참여버튼 모달 출력
-    $('#groupCode option[value="' + plannerJson.groupCode + '"]').attr('selected','true');
-    $("#modalBtn").click();
+			$('#startrip').val(plannerJson.plannerStartDT);
+		    // 페이지 입장 시 참여버튼 모달 출력
+		    $('#groupCode option[value="' + plannerJson.groupCode + '"]').attr('selected','true');
+		    $("#modalBtn").click();
+	}, 600);
 });
 
 var iwContent = '';
@@ -1251,9 +1254,17 @@ $('#removeSchedule').click(function(){
 //=======================================================================================//
 
 //웹소켓을 지정한 url로 연결한다.
-let sock = new SockJS("<c:url value="/echo"/>");
-sock.onmessage = onMessage;
-sock.onclose = onClose;
+function connectSock(){
+	return new Promise(function(resolve, reject){
+		let sock = new SockJS("<c:url value="/echo"/>");
+		sock.onmessage = onMessage;
+		sock.onclose = onClose;
+		console.log(sock);
+		console.log(sock.onmessage);
+		console.log(sock.onclose);
+		resolve(sock);
+	});
+}
 
 // 서버로부터 메시지를 받았을 때
 function onMessage(msg) {
@@ -1278,11 +1289,13 @@ function onMessage(msg) {
 	case 'addDate': 
 		days.push({no:data['dno'],tripDate:-1,plannerNo:planner.no,schedules:new Array()});
 		scheduleMarkers.push({dno:data['dno'],scheduleMarker:new Array()});
-		createDate(data['dno'],(data['id'] == '${loginMember.memberEmail}'));
+		createDate(data['dno'],true);
+		//createDate(data['dno'],(data['id'] == '${loginMember.memberEmail}'));
 		addSchedule(data['dno'],data['sno'],'제목 없음','','미정',0,'',0,0,null,memberNo);
 		break;
 	case 'deleteDate': 
-		deleteDate(data['dno'],(data['id'] == '${loginMember.memberEmail}'));
+		deleteDate(data['dno'],true);
+		//deleteDate(data['dno'],(data['id'] == '${loginMember.memberEmail}'));
 		break;
 	case 'updateSchedule':
 		updateSchedule(data['sno'],data['title'],data['time'],data['location'],data['cost'],data['memo'],data['lat'],data['lng'],data['iwContent'])
