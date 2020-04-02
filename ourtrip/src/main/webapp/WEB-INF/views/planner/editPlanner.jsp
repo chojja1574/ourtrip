@@ -215,19 +215,17 @@
 					</div>
 				</div>
 			</div>
+			<%-- <div class="">
+				<input type="text" id="edit-url" class="pl-2" readonly style="width:5px; height:5px;"
+					value="http://192.168.10.59:8080/ourtrip/planner/editplanner?no=${plannerurl}">
+				<input type="text" id="detail-url" class="pl-2" readonly style="width:5px; height:5px;"
+					value="http://192.168.10.59:8080/ourtrip/planner/plannerDetail?no=${plannerurl}">
+			</div> --%>
 			<div class="row noselect">
 				<div class="col-md-1"></div>
 				<div class="col-md-4">
 					<div class="main-back plannerHeader row ml-0 mr-0"
 						style="text-align: center;">
-						<div class="hide">
-							<input type="text" id="edit-url" class="pl-2" readonly
-								value="">
-						</div>
-						<div class="hide">
-							<input type="text" id="detail-url" class="pl-2" readonly
-								value="">
-						</div>
 						<div class="col-md-6">
 							<button type="button" id="editcopy"
 								class="plannerHeaderBtn btnColor1">수정페이지 주소 복사</button>
@@ -480,8 +478,6 @@ $(function() {
 		})
 	}
 	
-	$('#edit-url').val(window.location.href);
-	$('#detail-url').val((window.location.href).replace('editplanner','plannerDetail'));
 	$('#startrip').val(plannerJson.plannerStartDT);
 	$("#join").click(function(){
 		var inputPwd = $('#inputPwd').val();
@@ -871,7 +867,8 @@ function createDate(dateNo,reorderBoolean){
 
 //일차 선택하는 함수
 function selectDay(no){
-
+	
+	console.log(no);
     // 매개변수로 받은 인덱스로 div를 찾아 저장할 변수
     var selectedDay;
 
@@ -947,13 +944,20 @@ function deleteDay(ind){
 }
 function deleteDate(ind,reorderBool){
 	dayIndex--;
+	var dateNo = -1;
     $(".daystyle").each(function(i, box) {
-        if($(box).data("dateno")==ind)
+        if($(box).data("dateno")==ind){
             $(box).remove();
+            dateNo = $(box).data('dateno');
+            console.log(dateNo);
+        }
     });
     if(reorderBool)
     	reorder();
-    selectDay($($(".daystyle").get(0)).data('dateno'));
+    console.log($('#selectedDay').data('dateno'));
+    console.log($('#selectedDay').data('dateno') == dateNo);
+    if($('#selectedDay').data('dateno') == dateNo)
+    	selectDay($($(".daystyle").get(0)).data('dateno'));
 }
 
 //=======================================================================================//
@@ -1520,16 +1524,22 @@ $(function () {
         
     // 복사 버튼 클릭 시 페이지 url 클립보드에 복사
     $("#editcopy").on("click", function () {
-        var urlbox = document.getElementById('edit-url');
-        urlbox.select();
-        document.execCommand('Copy');
-        alert('수정페이지 URL이 복사 되었습니다.');
+    	var dummy = document.createElement("textarea");
+    	document.body.appendChild(dummy);
+    	dummy.value = window.location.href;
+    	dummy.select();
+    	document.execCommand("copy");
+    	document.body.removeChild(dummy);
+    	alert("플래너 수정 URL이 복사되었습니다.");
     })
     $("#detailcopy").on("click", function () {
-        var urlbox = document.getElementById('detail-url');
-        urlbox.select();
-        document.execCommand('Copy');
-        alert('조회페이지 URL이 복사 되었습니다.');
+		var dummy = document.createElement("textarea");
+		document.body.appendChild(dummy);
+		dummy.value = (window.location.href).replace('editplanner','plannerDetail');
+		dummy.select();
+		document.execCommand("copy");
+		document.body.removeChild(dummy);
+		alert("플래너 조회 URL이 복사되었습니다.");
     })
 
     /* <div class="hide">
