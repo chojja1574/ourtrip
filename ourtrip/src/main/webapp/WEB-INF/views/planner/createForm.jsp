@@ -199,7 +199,7 @@
         		 alert("달을 확인해 주세요.");
                  return false;	
         	}else if(startDateArr[2] < dd){
-        		 alert("달을 확인해 주세요.");
+        		 alert("날짜을 확인해 주세요.");
                  return false;	
         	} return true;
         	});
