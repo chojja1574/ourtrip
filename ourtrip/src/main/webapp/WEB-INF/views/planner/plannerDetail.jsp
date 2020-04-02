@@ -324,7 +324,7 @@
     			var sm = new Object();
     			sm.sno = locationJson[i].schedules[j].sno;
     			sm.LatLng = new kakao.maps.LatLng(locationJson[i].schedules[j].lat, locationJson[i].schedules[j].lng);
-    			sm.unselect = (locationJson[i].schedules[j].lat + locationJson[i].schedules[j].lng) == 0 ? true:false;
+    			sm.unselect = (parseInt(locationJson[i].schedules[j].lat,10) + parseInt(locationJson[i].schedules[j].lng,10)) == 0 ? true:false;
     			sm.location = locationJson[i].schedules[j].location;
     			sm.infoWindow = null;
     			scheduleMarker.push(sm);
@@ -339,12 +339,9 @@
 		    	getScheduleAddr(scheduleMarkers[d].scheduleMarker[s].LatLng,scheduleMarkers[d].scheduleMarker[s].location,scheduleMarkers[d].scheduleMarker[s].sno).then(function(args){
 					for(var i in scheduleMarkers){
 						for(var j in scheduleMarkers[i].scheduleMarker){
-							console.log(scheduleMarkers[i].scheduleMarker[j].sno + ' =sno= ' +  args[0]);
 							if(scheduleMarkers[i].scheduleMarker[j].sno == args[0]){
 								scheduleMarkers[i].scheduleMarker[j].infoWindow = args[1];
 								loadingAddr += 1;
-								console.log(args[1]);
-								console.log(loadingAddr + ' == ' + loadingInfo);
 								if(loadingInfo == loadingAddr){
 									for(var i in scheduleMarkers){
 										var mapDiv = document.getElementById(locationJson[i].dno+''); 
@@ -416,7 +413,6 @@
     			try{
     				var contentArr= new Array();
     				contentArr.push(scheduleNo);
-    				console.log(templocation);
     				searchDetailAddrFromCoords(templocation, function(result, status) {
     				    if (status === kakao.maps.services.Status.OK) {
     				        var detailAddr = !!result[0].road_address ? '<div style="font-size: 14px;">도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
@@ -493,35 +489,28 @@
 	}
 	
 	$('.schedule').click(function(){
-		console.log($(this).data('sno'));
 		for(var i in days){
 			for(var j in days[i].schedules){
 				if(days[i].schedules[j].no == $(this).data('sno')){
 					for(var k = 0; k < $('.selectTitle').length; k++){
-						console.log($($('.selectTitle')[k]));
 						$($('.selectTitle')[k]).html('제목 : ' + days[i].schedules[j].title);
-						$($('.selectTime')[k]).html('시간 : ' + timeToTime(days[i].schedules[j].time));
+						var time = ""
+						if(timeToTime(days[i].schedules[j].time) != 'nu:ll')
+							time = timeToTime(days[i].schedules[j].time);
+						$($('.selectTime')[k]).html('시간 : ' + time);
 						$($('.selectLocation')[k]).html('장소 : ' + days[i].schedules[j].locationNM);
 						$($('.selectCost')[k]).html('비용 : ' + days[i].schedules[j].cost);
 						$($('.selectMemo')[k]).html(days[i].schedules[j].memo);
 					}
 				}
 				if(scheduleMarkers[i].scheduleMarker[j].sno == $(this).data('sno')){
-					console.log('map');
 					var scheduleLocation = scheduleMarkers[i].scheduleMarker[j].LatLng;
 					var locationContent = scheduleMarkers[i].scheduleMarker[j].infoWindow;
 					if(scheduleLocation.getLat()+scheduleLocation.getLng() == 0){
 				        marker.setMap(null);
 				        infowindow.setMap(null);
 				    }else{
-				    	console.log(selectMap);
-				    	console.log(marker);
-				    	
 				        marker.setMap(selectMap);
-				        
-				        console.log("locationContent : " + locationContent);
-				        // 마커를 클릭한 위치에 표시합니다 
-				        console.log(scheduleLocation);
 
 				        marker.setPosition(scheduleLocation);
 				        marker.setMap(selectMap);

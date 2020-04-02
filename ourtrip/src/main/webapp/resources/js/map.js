@@ -188,8 +188,6 @@ function addMarker(place) {
 
 
 function displayInfowindow(marker, i, map) {
-	console.log("displayInfowindow : i");
-	console.log(i);
     var content = '<div style="padding:5px;z-index:1;">' + i + '</div>';
    
     infowindowAll.setContent(content);
@@ -197,8 +195,6 @@ function displayInfowindow(marker, i, map) {
 }
 
 function displayInfowindowLocal(marker, i, map,infowindowLocal) {
-	console.log("displayInfowindow : i");
-	console.log(i);
     var content = '<div style="padding:5px;z-index:1;">' + i + '</div>';
     
     infowindowLocal.setContent(content);
@@ -207,62 +203,71 @@ function displayInfowindowLocal(marker, i, map,infowindowLocal) {
 
 // 검색 결과 목록과 마커를 표출하는 함수입니다
 function displayAllPlaces(pointsArr,mymap,mymarkers,myIw) {
-	console.log("myIw");
-	console.log(myIw);
-	// 버튼을 클릭하면 아래 배열의 좌표들이 모두 보이게 지도 범위를 재설정합니다
-    var allBounds = new kakao.maps.LatLngBounds();
-
-    // 지도에 표시되고 있는 마커를 제거합니다
-    removeAllMarker();
-    
-    var i;
-    for (i = 0; i < pointsArr.scheduleMarker.length; i++) {
-
-        // 경도, 위도의 합이 0이면(위치지정 안한 값) 마커 찍는거 건너뜀
-        if(pointsArr.scheduleMarker[i].unselect){
-            console.log("continue : " + i);
-            continue;
-        }
-
-        //   순서있는 마커 코드
-       var numImageSrc = 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
-       numImageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
-       imgOptions =  {
-           spriteSize : new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
-           spriteOrigin : new kakao.maps.Point(0, (i*46)+10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
-           offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
-       },
-       markerImage = new kakao.maps.MarkerImage(numImageSrc, numImageSize, imgOptions),
-        allMarker = new kakao.maps.Marker({
-           position: pointsArr.scheduleMarker[i].LatLng, // 마커의 위치
-           image: markerImage,
-           clickable: true
-       });
-        // 마커에 클릭이벤트를 등록합니다
-        (function(allMarker, i){
-            kakao.maps.event.addListener(allMarker, 'click', function() {
-                // 마커 위에 인포윈도우를 표시합니다
-            	console.log("set infoWindow")
-            	console.log(pointsArr.scheduleMarker[i].infoWindow);
-            	if(myIw == null || myIw == undefined){
-            		displayInfowindow(allMarker, pointsArr.scheduleMarker[i].infoWindow, mymap);
-            	}else{
-            		displayInfowindowLocal(allMarker, pointsArr.scheduleMarker[i].infoWindow, mymap,myIw);
-            	}
-                
-            });
-        })(allMarker, i);
-
-       // 배열의 좌표들이 잘 보이게 마커를 지도에 추가합니다
-       allMarker.setMap(mymap);
-       mymarkers.push(allMarker);
-       
-       // LatLngBounds 객체에 좌표를 추가합니다
-       allBounds.extend(pointsArr.scheduleMarker[i].LatLng);
-   }
-
-    // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-    mymap.setBounds(allBounds);
+	
+	var displayBool = true;
+	
+	for(var i in pointsArr.scheduleMarker){
+		if(displayBool){
+			displayBool = pointsArr.scheduleMarker[i].unselect;
+		}
+	}
+	if(displayBool){
+		if(typeof mapDiv !== "undefined"){
+			mymap = new kakao.maps.Map(mapDiv, mapOption);
+		}
+	}else{
+		// 버튼을 클릭하면 아래 배열의 좌표들이 모두 보이게 지도 범위를 재설정합니다
+	    var allBounds = new kakao.maps.LatLngBounds();
+	
+	    // 지도에 표시되고 있는 마커를 제거합니다
+	    removeAllMarker();
+	    
+	    var i;
+	    for (i = 0; i < pointsArr.scheduleMarker.length; i++) {
+	
+	        // 경도, 위도의 합이 0이면(위치지정 안한 값) 마커 찍는거 건너뜀
+	        if(pointsArr.scheduleMarker[i].unselect){
+	            continue;
+	        }
+	
+	        //   순서있는 마커 코드
+	       var numImageSrc = 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+	       numImageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
+	       imgOptions =  {
+	           spriteSize : new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
+	           spriteOrigin : new kakao.maps.Point(0, (i*46)+10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+	           offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+	       },
+	       markerImage = new kakao.maps.MarkerImage(numImageSrc, numImageSize, imgOptions),
+	        allMarker = new kakao.maps.Marker({
+	           position: pointsArr.scheduleMarker[i].LatLng, // 마커의 위치
+	           image: markerImage,
+	           clickable: true
+	       });
+	        // 마커에 클릭이벤트를 등록합니다
+	        (function(allMarker, i){
+	            kakao.maps.event.addListener(allMarker, 'click', function() {
+	                // 마커 위에 인포윈도우를 표시합니다
+	            	if(myIw == null || myIw == undefined){
+	            		displayInfowindow(allMarker, pointsArr.scheduleMarker[i].infoWindow, mymap);
+	            	}else{
+	            		displayInfowindowLocal(allMarker, pointsArr.scheduleMarker[i].infoWindow, mymap,myIw);
+	            	}
+	                
+	            });
+	        })(allMarker, i);
+	
+	       // 배열의 좌표들이 잘 보이게 마커를 지도에 추가합니다
+	       allMarker.setMap(mymap);
+	       mymarkers.push(allMarker);
+	       
+	       // LatLngBounds 객체에 좌표를 추가합니다
+	       allBounds.extend(pointsArr.scheduleMarker[i].LatLng);
+	   }
+	
+	    // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+	    mymap.setBounds(allBounds);
+	}
 }
 
 // 카카오 외의 함수들
@@ -315,10 +320,6 @@ function initMarker(scheduleLocation,locationContent){
         lng = 0;
         marker.setMap(map);
         
-        console.log("locationContent : " + locationContent);
-        // 마커를 클릭한 위치에 표시합니다 
-        console.log(scheduleLocation);
-
         marker.setPosition(scheduleLocation);
         marker.setMap(map);
 

@@ -461,16 +461,13 @@ $(function() {
 	var chatListJson = JSON.parse(chatList);
 	var profilePath = '${profilePath}';
 	planner.pwd = plannerJson.plannerPwd;
-	console.log("pwd : " + planner.pwd + ", " + plannerJson.plannerPwd);
 	if(planner.pwd == '' || planner.pwd == 'null'){
 		$('.pwdIsnotEmpty').each(function(i, item){
-			console.log(1);
 			$(item).css('display','none');
 			planner.pwd = '';
 		})
 	}else{
 		$('.pwdIsEmpty').each(function(i, item){
-			console.log(2);
 			$(item).css('display','none');
 		})
 	}
@@ -479,7 +476,6 @@ $(function() {
 	$('#startrip').val(plannerJson.plannerStartDT);
 	$("#join").click(function(){
 		var inputPwd = $('#inputPwd').val();
-		console.log(inputPwd + ", " + planner.pwd);
 		if(planner.pwd == inputPwd){
 			initChatting(chatListJson);
 			initPlanner(plannerJson);
@@ -495,10 +491,8 @@ $(function() {
 		}else{
 			alert('비밀번호가 틀렸습니다');
 		}
-		console.log(locationList);
 		var tempList = new Array();
 		<c:forEach var="areaName" items="${areaNameList}" varStatus="vs">
-			console.log(12314123);
 			tempList.push({large:'${areaName.largeAreaCode}',largeNM:'${areaName.largeAreaName}',
 				small:'${areaName.smallAreaCode}',smallNM:'${areaName.smallAreaName}'});
 		</c:forEach>
@@ -508,7 +502,6 @@ $(function() {
 		
 		sock.send(JSON.stringify({pno:planner.no, type: 'JOIN', memberNo: memberNo, memberNickName: memberNickName,newJoinUser:newJoinUser}));
 	})
-	console.log(plannerJson.plannerStartDT);
 	$('#startrip').val(plannerJson.plannerStartDT);
     // 페이지 입장 시 참여버튼 모달 출력
     $('#groupCode option[value="' + plannerJson.groupCode + '"]').attr('selected','true');
@@ -628,14 +621,11 @@ function timeToTime(time){
 //=======================================================================================//
 
 function sortSchedules(schedules){
-	console.log("schedules");
-	console.log(schedules);
 	var dno = schedules[0].dateNo;
 	var dayIdx = -1;
 	var i = null;
 	var j = null;
 	for(i in scheduleMarkers){
-		console.log(scheduleMarkers[i].dno + ' == ' + dno)
 		if(scheduleMarkers[i].dno == dno)
 			dayIdx = i;
 	}
@@ -920,11 +910,8 @@ function selectDay(no){
 		if(!todayMarker.scheduleMarker[i].unselect)
 			existMarker = true;
 	}
-	console.log('selectDay');
-	console.log(extractDayMarker(no));
-	console.log(existMarker);
+
 	if(existMarker){
-		console.log('displayAllPlaces');
 		displayAllPlaces(extractDayMarker(no),allMap,allMarkers);
 	}else{
 		
@@ -968,7 +955,6 @@ function deleteDate(ind,reorderBool){
 //첫번째 매개변수는 SCHEDULE 테이블에서 SCHEDULE_NO값이 들어가야 하는데
 //새로운 일정을 만드는 것이니 시퀀스 NEXTVAL 얻어와서 넣어야함
 function createSchedule(no,title,time,cost,memo,locationName){
-	console.log('time : ' + time);
 	var schedule = 
 	'<div data-scheduleno="' + no + '" class="btn p-cont schedule" onclick="selectSchedule(' + no + ')">' +
 	'<div class="row font-weight-bold accodianElement mb-1">' +
@@ -1038,9 +1024,6 @@ function addSchedule(dno,sno,title,time,location,cost,memo,llat,llng,liwContent,
 	var today = extractDayMarker(dno);
 	var locationLatLng = new kakao.maps.LatLng(llat,llng)
 	today.scheduleMarker.push({"sno" : sno, "LatLng" : locationLatLng, "unselect" : (llat+llng==0?true:false), "infoWindow" : liwContent});
-	console.log("addSchedule");
-	console.log(today);
-	console.log(days[dayIdx]);
 	
 	if($('#selectedDay').data('dateno') == dno){
 		createSchedule(sno,title,time,cost,memo,location);
@@ -1312,7 +1295,6 @@ function onMessage(msg) {
 	case 'JOIN':
 		var dupCheck = false;
 		for(var i in joinMember){
-			console.log(joinMember[i].memberNo + ' == ' + data['newJoinUser']);
 			if(joinMember[i].memberNo == data['newJoinUser'].memberNo)
 				dupCheck = true;
 		}
@@ -1359,7 +1341,6 @@ function onMessage(msg) {
 		initJoinMember(data['joinUserArray']);
 		break;
 	case 'locationList':
-		console.log(JSON.parse(data['locationList']));
 		initLocationList(JSON.parse(data['locationList']));
 		break;
 	}
@@ -1466,7 +1447,6 @@ function initJoinMember(joinUserArray){
 		$('#userPermission').append(userOption);
 	}
 	// <option value="memberNo">닉네임 <option>
-	console.log(joinUserJson);
 }
 
 $('#grantBtn').click(function(){
@@ -1478,7 +1458,6 @@ $('#grantBtn').click(function(){
 });
 
 $('#stealBtn').click(function(){
-	console.log(joinUserJson);
 	var grantMemberNo = $('#userPermission').val();
 	var userIndex = -1;
 	for(var i in joinUserJson){
@@ -1487,8 +1466,6 @@ $('#stealBtn').click(function(){
 	}
 	
 	if(permission > 2){
-		console.log(grantMemberNo);
-		console.log(joinUserJson[userIndex]);
 		if(joinUserJson[userIndex].plannerPermission != 3){
 			sock.send(JSON.stringify({pno:planner.no, type: 'permission', memberNo: memberNo, permission: '1', grantMemberNo:grantMemberNo}));
 		}else{
@@ -1638,7 +1615,6 @@ $(function () {
     });
 	$('#updatePassword').click(function(){
 		var inputPwd1 = prompt('변경할 비밀번호를 입력해주세요');
-		console.log(inputPwd1);
 		if(inputPwd1 == '' || inputPwd1 == 'null' || inputPwd1 == null){
 			sock.send(JSON.stringify({pno:planner.no, type: 'updatePassword', memberNo: memberNo, pwd: ''}));
 		}else{
@@ -1733,7 +1709,6 @@ function toggleArrow(e){
 //지역 선택
 $("#wide-area").on("change", function(){
     var wideVal = Number($(this).val());
-    console.log(wideVal);
     var html = "";
 
     switch(wideVal){
@@ -1773,7 +1748,6 @@ function addLocationList(lc,ln,sc,sn){
 	'class="btn btn-block btn-danger" onclick="removeLocation(this);">-</button>' +
 	'</div>' +
 	'</div>';
-	console.log(lc, ln, sc, sn);
 	if(locationList.length < 5){
 		//console.log("large : " + lc + ", small : " + sc);
 		locationList.push({large:lc,largeNM:ln,small:sc,smallNM:sn});
@@ -1785,10 +1759,7 @@ function addLocationList(lc,ln,sc,sn){
 }
 
 function removeLocation(location){
-	console.log(location);
-	console.log(locationList);
 	locationList.splice(locationEqual($('#wide-area').val(),$('#local-area').val()),1);
-	console.log(locationList);
 	$(location).parent().parent().remove();
 }
 
@@ -1802,8 +1773,6 @@ function locationEqual(lc, sc){
 $('#updateLocation').click(function(){
 	
 	var locationJson = JSON.stringify(locationList);
-	console.log(locationList);
-	console.log(locationJson);
 	sock.send(JSON.stringify({pno:planner.no, type:'locationList', locationList:locationList}));
 })
 
