@@ -108,7 +108,6 @@ $(document).ready(
 		    						
 		    						// 인증번호 입력 폼 보여줌
 		    						$("#email-authentication-div").show();
-		    						console.log(result);
 		    						certifyCode = result;
 		    					}
 		    				},
