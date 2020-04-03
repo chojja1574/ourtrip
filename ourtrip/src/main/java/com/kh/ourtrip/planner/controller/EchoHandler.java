@@ -20,6 +20,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.kh.ourtrip.planner.model.dao.PlannerDAO;
 import com.kh.ourtrip.planner.model.service.PlannerService;
 import com.kh.ourtrip.planner.model.vo.AreaName;
 import com.kh.ourtrip.planner.model.vo.ChattingLogView;
@@ -39,6 +40,9 @@ public class EchoHandler extends TextWebSocketHandler {
 	
 	@Autowired
 	private PlannerService plannerService;
+	
+	@Autowired
+	private PlannerDAO plannerDAO;
 	
 	// 클라이언트와 연결 이후에 실행되는 메서드
 	@Override
@@ -256,12 +260,14 @@ public class EchoHandler extends TextWebSocketHandler {
 	private int orderDate(WebSocketSession session, JSONObject msgJson) throws Exception {
 		int result = 0;
 
+		int pno = Integer.parseInt(msgJson.get("pno").toString());
 		JSONArray dateInfo = (JSONArray)(msgJson.get("dateInfo"));
 
 		List<Day> dayList = new ArrayList<Day>();
 		Day tempDay = null;
 		
 		if (dateInfo != null) { 
+			System.out.println("dateInfo !null");
 		   for (int i=0;i<dateInfo.size();i++){ 
 			   JSONParser jsonParser = new JSONParser();
 			   JSONObject jsonObj = (JSONObject) jsonParser.parse(dateInfo.get(i).toString());
@@ -272,9 +278,19 @@ public class EchoHandler extends TextWebSocketHandler {
 			   tempDay.setTripDate(order);
 			   dayList.add(tempDay);
 		   } 
+		}else {
+			System.out.println("dateInfo null");
+			int countDate = plannerDAO.countDate(pno);
+			
+			for(int i = 0; i < countDate; i++) {
+				dayList.get(i).setTripDate(i);
+			}
+			plannerService.updateTripDate(dayList);
+			//msgJson.put("type","alert");
 		}
 		
 		result = plannerService.updateTripDate(dayList);
+		
 		
 		sendChatroom(session, msgJson);
 		

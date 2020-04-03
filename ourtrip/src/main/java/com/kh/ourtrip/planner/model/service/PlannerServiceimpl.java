@@ -589,10 +589,11 @@ public class PlannerServiceimpl implements PlannerService {
 		int plannerCount = -1;
 		String plannerUrl = null;
 		int groupCode = -1;
+		int maxTripDate = -1;
 		
 		List<PlannerView> selectPlannerView = plannerDAO.selectPlannerView(no);
 		
-		System.out.println(selectPlannerView);
+		//System.out.println(selectPlannerView);
 		Map<Integer,List<PlannerView>> dateMap = new HashMap<Integer,List<PlannerView>>();
 		for(PlannerView pv : selectPlannerView) {
 			if(inputPvVal) {
@@ -632,6 +633,8 @@ public class PlannerServiceimpl implements PlannerService {
 		    	}
 		    	if(tripDate == -1) {
 		    		tripDate = pv.getTripDate();
+		    		if(tripDate > maxTripDate)
+		    			maxTripDate = tripDate;
 		    	}
 				if(plannerNo == -1) {
 					plannerNo = pv.getPlannerNo();
@@ -644,8 +647,21 @@ public class PlannerServiceimpl implements PlannerService {
 		    }
 		    Day oneDay = new Day(dateNo,tripDate,plannerNo,scheduleList);
 		    dayList.add(oneDay);
-		    
 		}
+		int countDate = plannerDAO.countDate(plannerNo);
+		
+		System.out.println(maxTripDate+1 + " != " + countDate);
+		if(maxTripDate+1 != countDate) {
+			System.out.println("maxTripDate+1 != countDate");
+			for(int i = 0; i < countDate; i++) {
+				dayList.get(i).setTripDate(i);
+			}
+			int result = plannerDAO.updateTripDate(dayList);
+			if(result == -1) {
+				System.out.println("tripDate sort complete");
+			}
+		}
+			
 		selectedPlanner = new Planner(plannerNo, plannerTitle, plannerPwd, plannerCost, 
 				plannerCreateDT, plannerModifyDT, plannerStartDT, plannerPublicYN, plannerDeleteYN, 
 				plannerExpiry, plannerCount, plannerUrl, groupCode, dayList);

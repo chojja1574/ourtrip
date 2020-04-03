@@ -237,4 +237,9 @@
 	<update id="increasePlannerCount">
 		UPDATE PLANNER SET PLANNER_COUNT = PLANNER_COUNT + 1 WHERE PLANNER_NO = #{plannerNo}
 	</update>
+	
+	<select id="maxTripDate" parameterType="_int" resultType="_int">
+		select max(trip_date) from v_planner where planner_no = #{no}
+	</select>
+
 </mapper>
