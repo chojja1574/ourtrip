@@ -513,7 +513,16 @@ $(function() {
 		    // 페이지 입장 시 참여버튼 모달 출력
 		    $('#groupCode option[value="' + plannerJson.groupCode + '"]').attr('selected','true');
 		    $("#modalBtn").click();
+		    
+//=======================================================================================//
+//====================================== 시간 바꾸는 곳  ======================================//
+//=======================================================================================//
+		  
 	}, 600);
+	
+//=======================================================================================//
+//====================================== 시간 바꾸는 곳  ======================================//
+//=======================================================================================//
 });
 
 var iwContent = '';
@@ -1615,6 +1624,12 @@ $(function () {
     });
     
     $('#mymsg').keyup(function (evt) {
+    	
+    	var text = $('#mymsg').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#mymsg').val('');
+    	}
     	if (evt.keyCode == 13 && !evt.shiftKey) {
     	    $('#send').click();
     	}else if(evt.keyCode == 13 && evt.shiftKey){
@@ -1640,6 +1655,12 @@ $(function () {
     });
     
     $('#inputScheduleTitle').keyup(function(){
+
+    	var text = $('#inputScheduleTitle').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#inputScheduleTitle').val('');
+    	}
     	if($('#inputScheduleTitle').val().length > 20){
     		alert('20글자를 초과하여 입력할 수 없습니다');
     		$('#inputScheduleTitle').val($('#inputScheduleTitle').val().substring(0,20));
@@ -1647,6 +1668,12 @@ $(function () {
     });
     
     $('#inputScheduleCost').keyup(function(){
+
+    	var text = $('#inputScheduleCost').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#inputScheduleCost').val('');
+    	}
     	if($('#inputScheduleCost').val().length > 9){
     		alert('돈을 너무 막씁니다');
     		$('#inputScheduleCost').val($('#inputScheduleCost').val().substring(0,9));
@@ -1654,6 +1681,12 @@ $(function () {
     });
     
     $('#inputScheduleMemo').keyup(function(){
+
+    	var text = $('#inputScheduleMemo').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#inputScheduleMemo').val('');
+    	}
     	if($('#inputScheduleCost').val().length > 200){
     		alert('200글자를 초과하여 입력할 수 없습니다');
     		$('#inputScheduleCost').val($('#inputScheduleCost').val().substring(0,200));
@@ -1661,13 +1694,33 @@ $(function () {
     });
     
     $('#inputScheduleLocationName').keyup(function(){
+
+    	var text = $('#inputScheduleLocationName').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#inputScheduleLocationName').val('');
+    	}
     	if($('#inputScheduleLocationName').val().length > 20){
     		alert('20글자를 초과하여 입력할 수 없습니다');
     		$('#inputScheduleLocationName').val($('#inputScheduleLocationName').val().substring(0,20));
     	}
     });
     
+    $('#inputScheduleLocation').keyup(function(){
+    	var text = $('#inputScheduleLocation').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#inputScheduleLocation').val('');
+    	}
+    });
+    
 	$('#updateTitle').click(function(){
+
+    	var text = $('#updateTitle').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#updateTitle').val('');
+    	}
     	var inputTitle = prompt('변경할 제목을 입력해주세요');
     	if(inputTitle != ''){
     		sock.send(JSON.stringify({pno:planner.no, type: 'updateTitle', memberNo: memberNo, title: inputTitle}));
@@ -1676,6 +1729,12 @@ $(function () {
     	}
     });
 	$('#updatePassword').click(function(){
+
+    	var text = $('#mymsg').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#mymsg').val('');
+    	}
 		var inputPwd1 = prompt('변경할 비밀번호를 입력해주세요');
 		if(inputPwd1 == '' || inputPwd1 == 'null' || inputPwd1 == null){
 			sock.send(JSON.stringify({pno:planner.no, type: 'updatePassword', memberNo: memberNo, pwd: ''}));
