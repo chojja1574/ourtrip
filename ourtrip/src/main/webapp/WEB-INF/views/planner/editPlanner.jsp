@@ -833,14 +833,17 @@ function extractScheduleMarker(dno,sno){
 var tempDayno = 100;
 
 function addDate(){
+	var check = confirm('일차를 추가하시겠습니까?');
 	// date_no는 DB 에서 가져옴
-	if(permission > 1)
-		sock.send(JSON.stringify({pno:planner.no, type: 'addDate', id: "${loginMember.getMemberEmail()}"}));
-	else
-		alert('권한이 없습니다.');
-	// trip_date 값은  reorder에서 수정
-	
-	
+	if(check){
+		if(permission > 1){
+			sock.send(JSON.stringify({pno:planner.no, type: 'addDate', id: "${loginMember.getMemberEmail()}"}));
+			alert('추가 되었습니다');
+		}
+		else
+			alert('권한이 없습니다.');
+		// trip_date 값은  reorder에서 수정
+	}
 }
 
 function createDate(dateNo,reorderBoolean){
@@ -911,8 +914,7 @@ function selectDay(no){
 
     sortSchedule();
     for(var i in days){
-    	if(days[i].no == no)
-    		sortSchedules(days[i].schedules);
+   		sortSchedules(days[i].schedules);
     }
     
 	for(var i in todayMarker.scheduleMarker){
@@ -935,14 +937,19 @@ function selectDay(no){
 
 //일차 제거하는 함수
 function deleteDay(ind){
-	if(permission > 1){
-		if(days.length > 1){
-			sock.send(JSON.stringify({pno:planner.no, type: 'deleteDate', id: "${loginMember.getMemberEmail()}", dno:ind}));
+	var check = confirm('일차를 제거하시겠습니까?');
+	// date_no는 DB 에서 가져옴
+	if(check){
+		if(permission > 1){
+			if(days.length > 1){
+				sock.send(JSON.stringify({pno:planner.no, type: 'deleteDate', id: "${loginMember.getMemberEmail()}", dno:ind}));
+				alert('삭제 하였습니다.');
+			}else{
+				alert('삭제 실패');
+			}
 		}else{
-			alert('삭제 실패');
+			alert('권한이 없습니다.');
 		}
-	}else{
-		alert('권한이 없습니다.');
 	}
 }
 function deleteDate(ind,reorderBool){

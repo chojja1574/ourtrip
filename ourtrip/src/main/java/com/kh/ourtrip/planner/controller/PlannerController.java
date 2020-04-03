@@ -189,7 +189,7 @@ public class PlannerController {
 			smallNmList = plannerService.selectsmallNmList();
 			
 			areaNameList = plannerService.selectPlannerLocationName(plannerNo);
-			System.out.println("areaNameList : " + areaNameList);
+			//System.out.println("areaNameList : " + areaNameList);
 		}catch(Exception e) {
 			e.printStackTrace();
 			model.addAttribute("msg", "플래너 수정화면 로드중 오류발생");

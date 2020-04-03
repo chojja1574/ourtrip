@@ -363,8 +363,8 @@ public class PlannerDAO {
 	public int increasePlannerCount(int plannerNo) {
 		return sqlSessionTemplate.update("planner1Mapper.increasePlannerCount",plannerNo);
 	}
-
-
-	
+	public int maxTripDate(int plannerNo) {
+		return sqlSessionTemplate.update("planner1Mapper.maxTripDate",plannerNo);
+	}
 	
 }
