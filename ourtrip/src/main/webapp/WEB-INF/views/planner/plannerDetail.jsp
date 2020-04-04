@@ -395,13 +395,6 @@
     		}
     		days.push(day);
     	}
-    	console.log("planner");
-    	console.log(planner);
-    	console.log("days");
-    	console.log(days);
-    	console.log(days);
-    	console.log("scheduleMarkers");
-    	console.log(scheduleMarkers);
     	
     	selectMapContainer = document.getElementById("PCMap");
     	selectMap = new kakao.maps.Map(selectMapContainer, mapOption);
@@ -489,6 +482,15 @@
 	}
 	
 	$('.schedule').click(function(){
+		tempsche = new Array();
+		for(var i in days){
+			for(var j in scheduleMarkers){
+				if(days[i].no == scheduleMarkers[j].dno){
+					tempsche.push(scheduleMarkers[j]);
+				}
+			}
+		}
+		scheduleMarkers = tempsche;
 		for(var i in days){
 			for(var j in days[i].schedules){
 				if(days[i].schedules[j].no == $(this).data('sno')){

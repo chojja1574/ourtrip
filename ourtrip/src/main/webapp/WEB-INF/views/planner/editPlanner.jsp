@@ -448,7 +448,6 @@ var locationList = new Array();
 
 $(function() {
 	setTimeout(function() {
-		  console.log('Works!');
 		  memberNo = '${loginMember.memberNo}';
 			if(memberNo == ''){
 				memberNo = '-1';
@@ -480,8 +479,6 @@ $(function() {
 			$('#startrip').val(plannerJson.plannerStartDT);
 			$("#join").click(function(){
 				var inputPwd = $('#inputPwd').val();
-				console.log(planner.pwd);
-				console.log(inputPwd);
 				if(planner.pwd == inputPwd || planner.pwd == 'null' || planner.pwd == '' || planner.pwd == null){
 					
 				}else{
@@ -513,7 +510,17 @@ $(function() {
 		    // 페이지 입장 시 참여버튼 모달 출력
 		    $('#groupCode option[value="' + plannerJson.groupCode + '"]').attr('selected','true');
 		    $("#modalBtn").click();
+		    
+//=======================================================================================//
+//====================================== 시간 바꾸는 곳  ======================================//
+//=======================================================================================//
+		  
 	}, 600);
+	// 1000 = 1초
+	
+//=======================================================================================//
+//====================================== 시간 바꾸는 곳  ======================================//
+//=======================================================================================//
 });
 
 var iwContent = '';
@@ -586,13 +593,6 @@ function initPlanner(pj){
 	for(var i = 0; i < days.length; i++){
 		sortSchedules(days[i].schedules);
 	}
-	console.log("planner");
-	console.log(planner);
-	console.log("days");
-	sortDaysUserTripdate(days);
-	console.log(days);
-	console.log("scheduleMarkers");
-	console.log(scheduleMarkers);
 	//}, 1000);
 }
 function initChatting(chatList){
@@ -652,8 +652,6 @@ function sortSchedules(schedules){
 		}
 	}catch(e){
 		console.log('정렬오류 발생' + e.stack);
-		console.log('error : i = ' + i + ', j = ' + j + ', idx : ' + dayIdx);
-		console.log(scheduleMarkers[dayIdx]);
 	}
 	
 }
@@ -725,9 +723,6 @@ function sortDaysUseDateNo(orderDate){
 				}
 			}catch(e){
 				console.log(e.stack);
-				console.log('i : ' + i + ', j : ' + j);
-				console.log(orderDate[i]);
-				console.log(days[j]);
 			}
 		}
 	}
@@ -874,7 +869,6 @@ function createDate(dateNo,reorderBoolean){
 //일차 선택하는 함수
 function selectDay(no){
 	
-	console.log(no);
     // 매개변수로 받은 인덱스로 div를 찾아 저장할 변수
     var selectedDay;
 
@@ -959,13 +953,10 @@ function deleteDate(ind,reorderBool){
         if($(box).data("dateno")==ind){
             $(box).remove();
             dateNo = $(box).data('dateno');
-            console.log(dateNo);
         }
     });
     if(reorderBool)
     	reorder();
-    console.log($('#selectedDay').data('dateno'));
-    console.log($('#selectedDay').data('dateno') == dateNo);
     if($('#selectedDay').data('dateno') == dateNo)
     	selectDay($($(".daystyle").get(0)).data('dateno'));
 }
@@ -1266,9 +1257,6 @@ function connectSock(){
 		let sock = new SockJS("<c:url value="/echo"/>");
 		sock.onmessage = onMessage;
 		sock.onclose = onClose;
-		console.log(sock);
-		console.log(sock.onmessage);
-		console.log(sock.onclose);
 		resolve(sock);
 	});
 }
@@ -1615,6 +1603,13 @@ $(function () {
     });
     
     $('#mymsg').keyup(function (evt) {
+    	
+    	var text = $('#mymsg').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#mymsg').val('');
+    		sock.send(JSON.stringify({pno:planner.no, type: 'scripting', memberNo: memberNo}));
+    	}
     	if (evt.keyCode == 13 && !evt.shiftKey) {
     	    $('#send').click();
     	}else if(evt.keyCode == 13 && evt.shiftKey){
@@ -1640,6 +1635,13 @@ $(function () {
     });
     
     $('#inputScheduleTitle').keyup(function(){
+
+    	var text = $('#inputScheduleTitle').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#inputScheduleTitle').val('');
+    		sock.send(JSON.stringify({pno:planner.no, type: 'scripting', memberNo: memberNo}));
+    	}
     	if($('#inputScheduleTitle').val().length > 20){
     		alert('20글자를 초과하여 입력할 수 없습니다');
     		$('#inputScheduleTitle').val($('#inputScheduleTitle').val().substring(0,20));
@@ -1647,6 +1649,13 @@ $(function () {
     });
     
     $('#inputScheduleCost').keyup(function(){
+
+    	var text = $('#inputScheduleCost').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#inputScheduleCost').val('');
+    		sock.send(JSON.stringify({pno:planner.no, type: 'scripting', memberNo: memberNo}));
+    	}
     	if($('#inputScheduleCost').val().length > 9){
     		alert('돈을 너무 막씁니다');
     		$('#inputScheduleCost').val($('#inputScheduleCost').val().substring(0,9));
@@ -1654,6 +1663,13 @@ $(function () {
     });
     
     $('#inputScheduleMemo').keyup(function(){
+
+    	var text = $('#inputScheduleMemo').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#inputScheduleMemo').val('');
+    		sock.send(JSON.stringify({pno:planner.no, type: 'scripting', memberNo: memberNo}));
+    	}
     	if($('#inputScheduleCost').val().length > 200){
     		alert('200글자를 초과하여 입력할 수 없습니다');
     		$('#inputScheduleCost').val($('#inputScheduleCost').val().substring(0,200));
@@ -1661,13 +1677,35 @@ $(function () {
     });
     
     $('#inputScheduleLocationName').keyup(function(){
+
+    	var text = $('#inputScheduleLocationName').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#inputScheduleLocationName').val('');
+    		sock.send(JSON.stringify({pno:planner.no, type: 'scripting', memberNo: memberNo}));
+    	}
     	if($('#inputScheduleLocationName').val().length > 20){
     		alert('20글자를 초과하여 입력할 수 없습니다');
     		$('#inputScheduleLocationName').val($('#inputScheduleLocationName').val().substring(0,20));
     	}
     });
     
+    $('#inputScheduleLocation').keyup(function(){
+    	var text = $('#inputScheduleLocation').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#inputScheduleLocation').val('');
+    		sock.send(JSON.stringify({pno:planner.no, type: 'scripting', memberNo: memberNo}));
+    	}
+    });
+    
 	$('#updateTitle').click(function(){
+
+    	var text = $('#updateTitle').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#updateTitle').val('');
+    	}
     	var inputTitle = prompt('변경할 제목을 입력해주세요');
     	if(inputTitle != ''){
     		sock.send(JSON.stringify({pno:planner.no, type: 'updateTitle', memberNo: memberNo, title: inputTitle}));
@@ -1676,6 +1714,13 @@ $(function () {
     	}
     });
 	$('#updatePassword').click(function(){
+
+    	var text = $('#mymsg').val();
+    	if (text.includes('<') || text.includes('>')){
+    		alert('<, > 를 입력할 수 없습니다.');
+    		$('#mymsg').val('');
+    		sock.send(JSON.stringify({pno:planner.no, type: 'scripting', memberNo: memberNo}));
+    	}
 		var inputPwd1 = prompt('변경할 비밀번호를 입력해주세요');
 		if(inputPwd1 == '' || inputPwd1 == 'null' || inputPwd1 == null){
 			sock.send(JSON.stringify({pno:planner.no, type: 'updatePassword', memberNo: memberNo, pwd: ''}));
